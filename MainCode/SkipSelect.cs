@@ -22,24 +22,33 @@ namespace SkipSelect.MainCode
             var config = ModContent.GetInstance<Config>();
             Logger.Info($"AutoLoad is {(config.EnableSingleplayer ? "enabled" : "disabled")}");
 
-            if (config.EnableSingleplayer)
-            {
-                // Hook into OnSuccessfulLoad to skip the player and world selection.
-                typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)
-                    ?.SetValue(null, (Action)EnterSingleplayerWorld);
+            // Get the OnSuccessfulLoad field using reflection
+            FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);
 
-                // Cache the CanWorldBePlayed method for later use.
-                canWorldBePlayedMethod = typeof(UIWorldSelect).GetMethod("CanWorldBePlayed", BindingFlags.NonPublic | BindingFlags.Static);
+            // Get the CanWorldBePlayed method using reflection
+            canWorldBePlayedMethod = typeof(UIWorldSelect).GetMethod("CanWorldBePlayed", BindingFlags.NonPublic | BindingFlags.Static);
+
+            if (onSuccessfulLoadField != null)
+            {
+                Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
+
+                if (config.EnableSingleplayer)
+                {
+                    // Hook into OnSuccessfulLoad to enter single-player world
+                    onSuccessfulLoad += EnterSingleplayerWorld;
+                }
+                else if (config.EnableMultiplayer)
+                {
+                    // Hook into OnSuccessfulLoad to enter multiplayer world
+                    onSuccessfulLoad += EnterMultiplayerWorld;
+                }
+
+                // Set the modified delegate back to the field
+                onSuccessfulLoadField.SetValue(null, onSuccessfulLoad);
             }
-
-            else if (config.EnableMultiplayer)
+            else
             {
-                // Hook into OnSuccessfulLoad to skip the player and world selection.
-                typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)
-                    ?.SetValue(null, (Action)EnterMultiplayerWorld);
-
-                // Cache the CanWorldBePlayed method for later use.
-                canWorldBePlayedMethod = typeof(UIWorldSelect).GetMethod("CanWorldBePlayed", BindingFlags.NonPublic | BindingFlags.Static);
+                Logger.Warn("Failed to access OnSuccessfulLoad field.");
             }
         }
 

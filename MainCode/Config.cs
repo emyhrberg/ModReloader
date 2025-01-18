@@ -16,5 +16,9 @@ namespace SkipSelect.MainCode
         [Tooltip("Automatically loads the first player and world in multiplayer mode upon reloading mods.")]
         [DefaultValue(false)] // Default value is true.
         public bool EnableMultiplayer;
+
+        [Tooltip("Enables a big refresh button to quickly navigate back to mods.")]
+        [DefaultValue(false)] // Default value is true.
+        public bool EnableRefresh;
     }
 }

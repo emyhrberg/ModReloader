@@ -44,6 +44,11 @@ Mods: {
 					Label: Enable Multiplayer Auto-Load
 					Tooltip: Automatically loads the first player and world in multiplayer mode upon reloading mods.
 				}
+
+				EnableRefresh: {
+					Label: Enable Refresh
+					Tooltip: Enables a big refresh button to quickly navigate back to mods.
+				}
 			}
 		}
 	}
