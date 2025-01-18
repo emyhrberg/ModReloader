@@ -3,7 +3,7 @@ using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 
-namespace SkipSelect.MainCode
+namespace SkipSelect.MainCode.UI
 {
     internal class MyHoverButton : UIImageButton
     {

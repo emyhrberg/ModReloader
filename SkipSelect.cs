@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SkipSelect.MainCode.Other;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 
-namespace SkipSelect.MainCode
+namespace SkipSelect
 {
     public class SkipSelect : Mod
     {
@@ -55,7 +56,7 @@ namespace SkipSelect.MainCode
         {
             // Reset the OnSuccessfulLoad hook.
             typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)
-                ?.SetValue(null, (Action)null);
+                ?.SetValue(null, null);
 
             // Reset the CanWorldBePlayed method.
             canWorldBePlayedMethod = null;
@@ -115,7 +116,7 @@ namespace SkipSelect.MainCode
             }
             else
             {
-                string log = "Error: No compatible player-world pair found. \n" + 
+                string log = "Error: No compatible player-world pair found. \n" +
                     "Please favorite a player and a world";
                 Logger.Info(log);
                 throw new Exception(log);

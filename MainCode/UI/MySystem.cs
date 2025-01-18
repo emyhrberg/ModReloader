@@ -3,8 +3,9 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using System.Collections.Generic;
 using Terraria;
+using SkipSelect.MainCode.Other;
 
-namespace SkipSelect.MainCode
+namespace SkipSelect.MainCode.UI
 {
     public class MySystem : ModSystem
     {

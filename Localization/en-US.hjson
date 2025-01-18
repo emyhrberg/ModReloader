@@ -49,6 +49,11 @@ Mods: {
 					Label: Enable Refresh
 					Tooltip: Enables a big refresh button to quickly navigate back to mods.
 				}
+
+				WaitingTime: {
+					Label: Waiting Time (Navigation Delay in ms)
+					Tooltip: Set the waiting time before navigating from Main Menu to Mod Sources
+				}
 			}
 		}
 	}

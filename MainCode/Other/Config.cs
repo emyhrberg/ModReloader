@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-namespace SkipSelect.MainCode
+namespace SkipSelect.MainCode.Other
 {
     public class Config : ModConfig
     {
@@ -18,7 +18,11 @@ namespace SkipSelect.MainCode
         public bool EnableMultiplayer;
 
         [Tooltip("Enables a big refresh button to quickly navigate back to mods.")]
-        [DefaultValue(false)] // Default value is true.
+        [DefaultValue(true)] // Default value is true.
         public bool EnableRefresh;
+
+        [Tooltip("Set the waiting time before navigating from Main Menu to Mod Sources. Recommend 500-1500ms.")]
+        [DefaultValue(700)] // Default value is true.
+        public int WaitingTime;
     }
 }
