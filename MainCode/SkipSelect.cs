@@ -20,7 +20,6 @@ namespace SkipSelect.MainCode
         public override void Load()
         {
             var config = ModContent.GetInstance<Config>();
-            Logger.Info($"AutoLoad is {(config.EnableSingleplayer ? "enabled" : "disabled")}");
 
             // Get the OnSuccessfulLoad field using reflection
             FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);

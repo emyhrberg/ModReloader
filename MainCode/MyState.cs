@@ -13,28 +13,25 @@ namespace SkipSelect.MainCode
 {
     public class MyState : UIState
     {
+
+        // Variables
+        private bool Visible;
+
         public override void OnInitialize()
         {
-            // Load button texture
-            Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SkipSelect/MainCode/ButtonRefresh");
-
-            // Create the button
-            MyHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
-
-            // Set button size and position
-            buttonRefresh.Width.Set(100f, 0f);
-            buttonRefresh.Height.Set(100f, 0f);
-            buttonRefresh.Top.Set(10f, 0f);
-            buttonRefresh.Left.Set(10f, 0f);
-            buttonRefresh.HAlign = 0.5f;
-
-            // Add click event
-            buttonRefresh.OnLeftClick += CloseButtonClicked;
-
-            // Add the button to the UIState
-            Append(buttonRefresh);
+            Config config = ModContent.GetInstance<Config>();
+            if (config.EnableRefresh)
+            {
+                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SkipSelect/MainCode/ButtonRefresh");
+                MyHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
+                buttonRefresh.Width.Set(100f, 0f);
+                buttonRefresh.Height.Set(100f, 0f);
+                buttonRefresh.Top.Set(10f, 0f);
+                buttonRefresh.HAlign = 0.5f;
+                buttonRefresh.OnLeftClick += CloseButtonClicked;
+                Append(buttonRefresh);
+            }
         }
-
 
         private async void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
@@ -47,15 +44,15 @@ namespace SkipSelect.MainCode
             // Wait for save to complete (adjust timing if necessary)
             await Task.Delay(3000);
 
-            // Navigate to Mod Browser
-            NavigateToModBrowser();
+            // Navigate to Develop Mods
+            NavigateToDevelopMods();
         }
 
-        private void NavigateToModBrowser()
+        private void NavigateToDevelopMods()
         {
             try
             {
-                ModContent.GetInstance<SkipSelect>().Logger.Warn("Attempting to navigate to Mod Browser...");
+                ModContent.GetInstance<SkipSelect>().Logger.Warn("Attempting to navigate to Develop Mods...");
 
                 // Access the Interface type
                 Assembly tModLoaderAssembly = typeof(Main).Assembly;
@@ -67,36 +64,34 @@ namespace SkipSelect.MainCode
                     return;
                 }
 
-                DebugInterfaceMembers();
+                // Get the modSources instance (Develop Mods menu)
+                FieldInfo modSourcesField = interfaceType.GetField("modSources", BindingFlags.NonPublic | BindingFlags.Static);
+                object modSourcesInstance = modSourcesField?.GetValue(null);
 
-                // Get the modBrowser instance
-                FieldInfo modBrowserField = interfaceType.GetField("modBrowser", BindingFlags.NonPublic | BindingFlags.Static);
-                object modBrowserInstance = modBrowserField?.GetValue(null);
-
-                if (modBrowserInstance == null)
+                if (modSourcesInstance == null)
                 {
-                    ModContent.GetInstance<SkipSelect>().Logger.Warn("modBrowser instance not found.");
+                    ModContent.GetInstance<SkipSelect>().Logger.Warn("modSources instance not found.");
                     return;
                 }
 
-                // Get the modBrowserID
-                FieldInfo modBrowserIDField = interfaceType.GetField("modBrowserID", BindingFlags.NonPublic | BindingFlags.Static);
-                int modBrowserID = (int)(modBrowserIDField?.GetValue(null) ?? -1);
+                // Get the modSourcesID
+                FieldInfo modSourcesIDField = interfaceType.GetField("modSourcesID", BindingFlags.NonPublic | BindingFlags.Static);
+                int modSourcesID = (int)(modSourcesIDField?.GetValue(null) ?? -1);
 
-                if (modBrowserID == -1)
+                if (modSourcesID == -1)
                 {
-                    ModContent.GetInstance<SkipSelect>().Logger.Warn("modBrowserID not found.");
+                    ModContent.GetInstance<SkipSelect>().Logger.Warn("modSourcesID not found.");
                     return;
                 }
 
-                // Set Main.menuMode to modBrowserID
-                Main.menuMode = modBrowserID;
+                // Set Main.menuMode to modSourcesID
+                Main.menuMode = modSourcesID;
 
-                ModContent.GetInstance<SkipSelect>().Logger.Warn($"Successfully navigated to Mod Browser (MenuMode: {modBrowserID}).");
+                ModContent.GetInstance<SkipSelect>().Logger.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
             }
             catch (Exception ex)
             {
-                ModContent.GetInstance<SkipSelect>().Logger.Error($"Error navigating to Mod Browser: {ex.Message}\n{ex.StackTrace}");
+                ModContent.GetInstance<SkipSelect>().Logger.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
             }
         }
 
@@ -123,8 +118,5 @@ namespace SkipSelect.MainCode
                 ModContent.GetInstance<SkipSelect>().Logger.Warn($"Property: {property.Name} ({property.PropertyType.Name})");
             }
         }
-
-
-
     }
 }

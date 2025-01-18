@@ -15,9 +15,13 @@ namespace SkipSelect.MainCode
         {
             if (!Main.dedServ)
             {
-                userInterface = new UserInterface();
-                myState = new MyState();
-                userInterface.SetState(myState);
+                var config = ModContent.GetInstance<Config>();
+                if (config.EnableRefresh)
+                {
+                    userInterface = new UserInterface();
+                    myState = new MyState();
+                    userInterface.SetState(myState);
+                }
             }
         }
 
