@@ -1,3 +1,4 @@
-/.bin
+# folders to ignore
+/bin
 /.vs
 /obj

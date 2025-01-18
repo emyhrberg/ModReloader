@@ -1,0 +1,50 @@
+Mods: {
+	SkipSelect: {
+		Config: {
+			AutoLoad.Header: Auto Load Settings
+
+			EnableAutoLoad: {
+				Label: Enable Auto Load
+				Tooltip: If enabled, the mod will automatically load the first player and world.
+			}
+		}
+
+		Configs: {
+			SkipSelectConfig: {
+				DisplayName: Skip Select Config
+				Headers.AutoLoadingSettings: Auto Loading Settings Header
+
+				EnableAutoLoad: {
+					Label: EnableAutoLoad
+					Tooltip: Automatically loads the first player and world upon game start. Disable this to use the normal menu.
+				}
+			}
+
+			Config: {
+				DisplayName: Config
+
+				Headers: {
+					AutoLoadingSettings: Auto Loading Settings Header
+					SkipSelect: Skip Select Header
+					SinglePlayerSettings: Single Player Settings Header
+					MultiplayerSettings: Multiplayer Settings Header
+				}
+
+				EnableAutoLoad: {
+					Label: EnableAutoLoad
+					Tooltip: Automatically loads the first player and world upon game start. Disable this to use the normal menu.
+				}
+
+				EnableSingleplayer: {
+					Label: Enable Single Player Auto-Load
+					Tooltip: Automatically loads the first player and world in singleplayer mode upon reloading mods.
+				}
+
+				EnableMultiplayer: {
+					Label: Enable Multiplayer Auto-Load
+					Tooltip: Automatically loads the first player and world in multiplayer mode upon reloading mods.
+				}
+			}
+		}
+	}
+}
