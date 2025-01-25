@@ -14,7 +14,7 @@ namespace SkipSelect.MainCode.UI
 
         public override void Load()
         {
-            if (!Main.dedServ)
+            if (!Main.dedServ) // ensure that this is only run on the client
             {
                 var config = ModContent.GetInstance<Config>();
                 if (config.EnableRefresh)
@@ -28,9 +28,16 @@ namespace SkipSelect.MainCode.UI
 
         public override void UpdateUI(GameTime gameTime)
         {
-            userInterface?.Update(gameTime);
+
+            // check if toggle
+            Config c = ModContent.GetInstance<Config>();
+            if (c.EnableRefresh)
+            {
+                userInterface?.Update(gameTime);
+            }
         }
 
+        // boilerplate code to draw the UI
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
@@ -40,7 +47,11 @@ namespace SkipSelect.MainCode.UI
                     "SkipSelect: MyState",
                     delegate
                     {
-                        userInterface?.Draw(Main.spriteBatch, new GameTime());
+                        Config config = ModContent.GetInstance<Config>();
+                        if (config.EnableRefresh)
+                        {
+                            userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw
+                        }
                         return true;
                     },
                     InterfaceScaleType.UI));

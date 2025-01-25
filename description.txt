@@ -3,3 +3,8 @@ Tired of having to reload mods and then manually select and load a player and wo
 This mod adds the option to automatically load into a world when mods are reloaded from the mod menu.
 
 This mod selects the first player and world in the list, so make sure the player and world you want to load into are at the top of the list.
+
+~
+
+v0.2:
+- Added Refresh button in-game which simply Quits a world and navigates to Mod Sources menu.

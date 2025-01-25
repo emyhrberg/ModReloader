@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using SkipSelect.MainCode.Other;
 using Terraria;
 using Terraria.GameContent.UI.States;
@@ -20,8 +21,11 @@ namespace SkipSelect
         // --------------------------------------------------------------------
         public override void Load()
         {
-            var config = ModContent.GetInstance<Config>();
+            startMPorSP();
+        }
 
+        private void startMPorSP()
+        {
             // Get the OnSuccessfulLoad field using reflection
             FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -31,18 +35,15 @@ namespace SkipSelect
             if (onSuccessfulLoadField != null)
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
-
+                var config = ModContent.GetInstance<Config>();
                 if (config.EnableSingleplayer)
                 {
-                    // Hook into OnSuccessfulLoad to enter single-player world
                     onSuccessfulLoad += EnterSingleplayerWorld;
                 }
                 else if (config.EnableMultiplayer)
                 {
-                    // Hook into OnSuccessfulLoad to enter multiplayer world
-                    onSuccessfulLoad += EnterMultiplayerWorld;
+                    //onSuccessfulLoad += EnterMultiplayerWorld;
                 }
-
                 // Set the modified delegate back to the field
                 onSuccessfulLoadField.SetValue(null, onSuccessfulLoad);
             }
@@ -65,7 +66,7 @@ namespace SkipSelect
         // --------------------------------------------------------------------
         // MULTIPLAYER
         // --------------------------------------------------------------------
-        private void EnterMultiplayerWorld()
+        private async void EnterMultiplayerWorld()
         {
             Logger.Info("EnterMultiplayerWorld() called!");
 
@@ -74,20 +75,94 @@ namespace SkipSelect
             if (Main.PlayerList.Count == 0 || Main.WorldList.Count == 0)
                 throw new Exception("No players or worlds found.");
 
-            // Get the first player and world
+            // Get the first player and a favorite world
             var player = Main.PlayerList[0];
-            var world = Main.WorldList[0];
+            List<WorldFileData> favoriteWorldsNonJourney = Main.WorldList.Where(p => p.IsFavorite).ToList();
+            if (favoriteWorldsNonJourney.Count == 0)
+            {
+                Logger.Error("No favorite worlds found!");
+                throw new Exception("No favorite worlds found.");
+            }
+            var world = favoriteWorldsNonJourney[0];
 
-            Logger.Info($"Starting game with Player: {player.Name}{player.Player.difficulty}, World: {world.Name}{world.CreationTime}");
+            Logger.Info($"Starting game with Player: {player.Name} (Difficulty: {player.Player.difficulty}), World: {world.Name} (Created: {world.CreationTime})");
 
             Main.SelectPlayer(player);
+            Main.ActiveWorldFileData = world;
 
+            // Set global flags for server mode
+            Main.netMode = NetmodeID.Server;
+            Netplay.ServerPassword = "";
+
+            // It is common for server mode to set the active player index to 255
+            Main.myPlayer = 255;
+            // And also set an appropriate menu mode (often 14 for dedicated server)
+            Main.menuMode = 14;
+
+            // Debug info before starting
+            Logger.Info($"Active World: {Main.ActiveWorldFileData?.Path}");
+            Logger.Info($"Main netmode: {Main.netMode}, Clients count: {Netplay.Clients.Count()}");
+            Logger.Info($"TCP Listener before init: {(Netplay.TcpListener != null ? "Initialized" : "Null")}");
+            Logger.Info($"Netmode: {Main.netMode}");
+
+            // Ensure disconnect flag is false
+            Netplay.Disconnect = false;
+
+            // Call Netplay.Initialize() to set up internal buffers; this should be called early
+            Logger.Info("Init begin! ");
+            Netplay.Initialize();
+            Logger.Info("Init success! ");
+
+            Logger.Info($"TCP Listener after init: {(Netplay.TcpListener != null ? "Initialized" : "Null")}");
+            Logger.Info($"Netmode: {Main.netMode}");
+
+            Logger.Info("Start server in 3 seconds!");
+            await Task.Delay(3000);
+            Logger.Info("Start server now!");
+
+            try
+            {
+                // Call StartServer(), which should call InitializeServer() internally
+                Netplay.StartServer();
+                Logger.Info("Netplay.StartServer() called successfully.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Exception during Netplay.StartServer(): " + ex);
+            }
         }
+        private void CallInitializeServer()
+            {
+                try
+                {
+                    // Get the type of Netplay
+                    Type netplayType = typeof(Netplay);
 
-        // --------------------------------------------------------------------
-        // SINGLEPLAYER
-        // --------------------------------------------------------------------
-        private void EnterSingleplayerWorld()
+                    // Get the private static InitializeServer method
+                    MethodInfo initializeServerMethod = netplayType.GetMethod("InitializeServer", BindingFlags.NonPublic | BindingFlags.Static);
+
+                    if (initializeServerMethod != null)
+                    {
+                        // Invoke the method
+                        initializeServerMethod.Invoke(null, null); // Static method, so pass 'null' for the instance
+                        Logger.Info("InitializeServer successfully invoked.");
+                    }
+                    else
+                    {
+                        Logger.Error("Could not find InitializeServer method.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error($"Error invoking InitializeServer: {ex.Message}\n{ex.StackTrace}");
+                }
+            }
+
+
+    // --------------------------------------------------------------------
+    // SINGLEPLAYER
+    // --------------------------------------------------------------------
+    private void EnterSingleplayerWorld()
         {
             Logger.Info("EnterSingleplayerWorld() called!");
 
@@ -179,6 +254,14 @@ namespace SkipSelect
         {
             Main.SelectPlayer(player);
             Logger.Info($"Starting game with Player: {player.Name}, World: {world.Name}");
+            Main.ActiveWorldFileData = world;
+            // Ensure the world's file path is valid
+            if (string.IsNullOrEmpty(world.Path))
+            {
+                Logger.Error($"World {world.Name} has an invalid or null path.");
+                throw new ArgumentNullException(nameof(world.Path), "World path cannot be null or empty.");
+            }
+            // Play the selected world
             WorldGen.playWorld();
         }
 

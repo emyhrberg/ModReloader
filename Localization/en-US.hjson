@@ -28,6 +28,9 @@ Mods: {
 					SkipSelect: Skip Select Header
 					SinglePlayerSettings: Single Player Settings Header
 					MultiplayerSettings: Multiplayer Settings Header
+					SP/MP: S P/ M P Header
+					Other: Other Header
+					Refresh: Refresh Header
 				}
 
 				EnableAutoLoad: {
@@ -53,6 +56,11 @@ Mods: {
 				WaitingTime: {
 					Label: Waiting Time (Navigation Delay in ms)
 					Tooltip: Set the waiting time before navigating from Main Menu to Mod Sources
+				}
+
+				SaveWorld: {
+					Label: Save World
+					Tooltip: Save world before going to mod menu.
 				}
 			}
 		}
