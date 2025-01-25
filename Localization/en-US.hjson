@@ -1,51 +1,20 @@
 Mods: {
 	SkipSelect: {
-		Config: {
-			AutoLoad.Header: Auto Load Settings
-
-			EnableAutoLoad: {
-				Label: Enable Auto Load
-				Tooltip: If enabled, the mod will automatically load the first player and world.
-			}
-		}
-
 		Configs: {
-			SkipSelectConfig: {
-				DisplayName: Skip Select Config
-				Headers.AutoLoadingSettings: Auto Loading Settings Header
-
-				EnableAutoLoad: {
-					Label: EnableAutoLoad
-					Tooltip: Automatically loads the first player and world upon game start. Disable this to use the normal menu.
-				}
-			}
-
 			Config: {
-				DisplayName: Config
-
-				Headers: {
-					AutoLoadingSettings: Auto Loading Settings Header
-					SkipSelect: Skip Select Header
-					SinglePlayerSettings: Single Player Settings Header
-					MultiplayerSettings: Multiplayer Settings Header
-					SP/MP: S P/ M P Header
-					Other: Other Header
-					Refresh: Refresh Header
-				}
-
-				EnableAutoLoad: {
-					Label: EnableAutoLoad
-					Tooltip: Automatically loads the first player and world upon game start. Disable this to use the normal menu.
-				}
-
 				EnableSingleplayer: {
-					Label: Enable Single Player Auto-Load
+					Label: Enable Singleplayer
 					Tooltip: Automatically loads the first player and world in singleplayer mode upon reloading mods.
 				}
 
 				EnableMultiplayer: {
-					Label: Enable Multiplayer Auto-Load
-					Tooltip: Automatically loads the first player and world in multiplayer mode upon reloading mods.
+					Label: Enable Multiplayer
+					Tooltip: Note: Does NOTHING. Its too hard to create a server programmatically rn.
+				}
+
+				Headers: {
+					Refresh: Refresh Header
+					Singleplayer&Multiplayer: Singleplayer& Multiplayer Header
 				}
 
 				EnableRefresh: {
@@ -54,15 +23,19 @@ Mods: {
 				}
 
 				WaitingTime: {
-					Label: Waiting Time (Navigation Delay in ms)
-					Tooltip: Set the waiting time before navigating from Main Menu to Mod Sources
+					Label: Waiting Time
+					Tooltip: Set the waiting time before navigating, recommend 1000ms.
 				}
 
 				SaveWorld: {
 					Label: Save World
 					Tooltip: Save world before going to mod menu.
 				}
+
+				DisplayName: Config
 			}
 		}
+
+		"Keybinds.Toggle God Mode.DisplayName": Toggle  God  Mode
 	}
 }

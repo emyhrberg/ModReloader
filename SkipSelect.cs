@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using SkipSelect.MainCode.Other;
+using SkipSelect.Core.System;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
@@ -132,37 +132,37 @@ namespace SkipSelect
             }
         }
         private void CallInitializeServer()
+        {
+            try
             {
-                try
+                // Get the type of Netplay
+                Type netplayType = typeof(Netplay);
+
+                // Get the private static InitializeServer method
+                MethodInfo initializeServerMethod = netplayType.GetMethod("InitializeServer", BindingFlags.NonPublic | BindingFlags.Static);
+
+                if (initializeServerMethod != null)
                 {
-                    // Get the type of Netplay
-                    Type netplayType = typeof(Netplay);
-
-                    // Get the private static InitializeServer method
-                    MethodInfo initializeServerMethod = netplayType.GetMethod("InitializeServer", BindingFlags.NonPublic | BindingFlags.Static);
-
-                    if (initializeServerMethod != null)
-                    {
-                        // Invoke the method
-                        initializeServerMethod.Invoke(null, null); // Static method, so pass 'null' for the instance
-                        Logger.Info("InitializeServer successfully invoked.");
-                    }
-                    else
-                    {
-                        Logger.Error("Could not find InitializeServer method.");
-                    }
+                    // Invoke the method
+                    initializeServerMethod.Invoke(null, null); // Static method, so pass 'null' for the instance
+                    Logger.Info("InitializeServer successfully invoked.");
                 }
-                catch (Exception ex)
+                else
                 {
-                    Logger.Error($"Error invoking InitializeServer: {ex.Message}\n{ex.StackTrace}");
+                    Logger.Error("Could not find InitializeServer method.");
                 }
             }
+            catch (Exception ex)
+            {
+                Logger.Error($"Error invoking InitializeServer: {ex.Message}\n{ex.StackTrace}");
+            }
+        }
 
 
-    // --------------------------------------------------------------------
-    // SINGLEPLAYER
-    // --------------------------------------------------------------------
-    private void EnterSingleplayerWorld()
+        // --------------------------------------------------------------------
+        // SINGLEPLAYER
+        // --------------------------------------------------------------------
+        private void EnterSingleplayerWorld()
         {
             Logger.Info("EnterSingleplayerWorld() called!");
 

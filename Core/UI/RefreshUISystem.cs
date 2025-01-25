@@ -3,14 +3,14 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using System.Collections.Generic;
 using Terraria;
-using SkipSelect.MainCode.Other;
+using SkipSelect.Core.System;
 
-namespace SkipSelect.MainCode.UI
+namespace SkipSelect.Core.UI
 {
-    public class MySystem : ModSystem
+    public class RefreshUISystem : ModSystem
     {
         private UserInterface userInterface;
-        private MyState myState;
+        private RefreshUIState myState;
 
         public override void Load()
         {
@@ -20,7 +20,7 @@ namespace SkipSelect.MainCode.UI
                 if (config.EnableRefresh)
                 {
                     userInterface = new UserInterface();
-                    myState = new MyState();
+                    myState = new RefreshUIState();
                     userInterface.SetState(myState);
                 }
             }
@@ -28,7 +28,6 @@ namespace SkipSelect.MainCode.UI
 
         public override void UpdateUI(GameTime gameTime)
         {
-
             // check if toggle
             Config c = ModContent.GetInstance<Config>();
             if (c.EnableRefresh)

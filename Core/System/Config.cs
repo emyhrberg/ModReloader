@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-namespace SkipSelect.MainCode.Other
+namespace SkipSelect.Core.System
 {
     public class Config : ModConfig
     {
@@ -9,12 +9,13 @@ namespace SkipSelect.MainCode.Other
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
         // -------------------------------------------------------------
-        [Header("SP/MP")]
-        [Label("Efficiency Selection")]
+        [Header("Singleplayer&Multiplayer")]
+        [Label("Enable Singleplayer")]
         [Tooltip("Automatically loads the first player and world in singleplayer mode upon reloading mods.")]
         [DefaultValue(true)] // Default value is true.
         public bool EnableSingleplayer;
 
+        [Label("Enable Multiplayer")]
         [Tooltip("Note: Does NOTHING. Its too hard to create a server programmatically rn.")]
         [DefaultValue(false)] // Default value is true.
         public bool EnableMultiplayer;
@@ -27,7 +28,7 @@ namespace SkipSelect.MainCode.Other
 
         [Tooltip("Set the waiting time before navigating, recommend 1000ms.")]
         [DefaultValue(1000)] // Default value is true.
-        [Range(0,5000)] // we have to change this to 5000 or something, otherwise default is max 100
+        [Range(0, 5000)] // we have to change this to 5000 or something, otherwise default is max 100
         public int WaitingTime;
 
         [Tooltip("Save world before going to mod menu.")]

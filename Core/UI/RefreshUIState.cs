@@ -8,17 +8,16 @@ using Terraria.ModLoader;
 using System.Reflection;
 using System;
 using System.Threading.Tasks;
-using SkipSelect.MainCode.Other;
-using Microsoft.Xna.Framework;
+using SkipSelect.Core.System;
 
-namespace SkipSelect.MainCode.UI
+namespace SkipSelect.Core.UI
 {
-    public class MyState : UIState
+    public class RefreshUIState : UIState
     {
 
         // variables
         private bool IsRefreshButtonVisible = true;
-        MyHoverButton buttonRefresh;
+        RefreshUIHoverButton buttonRefresh;
 
         public override void OnInitialize()
         {
@@ -30,12 +29,12 @@ namespace SkipSelect.MainCode.UI
             Config config = ModContent.GetInstance<Config>();
             if (config.EnableRefresh)
             {
-                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SkipSelect/MainCode/Assets/ButtonRefresh");
-                MyHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
+                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SkipSelect/Core/Assets/ButtonRefresh");
+                RefreshUIHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
                 buttonRefresh.Width.Set(100f, 0f); // only change the size of the clickable area, not actual size of the button
                 buttonRefresh.Height.Set(100f, 0f);
-                buttonRefresh.Top.Set(50f, 0f);
-                buttonRefresh.HAlign = 0.3f;
+                buttonRefresh.HAlign = 0.5f; // slightly to the right
+                buttonRefresh.VAlign = 0.7f; // bottom of the screen
                 buttonRefresh.OnLeftClick += RefreshButtonClicked;
                 Append(buttonRefresh);
             }
@@ -57,7 +56,7 @@ namespace SkipSelect.MainCode.UI
 
         private async void RefreshButtonClicked(UIMouseEvent evt, UIElement listeningElement)
         {
-            SoundEngine.PlaySound(SoundID.MenuClose);
+            // SoundEngine.PlaySound(SoundID.MenuClose);
 
             // 1) Save and quit or just quit.
             Config c = ModContent.GetInstance<Config>();
@@ -88,36 +87,18 @@ namespace SkipSelect.MainCode.UI
                 Assembly tModLoaderAssembly = typeof(Main).Assembly;
                 Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
 
-                if (interfaceType == null)
-                {
-                    ModContent.GetInstance<SkipSelect>().Logger.Warn("Interface class not found.");
-                    return null;
-                }
-
                 // Get the modSources instance (Develop Mods menu)
                 FieldInfo modSourcesField = interfaceType.GetField("modSources", BindingFlags.NonPublic | BindingFlags.Static);
                 object modSourcesInstance = modSourcesField?.GetValue(null);
-
-                if (modSourcesInstance == null)
-                {
-                    ModContent.GetInstance<SkipSelect>().Logger.Warn("modSources instance not found.");
-                    return null;
-                }
 
                 // Get the modSourcesID
                 FieldInfo modSourcesIDField = interfaceType.GetField("modSourcesID", BindingFlags.NonPublic | BindingFlags.Static);
                 int modSourcesID = (int)(modSourcesIDField?.GetValue(null) ?? -1);
 
-                if (modSourcesID == -1)
-                {
-                    ModContent.GetInstance<SkipSelect>().Logger.Warn("modSourcesID not found.");
-                    return null;
-                }
-
                 // Set Main.menuMode to modSourcesID
                 Main.menuMode = modSourcesID;
 
-                ModContent.GetInstance<SkipSelect>().Logger.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
+                ModContent.GetInstance<SkipSelect>().Logger.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}). | modSourcesInstance: {modSourcesInstance} (type: {modSourcesInstance.GetType()})");
 
                 return modSourcesInstance;
             }

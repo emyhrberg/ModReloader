@@ -3,13 +3,13 @@ using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 
-namespace SkipSelect.MainCode.UI
+namespace SkipSelect.Core.UI
 {
-    internal class MyHoverButton : UIImageButton
+    internal class RefreshUIHoverButton : UIImageButton
     {
         private readonly string hoverText;
 
-        public MyHoverButton(Asset<Texture2D> texture, string hoverText) : base(texture)
+        public RefreshUIHoverButton(Asset<Texture2D> texture, string hoverText) : base(texture)
         {
             this.hoverText = hoverText;
         }
