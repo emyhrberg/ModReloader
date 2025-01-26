@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 
 namespace SkipSelect
 {
+    [Autoload(Side = ModSide.Client)]
     public class SkipSelect : Mod
     {
         private MethodInfo canWorldBePlayedMethod;
