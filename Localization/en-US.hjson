@@ -15,6 +15,7 @@ Mods: {
 				Headers: {
 					Refresh: Refresh Header
 					Singleplayer&Multiplayer: Singleplayer& Multiplayer Header
+					Misc: Misc Header
 				}
 
 				EnableRefresh: {
@@ -33,6 +34,11 @@ Mods: {
 				}
 
 				DisplayName: Config
+
+				ShowHitboxes: {
+					Label: Show Hitboxes
+					Tooltip: Show hitboxes of players and NPCs.
+				}
 			}
 		}
 

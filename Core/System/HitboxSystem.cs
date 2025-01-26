@@ -10,6 +10,9 @@ namespace SkipSelect.Core.System
     {
         public override void PostDrawInterface(SpriteBatch spriteBatch)
         {
+            if (!ModContent.GetInstance<Config>().ShowHitboxes)
+                return;
+
             drawPlayerHitbox(spriteBatch);
             drawNPCs(spriteBatch);
         }

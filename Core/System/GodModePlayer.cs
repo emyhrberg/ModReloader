@@ -1,12 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Text;
+using Microsoft.Xna.Framework;
+using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace SkipSelect.Core.System
 {
     public class GodModePlayer : ModPlayer
     {
-        public bool IsGodModeEnabled { get; private set; } = true;
+        public bool IsGodModeEnabled { get; private set; } = false;
 
         public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
         {
@@ -26,6 +29,15 @@ namespace SkipSelect.Core.System
             IsGodModeEnabled = !IsGodModeEnabled;
             string status = IsGodModeEnabled ? "Enabled" : "Disabled";
             Main.NewText($"God Mode {status}", IsGodModeEnabled ? Color.Green : Color.Red);
+        }
+
+        // draw glow effect
+        public override void PostUpdate()
+        {
+            if (IsGodModeEnabled)
+            {
+                Lighting.AddLight(Main.LocalPlayer.Center, Color.AliceBlue.ToVector3() * 1f);
+            }
         }
     }
 }

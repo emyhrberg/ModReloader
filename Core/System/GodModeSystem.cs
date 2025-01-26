@@ -32,9 +32,9 @@ namespace SkipSelect.Core.System
             }
         }
 
-        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        public override void PostDrawInterface(SpriteBatch sb)
         {
-            // drawGodText(spriteBatch);
+            drawGodText(sb);
         }
 
         private void drawGodText(SpriteBatch spriteBatch)
