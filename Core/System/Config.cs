@@ -12,7 +12,7 @@ namespace SkipSelect.Core.System
         [Header("Singleplayer&Multiplayer")]
         [Label("Enable Singleplayer")]
         [Tooltip("Automatically loads the first player and world in singleplayer mode upon reloading mods.")]
-        [DefaultValue(true)] // Default value is true.
+        [DefaultValue(false)] // Default value is true.
         public bool EnableSingleplayer;
 
         [Label("Enable Multiplayer")]
