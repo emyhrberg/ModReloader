@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace SkipSelect.Core.System
+namespace SquidTestingMod.Core.System
 {
     public class GodModeSystem : ModSystem
     {

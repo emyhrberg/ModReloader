@@ -8,9 +8,9 @@ using Terraria.ModLoader;
 using System.Reflection;
 using System;
 using System.Threading.Tasks;
-using SkipSelect.Core.System;
+using SquidTestingMod.Core.System;
 
-namespace SkipSelect.Core.UI
+namespace SquidTestingMod.Core.UI
 {
     public class RefreshUIState : UIState
     {
@@ -29,7 +29,7 @@ namespace SkipSelect.Core.UI
             Config config = ModContent.GetInstance<Config>();
             if (config.EnableRefresh)
             {
-                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SkipSelect/Core/Assets/ButtonRefresh");
+                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SquidTestingMod/Core/Assets/ButtonRefresh");
                 RefreshUIHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
                 buttonRefresh.Width.Set(100f, 0f); // only change the size of the clickable area, not actual size of the button
                 buttonRefresh.Height.Set(100f, 0f);
@@ -62,14 +62,14 @@ namespace SkipSelect.Core.UI
             Config c = ModContent.GetInstance<Config>();
             if (c.SaveWorld)
             {
-                ModContent.GetInstance<SkipSelect>().Logger.Warn("Saving and quitting...");
+                ModContent.GetInstance<SquidTestingMod>().Logger.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
                 int wait = c.WaitingTime; // 1000 = 1 second
                 await Task.Delay(wait);
             }
             else
             {
-                ModContent.GetInstance<SkipSelect>().Logger.Warn("Just quitting...");
+                ModContent.GetInstance<SquidTestingMod>().Logger.Warn("Just quitting...");
                 WorldGen.JustQuit();
             }
 
@@ -81,7 +81,7 @@ namespace SkipSelect.Core.UI
         {
             try
             {
-                ModContent.GetInstance<SkipSelect>().Logger.Warn("Attempting to navigate to Develop Mods...");
+                ModContent.GetInstance<SquidTestingMod>().Logger.Warn("Attempting to navigate to Develop Mods...");
 
                 // Access the Interface type
                 Assembly tModLoaderAssembly = typeof(Main).Assembly;
@@ -98,13 +98,13 @@ namespace SkipSelect.Core.UI
                 // Set Main.menuMode to modSourcesID
                 Main.menuMode = modSourcesID;
 
-                ModContent.GetInstance<SkipSelect>().Logger.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}). | modSourcesInstance: {modSourcesInstance} (type: {modSourcesInstance.GetType()})");
+                ModContent.GetInstance<SquidTestingMod>().Logger.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}). | modSourcesInstance: {modSourcesInstance} (type: {modSourcesInstance.GetType()})");
 
                 return modSourcesInstance;
             }
             catch (Exception ex)
             {
-                ModContent.GetInstance<SkipSelect>().Logger.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
+                ModContent.GetInstance<SquidTestingMod>().Logger.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
                 return null;
             }
         }

@@ -3,9 +3,9 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using System.Collections.Generic;
 using Terraria;
-using SkipSelect.Core.System;
+using SquidTestingMod.Core.System;
 
-namespace SkipSelect.Core.UI
+namespace SquidTestingMod.Core.UI
 {
     public class RefreshUISystem : ModSystem
     {
@@ -43,7 +43,7 @@ namespace SkipSelect.Core.UI
             if (mouseTextIndex != -1)
             {
                 layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-                    "SkipSelect: MyState",
+                    "SquidTestingMod: MyState",
                     delegate
                     {
                         Config config = ModContent.GetInstance<Config>();

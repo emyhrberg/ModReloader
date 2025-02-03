@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using SkipSelect.Core.System;
+using SquidTestingMod.Core.System;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 
-namespace SkipSelect
+namespace SquidTestingMod
 {
     [Autoload(Side = ModSide.Client)]
-    public class SkipSelect : Mod
+    public class SquidTestingMod : Mod
     {
         private MethodInfo canWorldBePlayedMethod;
 

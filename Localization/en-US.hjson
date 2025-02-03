@@ -1,5 +1,5 @@
 Mods: {
-	SkipSelect: {
+	SquidTestingMod: {
 		Configs: {
 			Config: {
 				EnableSingleplayer: {

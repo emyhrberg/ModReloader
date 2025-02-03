@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-namespace SkipSelect.Core.System
+namespace SquidTestingMod.Core.System
 {
     public class Config : ModConfig
     {
@@ -28,7 +28,7 @@ namespace SkipSelect.Core.System
         [DefaultValue(true)] // Default value is true.
         public bool EnableRefresh;
 
-        [Tooltip("Set the waiting time before navigating, recommend 1000ms.")]
+        [Tooltip("Set the waiting time before navigating, recommend at least 1000ms, or 1500ms.")]
         [Label("Waiting Time")]
         [DefaultValue(1000)] // Default value is true.
         [Range(0, 5000)] // we have to change this to 5000 or something, otherwise default is max 100

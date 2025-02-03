@@ -1,4 +1,4 @@
-# SkipSelect
+# SquidTestingMod
 
 <div align="center">
     <img src="https://github.com/user-attachments/assets/3ca3871c-5391-4d60-b740-842480e7230b" alt="Logo" width="80" height="80">
@@ -7,7 +7,7 @@
   <h3 align="center">Terraria mod</h3>
 
   <p align="center">
-    A skipselect to improve efficiency.
+    A SquidTestingMod to improve efficiency.
   </p>
 </div>
 

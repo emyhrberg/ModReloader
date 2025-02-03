@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace SkipSelect.Core.System
+namespace SquidTestingMod.Core.System
 {
     public class HitboxSystem : ModSystem
     {
@@ -34,7 +34,7 @@ namespace SkipSelect.Core.System
                 y -= h + h / 4;
 
                 // Draw red rectangle (main hitbox)
-                Rectangle redRect = new Rectangle(x, y, w, h);
+                Rectangle redRect = new(x, y, w, h);
                 Color fillColor = Color.Red * 0.3f;
                 spriteBatch.Draw(pixel, redRect, fillColor);
 

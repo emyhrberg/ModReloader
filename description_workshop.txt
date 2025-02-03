@@ -1,0 +1,9 @@
+This mod introduces some new functionality that makes modding faster, more efficient, and simpler.
+
+For example, when you are building your mod, are you tired of having to exit the world, navigate menus, reload mods and then select a player and world? This is simplified to a refresh button in-game which does all this for *faster refresh*!
+
+List of functionality:
+
+1. God Mode (toggle with H)
+2. Spawn Boss On Top (will always spawn every boss on top of your position, instead of outside the screen)
+3. 

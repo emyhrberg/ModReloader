@@ -4,7 +4,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SkipSelect.Core.NPCs
+namespace SquidTestingMod.Core.NPCs
 {
     public class BossSpawnGlobalNPC : GlobalNPC
     {
