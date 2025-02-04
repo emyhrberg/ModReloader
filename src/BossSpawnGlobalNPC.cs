@@ -1,11 +1,11 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Core.NPCs
+namespace SquidTestingMod.src
 {
+    [Autoload(Side = ModSide.Client)]
     public class BossSpawnGlobalNPC : GlobalNPC
     {
         // Ensure each NPC gets its own instance of this class
@@ -13,8 +13,8 @@ namespace SquidTestingMod.Core.NPCs
 
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
-            // Only modify spawn positions on the server or single-player
-            if (Main.netMode == NetmodeID.MultiplayerClient)
+            Config c = ModContent.GetInstance<Config>();
+            if (!c.AlwaysSpawnBossOnTopOfPlayer)
                 return;
 
             // Check if the spawned NPC is a boss
@@ -35,13 +35,13 @@ namespace SquidTestingMod.Core.NPCs
                     npc.Center = spawnPosition;
 
                     // Sync the NPC's new position with all clients
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
-                    }
+                    // if (Main.netMode == NetmodeID.Server)
+                    // {
+                    //     NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
+                    // }
 
                     // Optional: Log the spawn modification for debugging
-                    // Mod.Logger.Info($"Spawned {npc.FullName} at {npc.Center}");
+                    Mod.Logger.Info($"Spawned {npc.FullName} at {npc.Center}");
                 }
             }
         }
@@ -76,10 +76,8 @@ namespace SquidTestingMod.Core.NPCs
 
         private bool IsBoss(NPC npc)
         {
-            // Check if the NPC is a boss by comparing its type to known boss types
             return npc.boss;
         }
 
-        // Other methods (ClampPosition, GetClosestPlayer, etc.) remain unchanged
     }
 }

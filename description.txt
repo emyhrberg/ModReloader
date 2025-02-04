@@ -1,0 +1,4 @@
+List of functionality:
+
+- Refresh button to quickly navigate to Mod Menu.
+- After reloading mods, instantly load into the first compatible world.

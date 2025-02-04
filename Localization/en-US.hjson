@@ -1,47 +1,52 @@
 Mods: {
 	SquidTestingMod: {
+		"Keybinds.Toggle God Mode.DisplayName": Toggle  God  Mode
+
 		Configs: {
 			Config: {
-				EnableSingleplayer: {
-					Label: Enable Singleplayer
-					Tooltip: Automatically loads the first player and world in singleplayer mode upon reloading mods.
-				}
-
-				EnableMultiplayer: {
-					Label: Enable Multiplayer
-					Tooltip: Note: Does NOTHING. Its too hard to create a server programmatically rn.
-				}
+				DisplayName: Config
 
 				Headers: {
-					Refresh: Refresh Header
-					Singleplayer&Multiplayer: Singleplayer& Multiplayer Header
-					Misc: Misc Header
+					Autoload: Autoload
+					Refresh: Refresh
+					Misc: Misc
 				}
 
-				EnableRefresh: {
-					Label: Enable Refresh
-					Tooltip: Enables a big refresh button to quickly navigate back to mods.
+				EnableRefreshButton: {
+					Label: Enable Refresh Button
+					Tooltip: This will put a refresh button in the middle of the screen.
 				}
 
 				WaitingTime: {
 					Label: Waiting Time
-					Tooltip: Set the waiting time before navigating, recommend 1000ms.
+					Tooltip: After you press refresh button, set the time to wait before navigating to mod menu.
 				}
 
 				SaveWorld: {
 					Label: Save World
-					Tooltip: Save world before going to mod menu.
+					Tooltip: ON: Save the world when exiting. OFF: Quit the world without saving.
 				}
-
-				DisplayName: Config
 
 				ShowHitboxes: {
 					Label: Show Hitboxes
-					Tooltip: Show hitboxes of players and NPCs.
+					Tooltip: Shows the hitboxes of your own player, town NPCs, enemy NPCs, and enemy bosses.
+				}
+
+				StartInGodMode: {
+					Label: Start In God Mode
+					Tooltip: When you enter the world, choose whether to always start in god mode or not.
+				}
+
+				AutoloadWorld: {
+					Label: Autoload World
+					Tooltip: After mods are reloaded, this option can instantly load into the first compatible player and world in SP or MP.
+				}
+
+				AlwaysSpawnBossOnTopOfPlayer: {
+					Label: Always Spawn Boss On Top Of Player
+					Tooltip: Bosses will spawn above the player, instead of outside the screen as usual.
 				}
 			}
 		}
-
-		"Keybinds.Toggle God Mode.DisplayName": Toggle  God  Mode
 	}
 }

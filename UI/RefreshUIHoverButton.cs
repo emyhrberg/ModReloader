@@ -3,7 +3,7 @@ using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 
-namespace SquidTestingMod.Core.UI
+namespace SquidTestingMod.UI
 {
     internal class RefreshUIHoverButton : UIImageButton
     {

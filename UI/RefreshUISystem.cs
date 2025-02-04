@@ -3,9 +3,9 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using System.Collections.Generic;
 using Terraria;
-using SquidTestingMod.Core.System;
+using SquidTestingMod.src;
 
-namespace SquidTestingMod.Core.UI
+namespace SquidTestingMod.UI
 {
     public class RefreshUISystem : ModSystem
     {
@@ -17,7 +17,7 @@ namespace SquidTestingMod.Core.UI
             if (!Main.dedServ) // ensure that this is only run on the client
             {
                 var config = ModContent.GetInstance<Config>();
-                if (config.EnableRefresh)
+                if (config.EnableRefreshButton)
                 {
                     userInterface = new UserInterface();
                     myState = new RefreshUIState();
@@ -30,7 +30,7 @@ namespace SquidTestingMod.Core.UI
         {
             // check if toggle
             Config c = ModContent.GetInstance<Config>();
-            if (c.EnableRefresh)
+            if (c.EnableRefreshButton)
             {
                 userInterface?.Update(gameTime);
             }
@@ -47,7 +47,7 @@ namespace SquidTestingMod.Core.UI
                     delegate
                     {
                         Config config = ModContent.GetInstance<Config>();
-                        if (config.EnableRefresh)
+                        if (config.EnableRefreshButton)
                         {
                             userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw
                         }

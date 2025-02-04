@@ -1,5 +1,5 @@
 displayName = SquidTestingMod
 author = Erky
-version = 0.2.1
-side = both
+version = 0.1
+side = client
 hideCode = true

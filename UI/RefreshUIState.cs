@@ -8,9 +8,10 @@ using Terraria.ModLoader;
 using System.Reflection;
 using System;
 using System.Threading.Tasks;
-using SquidTestingMod.Core.System;
+using SquidTestingMod.src;
+using Terraria.GameContent.UI.Elements;
 
-namespace SquidTestingMod.Core.UI
+namespace SquidTestingMod.UI
 {
     public class RefreshUIState : UIState
     {
@@ -19,19 +20,21 @@ namespace SquidTestingMod.Core.UI
         private bool IsRefreshButtonVisible = true;
         RefreshUIHoverButton buttonRefresh;
 
+        Asset<Texture2D> playerGlowTexture;
+
         public override void OnInitialize()
         {
-            initButton();
+            InitButton();
         }
 
-        private void initButton()
+        private void InitButton()
         {
             Config config = ModContent.GetInstance<Config>();
-            if (config.EnableRefresh)
+            if (config.EnableRefreshButton)
             {
-                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SquidTestingMod/Core/Assets/ButtonRefresh");
+                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SquidTestingMod/Assets/ButtonRefresh");
                 RefreshUIHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
-                buttonRefresh.Width.Set(100f, 0f); // only change the size of the clickable area, not actual size of the button
+                buttonRefresh.Width.Set(100f, 0f); // only changes the size of the clickable area, not actual size of the button
                 buttonRefresh.Height.Set(100f, 0f);
                 buttonRefresh.HAlign = 0.5f; // slightly to the right
                 buttonRefresh.VAlign = 0.7f; // bottom of the screen
