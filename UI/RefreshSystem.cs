@@ -7,10 +7,10 @@ using SquidTestingMod.src;
 
 namespace SquidTestingMod.UI
 {
-    public class RefreshUISystem : ModSystem
+    public class RefreshSystem : ModSystem
     {
         private UserInterface userInterface;
-        private RefreshUIState myState;
+        private RefreshState myState;
 
         public override void Load()
         {
@@ -20,7 +20,7 @@ namespace SquidTestingMod.UI
                 if (config.EnableRefreshButton)
                 {
                     userInterface = new UserInterface();
-                    myState = new RefreshUIState();
+                    myState = new RefreshState();
                     userInterface.SetState(myState);
                 }
             }

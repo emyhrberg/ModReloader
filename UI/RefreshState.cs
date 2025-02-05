@@ -9,14 +9,15 @@ using System.Threading.Tasks;
 using SquidTestingMod.src;
 using log4net.Core;
 using log4net;
+using Microsoft.Xna.Framework;
 
 namespace SquidTestingMod.UI
 {
-    public class RefreshUIState : UIState
+    public class RefreshState : UIState
     {
         // variables
         private bool IsRefreshButtonVisible = true;
-        RefreshUIHoverButton buttonRefresh;
+        private RefreshHoverButton buttonRefresh;
 
         // logger
         ILog logger;
@@ -32,8 +33,8 @@ namespace SquidTestingMod.UI
             Config config = ModContent.GetInstance<Config>();
             if (config.EnableRefreshButton)
             {
-                Asset<Texture2D> buttonRefreshTexture = ModContent.Request<Texture2D>("SquidTestingMod/Assets/ButtonRefresh");
-                RefreshUIHoverButton buttonRefresh = new(buttonRefreshTexture, "Refresh (Go to Develop Mods)");
+                Asset<Texture2D> buttonTexture = ModContent.Request<Texture2D>("SquidTestingMod/Assets/ButtonRefresh");
+                buttonRefresh = new(buttonTexture, "Refresh (Go to Develop Mods)");
                 buttonRefresh.Width.Set(100f, 0f); // only changes the size of the clickable area, not actual size of the button
                 buttonRefresh.Height.Set(100f, 0f);
                 buttonRefresh.HAlign = 0.5f; // slightly to the right
@@ -79,12 +80,7 @@ namespace SquidTestingMod.UI
             // 2) Navigate to Develop Mods
             object inst = NavigateToDevelopMods();
 
-            // await Task.Delay(5000);
-
             // 3) Click Build & Reload
-            // FindBuildReload(inst);
-            // await Task.Delay(5000);
-
             if (c.InvokeBuildAndReload)
             {
                 int wait2 = c.WaitingTime;
@@ -112,34 +108,6 @@ namespace SquidTestingMod.UI
             var method = modSourceItem.GetType().GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
             method.Invoke(modSourceItem, [null, null]);
         }
-
-        private void FindBuildReload(object inst)
-        {
-            // Find the Build + Reload button
-            var items = (System.Collections.IEnumerable)inst.GetType().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(inst);
-            object buildReloadButton = null;
-            foreach (var item in items)
-            {
-                if (item.GetType().Name == "UIModSourceItem")
-                {
-                    var children = (System.Collections.IEnumerable)item.GetType().GetProperty("Children", BindingFlags.Public | BindingFlags.Instance).GetValue(item);
-                    foreach (var child in children)
-                    {
-                        if (child.GetType().Name.Contains("UIAutoScaleTextTextPanel"))
-                        {
-                            if ((string)child.GetType().GetField("_text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(child) == "Build + Reload")
-                            {
-                                buildReloadButton = child;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (buildReloadButton != null) break;
-            }
-            logger.Info("Found 'Build + Reload' button.");
-        }
-
 
         private object NavigateToDevelopMods()
         {
@@ -172,7 +140,5 @@ namespace SquidTestingMod.UI
                 return null;
             }
         }
-
-
     }
 }
