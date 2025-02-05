@@ -7,6 +7,8 @@ using System.Reflection;
 using System;
 using System.Threading.Tasks;
 using SquidTestingMod.src;
+using log4net.Core;
+using log4net;
 
 namespace SquidTestingMod.UI
 {
@@ -16,9 +18,13 @@ namespace SquidTestingMod.UI
         private bool IsRefreshButtonVisible = true;
         RefreshUIHoverButton buttonRefresh;
 
+        // logger
+        ILog logger;
+
         public override void OnInitialize()
         {
             InitButton();
+            logger = ModContent.GetInstance<SquidTestingMod>().Logger;
         }
 
         private void InitButton()
@@ -72,9 +78,70 @@ namespace SquidTestingMod.UI
 
             // 2) Navigate to Develop Mods
             object inst = NavigateToDevelopMods();
+
+            // await Task.Delay(5000);
+
+            // 3) Click Build & Reload
+            // FindBuildReload(inst);
+            // await Task.Delay(5000);
+
+            if (c.InvokeBuildAndReload)
+            {
+                int wait2 = c.WaitingTime;
+                await Task.Delay(wait2);
+                BuildReload(inst);
+            }
         }
 
-        private Object NavigateToDevelopMods()
+        private void BuildReload(object modSourcesInstance)
+        {
+            // Get the _items field from modSourcesInstance and take the first UIModSourceItem.
+            var items = (System.Collections.IEnumerable)modSourcesInstance
+                .GetType().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)
+                .GetValue(modSourcesInstance);
+            object modSourceItem = null;
+            foreach (var item in items)
+            {
+                if (item.GetType().Name == "UIModSourceItem")
+                {
+                    modSourceItem = item;
+                    break;
+                }
+            }
+            // Invoke the internal BuildAndReload method on the UIModSourceItem.
+            var method = modSourceItem.GetType().GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
+            method.Invoke(modSourceItem, [null, null]);
+        }
+
+        private void FindBuildReload(object inst)
+        {
+            // Find the Build + Reload button
+            var items = (System.Collections.IEnumerable)inst.GetType().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(inst);
+            object buildReloadButton = null;
+            foreach (var item in items)
+            {
+                if (item.GetType().Name == "UIModSourceItem")
+                {
+                    var children = (System.Collections.IEnumerable)item.GetType().GetProperty("Children", BindingFlags.Public | BindingFlags.Instance).GetValue(item);
+                    foreach (var child in children)
+                    {
+                        if (child.GetType().Name.Contains("UIAutoScaleTextTextPanel"))
+                        {
+                            if ((string)child.GetType().GetField("_text", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(child) == "Build + Reload")
+                            {
+                                buildReloadButton = child;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (buildReloadButton != null) break;
+            }
+            logger.Info("Found 'Build + Reload' button.");
+        }
+
+
+        private object NavigateToDevelopMods()
         {
             try
             {
@@ -105,5 +172,7 @@ namespace SquidTestingMod.UI
                 return null;
             }
         }
+
+
     }
 }

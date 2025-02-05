@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria.GameInput;
+using SquidTestingMod.src;
 
 namespace SquidTestingMod
 {
@@ -11,6 +12,13 @@ namespace SquidTestingMod
     {
         public static bool GodMode;
         private static ModKeybind ToggleGodModeKeybind;
+
+        public override void OnEnterWorld()
+        {
+            Config c = ModContent.GetInstance<Config>();
+            ModContent.GetInstance<SquidTestingMod>().Logger.Info("enter world godmode!" + c.StartInGodMode);
+            GodMode = c.StartInGodMode;
+        }
 
         public override void Load()
         {

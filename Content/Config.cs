@@ -26,6 +26,9 @@ namespace SquidTestingMod.src
         [DefaultValue(true)]
         public bool SaveWorld;
 
+        [DefaultValue(false)]
+        public bool InvokeBuildAndReload;
+
         [Header("Misc")]
         [DefaultValue(false)]
         public bool ShowHitboxes;
@@ -35,6 +38,5 @@ namespace SquidTestingMod.src
 
         [DefaultValue(false)]
         public bool AlwaysSpawnBossOnTopOfPlayer;
-
     }
 }
