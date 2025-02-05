@@ -25,7 +25,7 @@ namespace SquidTestingMod.UI
             // Toggle the panel's visibility flag.
             isPanelVisible = !isPanelVisible;
 
-            // Ensure the button is part of a UIState.
+            // Ensure the button is part of a UIState. (ButtonState in our case right now)
             if (Parent is not UIState state)
             {
                 logger.Warn("ItemsButton has no parent UIState!");

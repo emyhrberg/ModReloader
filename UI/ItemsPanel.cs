@@ -1,11 +1,8 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.ModLoader;
+using Terraria.GameContent.UI.Elements;
 using ReLogic.Content;
-using System.Linq;
-using Terraria.GameContent;
 
 namespace SquidTestingMod.UI
 {
@@ -13,88 +10,62 @@ namespace SquidTestingMod.UI
     {
         public ItemsPanel()
         {
-            // Initialize the panel.
             OnInitialize();
         }
 
         public override void OnInitialize()
         {
-            // Configure the panel.
-            SetPadding(10);
+            // Set up the main panel
+            SetPadding(0);
             Width.Set(300f, 0f);
             Height.Set(300f, 0f);
             HAlign = 0.5f;
             VAlign = 0.5f;
             BackgroundColor = new Color(63, 82, 151) * 0.8f;
 
-            // Create a UIList to hold rows.
+            int itemsPerRow = 5;
+            float itemSize = 50f;
+            int totalRows = 20; // 20 rows * 5 items = 100 panels
+
+            // Create a UIList to contain row panels (each row panel holds 5 items)
             UIList list = new UIList();
             list.Width.Set(0f, 1f);
             list.Height.Set(0f, 1f);
-            list.ListPadding = 5f;
+            list.ListPadding = 0;
             Append(list);
 
-            // Create and attach a scrollbar.
+            // Create and attach a scrollbar
             UIScrollbar scrollbar = new UIScrollbar();
             scrollbar.HAlign = 1f;
             scrollbar.Height.Set(0f, 1f);
             Append(scrollbar);
             list.SetScrollbar(scrollbar);
 
-            // We'll build the grid row‐by‐row.
-            int itemsPerRow = 5;
-            int currentItemInRow = 0;
-            UIPanel rowPanel = CreateNewRowPanel();
-
-            // Loop through all available item textures.
-            // (TextureAssets.Item is an array of Asset<Texture2D> for every vanilla item.)
-            for (int i = 1; i < TextureAssets.Item.Length; i++)
+            // Build rows manually without a separate row container class
+            for (int row = 0; row < totalRows; row++)
             {
-                Asset<Texture2D> texture = TextureAssets.Item[i];
-                if (texture == null)
-                    continue;
+                UIPanel rowPanel = new UIPanel();
+                rowPanel.SetPadding(0);
+                rowPanel.Width.Set(0f, 1f);
+                rowPanel.Height.Set(itemSize, 0f);
+                rowPanel.BackgroundColor = Color.Transparent;
+                rowPanel.BorderColor = Color.Transparent;
 
-                // Create an image button for this item.
-                UIImageButton button = new UIImageButton(texture);
-                button.Width.Set(50f, 0f);
-                button.Height.Set(50f, 0f);
-                // Manually position the button inside the row.
-                float spacing = 5f;
-                button.Left.Set((50f + spacing) * currentItemInRow, 0f);
-                // Optionally, you can attach click handlers to 'button' here.
-                rowPanel.Append(button);
-
-                currentItemInRow++;
-                // When we've added itemsPerRow buttons, add the row panel to the list.
-                if (currentItemInRow >= itemsPerRow)
+                for (int col = 0; col < itemsPerRow; col++)
                 {
-                    list.Add(rowPanel);
-                    // Reset for the next row.
-                    rowPanel = CreateNewRowPanel();
-                    currentItemInRow = 0;
+                    UIPanel itemPanel = new UIPanel();
+                    itemPanel.SetPadding(0);
+                    itemPanel.Width.Set(itemSize, 0f);
+                    itemPanel.Height.Set(itemSize, 0f);
+                    itemPanel.BackgroundColor = new Color(40, 33, 82); // blueish inventory-like color
+                    // Manually position each item in the row
+                    itemPanel.Left.Set(col * itemSize, 0f);
+                    rowPanel.Append(itemPanel);
                 }
-            }
-            // If the last row is not empty, add it.
-            if (rowPanel.Children.Any())
                 list.Add(rowPanel);
+            }
 
             Recalculate();
-        }
-
-        /// <summary>
-        /// Helper method to create a new row panel for a grid row.
-        /// </summary>
-        /// <returns>A UIPanel configured as a row container.</returns>
-        private UIPanel CreateNewRowPanel()
-        {
-            UIPanel row = new UIPanel();
-            row.SetPadding(0);
-            row.Width.Set(0f, 1f);
-            // Fix the row height to 50 (the height of our item buttons).
-            row.Height.Set(50f, 0f);
-            // Remove the background for rows so only the main panel’s background shows.
-            row.BackgroundColor = Color.Transparent;
-            return row;
         }
     }
 }
