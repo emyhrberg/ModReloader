@@ -1,15 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod;
 using System.Collections.Generic;
-using System.Text;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ModeGoop.Content.Global
+namespace SquidTestingMod.src
 {
     public class PlayerGlowEffect : ModPlayer
     {
@@ -262,7 +260,17 @@ namespace ModeGoop.Content.Global
         public override void SetStaticDefaults()
         {
             if (!Main.dedServ)
-                GameShaders.Armor.BindShader<ArmorShaderData>(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
+            {
+                Config c = ModContent.GetInstance<Config>();
+                if (c.GodModeOutlineSize == "Small")
+                {
+                    GameShaders.Armor.BindShader<ArmorShaderData>(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/LessOutlineEffect"), "Pass0"));
+                }
+                else
+                {
+                    GameShaders.Armor.BindShader<ArmorShaderData>(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
+                }
+            }
         }
 
         public override void SetDefaults()

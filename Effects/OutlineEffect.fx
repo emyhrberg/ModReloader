@@ -24,8 +24,8 @@ float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD
 	float4 col = tex2D(uImage0, coords);
 	if (!any(col))
 	{
-		float w = 3.0 / uImageSize0.x;
-		float h = 3.0 / uImageSize0.y;
+		float w = 2.0 / uImageSize0.x;
+		float h = 2.0 / uImageSize0.y;
 		
 		// Expand the border outline and enhance the glow
 		if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||

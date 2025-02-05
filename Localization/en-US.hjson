@@ -51,6 +51,11 @@ Mods: {
 					Label: Invoke Build And Reload
 					Tooltip: After clicking refresh at Mod Sources Menu, invokes BuildReload method (experimental, may cause crash/slow behaviour.)
 				}
+
+				GodModeOutlineSize: {
+					Label: God Mode Outline Size
+					Tooltip: ""
+				}
 			}
 		}
 
