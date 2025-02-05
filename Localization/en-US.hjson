@@ -48,5 +48,12 @@ Mods: {
 				}
 			}
 		}
+
+		Items: {
+			BorderShaderDye: {
+				DisplayName: Border Shader Dye
+				Tooltip: ""
+			}
+		}
 	}
 }
