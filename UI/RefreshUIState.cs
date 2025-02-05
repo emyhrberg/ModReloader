@@ -1,26 +1,20 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.UI;
-using Terraria.Audio;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using System.Reflection;
 using System;
 using System.Threading.Tasks;
 using SquidTestingMod.src;
-using Terraria.GameContent.UI.Elements;
 
 namespace SquidTestingMod.UI
 {
     public class RefreshUIState : UIState
     {
-
         // variables
         private bool IsRefreshButtonVisible = true;
         RefreshUIHoverButton buttonRefresh;
-
-        Asset<Texture2D> playerGlowTexture;
 
         public override void OnInitialize()
         {

@@ -1,4 +1,18 @@
-List of functionality:
+This mod introduces some new functionality that makes modding faster, more efficient, and simpler.
 
-- Refresh button to quickly navigate to Mod Menu.
-- After reloading mods, instantly load into the first compatible world.
+For example, when you are building your mod, are you tired of having to exit the world, navigate menus, reload mods and then select a player and world? This is simplified to a refresh button in-game which does all this for *faster refresh*!
+
+List of functionality that exists right now:
+
+1. God Mode (toggle with H)
+2. Spawn Boss On Top (will always spawn every boss on top of your position, instead of outside the screen)
+
+List of functionality that I plan to implement in the future:
+
+1. Autoload Singleplayer and multiplayer
+2. Fast refresh (one click)
+3. Item browser
+4. NPC browser
+5. Light hack
+6. Teleport anywhere on map
+7. Copy structures
