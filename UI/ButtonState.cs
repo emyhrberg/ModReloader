@@ -8,17 +8,15 @@ namespace SquidTestingMod.UI
     public class ButtonState : UIState
     {
         private RefreshButton refreshButton;
-        private ItemBrowserButton itemBrowserButton;
+        private ItemsButton itemBrowserButton;
         ILog logger;
 
         public override void OnInitialize()
         {
             logger = ModContent.GetInstance<SquidTestingMod>().Logger;
 
-
-
             // Initialize Item Browser Button
-            itemBrowserButton = new ItemBrowserButton(Assets.ButtonItems, "Open Item Browser");
+            itemBrowserButton = new ItemsButton(Assets.ButtonItems, "Open Item Browser");
             itemBrowserButton.Width.Set(100f, 0f);
             itemBrowserButton.Height.Set(100f, 0f);
             itemBrowserButton.HAlign = 0.4f;
