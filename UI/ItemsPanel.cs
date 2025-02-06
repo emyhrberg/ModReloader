@@ -8,6 +8,7 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
@@ -20,7 +21,7 @@ namespace SquidTestingMod.UI
         private UIGrid grid;
         private UIScrollbar scrollbar;
         private UISearchBox searchTextBox;
-        private UISearchBar test;
+        private UISearchBar search;
 
         public ItemsPanel()
         {
@@ -39,17 +40,22 @@ namespace SquidTestingMod.UI
             scrollbar = CreateScrollbar();
             grid = CreateGrid();
             grid.SetScrollbar(scrollbar);
-            searchTextBox = CreateSearchTextBox();
-            Append(searchTextBox);
             Append(scrollbar);
             Append(grid);
 
+            // Create the search box
+            searchTextBox = CreateSearchTextBox();
+            Append(searchTextBox);
 
-            // Debugging
-            LogInnerOuterDimensions(this);
-            LogInnerOuterDimensions(grid);
-            LogInnerOuterDimensions(scrollbar);
-            LogInnerOuterDimensions(searchTextBox);
+            LocalizedText text = Language.GetText("Mods.SquidTestingMod.ItemsPanel.Search");
+            search = new(null, 1)
+            {
+                Width = { Pixels = 200 },
+                Height = { Pixels = 40 },
+                Top = { Pixels = 0 },
+                Left = { Pixels = 200 },
+            };
+            Append(search);
 
             // Create the item panels.
             CreateItemPanels(grid);

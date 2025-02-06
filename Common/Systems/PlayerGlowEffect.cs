@@ -231,6 +231,13 @@ namespace SquidTestingMod.Common.Systems
                 return;
             }
 
+            // get godmode outline config setting
+            Config c = ModContent.GetInstance<Config>();
+            if (c.GodModeOutlineSize == "None")
+            {
+                return;
+            }
+
             if (PlayerGlowEffect.ready)
             {
                 // draw the draw data 4 times, but shifted in different

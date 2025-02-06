@@ -76,7 +76,7 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(false)]
         public bool StartInGodMode;
 
-        [OptionStrings(["Small", "Big"])]
+        [OptionStrings(["None", "Small", "Big"])]
         [DefaultValue("Small")]
         [DrawTicks]
         public string GodModeOutlineSize = "Small";

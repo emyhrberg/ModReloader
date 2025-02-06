@@ -8,6 +8,10 @@ namespace SquidTestingMod.UI
 {
     public class ButtonsState : UIState
     {
+        // State
+        public bool AreButtonsVisible { get; private set; }
+
+        // Buttons
         public ItemsButton itemBrowserButton;
         public RefreshButton refreshButton;
         public ConfigButton configButton;
@@ -43,6 +47,24 @@ namespace SquidTestingMod.UI
             button.Left.Set(leftOffset, 0f);
 
             return button;
+        }
+
+        public void ToggleAllButtons()
+        {
+            AreButtonsVisible = !AreButtonsVisible;
+
+            if (AreButtonsVisible)
+            {
+                itemBrowserButton.Activate();
+                refreshButton.Activate();
+                configButton.Activate();
+            }
+            else
+            {
+                itemBrowserButton.Deactivate();
+                refreshButton.Deactivate();
+                configButton.Deactivate();
+            }
         }
     }
 }

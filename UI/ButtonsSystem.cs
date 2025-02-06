@@ -10,7 +10,7 @@ namespace SquidTestingMod.UI
     public class ButtonsSystem : ModSystem
     {
         private UserInterface userInterface;
-        private ButtonsState myState;
+        public ButtonsState myState;
 
         public override void Load()
         {
