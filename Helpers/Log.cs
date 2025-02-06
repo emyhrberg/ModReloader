@@ -1,6 +1,6 @@
 using Terraria.ModLoader;
 
-namespace SquidTestingMod
+namespace SquidTestingMod.Helpers
 {
     public static class Log
     {
