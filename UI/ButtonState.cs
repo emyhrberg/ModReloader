@@ -9,12 +9,10 @@ namespace SquidTestingMod.UI
     {
         private RefreshButton refreshButton;
         private ItemsButton itemBrowserButton;
-        ILog logger;
+        private ConfigButton configButton;
 
         public override void OnInitialize()
         {
-            logger = ModContent.GetInstance<SquidTestingMod>().Logger;
-
             // Initialize Item Browser Button
             itemBrowserButton = new ItemsButton(Assets.ButtonItems, "Open Item Browser");
             itemBrowserButton.Width.Set(100f, 0f);
@@ -28,14 +26,22 @@ namespace SquidTestingMod.UI
             refreshButton.Width.Set(100f, 0f);
             refreshButton.Height.Set(100f, 0f);
             refreshButton.HAlign = 0.4f;
-            refreshButton.Left.Set(100f, 0f);
             refreshButton.VAlign = 0.02f;
             refreshButton.OnLeftClick += refreshButton.HandleClick;
+            refreshButton.Left.Set(100f, 0f); // lil offset
+
+            // Initialize Config Button
+            configButton = new ConfigButton(Assets.ButtonConfig, "Open Config");
+            configButton.Width.Set(100f, 0f);
+            configButton.Height.Set(100f, 0f);
+            configButton.HAlign = 0.4f;
+            configButton.VAlign = 0.02f;
+            configButton.OnLeftClick += configButton.HandleClick;
+            configButton.Left.Set(200f, 0f); // lil offset
 
             Append(refreshButton);
             Append(itemBrowserButton);
+            Append(configButton);
         }
-
-
     }
 }

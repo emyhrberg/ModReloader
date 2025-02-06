@@ -3,23 +3,17 @@ using log4net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ItemsButton : BaseButton
+    public class ItemsButton(Asset<Texture2D> texture, string hoverText) : BaseButton(texture, hoverText)
     {
-        private readonly ILog logger;
         private ItemsPanel itemsPanel;
         private bool isPanelVisible = false;
-
-        public ItemsButton(Asset<Texture2D> texture, string hoverText)
-            : base(texture, hoverText)
-        {
-            logger = ModContent.GetInstance<SquidTestingMod>().Logger;
-        }
 
         public void HandleClick(UIMouseEvent evt, UIElement listeningElement)
         {
@@ -29,7 +23,7 @@ namespace SquidTestingMod.UI
             // Ensure the button is part of a UIState. (ButtonState in our case right now)
             if (Parent is not UIState state)
             {
-                logger.Warn("ItemsButton has no parent UIState!");
+                Log.Warn("ItemsButton has no parent UIState!");
                 return;
             }
 
@@ -39,10 +33,10 @@ namespace SquidTestingMod.UI
                 if (itemsPanel == null)
                 {
                     itemsPanel = new ItemsPanel();
-                    logger.Info("Created new ItemsPanel.");
+                    Log.Info("Created new ItemsPanel.");
                 }
 
-                logger.Info("Appending ItemsPanel to parent state.");
+                Log.Info("Appending ItemsPanel to parent state.");
                 if (!state.Children.Contains(itemsPanel))
                     state.Append(itemsPanel);
 
@@ -52,7 +46,7 @@ namespace SquidTestingMod.UI
             }
             else
             {
-                logger.Info("Removing ItemsPanel from parent state.");
+                Log.Info("Removing ItemsPanel from parent state.");
                 if (state.Children.Contains(itemsPanel))
                     state.RemoveChild(itemsPanel);
                 state.Recalculate();

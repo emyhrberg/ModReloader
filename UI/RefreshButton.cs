@@ -3,8 +3,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using SquidTestingMod.src;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -23,13 +25,13 @@ namespace SquidTestingMod.UI
 
             if (config.SaveWorld)
             {
-                ModContent.GetInstance<SquidTestingMod>().Logger.Warn("Saving and quitting...");
+                Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
                 await Task.Delay(config.WaitingTime);
             }
             else
             {
-                ModContent.GetInstance<SquidTestingMod>().Logger.Warn("Just quitting...");
+                Log.Warn("Just quitting...");
                 WorldGen.JustQuit();
             }
 
@@ -50,25 +52,55 @@ namespace SquidTestingMod.UI
                 .GetValue(modSourcesInstance);
 
             object modSourceItem = null;
+            int modSourceItemCount = 0;
+
             foreach (var item in items)
             {
+                // Log the name of each item
+                Log.Info($"Item: {item.GetType().Name}");
+
                 if (item.GetType().Name == "UIModSourceItem")
                 {
-                    modSourceItem = item;
-                    break;
+                    modSourceItemCount++;
+                    if (modSourceItemCount == 2)
+                    {
+                        modSourceItem = item;
+                    }
+
+                    // Extract and log the mod name
+                    var modNameField = item.GetType().GetField("_modName", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (modNameField != null)
+                    {
+                        var modNameValue = modNameField.GetValue(item);
+                        if (modNameValue is UIText uiText)
+                        {
+                            string modName = uiText.Text;
+                            Log.Info($"Mod Name: {modName}");
+                        }
+                        else
+                        {
+                            Log.Warn("Mod name is not a UIText.");
+                        }
+                    }
                 }
+            }
+
+            if (modSourceItem == null)
+            {
+                Log.Warn("Second UIModSourceItem not found.");
+                return;
             }
 
             var method = modSourceItem.GetType()
                 .GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
-            method.Invoke(modSourceItem, new object[] { null, null });
+            method.Invoke(modSourceItem, [null, null]);
         }
 
         private object NavigateToDevelopMods()
         {
             try
             {
-                ModContent.GetInstance<SquidTestingMod>().Logger.Warn("Attempting to navigate to Develop Mods...");
+                Log.Warn("Attempting to navigate to Develop Mods...");
 
                 Assembly tModLoaderAssembly = typeof(Main).Assembly;
                 Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
@@ -81,16 +113,15 @@ namespace SquidTestingMod.UI
 
                 Main.menuMode = modSourcesID;
 
-                ModContent.GetInstance<SquidTestingMod>().Logger.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
+                Log.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
 
                 return modSourcesInstance;
             }
             catch (Exception ex)
             {
-                ModContent.GetInstance<SquidTestingMod>().Logger.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
+                Log.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
                 return null;
             }
         }
     }
-
 }

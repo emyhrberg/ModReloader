@@ -61,10 +61,10 @@ namespace SquidTestingMod.UI
         {
             return new UISearchBox("Search for items")
             {
-                Width = { Percent = 1f, Pixels = -30 },
+                Width = { Percent = 1f, Pixels = -40 },
                 Height = { Pixels = 40 }, // minimum height
                 Top = { Pixels = 0 },
-                Left = { Pixels = 0 },
+                Left = { Pixels = 5 },
                 BackgroundColor = Color.DarkCyan,
                 BorderColor = Color.DarkBlue,
             };
@@ -74,14 +74,14 @@ namespace SquidTestingMod.UI
         {
             int maxItems = TextureAssets.Item.Length - 1;
 
-            for (int i = 1; i <= 100; i++)
+            for (int i = 1; i <= 60; i++)
             {
                 UIPanel panel = new()
                 {
                     Width = { Pixels = 50 },
                     Height = { Pixels = 50 },
-                    BackgroundColor = Color.Blue,
-                    BorderColor = Color.Red,
+                    BackgroundColor = new Color(56, 58, 134),
+                    BorderColor = Color.Black * 0.8f,
                     OverflowHidden = true,
                 };
 
@@ -102,19 +102,14 @@ namespace SquidTestingMod.UI
         private static UIImage CreateItemImage(int itemIndex)
         {
             Main.instance.LoadItem(itemIndex);
-            var texture = TextureAssets.Item[itemIndex];
-            if (texture != null)
+            Asset<Texture2D> texture = TextureAssets.Item[itemIndex];
+            return new UIImage(texture)
             {
-                UIImage itemImage = new(texture)
-                {
-                    HAlign = 0.5f,
-                    VAlign = 0.5f,
-                    ScaleToFit = true,
-                    OverflowHidden = true,
-                };
-                return itemImage;
-            }
-            return null;
+                HAlign = 0.5f,
+                VAlign = 0.5f,
+                ScaleToFit = true,
+                OverflowHidden = true,
+            };
         }
 
         private static UIScrollbar CreateScrollbar()
@@ -135,9 +130,9 @@ namespace SquidTestingMod.UI
                 Width = { Percent = 1f, Pixels = -20 },
                 VAlign = 0.5f,
                 HAlign = 0.5f,
-                ListPadding = 10f, // distance between items
+                ListPadding = 5f, // distance between items
                 Top = { Pixels = 30 },
-                Left = { Pixels = -10 },
+                Left = { Pixels = -2 },
                 OverflowHidden = true,
             };
         }
@@ -145,7 +140,7 @@ namespace SquidTestingMod.UI
         private void SetupPanelDimensions()
         {
             Width.Set(340f, 0f);
-            Height.Set(340f, 0f);
+            Height.Set(310f, 0f);
             HAlign = 0.5f;
             VAlign = 0.5f;
             BackgroundColor = new Color(63, 82, 151) * 0.8f;

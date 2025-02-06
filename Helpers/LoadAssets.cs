@@ -25,6 +25,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonRefresh;
         public static Asset<Texture2D> ButtonNPCs;
         public static Asset<Texture2D> ButtonItems;
+        public static Asset<Texture2D> ButtonConfig;
         public static Asset<Texture2D> PlayerGlow;
 
 
@@ -33,6 +34,7 @@ namespace SquidTestingMod.Helpers
             ButtonRefresh = PreloadAsset("ButtonRefresh");
             ButtonNPCs = PreloadAsset("ButtonNPCs");
             ButtonItems = PreloadAsset("ButtonItems");
+            ButtonConfig = PreloadAsset("ButtonConfig");
             PlayerGlow = PreloadAsset("PlayerGlow");
         }
 

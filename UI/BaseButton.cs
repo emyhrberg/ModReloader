@@ -8,14 +8,9 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public abstract class BaseButton : UIImageButton
+    public abstract class BaseButton(Asset<Texture2D> texture, string hoverText) : UIImageButton(texture)
     {
-        public string HoverText { get; private set; }
-
-        public BaseButton(Asset<Texture2D> texture, string hoverText) : base(texture)
-        {
-            HoverText = hoverText;
-        }
+        public string HoverText { get; private set; } = hoverText;
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
