@@ -1,12 +1,13 @@
-using Terraria;
-using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Helpers;
+using Terraria;
 using Terraria.GameInput;
-using SquidTestingMod.src;
+using Terraria.ModLoader;
 
-namespace SquidTestingMod
+namespace SquidTestingMod.Common.Systems
 {
     public class GodModePlayer : ModPlayer
     {
@@ -16,7 +17,7 @@ namespace SquidTestingMod
         public override void OnEnterWorld()
         {
             Config c = ModContent.GetInstance<Config>();
-            ModContent.GetInstance<SquidTestingMod>().Logger.Info("enter world godmode!" + c.StartInGodMode);
+            Log.Info("enter world godmode is set to" + c.StartInGodMode);
             GodMode = c.StartInGodMode;
         }
 

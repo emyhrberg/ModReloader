@@ -1,16 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
+using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
-using System.Collections.Generic;
 using Terraria.IO;
 using Terraria.ModLoader;
-using System.Net.NetworkInformation;
-using System.Diagnostics;
 
-namespace SquidTestingMod.src
+namespace SquidTestingMod.Common.Systems
 {
     /// <summary>
     /// This system will do the following when mod has been loaded (when you click Build & Reload in tModLoader):
@@ -31,8 +32,8 @@ namespace SquidTestingMod.src
             if (onSuccessfulLoadField != null)
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
-                var config = ModContent.GetInstance<Config>();
-                if (config.AutoloadWorld == "Multiplayer")
+                Config c = ModContent.GetInstance<Config>();
+                if (c.AutoloadWorld == "Multiplayer")
                 {
                     onSuccessfulLoad += StartServerAndEnterMultiplayerWorld;
                 }

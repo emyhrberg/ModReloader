@@ -1,9 +1,9 @@
-using Terraria.ModLoader;
-using Terraria;
-using System.Diagnostics;
 using System;
+using System.Diagnostics;
+using Terraria;
+using Terraria.ModLoader;
 
-namespace SquidTestingMod.Commands
+namespace SquidTestingMod.Common.Commands
 {
     public class JoinMPCommand : ModCommand
     {

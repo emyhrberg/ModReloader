@@ -1,6 +1,6 @@
 Mods: {
 	SquidTestingMod: {
-		"Keybinds.Toggle God Mode.DisplayName": Toggle  God  Mode
+		"Keybinds.Toggle God Mode.DisplayName": Toggle God Mode
 
 		Configs: {
 			Config: {
@@ -10,6 +10,9 @@ Mods: {
 					Autoload: Autoload
 					Refresh: Refresh
 					Misc: Misc
+					GodMode: God Mode
+					UI: UI
+					Gameplay: Gameplay
 				}
 
 				EnableRefreshButton: {
@@ -54,6 +57,62 @@ Mods: {
 
 				GodModeOutlineSize: {
 					Label: God Mode Outline Size
+					Tooltip: ""
+				}
+
+				ChosenPrefix: {
+					Label: Chosen Prefix
+					Tooltip: ""
+				}
+
+				ModToReload: {
+					Label: Mod To Reload
+					Tooltip: ""
+				}
+
+				CustomChooser: {
+					Label: Custom Chooser
+					Tooltip: ""
+				}
+			}
+
+			CustomDefinition: {
+				Tooltip: ""
+
+				DisplayName: {
+					Label: Display Name
+					Tooltip: ""
+				}
+			}
+
+			CustomOptionDefinition: {
+				Tooltip: ""
+
+				DisplayName: {
+					Label: Display Name
+					Tooltip: ""
+				}
+			}
+
+			SimplePrefixDefinition: {
+				IsUnloaded: {
+					Label: Is Unloaded
+					Tooltip: ""
+				}
+
+				Tooltip: ""
+
+				DisplayName: {
+					Label: Display Name
+					Tooltip: ""
+				}
+			}
+
+			TestPrefixDefinition: {
+				Tooltip: ""
+
+				DisplayName: {
+					Label: Display Name
 					Tooltip: ""
 				}
 			}

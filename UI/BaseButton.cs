@@ -21,6 +21,9 @@ namespace SquidTestingMod.UI
             }
         }
 
+        // Abstract = force children to implement this method
+        public abstract void HandleClick(UIMouseEvent evt, UIElement listeningElement);
+
         #region dragging
         private bool dragging;
         private Vector2 dragOffset;
@@ -32,7 +35,6 @@ namespace SquidTestingMod.UI
             Main.LocalPlayer.mouseInterface = true;
         }
 
-        // End dragging on left mouse button up.
         public override void RightMouseUp(UIMouseEvent evt)
         {
             base.LeftMouseUp(evt);
@@ -52,7 +54,5 @@ namespace SquidTestingMod.UI
             }
         }
         #endregion
-
     }
-
 }

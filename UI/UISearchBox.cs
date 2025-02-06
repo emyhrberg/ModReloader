@@ -3,12 +3,8 @@ using Terraria.GameContent.UI.Elements;
 namespace SquidTestingMod.UI
 {
     // Subclass of UITextBox that overrides the minimum height
-    public class UISearchBox : UITextBox
+    public class UISearchBox(string text, float textScale = 1f) : UITextBox(text, textScale)
     {
-        public UISearchBox(string text, float textScale = 1f) : base(text, textScale)
-        {
-        }
-
         public override void Recalculate()
         {
             base.Recalculate();

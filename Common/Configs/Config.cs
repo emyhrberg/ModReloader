@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using SquidTestingMod.Common.Systems;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace SquidTestingMod.src
+namespace SquidTestingMod.Common.Configs
 {
     public class Config : ModConfig
     {
@@ -13,23 +15,22 @@ namespace SquidTestingMod.src
 
         public override void OnChanged()
         {
-            Config c = ModContent.GetInstance<Config>();
-
-            if (c == null)
-            {
-                Mod.Logger.Info("CONFIG NULL!");
+            // add null check for the class itself in case it's called before the mod is loaded
+            // idk
+            if (ModContent.GetInstance<Config>() == null)
                 return;
-            }
 
             int type = ModContent.ItemType<BorderShaderDye>();
 
-            if (c.GodModeOutlineSize == "Small")
+            if (GodModeOutlineSize == "Small")
             {
-                GameShaders.Armor.BindShader<ArmorShaderData>(type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/LessOutlineEffect"), "Pass0"));
+                Asset<Effect> smallOutlineEffect = Mod.Assets.Request<Effect>("Effects/LessOutlineEffect");
+                GameShaders.Armor.BindShader(type, new ArmorShaderData(smallOutlineEffect, "Pass0"));
             }
             else
             {
-                GameShaders.Armor.BindShader<ArmorShaderData>(type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
+                Asset<Effect> bigOutlineEffect = Mod.Assets.Request<Effect>("Effects/MoreOutlineEffect");
+                GameShaders.Armor.BindShader(type, new ArmorShaderData(bigOutlineEffect, "Pass0"));
             }
         }
 
@@ -42,12 +43,6 @@ namespace SquidTestingMod.src
 
         // REFRESH HEADER
         [Header("Refresh")]
-        [DefaultValue(true)]
-        public bool EnableRefreshButton;
-
-        [DefaultValue(1000)]
-        [Range(0, 5000)]
-        public int WaitingTime;
 
         [DefaultValue(true)]
         public bool SaveWorld;
@@ -55,11 +50,24 @@ namespace SquidTestingMod.src
         [DefaultValue(false)]
         public bool InvokeBuildAndReload;
 
+        [DefaultValue("SquidTestingMod")]
+        public string ModToReload;
+
+        [DefaultValue(1000)]
+        [Range(0, 5000)]
+        public int WaitingTime;
+
         // MISC HEADER
-        [Header("Misc")]
+        [Header("UI")]
         [DefaultValue(false)]
         public bool ShowHitboxes;
 
+        [Header("Gameplay")]
+
+        [DefaultValue(false)]
+        public bool AlwaysSpawnBossOnTopOfPlayer;
+
+        [Header("GodMode")]
         [DefaultValue(false)]
         public bool StartInGodMode;
 
@@ -67,8 +75,5 @@ namespace SquidTestingMod.src
         [DefaultValue("Small")]
         [DrawTicks]
         public string GodModeOutlineSize = "Small";
-
-        [DefaultValue(false)]
-        public bool AlwaysSpawnBossOnTopOfPlayer;
     }
 }

@@ -3,8 +3,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.src;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -12,22 +12,17 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class RefreshButton : BaseButton
+    public class RefreshButton(Asset<Texture2D> texture, string hoverText) : BaseButton(texture, hoverText)
     {
-        public RefreshButton(Asset<Texture2D> texture, string hoverText)
-            : base(texture, hoverText)
+        public override async void HandleClick(UIMouseEvent evt, UIElement listeningElement)
         {
-        }
+            Config c = ModContent.GetInstance<Config>();
 
-        public async void HandleClick(UIMouseEvent evt, UIElement listeningElement)
-        {
-            Config config = ModContent.GetInstance<Config>();
-
-            if (config.SaveWorld)
+            if (c.SaveWorld)
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
-                await Task.Delay(config.WaitingTime);
+                await Task.Delay(c.WaitingTime);
             }
             else
             {
@@ -37,36 +32,42 @@ namespace SquidTestingMod.UI
 
             object modSourcesInstance = NavigateToDevelopMods();
 
-            if (config.InvokeBuildAndReload)
+            if (c.InvokeBuildAndReload)
             {
-                await Task.Delay(config.WaitingTime);
+                await Task.Delay(c.WaitingTime);
                 BuildReload(modSourcesInstance);
             }
         }
 
-        private void BuildReload(object modSourcesInstance)
+        private static void BuildReload(object modSourcesInstance)
         {
-            var items = (System.Collections.IEnumerable)modSourcesInstance
-                .GetType()
-                .GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance)
-                .GetValue(modSourcesInstance);
+            if (modSourcesInstance == null)
+            {
+                Log.Warn("modSourcesInstance is null.");
+                return;
+            }
+
+            var itemsField = modSourcesInstance.GetType().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (itemsField == null)
+            {
+                Log.Warn("_items field not found.");
+                return;
+            }
+
+            var items = (System.Collections.IEnumerable)itemsField.GetValue(modSourcesInstance);
+            if (items == null)
+            {
+                Log.Warn("_items is null.");
+                return;
+            }
 
             object modSourceItem = null;
-            int modSourceItemCount = 0;
+            string modNameFound = "";
 
             foreach (var item in items)
             {
-                // Log the name of each item
-                Log.Info($"Item: {item.GetType().Name}");
-
                 if (item.GetType().Name == "UIModSourceItem")
                 {
-                    modSourceItemCount++;
-                    if (modSourceItemCount == 2)
-                    {
-                        modSourceItem = item;
-                    }
-
                     // Extract and log the mod name
                     var modNameField = item.GetType().GetField("_modName", BindingFlags.NonPublic | BindingFlags.Instance);
                     if (modNameField != null)
@@ -76,6 +77,13 @@ namespace SquidTestingMod.UI
                         {
                             string modName = uiText.Text;
                             Log.Info($"Mod Name: {modName}");
+                            Config c = ModContent.GetInstance<Config>();
+                            if (modName == c.ModToReload)
+                            {
+                                modSourceItem = item;
+                                modNameFound = modName;
+                                break;
+                            }
                         }
                         else
                         {
@@ -91,8 +99,14 @@ namespace SquidTestingMod.UI
                 return;
             }
 
-            var method = modSourceItem.GetType()
-                .GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
+            var method = modSourceItem.GetType().GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (method == null)
+            {
+                Log.Warn("BuildAndReload method not found.");
+                return;
+            }
+
+            Log.Info($"Invoking BuildAndReload method with {modNameFound} UIModSourceItem...");
             method.Invoke(modSourceItem, [null, null]);
         }
 

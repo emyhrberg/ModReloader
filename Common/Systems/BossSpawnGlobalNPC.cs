@@ -1,9 +1,11 @@
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.src
+namespace SquidTestingMod.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
     public class BossSpawnGlobalNPC : GlobalNPC

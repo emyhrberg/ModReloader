@@ -1,14 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
-using System.Collections.Generic;
 using Terraria.IO;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.src
+namespace SquidTestingMod.Common.Systems
 {
     /// <summary>
     /// This system will automatically load a player and world every time AFTER all the mods have been reloaded.
@@ -36,8 +37,8 @@ namespace SquidTestingMod.src
             if (onSuccessfulLoadField != null)
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
-                var config = ModContent.GetInstance<Config>();
-                if (config.AutoloadWorld == "Singleplayer")
+                Config c = ModContent.GetInstance<Config>();
+                if (c.AutoloadWorld == "Singleplayer")
                 {
                     onSuccessfulLoad += EnterSingleplayerWorld;
                 }

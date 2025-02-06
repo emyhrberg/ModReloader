@@ -1,22 +1,21 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
     [Autoload(Side = ModSide.Client)]
-    public class ButtonSystem : ModSystem
+    public class ButtonsSystem : ModSystem
     {
         private UserInterface userInterface;
-        private ButtonState myState;
+        private ButtonsState myState;
 
         public override void Load()
         {
             userInterface = new UserInterface();
-            myState = new ButtonState();
+            myState = new ButtonsState();
             userInterface.SetState(myState);
         }
 

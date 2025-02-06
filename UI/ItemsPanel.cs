@@ -65,8 +65,8 @@ namespace SquidTestingMod.UI
                 Height = { Pixels = 40 }, // minimum height
                 Top = { Pixels = 0 },
                 Left = { Pixels = 5 },
-                BackgroundColor = Color.DarkCyan,
-                BorderColor = Color.DarkBlue,
+                BackgroundColor = new Color(56, 58, 134), // inventory dark blue
+                BorderColor = Color.Black * 0.6f,
             };
         }
 
@@ -80,8 +80,8 @@ namespace SquidTestingMod.UI
                 {
                     Width = { Pixels = 50 },
                     Height = { Pixels = 50 },
-                    BackgroundColor = new Color(56, 58, 134),
-                    BorderColor = Color.Black * 0.8f,
+                    BackgroundColor = new Color(56, 58, 134), // inventory dark blue
+                    BorderColor = Color.Black * 0.6f,
                     OverflowHidden = true,
                 };
 
@@ -140,10 +140,10 @@ namespace SquidTestingMod.UI
         private void SetupPanelDimensions()
         {
             Width.Set(340f, 0f);
-            Height.Set(310f, 0f);
+            Height.Set(340f, 0f);
             HAlign = 0.5f;
             VAlign = 0.5f;
-            BackgroundColor = new Color(63, 82, 151) * 0.8f;
+            BackgroundColor = new Color(63, 82, 151) * 0.8f; // light blue
         }
 
         #region helpers

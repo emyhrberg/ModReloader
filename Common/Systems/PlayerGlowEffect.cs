@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.src
+namespace SquidTestingMod.Common.Systems
 {
     public class PlayerGlowEffect : ModPlayer
     {
