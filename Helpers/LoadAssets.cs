@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
 
-namespace DPSPanel.Helpers
+namespace SquidTestingMod.Helpers
 {
     /// <summary>
     /// A ModSystem that preloads assets early in the mod loading process.

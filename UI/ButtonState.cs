@@ -1,7 +1,7 @@
-﻿using Terraria.UI;
+﻿using log4net;
+using SquidTestingMod.Helpers;
 using Terraria.ModLoader;
-using log4net;
-using DPSPanel.Helpers;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {

@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using System.Linq;
+using log4net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -42,7 +43,8 @@ namespace SquidTestingMod.UI
                 }
 
                 logger.Info("Appending ItemsPanel to parent state.");
-                state.Append(itemsPanel);
+                if (!state.Children.Contains(itemsPanel))
+                    state.Append(itemsPanel);
 
                 // Force recalculation of the layout.
                 itemsPanel.Recalculate();
@@ -51,7 +53,8 @@ namespace SquidTestingMod.UI
             else
             {
                 logger.Info("Removing ItemsPanel from parent state.");
-                state.RemoveChild(itemsPanel);
+                if (state.Children.Contains(itemsPanel))
+                    state.RemoveChild(itemsPanel);
                 state.Recalculate();
             }
         }
