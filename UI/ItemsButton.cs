@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
+using Terraria;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -15,6 +16,7 @@ namespace SquidTestingMod.UI
 
         public override void HandleClick()
         {
+            Main.playerInventory = true; // Open the inventory.
             ToggleItemsPanel();
         }
 
