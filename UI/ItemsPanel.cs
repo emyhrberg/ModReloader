@@ -49,7 +49,7 @@ namespace SquidTestingMod.UI
                 PaddingLeft = 4f,
                 PaddingRight = 4f
             };
-            _searchBox.OnLeftClick += (evt, element) => _searchBox. = true;
+            // _searchBox.OnLeftClick += (evt, element) => _searchBox. = true;
             Append(_searchBox);
 
             // Create grid that will hold our items
