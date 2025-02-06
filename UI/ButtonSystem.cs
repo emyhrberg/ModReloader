@@ -4,7 +4,6 @@ using Terraria.UI;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace SquidTestingMod.UI
 {
@@ -37,7 +36,7 @@ namespace SquidTestingMod.UI
                     () =>
                     {
                         userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw
-                        TESTING_DRAW_TEMPORARY();
+                        // TESTING_DRAW_TEMPORARY();
                         return true;
                     },
                     InterfaceScaleType.UI));
