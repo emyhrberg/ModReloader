@@ -16,7 +16,7 @@ namespace SquidTestingMod.UI
 {
     public class ConfigButton(Asset<Texture2D> texture, string hoverText) : BaseButton(texture, hoverText)
     {
-        public override void HandleClick(UIMouseEvent evt, UIElement listeningElement)
+        public override void HandleClick()
         {
             Config c = ModContent.GetInstance<Config>();
             c.Open();

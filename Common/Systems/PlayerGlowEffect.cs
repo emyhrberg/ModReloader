@@ -60,7 +60,6 @@ namespace SquidTestingMod.Common.Systems
             drawInfo.BoringSetup(Main.LocalPlayer, data, useless, useless, Player.position, 0, 0, Vector2.Zero);
             DrawPlayerOnlyDrawLayers(ref drawInfo);
 
-
             // define the stuff neeeded for drawing
             GraphicsDevice device = Main.instance.GraphicsDevice;
             SpriteBatch spritebatch = new SpriteBatch(device);
@@ -86,10 +85,10 @@ namespace SquidTestingMod.Common.Systems
 
             // calculate the draw data
             DrawData glowDraw = new DrawData(
-                (Texture2D)PlayerGlowEffect.playerDrawingTarget,
+                playerDrawingTarget,
                 Vector2.Zero, // place it nowhere, for now
                 null, // use the entire image
-                Color.LightPink, // color it ;ight purple/pink
+                Color.LightPink, // color it light purple/pink
                 0, // rotation
                 (renderSize / 2).Floor(), // use the center as the origin
                 1f, // scale
@@ -98,7 +97,11 @@ namespace SquidTestingMod.Common.Systems
 
             // set the shader of the draw data to the glow effect thing.
             // This can be changed to any other shader
-            glowDraw.shader = GameShaders.Armor.GetShaderIdFromItemId(ModContent.ItemType<BorderShaderDye>());
+            int shaderId = GameShaders.Armor.GetShaderIdFromItemId(ModContent.ItemType<BorderShaderDye>());
+            if (shaderId != -1)
+            {
+                glowDraw.shader = shaderId;
+            }
 
             // set it to the thing to be used in
             // the draw layer
@@ -122,7 +125,6 @@ namespace SquidTestingMod.Common.Systems
         /// </summary>
         public static void DrawPlayerOnlyDrawLayers(ref PlayerDrawSet drawInfo)
         {
-
             PlayerDrawLayers.DrawPlayer_extra_TorsoPlus(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_01_2_JimsCloak(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_extra_TorsoMinus(ref drawInfo);
@@ -263,13 +265,16 @@ namespace SquidTestingMod.Common.Systems
             if (!Main.dedServ)
             {
                 Config c = ModContent.GetInstance<Config>();
-                if (c.GodModeOutlineSize == "Small")
+                if (c != null)
                 {
-                    GameShaders.Armor.BindShader<ArmorShaderData>(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/LessOutlineEffect"), "Pass0"));
-                }
-                else
-                {
-                    GameShaders.Armor.BindShader<ArmorShaderData>(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
+                    if (c.GodModeOutlineSize == "Small")
+                    {
+                        GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/LessOutlineEffect"), "Pass0"));
+                    }
+                    else if (c.GodModeOutlineSize == "Big")
+                    {
+                        GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
+                    }
                 }
             }
         }

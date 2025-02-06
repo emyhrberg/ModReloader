@@ -22,7 +22,7 @@ Mods: {
 
 				WaitingTime: {
 					Label: Waiting Time
-					Tooltip: After you press refresh button, set the time to wait before navigating to mod menu.
+					Tooltip: After you press refresh button, set the time to wait before building, navigating to mod menu.
 				}
 
 				SaveWorld: {
@@ -73,6 +73,16 @@ Mods: {
 				CustomChooser: {
 					Label: Custom Chooser
 					Tooltip: ""
+				}
+
+				WaitingTimeBeforeNavigatingToModSources: {
+					Label: Waiting Time Before Navigating To Mod Sources (ms)
+					Tooltip: After you click refresh, the time until menu state switching executes.
+				}
+
+				WaitingTimeBeforeBuildAndReload: {
+					Label: Waiting Time Before Build And Reload (ms)
+					Tooltip: When at mod sources menu state, the time until BuildReload executes.
 				}
 			}
 

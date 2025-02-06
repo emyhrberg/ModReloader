@@ -13,7 +13,12 @@ namespace SquidTestingMod.UI
         private ItemsPanel itemsPanel;
         private bool isPanelVisible = false;
 
-        public override void HandleClick(UIMouseEvent evt, UIElement listeningElement)
+        public override void HandleClick()
+        {
+            ToggleItemsPanel();
+        }
+
+        public void ToggleItemsPanel()
         {
             // Toggle the panel's visibility flag.
             isPanelVisible = !isPanelVisible;

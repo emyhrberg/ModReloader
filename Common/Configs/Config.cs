@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Systems;
+using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -27,9 +28,9 @@ namespace SquidTestingMod.Common.Configs
                 Asset<Effect> smallOutlineEffect = Mod.Assets.Request<Effect>("Effects/LessOutlineEffect");
                 GameShaders.Armor.BindShader(type, new ArmorShaderData(smallOutlineEffect, "Pass0"));
             }
-            else
+            else if (GodModeOutlineSize == "Big")
             {
-                Asset<Effect> bigOutlineEffect = Mod.Assets.Request<Effect>("Effects/MoreOutlineEffect");
+                Asset<Effect> bigOutlineEffect = Mod.Assets.Request<Effect>("Effects/OutlineEffect");
                 GameShaders.Armor.BindShader(type, new ArmorShaderData(bigOutlineEffect, "Pass0"));
             }
         }
@@ -44,7 +45,7 @@ namespace SquidTestingMod.Common.Configs
         // REFRESH HEADER
         [Header("Refresh")]
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool SaveWorld;
 
         [DefaultValue(false)]
@@ -53,9 +54,13 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue("SquidTestingMod")]
         public string ModToReload;
 
+        [DefaultValue(0)]
+        [Range(0, 5000)]
+        public int WaitingTimeBeforeNavigatingToModSources;
+
         [DefaultValue(1000)]
         [Range(0, 5000)]
-        public int WaitingTime;
+        public int WaitingTimeBeforeBuildAndReload;
 
         // MISC HEADER
         [Header("UI")]

@@ -14,28 +14,40 @@ namespace SquidTestingMod.UI
 {
     public class RefreshButton(Asset<Texture2D> texture, string hoverText) : BaseButton(texture, hoverText)
     {
-        public override async void HandleClick(UIMouseEvent evt, UIElement listeningElement)
+        public override async void HandleClick()
         {
             Config c = ModContent.GetInstance<Config>();
 
+            // 1) Exit world 
+            ExitWorld(c);
+
+            // 2) Navigate to Develop Mods
+            if (c.WaitingTimeBeforeNavigatingToModSources > 0)
+                await Task.Delay(c.WaitingTimeBeforeNavigatingToModSources);
+            object modSourcesInstance = NavigateToDevelopMods();
+
+            // 3) Build and reload
+            if (c.InvokeBuildAndReload)
+            {
+                await Task.Delay(c.WaitingTimeBeforeBuildAndReload);
+                BuildReload(modSourcesInstance);
+            }
+
+            // 4) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
+        }
+
+        private async static void ExitWorld(Config c)
+        {
             if (c.SaveWorld)
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
-                await Task.Delay(c.WaitingTime);
+                await Task.Delay(c.WaitingTimeBeforeNavigatingToModSources);
             }
             else
             {
                 Log.Warn("Just quitting...");
                 WorldGen.JustQuit();
-            }
-
-            object modSourcesInstance = NavigateToDevelopMods();
-
-            if (c.InvokeBuildAndReload)
-            {
-                await Task.Delay(c.WaitingTime);
-                BuildReload(modSourcesInstance);
             }
         }
 
@@ -110,11 +122,11 @@ namespace SquidTestingMod.UI
             method.Invoke(modSourceItem, [null, null]);
         }
 
-        private object NavigateToDevelopMods()
+        private static object NavigateToDevelopMods()
         {
             try
             {
-                Log.Warn("Attempting to navigate to Develop Mods...");
+                Log.Info("Attempting to navigate to Develop Mods...");
 
                 Assembly tModLoaderAssembly = typeof(Main).Assembly;
                 Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
@@ -127,7 +139,7 @@ namespace SquidTestingMod.UI
 
                 Main.menuMode = modSourcesID;
 
-                Log.Warn($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
+                Log.Info($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
 
                 return modSourcesInstance;
             }

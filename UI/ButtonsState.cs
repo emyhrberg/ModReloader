@@ -8,15 +8,15 @@ namespace SquidTestingMod.UI
 {
     public class ButtonsState : UIState
     {
-        private ItemsButton itemBrowserButton;
-        private RefreshButton refreshButton;
-        private ConfigButton configButton;
+        public ItemsButton itemBrowserButton;
+        public RefreshButton refreshButton;
+        public ConfigButton configButton;
 
         public override void OnInitialize()
         {
             // Create each button with the shared helper
             itemBrowserButton = CreateButton<ItemsButton>(Assets.ButtonItems, "Browse items", 0f);
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonRefresh, "Refresh the game", 100f);
+            refreshButton = CreateButton<RefreshButton>(Assets.ButtonRefresh, "Refresh selected mod (see config)", 100f);
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, "Open config", 200f);
 
             // Append them to this UIState
@@ -32,14 +32,14 @@ namespace SquidTestingMod.UI
             // We create the button via reflection
             T button = (T)Activator.CreateInstance(typeof(T), texture, hoverText);
 
-            // Wire up all buttons onleftclick to call their own handleclick
-            button.OnLeftClick += (evt, listeningElement) => button.HandleClick(evt, listeningElement);
+            // Wire up all buttons OnLeftClick to call their own HandleClick
+            button.OnLeftClick += (evt, element) => button.HandleClick();
 
             // Set up positions, alignment, etc.
             button.Width.Set(100f, 0f);
             button.Height.Set(100f, 0f);
-            button.HAlign = 0.3f;
-            button.VAlign = 0.98f;
+            button.HAlign = 0.3f; // start 30% from the left
+            button.VAlign = 0.9f; // buttons at bottom
             button.Left.Set(leftOffset, 0f);
 
             return button;

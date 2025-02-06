@@ -22,7 +22,7 @@ namespace SquidTestingMod.UI
         }
 
         // Abstract = force children to implement this method
-        public abstract void HandleClick(UIMouseEvent evt, UIElement listeningElement);
+        public abstract void HandleClick();
 
         #region dragging
         private bool dragging;

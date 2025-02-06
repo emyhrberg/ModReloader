@@ -20,6 +20,7 @@ namespace SquidTestingMod.UI
         private UIGrid grid;
         private UIScrollbar scrollbar;
         private UISearchBox searchTextBox;
+        private UISearchBar test;
 
         public ItemsPanel()
         {
@@ -43,15 +44,12 @@ namespace SquidTestingMod.UI
             Append(scrollbar);
             Append(grid);
 
-            // Log height of searchtextbox
-            Log.Info($"SearchTextBox height outer: {searchTextBox.GetOuterDimensions().Height}");
-            Log.Info($"SearchTextBox height inner: {searchTextBox.GetInnerDimensions().Height}");
 
             // Debugging
             LogInnerOuterDimensions(this);
-            LogInnerOuterDimensions(searchTextBox);
-            LogInnerOuterDimensions(scrollbar);
             LogInnerOuterDimensions(grid);
+            LogInnerOuterDimensions(scrollbar);
+            LogInnerOuterDimensions(searchTextBox);
 
             // Create the item panels.
             CreateItemPanels(grid);
@@ -66,7 +64,7 @@ namespace SquidTestingMod.UI
                 Top = { Pixels = 0 },
                 Left = { Pixels = 5 },
                 BackgroundColor = new Color(56, 58, 134), // inventory dark blue
-                BorderColor = Color.Black * 0.6f,
+                BorderColor = Color.Black * 0.8f,
             };
         }
 
@@ -81,7 +79,7 @@ namespace SquidTestingMod.UI
                     Width = { Pixels = 50 },
                     Height = { Pixels = 50 },
                     BackgroundColor = new Color(56, 58, 134), // inventory dark blue
-                    BorderColor = Color.Black * 0.6f,
+                    BorderColor = Color.Black * 0.8f,
                     OverflowHidden = true,
                 };
 
