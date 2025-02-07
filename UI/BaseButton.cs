@@ -70,28 +70,48 @@ namespace SquidTestingMod.UI
 
         #region dragging
         private bool DRAG_ENABLED = false;
-
         private bool dragging;
         private Vector2 dragOffset;
-        public override void RightMouseDown(UIMouseEvent evt)
+        // Track original mouse down position so we know if we moved
+        private Vector2 mouseDownPos;
+        private bool isDrag;
+        private const float DragThreshold = 10f; // you can tweak the threshold
+        // Hotfix click started outside the button
+        private bool clickStartedOutsideButton;
+
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
+            Main.LocalPlayer.mouseInterface = true;
+
             if (!DRAG_ENABLED)
                 return;
 
             base.LeftMouseDown(evt);
+
             dragging = true;
+            isDrag = false;
+            mouseDownPos = evt.MousePosition; // store mouse down location
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
-            Main.LocalPlayer.mouseInterface = true;
+            clickStartedOutsideButton = !ContainsPoint(evt.MousePosition);
+            if (!clickStartedOutsideButton)
+                Main.LocalPlayer.mouseInterface = true;
         }
 
-        public override void RightMouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
+            Main.LocalPlayer.mouseInterface = false;
+
             if (!DRAG_ENABLED)
                 return;
             base.LeftMouseUp(evt);
             dragging = false;
             Main.LocalPlayer.mouseInterface = false;
             Recalculate();
+
+            if (isDrag && !clickStartedOutsideButton)
+            {
+                HandleClick();
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -99,10 +119,48 @@ namespace SquidTestingMod.UI
             if (!DRAG_ENABLED)
                 return;
             base.Update(gameTime);
+
+            if (dragging || (ContainsPoint(Main.MouseScreen) && !clickStartedOutsideButton))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
+            // update the position of all the buttons
             if (dragging)
             {
-                Left.Set(Main.mouseX - dragOffset.X, 0f);
-                Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                // disable mouse interface
+                Main.LocalPlayer.mouseInterface = true;
+
+                // Check if we moved the mouse more than the threshold
+                var currentPos = new Vector2(Main.mouseX, Main.mouseY);
+                if (Vector2.Distance(currentPos, mouseDownPos) > DragThreshold)
+                {
+                    isDrag = true;
+                }
+
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+                // move all other buttons too
+                if (sys?.mainState?.AreButtonsVisible ?? false)
+                {
+                    // ToggleButton
+                    sys.mainState.toggleButton.Left.Set(Main.mouseX - dragOffset.X, 0f);
+                    sys.mainState.toggleButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
+                    // ConfigButton
+                    sys.mainState.configButton.Left.Set(Main.mouseX - dragOffset.X + 100, 0f);
+                    sys.mainState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
+                    // ItemsButton
+                    sys.mainState.itemBrowserButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
+                    sys.mainState.itemBrowserButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
+                    // RefreshButton
+                    sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
+                    sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
+                }
+
                 Recalculate();
             }
         }

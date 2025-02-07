@@ -9,8 +9,8 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.UI;
 using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
@@ -65,9 +65,9 @@ namespace SquidTestingMod.UI
 
             for (int i = 1; i <= 1000; i++)
             {
-                Item tempItem = new();
-                tempItem.SetDefaults(i);
-                if (tempItem.Name.ToLower().Contains(searchText))
+                Item item = new();
+                item.SetDefaults(i);
+                if (item.Name.ToLower().Contains(searchText))
                 {
                     UIPanel panel = new()
                     {
@@ -82,11 +82,18 @@ namespace SquidTestingMod.UI
                     UIImage itemImage = CreateItemImage(i);
                     panel.Append(itemImage);
 
+                    // when hovering the panel, draw a red rectangle at center with size 50,50 to indicate.
+                    panel.OnMouseOver += (evt, element) =>
+                    {
+                        Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)element.GetDimensions().X, (int)element.GetDimensions().Y, 50, 50), Color.Red);
+                        Log.Info($"Hovering over {item.Name}");
+                    };
+
                     // Add the panel to the grid
                     grid.Add(panel);
 
                     // Add item name to visible items list
-                    visibleItems.Add(tempItem.Name);
+                    visibleItems.Add(item.Name);
                 }
             }
 
@@ -127,11 +134,6 @@ namespace SquidTestingMod.UI
                 UIImage itemImage = CreateItemImage(i);
                 panel.Append(itemImage);
 
-                // Log the item’s name
-                Item tempItem = new();
-                tempItem.SetDefaults(i);
-                // Log.Info($"Added item ID: {i} - Name: {tempItem.Name}");
-
                 // Add the panel to the grid
                 grid.Add(panel);
             }
@@ -149,30 +151,37 @@ namespace SquidTestingMod.UI
                 OverflowHidden = true,
             };
 
-            itemImage.OnMouseOver += (evt, element) =>
+            // Full vanilla tooltip implementation
+            itemImage.OnUpdate += element =>
             {
-                Item tempItem = new Item();
-                tempItem.SetDefaults(itemIndex);
-                Main.HoverItem = tempItem;
-                Main.hoverItemName = tempItem.Name;
-                Main.instance.MouseText(tempItem.Name, tempItem.rare, 0);
-                Log.Info($"Hovering over item: {tempItem.Name}");
+                if (element.IsMouseHovering)
+                {
+                    Item item = new Item();
+                    item.SetDefaults(itemIndex);
+
+                    Main.LocalPlayer.mouseInterface = true;
+                    Main.HoverItem = item.Clone();
+                    Main.hoverItemName = "a";
+                    // Main.hoverItemName = Main.HoverItem.Name;
+                }
             };
 
             itemImage.OnLeftClick += (evt, element) =>
             {
-                Item tempItem = new Item();
-                tempItem.SetDefaults(itemIndex);
+                Item item = new();
+                item.SetDefaults(itemIndex);
                 // put item in the players hand
                 if (Main.mouseItem.IsAir)
                 {
                     if (!Main.playerInventory)
                         Main.playerInventory = true;
 
-                    Main.mouseItem = tempItem.Clone();
+                    Item clone = item.Clone();
+                    Main.mouseItem.stack = item.maxStack;
+                    Main.mouseItem = clone;
 
-                    if (!ItemID.Sets.Deprecated[tempItem.type])
-                        Main.mouseItem.SetDefaults(tempItem.type);
+                    if (!ItemID.Sets.Deprecated[item.type])
+                        Main.mouseItem.SetDefaults(item.type);
 
                     // stackDelay = 30;
                 }
@@ -263,7 +272,7 @@ namespace SquidTestingMod.UI
                 Main.QueueMainThreadAction(() =>
                 {
                     MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    sys?.myState?.itemBrowserButton?.ToggleItemsPanel();
+                    sys?.mainState?.itemBrowserButton?.ToggleItemsPanel();
                 });
             }
         }

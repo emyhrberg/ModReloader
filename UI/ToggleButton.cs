@@ -34,7 +34,7 @@ namespace SquidTestingMod.UI
                 if (c.ShowTooltips)
                 {
                     MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons" : "Show buttons";
+                    string toggleText = sys.mainState.AreButtonsVisible ? "Hide buttons" : "Show buttons";
                     UICommon.TooltipMouseText(toggleText);
                 }
             }
@@ -45,7 +45,7 @@ namespace SquidTestingMod.UI
             // Put custom on/off logic here, ignoring the base's version:
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            if (sys == null || sys.myState == null)
+            if (sys == null || sys.mainState == null)
             {
                 Log.Info("MainSystem or MainState is null. Cannot update texture.");
                 return;
@@ -53,7 +53,7 @@ namespace SquidTestingMod.UI
 
             Config c = ModContent.GetInstance<Config>();
             bool showText = c?.ShowButtonText ?? true; // true if config is null
-            bool isOn = sys.myState.AreButtonsVisible;
+            bool isOn = sys.mainState.AreButtonsVisible;
             Log.Info("showText: " + showText + ", isOn: " + isOn);
 
             // Set the texture based on the config and state settings
@@ -68,7 +68,7 @@ namespace SquidTestingMod.UI
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             // Toggle visibility of all buttons
-            sys?.myState?.ToggleAllButtonsVisibility();
+            sys?.mainState?.ToggleAllButtonsVisibility();
 
             // Update textures for ON/OFF and text on buttons
             UpdateTexture();
@@ -93,7 +93,7 @@ namespace SquidTestingMod.UI
             // Recalculate();
 
             // set state to null
-            ModContent.GetInstance<MainSystem>().myState = null;
+            ModContent.GetInstance<MainSystem>().SetUIStateToNull();
         }
 
         // public override bool ContainsPoint(Vector2 point)
@@ -157,7 +157,7 @@ namespace SquidTestingMod.UI
 
             // fix update texture
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (needsTextureUpdate && sys?.myState != null)
+            if (needsTextureUpdate && sys?.mainState != null)
             {
                 UpdateTexture();
                 needsTextureUpdate = false; // Run once
@@ -186,19 +186,19 @@ namespace SquidTestingMod.UI
                 Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                 // move all other buttons too
-                if (sys?.myState?.AreButtonsVisible ?? false)
+                if (sys?.mainState?.AreButtonsVisible ?? false)
                 {
                     // ConfigButton
-                    sys.myState.configButton.Left.Set(Main.mouseX - dragOffset.X + 100, 0f);
-                    sys.myState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                    sys.mainState.configButton.Left.Set(Main.mouseX - dragOffset.X + 100, 0f);
+                    sys.mainState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                     // ItemsButton
-                    sys.myState.itemBrowserButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
-                    sys.myState.itemBrowserButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                    sys.mainState.itemBrowserButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
+                    sys.mainState.itemBrowserButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                     // RefreshButton
-                    sys.myState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
-                    sys.myState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                    sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
+                    sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                 }
 

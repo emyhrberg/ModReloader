@@ -10,13 +10,13 @@ namespace SquidTestingMod.UI
     public class MainSystem : ModSystem
     {
         public UserInterface userInterface;
-        public MainState myState;
+        public MainState mainState;
 
         public override void Load()
         {
             userInterface = new UserInterface();
-            myState = new MainState();
-            userInterface.SetState(myState);
+            mainState = new MainState();
+            userInterface.SetState(mainState);
         }
 
         public override void UpdateUI(GameTime gameTime)
@@ -43,7 +43,7 @@ namespace SquidTestingMod.UI
 
         public void SetUIStateToMyState()
         {
-            userInterface.SetState(myState);
+            userInterface.SetState(mainState);
         }
 
         public void SetUIStateToNull()
