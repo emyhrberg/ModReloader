@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,7 +48,7 @@ namespace SquidTestingMod.UI
             Append(searchBox);
 
             // Create the item panels.
-            AddItemsToGrid(grid);
+            CreateItemSlots(grid);
             Log.Info($"Grid Children Count: {grid.Children.Count()}");
         }
 
