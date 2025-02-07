@@ -70,6 +70,22 @@ namespace SquidTestingMod.UI
             // Toggle visibility of all buttons
             sys?.mainState?.ToggleAllButtonsVisibility();
 
+            // move all other buttons too
+            if (sys?.mainState?.AreButtonsVisible ?? false)
+            {
+                // ConfigButton
+                sys.mainState.configButton.Left.Set(Main.mouseX - dragOffset.X + 100, 0f);
+                sys.mainState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
+                // ItemsButton
+                sys.mainState.itemButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
+                sys.mainState.itemButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
+                // RefreshButton
+                sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
+                sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+            }
+
             // Update textures for ON/OFF and text on buttons
             UpdateTexture();
         }
@@ -154,7 +170,6 @@ namespace SquidTestingMod.UI
         {
             base.Update(gameTime);
 
-
             // fix update texture
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (needsTextureUpdate && sys?.mainState != null)
@@ -199,7 +214,6 @@ namespace SquidTestingMod.UI
                     // RefreshButton
                     sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
                     sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-
                 }
 
                 Recalculate();

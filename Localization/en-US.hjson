@@ -15,6 +15,7 @@ Mods: {
 					Gameplay: Gameplay
 					General: General
 					Reload: Reload
+					PlannedFeatures: Planned Features Header
 				}
 
 				EnableRefreshButton: {
@@ -100,6 +101,21 @@ Mods: {
 				ShowTooltips: {
 					Label: Show Tooltips
 					Tooltip: ""
+				}
+
+				ShowUIElementsSizes: {
+					Tooltip: ""
+					Label: Show U I Elements Sizes
+				}
+
+				ShowUIElementsHitbox: {
+					Tooltip: ""
+					Label: Show U I Elements Hitbox
+				}
+
+				ButtonSizes: {
+					Tooltip: ""
+					Label: Button Sizes
 				}
 			}
 

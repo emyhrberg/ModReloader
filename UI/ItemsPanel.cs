@@ -41,7 +41,7 @@ namespace SquidTestingMod.UI
             Append(searchBox);
 
             // Create the item panels.
-            CreateItemPanels(grid);
+            CreateItemSlots(grid);
         }
 
         private void FilterItems()
@@ -53,29 +53,43 @@ namespace SquidTestingMod.UI
 
             for (int i = 1; i <= 500; i++)
             {
-                // Create an Item instance and set it up.
                 Item item = new();
                 item.SetDefaults(i);
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    // Create the UIItemSlot. 
-                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem)
+                    {
+                        Width = { Pixels = 40 },  // Explicit size
+                        Height = { Pixels = 40 },
+                        HAlign = 0f,  // Align left so they're packed with no padding
+                        VAlign = 0f
+                    };
                     grid.Add(itemSlot);
                 }
             }
         }
 
-        private static void CreateItemPanels(UIGrid grid)
+
+        private void CreateItemSlots(UIGrid grid)
         {
+            const int slotSize = 40; // Change to fit more per row
+
             for (int i = 1; i <= 500; i++)
             {
-                // Create an Item instance and set it up.
                 Item item = new();
                 item.SetDefaults(i);
 
-                // Create the UIItemSlot. 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem)
+                {
+                    Width = { Pixels = slotSize },
+                    Height = { Pixels = slotSize },
+                    HAlign = 0f, // Left-align so they are tightly packed
+                    VAlign = 0f
+                };
+
+                Log.Info("width " + itemSlot.Width.Pixels + " height " + itemSlot.Height.Pixels);
+                LogInnerOuterDimensions(itemSlot);
 
                 grid.Add(itemSlot);
             }
@@ -105,15 +119,15 @@ namespace SquidTestingMod.UI
             };
         }
 
-        private static UIGrid CreateGrid()
+        private static PassThroughUIGrid CreateGrid()
         {
-            return new UIGrid()
+            return new PassThroughUIGrid()
             {
                 Height = { Percent = 1f, Pixels = -45 },
                 Width = { Percent = 1f, Pixels = -20 },
                 VAlign = 0.5f,
                 HAlign = 0.5f,
-                ListPadding = 5f, // distance between items
+                ListPadding = 0f, // distance between items
                 Top = { Pixels = 30 },
                 Left = { Pixels = -2 },
                 OverflowHidden = true,

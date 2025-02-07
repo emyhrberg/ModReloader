@@ -71,6 +71,19 @@ namespace SquidTestingMod.Common.Configs
         [DrawTicks]
         public string GodModeOutlineSize = "Small";
 
+        [Header("PlannedFeatures")]
+
+        [DefaultValue(false)]
+        public bool ShowUIElementsHitbox;
+
+        [DefaultValue(false)]
+        public bool ShowUIElementsSizes;
+
+        [OptionStrings(["Small", "Medium", "Big"])]
+        [DefaultValue("Small")]
+        [DrawTicks]
+        public string ButtonSizes = "Small";
+
         public override void OnChanged()
         {
             if (ModContent.GetInstance<Config>() == null)
