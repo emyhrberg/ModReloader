@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Systems;
+using SquidTestingMod.UI;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -14,7 +16,91 @@ namespace SquidTestingMod.Common.Configs
         // CLIENT SIDE
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
+        // ACTUAL CONFIG
+        [Header("Autoload")]
+        [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
+        [DefaultValue("None")]
+        [DrawTicks]
+        public string AutoloadWorld = "None";
+
+        // RELOAD HEADER
+        [Header("Reload")]
+
+        [DefaultValue(false)]
+        public bool SaveWorld;
+
+        [DefaultValue(false)]
+        public bool InvokeBuildAndReload;
+
+        [DefaultValue("SquidTestingMod")]
+        public string ModToReload;
+
+        [DefaultValue(0)]
+        [Range(0, 5000)]
+        public int WaitingTimeBeforeNavigatingToModSources;
+
+        [DefaultValue(1000)]
+        [Range(0, 5000)]
+        public int WaitingTimeBeforeBuildAndReload;
+
+        [Header("General")]
+        [DefaultValue(true)]
+        public bool ShowToggleButton;
+
+        [DefaultValue(true)]
+        public bool ShowButtonText;
+
+        [DefaultValue(true)]
+        public bool ShowTooltips;
+
+        [Header("UI")]
+        [DefaultValue(false)]
+        public bool ShowHitboxes;
+
+        [Header("Gameplay")]
+
+        [DefaultValue(false)]
+        public bool AlwaysSpawnBossOnTopOfPlayer;
+
+        [Header("GodMode")]
+        [DefaultValue(false)]
+        public bool StartInGodMode;
+
+        [OptionStrings(["None", "Small", "Big"])]
+        [DefaultValue("Small")]
+        [DrawTicks]
+        public string GodModeOutlineSize = "Small";
+
         public override void OnChanged()
+        {
+            if (ModContent.GetInstance<Config>() == null)
+                return;
+
+            ChangeGodModeOutline();
+            ChangeToggleButtonVisibility();
+            ChangeButtonTextVisibility();
+        }
+
+        private void ChangeButtonTextVisibility()
+        {
+            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            sys?.myState?.ToggleButtonTextVisibility();
+        }
+
+        private void ChangeToggleButtonVisibility()
+        {
+            if (ModContent.GetInstance<Config>() == null)
+                return;
+
+            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+
+            if (ShowToggleButton)
+                sys?.ShowUI();
+            else
+                sys?.HideUI();
+        }
+
+        private void ChangeGodModeOutline()
         {
             // add null check for the class itself in case it's called before the mod is loaded
             // idk
@@ -34,51 +120,5 @@ namespace SquidTestingMod.Common.Configs
                 GameShaders.Armor.BindShader(type, new ArmorShaderData(bigOutlineEffect, "Pass0"));
             }
         }
-
-        // ACTUAL CONFIG
-        [Header("Autoload")]
-        [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
-        [DefaultValue("None")]
-        [DrawTicks]
-        public string AutoloadWorld = "None";
-
-        // REFRESH HEADER
-        [Header("Refresh")]
-
-        [DefaultValue(false)]
-        public bool SaveWorld;
-
-        [DefaultValue(false)]
-        public bool InvokeBuildAndReload;
-
-        [DefaultValue("SquidTestingMod")]
-        public string ModToReload;
-
-        [DefaultValue(0)]
-        [Range(0, 5000)]
-        public int WaitingTimeBeforeNavigatingToModSources;
-
-        [DefaultValue(1000)]
-        [Range(0, 5000)]
-        public int WaitingTimeBeforeBuildAndReload;
-
-        // MISC HEADER
-        [Header("UI")]
-        [DefaultValue(false)]
-        public bool ShowHitboxes;
-
-        [Header("Gameplay")]
-
-        [DefaultValue(false)]
-        public bool AlwaysSpawnBossOnTopOfPlayer;
-
-        [Header("GodMode")]
-        [DefaultValue(false)]
-        public bool StartInGodMode;
-
-        [OptionStrings(["None", "Small", "Big"])]
-        [DefaultValue("Small")]
-        [DrawTicks]
-        public string GodModeOutlineSize = "Small";
     }
 }

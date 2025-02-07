@@ -2,6 +2,7 @@ using log4net.Repository.Hierarchy;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -11,11 +12,30 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public abstract class BaseButton(Asset<Texture2D> texture, string hoverText) : UIImageButton(texture)
+    public abstract class BaseButton : UIImageButton
     {
-        public string HoverText { get; private set; } = hoverText;
+        private readonly Asset<Texture2D> _buttonImgText;
+        private readonly Asset<Texture2D> _buttonImgNoText;
 
-        public bool Visible { get; private set; }
+        public string HoverText { get; private set; }
+
+        public BaseButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText)
+            : base(buttonImgText) // Default to the text version
+        {
+            _buttonImgText = buttonImgText;
+            _buttonImgNoText = buttonImgNoText;
+            HoverText = hoverText;
+
+            // Ensure the correct initial texture is set
+            UpdateTexture();
+        }
+
+        public virtual void UpdateTexture()
+        {
+            Config config = ModContent.GetInstance<Config>();
+            bool showText = config?.ShowButtonText ?? true; // Default to true if config is null
+            SetImage(showText ? _buttonImgText : _buttonImgNoText);
+        }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -23,18 +43,25 @@ namespace SquidTestingMod.UI
 
             if (IsMouseHovering)
             {
-                UICommon.TooltipMouseText(HoverText);
+                Config c = ModContent.GetInstance<Config>();
+                if (c.ShowTooltips)
+                    UICommon.TooltipMouseText(HoverText);
             }
         }
 
-        // Abstract = force children to implement this method
+        // Abstract click function = force children (all buttons) to implement this method
         public abstract void HandleClick();
 
         #region dragging
+        private bool DRAG_ENABLED = false;
+
         private bool dragging;
         private Vector2 dragOffset;
         public override void RightMouseDown(UIMouseEvent evt)
         {
+            if (!DRAG_ENABLED)
+                return;
+
             base.LeftMouseDown(evt);
             dragging = true;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
@@ -43,6 +70,8 @@ namespace SquidTestingMod.UI
 
         public override void RightMouseUp(UIMouseEvent evt)
         {
+            if (!DRAG_ENABLED)
+                return;
             base.LeftMouseUp(evt);
             dragging = false;
             Main.LocalPlayer.mouseInterface = false;
@@ -51,6 +80,8 @@ namespace SquidTestingMod.UI
 
         public override void Update(GameTime gameTime)
         {
+            if (!DRAG_ENABLED)
+                return;
             base.Update(gameTime);
             if (dragging)
             {

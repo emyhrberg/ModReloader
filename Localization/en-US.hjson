@@ -13,16 +13,18 @@ Mods: {
 					GodMode: God Mode
 					UI: UI
 					Gameplay: Gameplay
+					General: General
+					Reload: Reload
 				}
 
 				EnableRefreshButton: {
-					Label: Enable Refresh Button
-					Tooltip: This will put a refresh button in the middle of the screen.
+					Label: Enable Reload Button
+					Tooltip: This will put a reload button in the middle of the screen.
 				}
 
 				WaitingTime: {
 					Label: Waiting Time
-					Tooltip: After you press refresh button, set the time to wait before building, navigating to mod menu.
+					Tooltip: After you press reload button, set the time to wait before building, navigating to mod menu.
 				}
 
 				SaveWorld: {
@@ -52,7 +54,7 @@ Mods: {
 
 				InvokeBuildAndReload: {
 					Label: Invoke Build And Reload
-					Tooltip: After clicking refresh at Mod Sources Menu, invokes BuildReload method (experimental, may cause crash/slow behaviour.)
+					Tooltip: After clicking reload at Mod Sources Menu, invokes BuildReload method (experimental, may cause crash/slow behaviour.)
 				}
 
 				GodModeOutlineSize: {
@@ -83,6 +85,21 @@ Mods: {
 				WaitingTimeBeforeBuildAndReload: {
 					Label: Waiting Time Before Build And Reload (ms)
 					Tooltip: When at mod sources menu state, the time until BuildReload executes.
+				}
+
+				ShowToggleButton: {
+					Label: Show Toggle Button
+					Tooltip: Show the On/Off Button
+				}
+
+				ShowButtonText: {
+					Label: Show Button Text
+					Tooltip: ""
+				}
+
+				ShowTooltips: {
+					Label: Show Tooltips
+					Tooltip: ""
 				}
 			}
 

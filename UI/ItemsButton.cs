@@ -10,18 +10,10 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ItemsButton(Asset<Texture2D> texture, string hoverText) : BaseButton(texture, hoverText)
+    public class ItemsButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         private ItemsPanel itemsPanel;
         private bool isPanelVisible = false;
-
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            base.DrawSelf(spriteBatch);
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
-            if (!sys?.myState?.AreButtonsVisible ?? false)
-                return;
-        }
 
         public override void HandleClick()
         {

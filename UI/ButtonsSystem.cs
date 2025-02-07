@@ -9,7 +9,7 @@ namespace SquidTestingMod.UI
     [Autoload(Side = ModSide.Client)]
     public class ButtonsSystem : ModSystem
     {
-        private UserInterface userInterface;
+        public UserInterface userInterface;
         public ButtonsState myState;
 
         public override void Load()
@@ -39,6 +39,16 @@ namespace SquidTestingMod.UI
                     },
                     InterfaceScaleType.UI));
             }
+        }
+
+        public void ShowUI()
+        {
+            userInterface.SetState(myState);
+        }
+
+        public void HideUI()
+        {
+            userInterface.SetState(null);
         }
     }
 }
