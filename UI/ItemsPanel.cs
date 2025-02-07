@@ -1,16 +1,8 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
@@ -65,10 +57,12 @@ namespace SquidTestingMod.UI
                 Item item = new();
                 item.SetDefaults(i);
 
-                // Create the UIItemSlot. 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.InventoryItem);
-
-                grid.Add(itemSlot);
+                if (item.Name.ToLower().Contains(searchText))
+                {
+                    // Create the UIItemSlot. 
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    grid.Add(itemSlot);
+                }
             }
         }
 
@@ -81,7 +75,7 @@ namespace SquidTestingMod.UI
                 item.SetDefaults(i);
 
                 // Create the UIItemSlot. 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.InventoryItem);
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
 
                 grid.Add(itemSlot);
             }
