@@ -8,7 +8,6 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
@@ -22,14 +21,14 @@ namespace SquidTestingMod.UI
             ExitWorld(c);
 
             // 2) Navigate to Develop Mods
-            if (c.WaitingTimeBeforeNavigatingToModSources > 0)
-                await Task.Delay(c.WaitingTimeBeforeNavigatingToModSources);
+            if (c.Reload.WaitingTimeBeforeNavigatingToModSources > 0)
+                await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
             object modSourcesInstance = NavigateToDevelopMods();
 
             // 3) Build and reload
-            if (c.InvokeBuildAndReload)
+            if (c.Reload.InvokeBuildAndReload)
             {
-                await Task.Delay(c.WaitingTimeBeforeBuildAndReload);
+                await Task.Delay(c.Reload.WaitingTimeBeforeBuildAndReload);
                 BuildReload(modSourcesInstance);
             }
 
@@ -38,11 +37,11 @@ namespace SquidTestingMod.UI
 
         private async static void ExitWorld(Config c)
         {
-            if (c.SaveWorld)
+            if (c.Reload.SaveWorld)
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
-                await Task.Delay(c.WaitingTimeBeforeNavigatingToModSources);
+                await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
             }
             else
             {
@@ -90,7 +89,7 @@ namespace SquidTestingMod.UI
                             string modName = uiText.Text;
                             Log.Info($"Mod Name: {modName}");
                             Config c = ModContent.GetInstance<Config>();
-                            if (modName == c.ModToReload)
+                            if (modName == c.Reload.ModToReload)
                             {
                                 modSourceItem = item;
                                 modNameFound = modName;

@@ -150,7 +150,12 @@ Mods: {
 				}
 
 				UI: {
-					Label: U I
+					Label: UI
+					Tooltip: ""
+				}
+
+				Reload: {
+					Label: Reload
 					Tooltip: ""
 				}
 			}
@@ -267,12 +272,46 @@ Mods: {
 				}
 
 				ShowUIElementsHitbox: {
-					Label: Show U I Elements Hitbox
+					Label: Show UI Elements Hitbox
 					Tooltip: ""
 				}
 
 				ShowUIElementsSizes: {
-					Label: Show U I Elements Sizes
+					Label: Show UI Elements Sizes
+					Tooltip: ""
+				}
+			}
+
+			ReloadConfig: {
+				Tooltip: ""
+
+				AutoloadWorld: {
+					Label: Autoload World
+					Tooltip: ""
+				}
+
+				SaveWorld: {
+					Label: Save World
+					Tooltip: ""
+				}
+
+				InvokeBuildAndReload: {
+					Label: Invoke Build And Reload
+					Tooltip: ""
+				}
+
+				ModToReload: {
+					Label: Mod To Reload
+					Tooltip: ""
+				}
+
+				WaitingTimeBeforeNavigatingToModSources: {
+					Label: Waiting Time Before Navigating To Mod Sources
+					Tooltip: ""
+				}
+
+				WaitingTimeBeforeBuildAndReload: {
+					Label: Waiting Time Before Build And Reload
 					Tooltip: ""
 				}
 			}

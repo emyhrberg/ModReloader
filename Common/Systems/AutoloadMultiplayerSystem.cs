@@ -22,8 +22,6 @@ namespace SquidTestingMod.Common.Systems
     [Autoload(Side = ModSide.Client)]
     public class AutoloadMultiplayerSystem : ModSystem
     {
-        private MethodInfo canWorldBePlayedMethod;
-
         public override void OnModLoad()
         {
             // Get the OnSuccessfulLoad field using reflection
@@ -33,7 +31,7 @@ namespace SquidTestingMod.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
                 Config c = ModContent.GetInstance<Config>();
-                if (c.AutoloadWorld == "Multiplayer")
+                if (c.Reload.AutoloadWorld == "Multiplayer")
                 {
                     onSuccessfulLoad += StartServerAndEnterMultiplayerWorld;
                 }

@@ -21,28 +21,7 @@ namespace SquidTestingMod.Common.Configs
 
         // ACTUAL CONFIG
         [Header("Reload")]
-
-        [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
-        [DefaultValue("None")]
-        [DrawTicks]
-        public string AutoloadWorld = "None";
-
-        [DefaultValue(false)]
-        public bool SaveWorld;
-
-        [DefaultValue(false)]
-        public bool InvokeBuildAndReload;
-
-        [DefaultValue("SquidTestingMod")]
-        public string ModToReload;
-
-        [DefaultValue(0)]
-        [Range(0, 5000)]
-        public int WaitingTimeBeforeNavigatingToModSources;
-
-        [DefaultValue(0)]
-        [Range(0, 5000)]
-        public int WaitingTimeBeforeBuildAndReload;
+        public ReloadConfig Reload = new();
 
         [Header("General")]
         public GeneralConfig General = new();
@@ -80,6 +59,31 @@ namespace SquidTestingMod.Common.Configs
             ChangeButtonTextVisibility();
         }
 
+        public class ReloadConfig
+        {
+            [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
+            [DefaultValue("None")]
+            [DrawTicks]
+            public string AutoloadWorld = "None";
+
+            [DefaultValue(false)]
+            public bool SaveWorld;
+
+            [DefaultValue(true)]
+            public bool InvokeBuildAndReload;
+
+            [DefaultValue("SquidTestingMod")]
+            public string ModToReload;
+
+            [DefaultValue(0)]
+            [Range(0, 5000)]
+            public int WaitingTimeBeforeNavigatingToModSources;
+
+            [DefaultValue(0)]
+            [Range(0, 5000)]
+            public int WaitingTimeBeforeBuildAndReload;
+        }
+
         public class GeneralConfig
         {
             [DefaultValue(true)]
@@ -111,10 +115,10 @@ namespace SquidTestingMod.Common.Configs
 
         public class GameplayConfig
         {
-            [DefaultValue(false)]
+            [DefaultValue(true)]
             public bool AlwaysSpawnBossOnTopOfPlayer;
 
-            [DefaultValue(false)]
+            [DefaultValue(true)]
             public bool StartInGodMode;
 
             [OptionStrings(["None", "Small", "Big"])]
