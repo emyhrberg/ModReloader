@@ -45,29 +45,10 @@ namespace SquidTestingMod.Common.Configs
         public int WaitingTimeBeforeBuildAndReload;
 
         [Header("General")]
-        [DefaultValue(true)]
-        public bool ShowToggleButton;
-
-        [DefaultValue(true)]
-        public bool ShowButtonText;
-
-        [DefaultValue(true)]
-        public bool ShowTooltips;
-
-        [OptionStrings(["Small", "Medium", "Big"])]
-        [DefaultValue("Big")]
-        [DrawTicks]
-        public string ButtonSizes = "Big";
+        public GeneralConfig General = new();
 
         [Header("UI")]
-        [DefaultValue(false)]
-        public bool ShowHitboxes;
-
-        [DefaultValue(false)]
-        public bool ShowUIElementsHitbox;
-
-        [DefaultValue(false)]
-        public bool ShowUIElementsSizes;
+        public UIConfig UI = new();
 
         [Header("Gameplay")]
         public GameplayConfig Gameplay = new();
@@ -97,6 +78,35 @@ namespace SquidTestingMod.Common.Configs
             ChangeGodModeOutline();
             ChangeToggleButtonVisibility();
             ChangeButtonTextVisibility();
+        }
+
+        public class GeneralConfig
+        {
+            [DefaultValue(true)]
+            public bool ShowToggleButton;
+
+            [DefaultValue(true)]
+            public bool ShowButtonText;
+
+            [DefaultValue(true)]
+            public bool ShowTooltips;
+
+            [OptionStrings(["Small", "Medium", "Big"])]
+            [DefaultValue("Big")]
+            [DrawTicks]
+            public string ButtonSizes = "Big";
+        }
+
+        public class UIConfig
+        {
+            [DefaultValue(false)]
+            public bool ShowHitboxes;
+
+            [DefaultValue(false)]
+            public bool ShowUIElementsHitbox;
+
+            [DefaultValue(false)]
+            public bool ShowUIElementsSizes;
         }
 
         public class GameplayConfig
@@ -140,7 +150,7 @@ namespace SquidTestingMod.Common.Configs
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            if (ShowToggleButton)
+            if (General.ShowToggleButton)
                 sys?.SetUIStateToMyState();
             else
                 sys?.SetUIStateToNull();

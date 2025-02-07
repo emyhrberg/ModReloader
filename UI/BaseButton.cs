@@ -80,7 +80,7 @@ namespace SquidTestingMod.UI
         public virtual void UpdateTexture()
         {
             Config config = ModContent.GetInstance<Config>();
-            bool showText = config?.ShowButtonText ?? true;
+            bool showText = config?.General.ShowButtonText ?? true;
 
             // Set the current image asset based on showText.
             CurrentImage = showText ? _buttonImgText : _buttonImgNoText;
@@ -88,7 +88,7 @@ namespace SquidTestingMod.UI
 
             // Set VisualScale based on config.ButtonSizes.
             // (Assuming config.ButtonSizes is one of "Small", "Medium", or "Big".)
-            VisualScale = config.ButtonSizes switch
+            VisualScale = config.General.ButtonSizes switch
             {
                 "Small" => 0.45f,
                 "Medium" => 0.7f,
@@ -114,7 +114,7 @@ namespace SquidTestingMod.UI
             if (IsMouseHovering)
             {
                 Config c = ModContent.GetInstance<Config>();
-                if (c.ShowTooltips)
+                if (c.General.ShowTooltips)
                     UICommon.TooltipMouseText(HoverText);
             }
         }

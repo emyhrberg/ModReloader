@@ -143,6 +143,16 @@ Mods: {
 					Label: Gameplay
 					Tooltip: ""
 				}
+
+				General: {
+					Label: General
+					Tooltip: ""
+				}
+
+				UI: {
+					Label: U I
+					Tooltip: ""
+				}
 			}
 
 			CustomDefinition: {
@@ -220,6 +230,49 @@ Mods: {
 
 				GodModeOutlineSize: {
 					Label: God Mode Outline Size
+					Tooltip: ""
+				}
+			}
+
+			GeneralConfig: {
+				Tooltip: ""
+
+				ShowToggleButton: {
+					Label: Show Toggle Button
+					Tooltip: ""
+				}
+
+				ShowButtonText: {
+					Label: Show Button Text
+					Tooltip: ""
+				}
+
+				ShowTooltips: {
+					Label: Show Tooltips
+					Tooltip: ""
+				}
+
+				ButtonSizes: {
+					Label: Button Sizes
+					Tooltip: ""
+				}
+			}
+
+			UIConfig: {
+				Tooltip: ""
+
+				ShowHitboxes: {
+					Label: Show Hitboxes
+					Tooltip: ""
+				}
+
+				ShowUIElementsHitbox: {
+					Label: Show U I Elements Hitbox
+					Tooltip: ""
+				}
+
+				ShowUIElementsSizes: {
+					Label: Show U I Elements Sizes
 					Tooltip: ""
 				}
 			}

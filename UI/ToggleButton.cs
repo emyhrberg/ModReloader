@@ -41,7 +41,7 @@ namespace SquidTestingMod.UI
             }
 
             Config c = ModContent.GetInstance<Config>();
-            bool showText = c?.ShowButtonText ?? true;
+            bool showText = c?.General.ShowButtonText ?? true;
             bool isOn = sys.mainState.AreButtonsVisible;
 
             // Now update the current image asset based on the toggle state.
@@ -89,7 +89,7 @@ namespace SquidTestingMod.UI
             Main.NewText(t, Color.Orange);
 
             // update config state
-            ModContent.GetInstance<Config>().ShowToggleButton = false;
+            ModContent.GetInstance<Config>().General.ShowToggleButton = false;
 
             // check issmall
             // isSmall = true;
