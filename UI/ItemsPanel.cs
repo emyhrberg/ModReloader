@@ -58,7 +58,7 @@ namespace SquidTestingMod.UI
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem)
+                    UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem)
                     {
                         Width = { Pixels = 40 },  // Explicit size
                         Height = { Pixels = 40 },
@@ -69,7 +69,6 @@ namespace SquidTestingMod.UI
                 }
             }
         }
-
 
         private void CreateItemSlots(UIGrid grid)
         {

@@ -13,35 +13,38 @@ namespace SquidTestingMod.UI
     {
         // We store the item that should be shown in the browser.
         private int itemSlotContext;
-        // IMPORTANT: Store a “master copy” for drawing so that we don’t accidentally change the browser item.
         private Item displayItem;
 
         public ItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
             this.itemSlotContext = itemSlotContext;
-            // Clone it once so that any temporary changes for drawing won’t alter the “source” item.
             this.displayItem = itemArray[itemIndex].Clone();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // Get the dimensions for this UI element.
+            base.Draw(spriteBatch);
 
-            // Draw the item icon using the vanilla helper.
             if (!displayItem.IsAir)
             {
                 CalculatedStyle dimensions = GetInnerDimensions();
                 Terraria.UI.ItemSlot.Draw(spriteBatch, ref displayItem, itemSlotContext, dimensions.Position(), Color.White);
             }
 
-            // Draw a colored overlay.
-            // spriteBatch.Draw(TextureAssets.ColorBar.Value, dimensions.ToRectangle(), Color.Red * 0.2f);
+            // draw the hovering tooltip for each item slot
+            if (IsMouseHovering)
+            {
+                Main.HoverItem = displayItem.Clone();
+
+                CalculatedStyle dimensions = GetInnerDimensions();
+                Texture2D overlay = TextureAssets.InventoryBack14.Value;
+                spriteBatch.Draw(overlay, dimensions.Position(), null, Color.White * 0.5f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            }
         }
 
         // When the user left-clicks, we want to give them a full-stack copy without removing the item from our browser.
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Do not call base.LeftClick(evt) here – that would trigger the default inventory behavior.
             if (Main.mouseItem.IsAir)
             {
                 // Clone our display item and give the clone the max stack.
