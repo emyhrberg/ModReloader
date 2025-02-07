@@ -42,9 +42,53 @@ namespace SquidTestingMod.Common.Systems
 
         // HOOKS, SETTING DAMAGE TO 0.
         // Todo does it work for drowning/lava? lol not important
-        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot) => !GodMode;
-        public override void ModifyHitByNPC(NPC npc, ref Player.HurtModifiers modifiers) { if (GodMode) modifiers.FinalDamage *= 0; }
-        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo) { if (GodMode) hurtInfo.Damage = 0; }
+        public override void OnHurt(Player.HurtInfo info)
+        {
+            Log.Info($"OnHurt: Damage = {info.Damage}, Source = {info.DamageSource}");
+            if (GodMode)
+            {
+                // Heal the damage immediately.
+                Player.statLife += info.Damage;
+                Log.Info("GodMode active: Healed damage in OnHurt.");
+            }
+        }
 
+        public override void OnHitByNPC(NPC npc, Player.HurtInfo hurtInfo)
+        {
+            Log.Info($"OnHitByNPC: Damage = {hurtInfo.Damage}, NPC type = {npc.type}");
+            if (GodMode)
+            {
+                // Heal the damage immediately.
+                Player.statLife += hurtInfo.Damage;
+                Log.Info("GodMode active: Healed NPC damage in OnHitByNPC.");
+            }
+            base.OnHitByNPC(npc, hurtInfo);
+        }
+
+        public override void OnHitByProjectile(Projectile proj, Player.HurtInfo hurtInfo)
+        {
+            Log.Info($"OnHitByProjectile: Damage = {hurtInfo.Damage}, Projectile type = {proj.type}");
+            if (GodMode)
+            {
+                // Heal the damage immediately.
+                Player.statLife += hurtInfo.Damage;
+                Log.Info("GodMode active: Healed projectile damage in OnHitByProjectile.");
+            }
+            base.OnHitByProjectile(proj, hurtInfo);
+        }
+
+        public override void PostUpdate()
+        {
+            if (GodMode)
+            {
+                // Optionally, clear harmful debuffs.
+                for (int i = 0; i < Player.buffType.Length; i++)
+                {
+                    Player.ClearBuff(i);
+                }
+                // Restore player's life to max.
+                Player.statLife = Player.statLifeMax2;
+            }
+        }
     }
 }

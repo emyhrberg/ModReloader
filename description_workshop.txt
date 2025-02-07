@@ -6,4 +6,3 @@ List of functionality:
 
 1. God Mode (toggle with H)
 2. Spawn Boss On Top (will always spawn every boss on top of your position, instead of outside the screen)
-3. 

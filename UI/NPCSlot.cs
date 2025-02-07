@@ -75,7 +75,6 @@ namespace SquidTestingMod.UI
         }
     }
 
-
     public class MyCustomNPCSource : IEntitySource
     {
         public string CustomData { get; private set; }

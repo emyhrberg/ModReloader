@@ -13,7 +13,7 @@ namespace SquidTestingMod.UI
     public class ItemsButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         public ItemsPanel itemsPanel;
-        private bool isPanelVisible = false;
+        private bool isItemsPanelVisible = false;
 
         public override void HandleClick()
         {
@@ -24,23 +24,31 @@ namespace SquidTestingMod.UI
                 Main.playerInventory = true;
 
             // close inv if we close the panel
-            if (!isPanelVisible)
+            if (!isItemsPanelVisible)
                 Main.playerInventory = false;
         }
 
         public void ToggleItemsPanel()
         {
-            // Toggle the panel's visibility flag.
-            isPanelVisible = !isPanelVisible;
-
-            // Ensure the button is part of a UIState. (ButtonState in our case right now)
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (Parent is not UIState state)
             {
                 Log.Warn("ItemsButton has no parent UIState!");
                 return;
             }
 
-            if (isPanelVisible)
+            // If the NPC panel is open, remove it first.
+            if (sys.mainState.npcButton != null && sys.mainState.npcButton.npcPanel != null && state.Children.Contains(sys.mainState.npcButton.npcPanel))
+            {
+                Log.Info("Removing NPCPanel because ItemsPanel is being toggled.");
+                state.RemoveChild(sys.mainState.npcButton.npcPanel);
+                sys.mainState.npcButton.npcPanel = null;
+            }
+
+            // Toggle the ItemsPanel flag.
+            isItemsPanelVisible = !isItemsPanelVisible;
+
+            if (isItemsPanelVisible)
             {
                 // Create the panel if it doesn't already exist.
                 if (itemsPanel == null)
@@ -49,24 +57,21 @@ namespace SquidTestingMod.UI
                     Log.Info("Created new ItemsPanel.");
                 }
 
+                // Only append if not already present.
                 if (!state.Children.Contains(itemsPanel))
                 {
                     Log.Info("Appending ItemsPanel to parent state.");
                     state.Append(itemsPanel);
                     itemsPanel.searchBox.Focus();
                 }
-
-                // Force recalculation of the layout.
-                itemsPanel.Recalculate();
-                state.Recalculate();
             }
             else
             {
                 Log.Info("Removing ItemsPanel from parent state.");
                 if (state.Children.Contains(itemsPanel))
                     state.RemoveChild(itemsPanel);
-                state.Recalculate();
             }
+            state.Recalculate();
         }
     }
 }
