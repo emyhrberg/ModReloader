@@ -24,38 +24,41 @@ namespace SquidTestingMod.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            CalculatedStyle dimensions = GetInnerDimensions();
+            float bgOpacity = IsMouseHovering ? 1f : 0.4f;
+
+            // Draw background
+            spriteBatch.Draw(TextureAssets.InventoryBack14.Value, dimensions.ToRectangle(), Color.Blue * bgOpacity);
+
             if (!displayItem.IsAir)
             {
-                CalculatedStyle dimensions = GetInnerDimensions();
-
                 // Load the item’s texture.
                 Main.instance.LoadItem(displayItem.type);
                 Asset<Texture2D> textureAsset = TextureAssets.Item[displayItem.type];
                 Texture2D itemTexture = textureAsset.Value;
-                // Determine desired drawing size.
-                int desiredSize = 48; // target size in pixels
+                int desiredSize = 25; // target size in pixels
 
-                // Compute a uniform scale factor so that the larger of width or height becomes desiredSize.
                 float scale = desiredSize / (float)Math.Max(itemTexture.Width, itemTexture.Height);
-
-                // Optionally, you might want to adjust the scale further based on any custom logic.
-                // For now, we simply use the computed scale.
-                // Center the scaled texture within the slot.
-                Vector2 drawPos = dimensions.Position() + new Vector2((dimensions.Width - itemTexture.Width * scale) / 2f,
-                                                                      (dimensions.Height - itemTexture.Height * scale) / 2f);
+                float x = (dimensions.Width - itemTexture.Width * scale) / 2f;
+                float y = (dimensions.Height - itemTexture.Height * scale) / 2f;
+                Vector2 drawPos = dimensions.Position() + new Vector2(x, y);
 
                 spriteBatch.Draw(itemTexture, drawPos, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
+
+            // Draw a black border (1 pixel thick) around the slot.
+            Rectangle r = dimensions.ToRectangle();
+            int thickness = 1;
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, r.Width, thickness), Color.Black); // Top border
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Bottom - thickness, r.Width, thickness), Color.Black); // Bottom border
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, thickness, r.Height), Color.Black); // Left border
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.Right - thickness, r.Y, thickness, r.Height), Color.Black); // Right border
 
             // draw the hovering tooltip for each item slot
             if (IsMouseHovering)
             {
                 Main.HoverItem = displayItem.Clone();
                 Main.hoverItemName = Main.HoverItem.Name;
-
-                // add red outline hover, meaning draw debug rectangle
-                CalculatedStyle dimensions = GetInnerDimensions();
-                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.ToRectangle(), Color.Red * 0.2f);
             }
         }
 

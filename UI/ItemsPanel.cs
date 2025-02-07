@@ -54,14 +54,16 @@ namespace SquidTestingMod.UI
 
             grid.Clear();
 
-            for (int i = 1; i <= 500; i++)
+            for (int i = 1; i <= 3000; i++)
             {
                 Item item = new();
                 item.SetDefaults(i);
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    itemSlot.Width.Set(50, 0f);
+                    itemSlot.Height.Set(50, 0f);
                     grid.Add(itemSlot);
                 }
             }
@@ -69,13 +71,15 @@ namespace SquidTestingMod.UI
 
         private void CreateItemSlots(UIGrid grid)
         {
-            for (int i = 1; i <= 500; i++)
+            for (int i = 1; i <= 3000; i++)
             {
                 Item item = new();
                 item.SetDefaults(i);
 
                 // note: you can use BankItem for red color, ChestItem for blue color, etc.
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ShopItem);
+                itemSlot.Width.Set(50, 0f);
+                itemSlot.Height.Set(50, 0f);
                 grid.Add(itemSlot);
             }
         }
@@ -143,7 +147,7 @@ namespace SquidTestingMod.UI
 
             // Draw the panel border
             CalculatedStyle dimensions = GetInnerDimensions();
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.Position(), null, Color.Orange * 0.2f, 0f, Vector2.Zero, new Vector2(dimensions.Width, dimensions.Height), SpriteEffects.None, 0f);
+            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.Position(), null, Color.Orange * 0.2f, 0f, Vector2.Zero, new Vector2(dimensions.Width, dimensions.Height), SpriteEffects.None, 0f);
         }
         #endregion
 
