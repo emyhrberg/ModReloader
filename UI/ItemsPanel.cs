@@ -58,13 +58,7 @@ namespace SquidTestingMod.UI
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem)
-                    {
-                        Width = { Pixels = 40 },  // Explicit size
-                        Height = { Pixels = 40 },
-                        HAlign = 0f,  // Align left so they're packed with no padding
-                        VAlign = 0f
-                    };
+                    UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
                     grid.Add(itemSlot);
                 }
             }
@@ -72,20 +66,12 @@ namespace SquidTestingMod.UI
 
         private void CreateItemSlots(UIGrid grid)
         {
-            const int slotSize = 40; // Change to fit more per row
-
             for (int i = 1; i <= 500; i++)
             {
                 Item item = new();
                 item.SetDefaults(i);
 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem)
-                {
-                    Width = { Pixels = slotSize },
-                    Height = { Pixels = slotSize },
-                    HAlign = 0f, // Left-align so they are tightly packed
-                    VAlign = 0f
-                };
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
 
                 Log.Info("width " + itemSlot.Width.Pixels + " height " + itemSlot.Height.Pixels);
                 LogInnerOuterDimensions(itemSlot);
@@ -123,12 +109,12 @@ namespace SquidTestingMod.UI
             return new PassThroughUIGrid()
             {
                 Height = { Percent = 1f, Pixels = -45 },
-                Width = { Percent = 1f, Pixels = -20 },
+                Width = { Percent = 1f, Pixels = -30 },
                 VAlign = 0.5f,
                 HAlign = 0.5f,
                 ListPadding = 0f, // distance between items
                 Top = { Pixels = 30 },
-                Left = { Pixels = -2 },
+                Left = { Pixels = 0 },
                 OverflowHidden = true,
             };
         }

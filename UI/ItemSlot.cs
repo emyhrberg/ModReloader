@@ -18,12 +18,12 @@ namespace SquidTestingMod.UI
         public ItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
             this.itemSlotContext = itemSlotContext;
-            this.displayItem = itemArray[itemIndex].Clone();
+            displayItem = itemArray[itemIndex].Clone();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            // base.Draw(spriteBatch);
 
             if (!displayItem.IsAir)
             {
@@ -35,10 +35,7 @@ namespace SquidTestingMod.UI
             if (IsMouseHovering)
             {
                 Main.HoverItem = displayItem.Clone();
-
-                CalculatedStyle dimensions = GetInnerDimensions();
-                Texture2D overlay = TextureAssets.InventoryBack14.Value;
-                spriteBatch.Draw(overlay, dimensions.Position(), null, Color.White * 0.5f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                Main.hoverItemName = Main.HoverItem.Name;
             }
         }
 
@@ -55,9 +52,8 @@ namespace SquidTestingMod.UI
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            // base.Update(gameTime);
         }
 
-        // (Optional) Override any additional drag or right-click handlers if you want to completely disable taking items.
     }
 }
