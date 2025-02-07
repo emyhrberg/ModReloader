@@ -138,9 +138,9 @@ namespace SquidTestingMod.UI
                 Width = { Percent = 1f, Pixels = -40 },
                 VAlign = 0.5f,
                 HAlign = 0.5f,
-                ListPadding = 0f, // distance between items
-                Top = { Pixels = 30 },
-                Left = { Pixels = -5 },
+                ListPadding = 3f, // distance between items
+                Top = { Pixels = 30f },
+                Left = { Pixels = -7f },
                 OverflowHidden = true,
             };
         }

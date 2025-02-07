@@ -128,6 +128,11 @@ Mods: {
 					Label: Item Slot Color
 					Tooltip: Blue looks most natural
 				}
+
+				ItemSlotStyle: {
+					Tooltip: ""
+					Label: Item Slot Style
+				}
 			}
 
 			CustomDefinition: {

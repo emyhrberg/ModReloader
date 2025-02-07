@@ -20,14 +20,12 @@ namespace SquidTestingMod.Common.Configs
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         // ACTUAL CONFIG
-        [Header("Autoload")]
+        [Header("Reload")]
+
         [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
         [DefaultValue("None")]
         [DrawTicks]
         public string AutoloadWorld = "None";
-
-        // RELOAD HEADER
-        [Header("Reload")]
 
         [DefaultValue(false)]
         public bool SaveWorld;
@@ -42,7 +40,7 @@ namespace SquidTestingMod.Common.Configs
         [Range(0, 5000)]
         public int WaitingTimeBeforeNavigatingToModSources;
 
-        [DefaultValue(1000)]
+        [DefaultValue(0)]
         [Range(0, 5000)]
         public int WaitingTimeBeforeBuildAndReload;
 
@@ -56,16 +54,26 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(true)]
         public bool ShowTooltips;
 
+        [OptionStrings(["Small", "Medium", "Big"])]
+        [DefaultValue("Big")]
+        [DrawTicks]
+        public string ButtonSizes = "Big";
+
         [Header("UI")]
         [DefaultValue(false)]
         public bool ShowHitboxes;
+
+        [DefaultValue(false)]
+        public bool ShowUIElementsHitbox;
+
+        [DefaultValue(false)]
+        public bool ShowUIElementsSizes;
 
         [Header("Gameplay")]
 
         [DefaultValue(false)]
         public bool AlwaysSpawnBossOnTopOfPlayer;
 
-        [Header("GodMode")]
         [DefaultValue(false)]
         public bool StartInGodMode;
 
@@ -79,21 +87,12 @@ namespace SquidTestingMod.Common.Configs
         [Range(0, 10000)]
         public int MaxItemsToDisplay = 1000;
 
+        [DefaultValue(1)]
+        [Range(1, 19)]
+        public int ItemSlotStyle = 1;
+
         [DefaultValue(typeof(Color), "255, 0, 0, 255"), ColorHSLSlider(false), ColorNoAlpha]
         public Color ItemSlotColor = new(255, 0, 0, 255);
-
-        [Header("PlannedFeatures")]
-
-        [DefaultValue(false)]
-        public bool ShowUIElementsHitbox;
-
-        [DefaultValue(false)]
-        public bool ShowUIElementsSizes;
-
-        [OptionStrings(["Small", "Medium", "Big"])]
-        [DefaultValue("Big")]
-        [DrawTicks]
-        public string ButtonSizes = "Big";
 
         public override void OnChanged()
         {

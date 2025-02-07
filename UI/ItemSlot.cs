@@ -29,12 +29,35 @@ namespace SquidTestingMod.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             CalculatedStyle dimensions = GetInnerDimensions();
-            float bgOpacity = IsMouseHovering ? 1f : 0.4f;
+            float bgOpacity = IsMouseHovering ? 0.9f : 0.8f;
 
             Config c = ModContent.GetInstance<Config>();
+            Texture2D t = c.ItemSlotStyle switch
+            {
+                1 => TextureAssets.InventoryBack.Value,
+                2 => TextureAssets.InventoryBack2.Value,
+                3 => TextureAssets.InventoryBack3.Value,
+                4 => TextureAssets.InventoryBack4.Value,
+                5 => TextureAssets.InventoryBack5.Value,
+                6 => TextureAssets.InventoryBack6.Value,
+                7 => TextureAssets.InventoryBack7.Value,
+                8 => TextureAssets.InventoryBack8.Value,
+                9 => TextureAssets.InventoryBack9.Value,
+                10 => TextureAssets.InventoryBack10.Value,
+                11 => TextureAssets.InventoryBack11.Value,
+                12 => TextureAssets.InventoryBack12.Value,
+                13 => TextureAssets.InventoryBack13.Value,
+                14 => TextureAssets.InventoryBack14.Value,
+                15 => TextureAssets.InventoryBack15.Value,
+                16 => TextureAssets.InventoryBack16.Value,
+                17 => TextureAssets.InventoryBack17.Value,
+                18 => TextureAssets.InventoryBack18.Value,
+                19 => TextureAssets.InventoryBack19.Value,
+                _ => TextureAssets.InventoryBack.Value,
+            };
 
             // Draw background
-            spriteBatch.Draw(TextureAssets.InventoryBack14.Value, dimensions.ToRectangle(), c.ItemSlotColor * bgOpacity);
+            spriteBatch.Draw(t, dimensions.ToRectangle(), c.ItemSlotColor * bgOpacity);
 
             if (!displayItem.IsAir)
             {
@@ -53,12 +76,12 @@ namespace SquidTestingMod.UI
             }
 
             // Draw a black border (1 pixel thick) around the slot.
-            Rectangle r = dimensions.ToRectangle();
-            int thickness = 1;
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, r.Width, thickness), Color.Black); // Top border
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Bottom - thickness, r.Width, thickness), Color.Black); // Bottom border
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, thickness, r.Height), Color.Black); // Left border
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.Right - thickness, r.Y, thickness, r.Height), Color.Black); // Right border
+            // Rectangle r = dimensions.ToRectangle();
+            // int thickness = 1;
+            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, r.Width, thickness), Color.Black); // Top border
+            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Bottom - thickness, r.Width, thickness), Color.Black); // Bottom border
+            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, thickness, r.Height), Color.Black); // Left border
+            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.Right - thickness, r.Y, thickness, r.Height), Color.Black); // Right border
 
             // draw the hovering tooltip for each item slot
             if (IsMouseHovering)
