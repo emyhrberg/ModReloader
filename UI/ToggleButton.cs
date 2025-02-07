@@ -62,22 +62,6 @@ namespace SquidTestingMod.UI
             // Toggle visibility of all buttons
             sys?.mainState?.ToggleAllButtonsVisibility();
 
-            // move all other buttons too
-            if (sys?.mainState?.AreButtonsVisible ?? false)
-            {
-                // ConfigButton
-                sys.mainState.configButton.Left.Set(Main.mouseX - dragOffset.X + 100, 0f);
-                sys.mainState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-
-                // ItemsButton
-                sys.mainState.itemButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
-                sys.mainState.itemButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-
-                // RefreshButton
-                sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
-                sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-            }
-
             // Update textures for ON/OFF and text on buttons
             UpdateTexture();
         }
@@ -90,48 +74,16 @@ namespace SquidTestingMod.UI
 
             // update config state
             ModContent.GetInstance<Config>().General.ShowToggleButton = false;
-
-            // check issmall
-            // isSmall = true;
-            // if (isSmall)
-            // {
-            //     Width.Set(50f, 0f);
-            //     Height.Set(50f, 0f);
-            //     Left.Set(Left.Pixels + 25, 0f);
-            //     Top.Set(Top.Pixels + 25, 0f);
-            // }
-            // Recalculate();
-
-            // set state to null
             ModContent.GetInstance<MainSystem>().SetUIStateToNull();
         }
-
-        // public override bool ContainsPoint(Vector2 point)
-        // {
-        //     // Reduce width by pixels (pixels/2 on each side)
-        //     float shrinkWidth = 10f;
-        //     // Reduce height by pixels (pixels/2 on each side)
-        //     float shrinkHeight = 50f;
-
-        //     Rectangle customArea = new(
-        //         (int)(GetDimensions().X + shrinkWidth / 2),  // Move left side inward
-        //         (int)(GetDimensions().Y + shrinkHeight / 2), // Move top side downward
-        //         (int)(Width.Pixels - shrinkWidth),  // Reduce total width
-        //         (int)(Height.Pixels - shrinkHeight) // Reduce total height
-        //     );
-
-        //     return customArea.Contains(point.ToPoint());
-        // }
 
 
         #region dragging
         private bool dragging;
         private Vector2 dragOffset;
-        // Track original mouse down position so we know if we moved
         private Vector2 mouseDownPos;
         private bool isDrag;
         private const float DragThreshold = 10f; // you can tweak the threshold
-        // Hotfix click started outside the button
         private bool clickStartedOutsideButton;
 
         public override void LeftMouseDown(UIMouseEvent evt)
@@ -190,7 +142,7 @@ namespace SquidTestingMod.UI
                     isDrag = true;
                 }
 
-                // update the position of this button
+                // update the position of this ToggleButton
                 Left.Set(Main.mouseX - dragOffset.X, 0f);
                 Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
@@ -205,8 +157,12 @@ namespace SquidTestingMod.UI
                     sys.mainState.itemButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
                     sys.mainState.itemButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
+                    // NPCButton
+                    sys.mainState.npcButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
+                    sys.mainState.npcButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+
                     // RefreshButton
-                    sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
+                    sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 400, 0f);
                     sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
                 }
 

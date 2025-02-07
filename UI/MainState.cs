@@ -17,6 +17,7 @@ namespace SquidTestingMod.UI
         public RefreshButton refreshButton;
         public ConfigButton configButton;
         public ToggleButton toggleButton;
+        public NPCButton npcButton;
 
         public override void OnInitialize()
         {
@@ -27,13 +28,12 @@ namespace SquidTestingMod.UI
             // Add all others buttons
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, Assets.ButtonConfigNoText, "Open config", 100f);
             itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse items", 200f);
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload selected mod (see config)", 300f);
+            npcButton = CreateButton<NPCButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse NPCs", 300f);
+            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload selected mod (see config)", 400f);
             Append(itemButton);
             Append(refreshButton);
             Append(configButton);
-
-            // Pass reference of ItemsPanel to ItemsButton
-            // itemButton.SetItemsPanel(itemsPanel);
+            Append(npcButton);
 
             ToggleButtonTextVisibility();
         }
@@ -64,6 +64,7 @@ namespace SquidTestingMod.UI
             itemButton.UpdateTexture();
             refreshButton.UpdateTexture();
             configButton.UpdateTexture();
+            npcButton.UpdateTexture();
         }
 
         public void ToggleAllButtonsVisibility()
@@ -76,12 +77,14 @@ namespace SquidTestingMod.UI
                 RemoveChild(itemButton);
                 RemoveChild(refreshButton);
                 RemoveChild(configButton);
+                RemoveChild(npcButton);
             }
             else
             {
                 Append(itemButton);
                 Append(refreshButton);
                 Append(configButton);
+                Append(npcButton);
             }
         }
     }

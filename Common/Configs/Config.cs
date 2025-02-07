@@ -75,12 +75,12 @@ namespace SquidTestingMod.Common.Configs
             [DefaultValue("SquidTestingMod")]
             public string ModToReload;
 
-            [DefaultValue(0)]
-            [Range(0, 5000)]
+            [DefaultValue(100)]
+            [Range(100, 5000)]
             public int WaitingTimeBeforeNavigatingToModSources;
 
-            [DefaultValue(0)]
-            [Range(0, 5000)]
+            [DefaultValue(100)]
+            [Range(100, 5000)]
             public int WaitingTimeBeforeBuildAndReload;
         }
 
