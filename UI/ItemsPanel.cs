@@ -186,6 +186,13 @@ namespace SquidTestingMod.UI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            // close panel if inventory is closed
+            if (!Main.playerInventory)
+            {
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+            }
+
             if (dragging)
             {
                 Left.Set(Main.mouseX - dragOffset.X, 0f);

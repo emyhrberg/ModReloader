@@ -17,7 +17,7 @@ namespace SquidTestingMod.Common.Commands
             Main.NewText("Toggling items panel...");
 
             // get button state
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             // toggle the items panel
             sys?.myState?.itemBrowserButton?.ToggleItemsPanel();

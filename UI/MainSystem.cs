@@ -7,15 +7,15 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     [Autoload(Side = ModSide.Client)]
-    public class ButtonsSystem : ModSystem
+    public class MainSystem : ModSystem
     {
         public UserInterface userInterface;
-        public ButtonsState myState;
+        public MainState myState;
 
         public override void Load()
         {
             userInterface = new UserInterface();
-            myState = new ButtonsState();
+            myState = new MainState();
             userInterface.SetState(myState);
         }
 
@@ -31,7 +31,7 @@ namespace SquidTestingMod.UI
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "SquidTestingMod: MyState",
+                    "SquidTestingMod: User Interface Draw MainSystem",
                     () =>
                     {
                         userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw

@@ -16,7 +16,7 @@ namespace SquidTestingMod.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
             // literally enables the entire state
             sys.ShowUI();
             // update config state

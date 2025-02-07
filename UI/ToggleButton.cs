@@ -16,8 +16,9 @@ namespace SquidTestingMod.UI
 
         public ToggleButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : base(buttonImgText, buttonImgNoText, hoverText)
         {
-            UpdateTexture();
         }
+
+        private bool needsTextureUpdate = true;
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -28,8 +29,8 @@ namespace SquidTestingMod.UI
                 Config c = ModContent.GetInstance<Config>();
                 if (c.ShowTooltips)
                 {
-                    ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
-                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons \n Right click to drag" : "Show buttons \n Right click to drag";
+                    MainSystem sys = ModContent.GetInstance<MainSystem>();
+                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons \nRight click to drag" : "Show buttons \nRight click to drag";
                     UICommon.TooltipMouseText(toggleText);
                 }
             }
@@ -37,20 +38,21 @@ namespace SquidTestingMod.UI
 
         public override void UpdateTexture()
         {
-            // Get system state
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            // Put your custom on/off logic here, ignoring the base's version:
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             if (sys == null || sys.myState == null)
+            {
+                Log.Info("MainSystem or MainState is null. Cannot update texture.");
                 return;
+            }
 
-            // Get config state
             Config c = ModContent.GetInstance<Config>();
-            bool showText = c?.ShowButtonText ?? true; // Default to true if config is null
-
-            // Get whether buttons are currently visible
+            bool showText = c?.ShowButtonText ?? true; // true if config is null
             bool isOn = sys.myState.AreButtonsVisible;
+            Log.Info("showText: " + showText + ", isOn: " + isOn);
 
-            // Set correct texture based on both ON/OFF state and text visibility
+            // Skip the base UpdateTexture; pick your on/off texture yourself
             SetImage(isOn ? (showText ? Assets.ButtonOn : Assets.ButtonOnNoText)
                           : (showText ? Assets.ButtonOff : Assets.ButtonOffNoText));
         }
@@ -60,7 +62,7 @@ namespace SquidTestingMod.UI
             Log.Info("ToggleButton clicked.");
 
             // Get ButtonsSystem
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             // Toggle visibility of all buttons
             sys?.myState?.ToggleAllButtonsVisibility();
@@ -77,7 +79,7 @@ namespace SquidTestingMod.UI
             ModContent.GetInstance<Config>().ShowToggleButton = false;
 
             // literally disable the entire state
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
             sys.HideUI();
         }
 
@@ -114,13 +116,22 @@ namespace SquidTestingMod.UI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+
+            // fix update texture
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (needsTextureUpdate && sys?.myState != null)
+            {
+                UpdateTexture();
+                needsTextureUpdate = false; // Run once
+            }
+
             if (dragging)
             {
                 Left.Set(Main.mouseX - dragOffset.X, 0f);
                 Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                 // move all other buttons too
-                ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
                 if (sys?.myState?.AreButtonsVisible ?? false)
                 {
                     // ConfigButton

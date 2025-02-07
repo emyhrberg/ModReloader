@@ -18,7 +18,14 @@ namespace SquidTestingMod.UI
         public override void HandleClick()
         {
             ToggleItemsPanel();
-            Main.LocalPlayer.ToggleInv(); // open and close inventory when clicking Item Button
+
+            // open inv if its not already open
+            if (!Main.playerInventory)
+                Main.playerInventory = true;
+
+            // close inv if we close the panel
+            if (!isPanelVisible)
+                Main.playerInventory = false;
         }
 
         public void ToggleItemsPanel()

@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ButtonsState : UIState
+    public class MainState : UIState
     {
         // State
         public bool AreButtonsVisible = true;
@@ -22,6 +22,7 @@ namespace SquidTestingMod.UI
         {
             // Create the toggle button
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Hide buttons", 0f);
+            toggleButton.Activate();
             Append(toggleButton);
 
             // Add all others buttons

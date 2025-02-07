@@ -83,7 +83,7 @@ namespace SquidTestingMod.Common.Configs
 
         private void ChangeButtonTextVisibility()
         {
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
             sys?.myState?.ToggleButtonTextVisibility();
         }
 
@@ -92,7 +92,7 @@ namespace SquidTestingMod.Common.Configs
             if (ModContent.GetInstance<Config>() == null)
                 return;
 
-            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             if (ShowToggleButton)
                 sys?.ShowUI();
