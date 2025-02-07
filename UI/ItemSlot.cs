@@ -2,9 +2,11 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -28,7 +30,7 @@ namespace SquidTestingMod.UI
             float bgOpacity = IsMouseHovering ? 1f : 0.4f;
 
             // Draw background
-            spriteBatch.Draw(TextureAssets.InventoryBack14.Value, dimensions.ToRectangle(), Color.Blue * bgOpacity);
+            spriteBatch.Draw(TextureAssets.InventoryBack14.Value, dimensions.ToRectangle(), new Color(56, 58, 134) * bgOpacity);
 
             if (!displayItem.IsAir)
             {
@@ -65,6 +67,14 @@ namespace SquidTestingMod.UI
         // When the user left-clicks, we want to give them a full-stack copy without removing the item from our browser.
         public override void LeftClick(UIMouseEvent evt)
         {
+            // check if dragging
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys.mainState.itemButton.itemsPanel.IsDragging)
+            {
+                Log.Info("Dragging");
+                return;
+            }
+
             if (Main.mouseItem.IsAir)
             {
                 // Clone our display item and give the clone the max stack.
@@ -73,10 +83,27 @@ namespace SquidTestingMod.UI
             }
         }
 
+        // When the user right-clicks, we want to give them an incrementing stack of the item.
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            if (Main.mouseItem.IsAir)
+            {
+                // Clone our display item and give the clone a stack of 1.
+                Main.mouseItem = displayItem.Clone();
+                if (Main.mouseItem.stack < Main.mouseItem.maxStack)
+                    Main.mouseItem.stack++;
+            }
+        }
+
+        public override void RightMouseDown(UIMouseEvent evt)
+        {
+            base.RightMouseDown(evt);
+        }
+
         public override void Update(GameTime gameTime)
         {
             // base.Update(gameTime);
         }
-
     }
 }

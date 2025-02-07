@@ -12,7 +12,7 @@ namespace SquidTestingMod.UI
 {
     public class ItemsButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
-        private ItemsPanel itemsPanel;
+        public ItemsPanel itemsPanel;
         private bool isPanelVisible = false;
 
         public override void HandleClick()

@@ -54,7 +54,9 @@ namespace SquidTestingMod.UI
 
             grid.Clear();
 
-            for (int i = 1; i <= 3000; i++)
+            int allItems = TextureAssets.Item.Length - 1;
+
+            for (int i = 1; i <= allItems; i++)
             {
                 Item item = new();
                 item.SetDefaults(i);
@@ -71,7 +73,9 @@ namespace SquidTestingMod.UI
 
         private void CreateItemSlots(UIGrid grid)
         {
-            for (int i = 1; i <= 3000; i++)
+            int allItems = TextureAssets.Item.Length - 1;
+
+            for (int i = 1; i <= allItems; i++)
             {
                 Item item = new();
                 item.SetDefaults(i);
@@ -145,21 +149,41 @@ namespace SquidTestingMod.UI
         {
             base.Draw(spriteBatch);
 
-            // Draw the panel border
+            // Draw the panel border for debugging
             CalculatedStyle dimensions = GetInnerDimensions();
             // spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.Position(), null, Color.Orange * 0.2f, 0f, Vector2.Zero, new Vector2(dimensions.Width, dimensions.Height), SpriteEffects.None, 0f);
         }
         #endregion
 
         #region dragging and update
+        public bool IsDragging = false;
         private bool dragging;
         private Vector2 dragOffset;
-
         private bool closeRequested = false;
+
+        // more
+        private Vector2 mouseDownPos;
+        private const float DragThreshold = 10f; // you can tweak the threshold
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            // Check if we moved the mouse more than the threshold
+            Vector2 currentPos = new(Main.mouseX, Main.mouseY);
+            if (dragging)
+            {
+                float dragDistance = Vector2.Distance(currentPos, mouseDownPos);
+
+                if (dragDistance > DragThreshold)
+                {
+                    IsDragging = true; // Now we are officially dragging
+                }
+            }
+            else
+            {
+                IsDragging = false; // Reset when not dragging
+            }
 
             // close panel if escape is pressed
             if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
@@ -218,8 +242,11 @@ namespace SquidTestingMod.UI
             if (scrollbar.ContainsPoint(evt.MousePosition))
                 return;
 
+            mouseDownPos = evt.MousePosition; // store mouse down location
+
             base.LeftMouseDown(evt);
             dragging = true;
+            IsDragging = false;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
             Main.LocalPlayer.mouseInterface = true;
         }
@@ -228,6 +255,7 @@ namespace SquidTestingMod.UI
         {
             base.LeftMouseUp(evt);
             dragging = false;
+            IsDragging = false;
             Main.LocalPlayer.mouseInterface = false;
             Recalculate();
         }
@@ -235,6 +263,8 @@ namespace SquidTestingMod.UI
         // CLICK
         public override void LeftClick(UIMouseEvent evt)
         {
+            if (IsDragging)
+                return;
             base.LeftClick(evt);
             Main.LocalPlayer.mouseInterface = true; // block item usage
         }
