@@ -20,7 +20,7 @@ namespace SquidTestingMod.Common.Commands
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             // toggle the items panel
-            sys?.mainState?.itemBrowserButton?.ToggleItemsPanel();
+            sys?.mainState?.itemButton?.ToggleItemsPanel();
         }
     }
 }

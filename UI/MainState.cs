@@ -13,27 +13,30 @@ namespace SquidTestingMod.UI
         public bool IsDrawingTextOnButtons = true;
 
         // Buttons
-        public ItemsButton itemBrowserButton;
+        public ItemsButton itemButton;
         public RefreshButton refreshButton;
         public ConfigButton configButton;
         public ToggleButton toggleButton;
+
+        // Panel
+        private ItemsPanel itemsPanel;
 
         public override void OnInitialize()
         {
             // Create the toggle button
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Hide buttons", 0f);
-            // set width and height to be only the center of the button
-            toggleButton.Height.Set(50f, 0f);
-            toggleButton.Width.Set(50f, 0f);
             Append(toggleButton);
 
             // Add all others buttons
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, Assets.ButtonConfigNoText, "Open config", 100f);
-            itemBrowserButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse items", 200f);
+            itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse items", 200f);
             refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload selected mod (see config)", 300f);
-            Append(itemBrowserButton);
+            Append(itemButton);
             Append(refreshButton);
             Append(configButton);
+
+            // Pass reference of ItemsPanel to ItemsButton
+            // itemButton.SetItemsPanel(itemsPanel);
 
             ToggleButtonTextVisibility();
         }
@@ -61,7 +64,7 @@ namespace SquidTestingMod.UI
         public void ToggleButtonTextVisibility()
         {
             toggleButton.UpdateTexture();
-            itemBrowserButton.UpdateTexture();
+            itemButton.UpdateTexture();
             refreshButton.UpdateTexture();
             configButton.UpdateTexture();
         }
@@ -73,13 +76,13 @@ namespace SquidTestingMod.UI
 
             if (!AreButtonsVisible)
             {
-                RemoveChild(itemBrowserButton);
+                RemoveChild(itemButton);
                 RemoveChild(refreshButton);
                 RemoveChild(configButton);
             }
             else
             {
-                Append(itemBrowserButton);
+                Append(itemButton);
                 Append(refreshButton);
                 Append(configButton);
             }

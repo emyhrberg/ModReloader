@@ -152,8 +152,8 @@ namespace SquidTestingMod.UI
                     sys.mainState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                     // ItemsButton
-                    sys.mainState.itemBrowserButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
-                    sys.mainState.itemBrowserButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                    sys.mainState.itemButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
+                    sys.mainState.itemButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
                     // RefreshButton
                     sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
