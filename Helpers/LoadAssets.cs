@@ -27,7 +27,8 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonNPCs;
         public static Asset<Texture2D> ButtonItems;
         public static Asset<Texture2D> ButtonConfig;
-        public static Asset<Texture2D> EyeToggle;
+        public static Asset<Texture2D> ToggleButtonOn;
+        public static Asset<Texture2D> ToggleButtonOff;
 
         public static void PreloadAllAssets()
         {
@@ -35,7 +36,8 @@ namespace SquidTestingMod.Helpers
             ButtonNPCs = PreloadAsset("ButtonNPCs");
             ButtonItems = PreloadAsset("ButtonItems");
             ButtonConfig = PreloadAsset("ButtonConfig");
-            EyeToggle = Main.Assets.Request<Texture2D>("Images/UI/Settings_Toggle", AssetRequestMode.ImmediateLoad);
+            ToggleButtonOn = PreloadAsset("ButtonOn");
+            ToggleButtonOff = PreloadAsset("ButtonOff");
         }
 
         /// <summary>

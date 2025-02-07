@@ -69,7 +69,7 @@ namespace SquidTestingMod.UI
 
         private static UIBetterTextBox CreateSearchTextBox()
         {
-            return new UIBetterTextBox("Search for items")
+            return new UIBetterTextBox("")
             {
                 Width = { Percent = 1f, Pixels = -40 },
                 Height = { Pixels = 40 }, // minimum height
@@ -167,7 +167,7 @@ namespace SquidTestingMod.UI
         #region dragging
         private bool dragging;
         private Vector2 dragOffset;
-        public override void RightMouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
             base.LeftMouseDown(evt);
             dragging = true;
@@ -175,7 +175,7 @@ namespace SquidTestingMod.UI
             Main.LocalPlayer.mouseInterface = true;
         }
 
-        public override void RightMouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
             base.LeftMouseUp(evt);
             dragging = false;

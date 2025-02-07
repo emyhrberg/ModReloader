@@ -1,16 +1,7 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using log4net;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config.UI;
-using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {

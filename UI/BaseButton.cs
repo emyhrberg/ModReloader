@@ -1,8 +1,11 @@
+using log4net.Repository.Hierarchy;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -12,9 +15,12 @@ namespace SquidTestingMod.UI
     {
         public string HoverText { get; private set; } = hoverText;
 
+        public bool Visible { get; private set; }
+
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
+
             if (IsMouseHovering)
             {
                 UICommon.TooltipMouseText(HoverText);

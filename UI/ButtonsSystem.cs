@@ -35,27 +35,10 @@ namespace SquidTestingMod.UI
                     () =>
                     {
                         userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw
-                        // TESTING_DRAW_TEMPORARY();
                         return true;
                     },
                     InterfaceScaleType.UI));
             }
         }
-
-        // private void TESTING_DRAW_TEMPORARY()
-        // {
-        //     for (int i = 1; i < 30; i++)
-        //     {
-        //         Main.instance.LoadItem(i);
-        //         var texture = TextureAssets.Item[i].Value;
-        //         Main.spriteBatch.Draw(texture, new Vector2(10 + 30 * i, 100), Color.White);
-        //     }
-        //     for (int i = 30; i < 60; i++)
-        //     {
-        //         Main.instance.LoadItem(i);
-        //         var texture = TextureAssets.Item[i].Value;
-        //         Main.spriteBatch.Draw(texture, new Vector2(10 + 30 * i, 150), Color.White);
-        //     }
-        // }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -14,10 +15,18 @@ namespace SquidTestingMod.UI
         private ItemsPanel itemsPanel;
         private bool isPanelVisible = false;
 
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+            ButtonsSystem sys = ModContent.GetInstance<ButtonsSystem>();
+            if (!sys?.myState?.AreButtonsVisible ?? false)
+                return;
+        }
+
         public override void HandleClick()
         {
-            Main.playerInventory = true; // Open the inventory.
             ToggleItemsPanel();
+            Main.LocalPlayer.ToggleInv(); // open and close inventory when clicking Item Button
         }
 
         public void ToggleItemsPanel()
