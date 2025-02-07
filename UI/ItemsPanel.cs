@@ -66,9 +66,7 @@ namespace SquidTestingMod.UI
                 item.SetDefaults(i);
 
                 // Create the UIItemSlot. 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.InventoryItem)
-                {
-                };
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.InventoryItem);
 
                 grid.Add(itemSlot);
             }
@@ -83,9 +81,7 @@ namespace SquidTestingMod.UI
                 item.SetDefaults(i);
 
                 // Create the UIItemSlot. 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.InventoryItem)
-                {
-                };
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.InventoryItem);
 
                 grid.Add(itemSlot);
             }
