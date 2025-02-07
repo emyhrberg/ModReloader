@@ -1,12 +1,15 @@
 using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -61,8 +64,30 @@ namespace SquidTestingMod.UI
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // For example, simply print the NPC's name when clicked.
-            Main.NewText(displayNPC.FullName);
+            // Spawn the NPC 200 tiles above and 200 tiles to the left of players pos
+            // Only singleplayer
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                int x = (int)Main.LocalPlayer.position.X - 200;
+                int y = (int)Main.LocalPlayer.position.Y - 200;
+                NPC.NewNPC(new MyCustomNPCSource("Spawn"), x, y, displayNPC.type);
+            }
         }
     }
+
+
+    public class MyCustomNPCSource : IEntitySource
+    {
+        public string CustomData { get; private set; }
+
+        public string Context => throw new NotImplementedException();
+
+        public MyCustomNPCSource(string customData)
+        {
+            CustomData = customData;
+        }
+    }
+
 }
+
+
