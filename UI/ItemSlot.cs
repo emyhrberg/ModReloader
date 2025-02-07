@@ -23,8 +23,6 @@ namespace SquidTestingMod.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // base.Draw(spriteBatch);
-
             if (!displayItem.IsAir)
             {
                 CalculatedStyle dimensions = GetInnerDimensions();
@@ -36,6 +34,10 @@ namespace SquidTestingMod.UI
             {
                 Main.HoverItem = displayItem.Clone();
                 Main.hoverItemName = Main.HoverItem.Name;
+
+                // add red outline hover, meaning draw debug rectangle
+                CalculatedStyle dimensions = GetInnerDimensions();
+                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.ToRectangle(), Color.Red * 0.2f);
             }
         }
 

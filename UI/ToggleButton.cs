@@ -26,25 +26,31 @@ namespace SquidTestingMod.UI
         // Methods
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            base.DrawSelf(spriteBatch);
+            CalculatedStyle dimensions = GetInnerDimensions();
+            if (CurrentImage != null && CurrentImage.Value != null)
+            {
+                // Calculate drawn sprite size using VisualScale.
+                float drawWidth = CurrentImage.Value.Width * VisualScale;
+                float drawHeight = CurrentImage.Value.Height * VisualScale;
+                // Center the sprite in the clickable area.
+                Vector2 drawPos = dimensions.Position() + new Vector2((dimensions.Width - drawWidth) / 2f, (dimensions.Height - drawHeight) / 2f);
+                spriteBatch.Draw(CurrentImage.Value, drawPos, null, Color.White, 0f, Vector2.Zero, VisualScale, SpriteEffects.None, 0f);
+            }
 
-            if (IsMouseHovering && !clickStartedOutsideButton)
+            if (IsMouseHovering)
             {
                 Config c = ModContent.GetInstance<Config>();
                 if (c.ShowTooltips)
-                {
-                    MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    string toggleText = sys.mainState.AreButtonsVisible ? "Hide buttons" : "Show buttons";
-                    UICommon.TooltipMouseText(toggleText);
-                }
+                    UICommon.TooltipMouseText(HoverText);
             }
         }
 
         public override void UpdateTexture()
         {
-            // Put custom on/off logic here, ignoring the base's version:
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            // First update the base (which sets VisualScale and the default image asset).
+            base.UpdateTexture();
 
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (sys == null || sys.mainState == null)
             {
                 Log.Info("MainSystem or MainState is null. Cannot update texture.");
@@ -52,13 +58,17 @@ namespace SquidTestingMod.UI
             }
 
             Config c = ModContent.GetInstance<Config>();
-            bool showText = c?.ShowButtonText ?? true; // true if config is null
+            bool showText = c?.ShowButtonText ?? true;
             bool isOn = sys.mainState.AreButtonsVisible;
             Log.Info("showText: " + showText + ", isOn: " + isOn);
 
-            // Set the texture based on the config and state settings
-            SetImage(isOn ? (showText ? Assets.ButtonOn : Assets.ButtonOnNoText)
-                          : (showText ? Assets.ButtonOff : Assets.ButtonOffNoText));
+            // Now update the current image asset based on the toggle state.
+            if (isOn)
+                CurrentImage = showText ? Assets.ButtonOn : Assets.ButtonOnNoText;
+            else
+                CurrentImage = showText ? Assets.ButtonOff : Assets.ButtonOffNoText;
+
+            SetImage(CurrentImage);
         }
 
         public override void HandleClick()

@@ -16,8 +16,10 @@ namespace SquidTestingMod.UI
     {
         private readonly Asset<Texture2D> _buttonImgText;
         private readonly Asset<Texture2D> _buttonImgNoText;
+        public float VisualScale { get; private set; }
 
         public string HoverText { get; private set; }
+        public Asset<Texture2D> CurrentImage { get; set; }
 
         public BaseButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText)
             : base(buttonImgText) // Default to the text version
@@ -33,14 +35,41 @@ namespace SquidTestingMod.UI
         public virtual void UpdateTexture()
         {
             Config config = ModContent.GetInstance<Config>();
-            bool showText = config?.ShowButtonText ?? true; // Default to true if config is null
-            SetImage(showText ? _buttonImgText : _buttonImgNoText);
+            bool showText = config?.ShowButtonText ?? true;
+
+            // Set the current image asset based on showText.
+            CurrentImage = showText ? _buttonImgText : _buttonImgNoText;
+            SetImage(CurrentImage);
+
+            // Set VisualScale based on config.ButtonSizes.
+            // (Assuming config.ButtonSizes is one of "Small", "Medium", or "Big".)
+            switch (config.ButtonSizes)
+            {
+                case "Small":
+                    VisualScale = 0.35f;
+                    break;
+                case "Medium":
+                    VisualScale = 0.7f;
+                    break;
+                case "Big":
+                default:
+                    VisualScale = 1.0f;
+                    break;
+            }
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            // base draws all buttons with hover effect
-            base.DrawSelf(spriteBatch);
+            CalculatedStyle dimensions = GetInnerDimensions();
+            if (CurrentImage != null && CurrentImage.Value != null)
+            {
+                // Calculate the drawn size based on VisualScale.
+                float drawWidth = CurrentImage.Value.Width * VisualScale;
+                float drawHeight = CurrentImage.Value.Height * VisualScale;
+                // Center the image within the UI element.
+                Vector2 drawPos = dimensions.Position() + new Vector2((dimensions.Width - drawWidth) / 2f, (dimensions.Height - drawHeight) / 2f);
+                spriteBatch.Draw(CurrentImage.Value, drawPos, null, Color.White, 0f, Vector2.Zero, VisualScale, SpriteEffects.None, 0f);
+            }
 
             if (IsMouseHovering)
             {

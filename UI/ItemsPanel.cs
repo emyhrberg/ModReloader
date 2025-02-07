@@ -1,6 +1,9 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using SquidTestingMod.Helpers;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI.Elements;
@@ -58,7 +61,7 @@ namespace SquidTestingMod.UI
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
                     grid.Add(itemSlot);
                 }
             }
@@ -72,10 +75,6 @@ namespace SquidTestingMod.UI
                 item.SetDefaults(i);
 
                 ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
-
-                Log.Info("width " + itemSlot.Width.Pixels + " height " + itemSlot.Height.Pixels);
-                LogInnerOuterDimensions(itemSlot);
-
                 grid.Add(itemSlot);
             }
         }
@@ -104,17 +103,17 @@ namespace SquidTestingMod.UI
             };
         }
 
-        private static PassThroughUIGrid CreateGrid()
+        private static UIGrid CreateGrid()
         {
-            return new PassThroughUIGrid()
+            return new UIGrid()
             {
                 Height = { Percent = 1f, Pixels = -45 },
-                Width = { Percent = 1f, Pixels = -30 },
+                Width = { Percent = 1f, Pixels = -40 },
                 VAlign = 0.5f,
                 HAlign = 0.5f,
                 ListPadding = 0f, // distance between items
                 Top = { Pixels = 30 },
-                Left = { Pixels = 0 },
+                Left = { Pixels = -5 },
                 OverflowHidden = true,
             };
         }
@@ -133,6 +132,17 @@ namespace SquidTestingMod.UI
         {
             element.Recalculate();
             Log.Info($"{element.GetType().Name} Outer: {element.GetOuterDimensions().Width} x {element.GetOuterDimensions().Height} Inner: {element.GetInnerDimensions().Width} x {element.GetInnerDimensions().Height}");
+        }
+        #endregion
+
+        #region draw
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            // Draw the panel border
+            CalculatedStyle dimensions = GetInnerDimensions();
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.Position(), null, Color.Orange * 0.2f, 0f, Vector2.Zero, new Vector2(dimensions.Width, dimensions.Height), SpriteEffects.None, 0f);
         }
         #endregion
 
