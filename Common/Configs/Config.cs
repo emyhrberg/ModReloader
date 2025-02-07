@@ -35,30 +35,6 @@ namespace SquidTestingMod.Common.Configs
         [Header("ItemBrowser")]
         public ItemBrowserConfig ItemBrowser = new();
 
-        public override void OnChanged()
-        {
-            if (ModContent.GetInstance<Config>() == null)
-            {
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                if (sys == null)
-                {
-                    Log.Info("MainSystem is null");
-                    return;
-                }
-                else
-                {
-                    Log.Info("MainSystem is not null");
-                    sys.mainState.configButton.IsConfigOpen = false;
-                }
-
-                return;
-            }
-
-            ChangeGodModeOutline();
-            ChangeToggleButtonVisibility();
-            ChangeButtonTextVisibility();
-        }
-
         public class ReloadConfig
         {
             [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
@@ -139,6 +115,30 @@ namespace SquidTestingMod.Common.Configs
 
             [DefaultValue(typeof(Color), "255, 0, 0, 255"), ColorHSLSlider(false), ColorNoAlpha]
             public Color ItemSlotColor = new(255, 0, 0, 255);
+        }
+
+        public override void OnChanged()
+        {
+            if (ModContent.GetInstance<Config>() == null)
+            {
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                if (sys == null)
+                {
+                    Log.Info("MainSystem is null");
+                    return;
+                }
+                else
+                {
+                    Log.Info("MainSystem is not null");
+                    sys.mainState.configButton.IsConfigOpen = false;
+                }
+
+                return;
+            }
+
+            ChangeGodModeOutline();
+            ChangeToggleButtonVisibility();
+            ChangeButtonTextVisibility();
         }
 
         private void ChangeButtonTextVisibility()

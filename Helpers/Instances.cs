@@ -1,3 +1,5 @@
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.UI;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.Helpers
@@ -20,5 +22,11 @@ namespace SquidTestingMod.Helpers
         {
             ModInstance.Logger.Error(message);
         }
+    }
+
+    public static class Instances
+    {
+        public static MainSystem Sys => ModContent.GetInstance<MainSystem>();
+        public static Config Config => ModContent.GetInstance<Config>();
     }
 }
