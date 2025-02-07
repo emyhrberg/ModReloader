@@ -61,7 +61,7 @@ namespace SquidTestingMod.Common.Systems
             catch (Exception e)
             {
                 // log it
-                Mod.Logger.Error("Failed to start server!!!" + e.Message);
+                Mod.Logger.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/_START_SERVER" + e.Message);
                 return;
             }
         }

@@ -61,7 +61,7 @@ namespace SquidTestingMod.UI
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
                     grid.Add(itemSlot);
                 }
             }
@@ -74,7 +74,8 @@ namespace SquidTestingMod.UI
                 Item item = new();
                 item.SetDefaults(i);
 
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                // note: you can use BankItem for red color, ChestItem for blue color, etc.
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
                 grid.Add(itemSlot);
             }
         }

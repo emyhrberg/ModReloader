@@ -48,11 +48,9 @@ namespace SquidTestingMod.UI
                         if (currentState != null)
                         {
                             string stateName = currentState.GetType().Name;
-                            Log.Info($"Current UI State: {stateName}");
-                            // Disable button interaction if the current state indicates config or inventory is open.
-                            if (stateName.Contains("Config") || stateName.Contains("Settings"))
+                            // UIModConfig will be open when we click config button
+                            if (stateName.Contains("Config"))
                             {
-                                Log.Info("Disabling button interaction because UI state is " + stateName);
                                 return false;
                             }
                         }
