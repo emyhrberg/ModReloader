@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Systems;
@@ -73,6 +74,14 @@ namespace SquidTestingMod.Common.Configs
         [DrawTicks]
         public string GodModeOutlineSize = "Small";
 
+        [Header("ItemBrowser")]
+        [DefaultValue(100)]
+        [Range(0, 10000)]
+        public int MaxItemsToDisplay = 1000;
+
+        [DefaultValue(typeof(Color), "255, 0, 0, 255"), ColorHSLSlider(false), ColorNoAlpha]
+        public Color ItemSlotColor = new(255, 0, 0, 255);
+
         [Header("PlannedFeatures")]
 
         [DefaultValue(false)]
@@ -82,9 +91,9 @@ namespace SquidTestingMod.Common.Configs
         public bool ShowUIElementsSizes;
 
         [OptionStrings(["Small", "Medium", "Big"])]
-        [DefaultValue("Small")]
+        [DefaultValue("Big")]
         [DrawTicks]
-        public string ButtonSizes = "Small";
+        public string ButtonSizes = "Big";
 
         public override void OnChanged()
         {

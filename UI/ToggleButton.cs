@@ -23,6 +23,11 @@ namespace SquidTestingMod.UI
         {
         }
 
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+        }
+
         public override void UpdateTexture()
         {
             // First update the base (which sets VisualScale and the default image asset).
@@ -79,7 +84,9 @@ namespace SquidTestingMod.UI
 
         public override void RightClick(UIMouseEvent evt)
         {
-            CombatText.NewText(Main.LocalPlayer.getRect(), Color.Orange, "Hide Toggle Button. Type /toggle to show again!");
+            string t = "Hide Toggle Button. Type /toggle to show again!";
+            CombatText.NewText(Main.LocalPlayer.getRect(), Color.Orange, "t");
+            Main.NewText(t, Color.Orange);
 
             // update config state
             ModContent.GetInstance<Config>().ShowToggleButton = false;

@@ -15,7 +15,8 @@ Mods: {
 					Gameplay: Gameplay
 					General: General
 					Reload: Reload
-					PlannedFeatures: Planned Features Header
+					PlannedFeatures: Planned Features
+					ItemBrowser: Item Browser
 				}
 
 				EnableRefreshButton: {
@@ -105,17 +106,27 @@ Mods: {
 
 				ShowUIElementsSizes: {
 					Tooltip: ""
-					Label: Show U I Elements Sizes
+					Label: Show UI Elements Sizes
 				}
 
 				ShowUIElementsHitbox: {
 					Tooltip: ""
-					Label: Show U I Elements Hitbox
+					Label: Show UI Elements Hitbox
 				}
 
 				ButtonSizes: {
 					Tooltip: ""
 					Label: Button Sizes
+				}
+
+				MaxItemsToDisplay: {
+					Label: Max Items To Display
+					Tooltip: Recommended below 1000. There are over 6000 items, but that takes over a second to load.
+				}
+
+				ItemSlotColor: {
+					Label: Item Slot Color
+					Tooltip: Blue looks most natural
 				}
 			}
 

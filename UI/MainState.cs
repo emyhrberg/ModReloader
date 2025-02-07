@@ -21,7 +21,7 @@ namespace SquidTestingMod.UI
         public override void OnInitialize()
         {
             // Create the toggle button
-            toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Hide buttons", 0f);
+            toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Toggle buttons", 0f);
             Append(toggleButton);
 
             // Add all others buttons

@@ -1,6 +1,8 @@
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
@@ -51,10 +53,12 @@ namespace SquidTestingMod.UI
         {
             string searchText = searchBox.currentString.ToLower();
             Log.Info($"Search Text: {searchText}");
+            Config c = ModContent.GetInstance<Config>();
 
             grid.Clear();
 
             int allItems = TextureAssets.Item.Length - 1;
+            int count = 0;
 
             for (int i = 1; i <= allItems; i++)
             {
@@ -67,6 +71,10 @@ namespace SquidTestingMod.UI
                     itemSlot.Width.Set(50, 0f);
                     itemSlot.Height.Set(50, 0f);
                     grid.Add(itemSlot);
+
+                    count++;
+                    if (count >= c.MaxItemsToDisplay)
+                        break;
                 }
             }
         }
@@ -74,6 +82,8 @@ namespace SquidTestingMod.UI
         private void CreateItemSlots(UIGrid grid)
         {
             int allItems = TextureAssets.Item.Length - 1;
+            int count = 0;
+            Config c = ModContent.GetInstance<Config>();
 
             for (int i = 1; i <= allItems; i++)
             {
@@ -85,6 +95,10 @@ namespace SquidTestingMod.UI
                 itemSlot.Width.Set(50, 0f);
                 itemSlot.Height.Set(50, 0f);
                 grid.Add(itemSlot);
+
+                count++;
+                if (count >= c.MaxItemsToDisplay)
+                    break;
             }
         }
 
