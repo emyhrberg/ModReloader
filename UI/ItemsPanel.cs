@@ -1,6 +1,11 @@
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
@@ -44,8 +49,10 @@ namespace SquidTestingMod.UI
             Append(searchBox);
 
             // Create the item panels.
-            CreateItemSlots(grid);
+            AddItemsToGrid(grid);
+            Log.Info($"Grid Children Count: {grid.Children.Count()}");
         }
+
 
         private void FilterItems()
         {
@@ -53,39 +60,42 @@ namespace SquidTestingMod.UI
             Log.Info($"Search Text: {searchText}");
 
             grid.Clear();
-
-            int allItems = TextureAssets.Item.Length - 1;
-
-            for (int i = 1; i <= allItems; i++)
+            Config c = ModContent.GetInstance<Config>();
+            Stopwatch s = Stopwatch.StartNew();
+            int count = 0;
+            foreach (var item in Assets.PreloadedItems)
             {
-                Item item = new();
-                item.SetDefaults(i);
-
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ShopItem);
                     itemSlot.Width.Set(50, 0f);
                     itemSlot.Height.Set(50, 0f);
                     grid.Add(itemSlot);
+                    count++;
+                    if (count >= c.MaxItemsToShow)
+                        break;
                 }
             }
+            s.Stop();
+            Log.Info($"Time to filter all item slots: {s.ElapsedMilliseconds} ms");
         }
 
-        private void CreateItemSlots(UIGrid grid)
+        private static void AddItemsToGrid(UIGrid grid)
         {
-            int allItems = TextureAssets.Item.Length - 1;
+            Stopwatch s = Stopwatch.StartNew();
 
-            for (int i = 1; i <= allItems; i++)
+            int count = 0;
+            Config c = ModContent.GetInstance<Config>();
+            foreach (var slot in Assets.PreloadedItemSlots)
             {
-                Item item = new();
-                item.SetDefaults(i);
-
-                // note: you can use BankItem for red color, ChestItem for blue color, etc.
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ShopItem);
-                itemSlot.Width.Set(50, 0f);
-                itemSlot.Height.Set(50, 0f);
-                grid.Add(itemSlot);
+                grid.Add(slot);
+                count++;
+                if (count >= c.MaxItemsToShow)
+                    break;
             }
+
+            s.Stop();
+            Log.Info($"Time to attach pre-created slots: {s.ElapsedMilliseconds} ms");
         }
 
         private static UIBetterTextBox CreateSearchTextBox()

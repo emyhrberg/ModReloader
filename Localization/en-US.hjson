@@ -16,6 +16,7 @@ Mods: {
 					General: General
 					Reload: Reload
 					PlannedFeatures: Planned Features Header
+					ItemBrowser: Item Browser Header
 				}
 
 				EnableRefreshButton: {
@@ -116,6 +117,16 @@ Mods: {
 				ButtonSizes: {
 					Tooltip: ""
 					Label: Button Sizes
+				}
+
+				MaxItemsToShow: {
+					Label: Max Items To Show
+					Tooltip: In item browser, the maximum items that can be showed at one point in time.
+				}
+
+				ItemSlotColor: {
+					Label: Item Slot Color
+					Tooltip: ""
 				}
 			}
 

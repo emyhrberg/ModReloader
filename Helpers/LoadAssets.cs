@@ -1,7 +1,12 @@
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.UI;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ModLoader;
+using Terraria.ModLoader.UI.Elements;
 
 namespace SquidTestingMod.Helpers
 {
@@ -14,6 +19,11 @@ namespace SquidTestingMod.Helpers
         {
             // Preload assets early (before PostSetupContent, etc.)
             Assets.PreloadAllAssets();
+        }
+
+        public override void PostSetupContent()
+        {
+            Assets.PreloadAllItems();
         }
     }
 
@@ -39,6 +49,8 @@ namespace SquidTestingMod.Helpers
 
         public static void PreloadAllAssets()
         {
+            Stopwatch s = Stopwatch.StartNew();
+
             // TEXT BUTTONS
             ButtonOn = PreloadAsset("ButtonOn");
             ButtonOff = PreloadAsset("ButtonOff");
@@ -52,6 +64,43 @@ namespace SquidTestingMod.Helpers
             ButtonConfigNoText = PreloadAsset("ButtonConfigNoText");
             ButtonItemsNoText = PreloadAsset("ButtonItemsNoText");
             ButtonReloadNoText = PreloadAsset("ButtonReloadNoText");
+
+            s.Stop();
+            Log.Info($"Time to Preloaded all assets in {s.ElapsedMilliseconds}ms.");
+        }
+
+        public static HashSet<Item> PreloadedItems = [];
+        public static HashSet<ItemSlot> PreloadedItemSlots = [];
+        public static UIGrid grid;
+
+        public static void PreloadAllItems()
+        {
+            int allItems = TextureAssets.Item.Length - 1;
+
+            Stopwatch s = Stopwatch.StartNew();
+
+            for (int i = 1; i <= allItems; i++)
+            {
+                Item item = new();
+                item.SetDefaults(i);
+                PreloadedItems.Add(item);
+
+                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ShopItem);
+                itemSlot.Width.Set(50, 0f);
+                itemSlot.Height.Set(50, 0f);
+                PreloadedItemSlots.Add(itemSlot);
+            }
+
+            // Add all preloaded slots at once
+            if (grid == null)
+            {
+                Log.Info("Creating new grid");
+                grid = new UIGrid();
+                grid.AddRange(PreloadedItemSlots);
+            }
+
+            s.Stop();
+            Log.Info($"Preloaded {PreloadedItemSlots.Count} item slots in {s.ElapsedMilliseconds} ms");
         }
 
         /// <summary>

@@ -73,6 +73,15 @@ namespace SquidTestingMod.Common.Configs
         [DrawTicks]
         public string GodModeOutlineSize = "Small";
 
+        [Header("ItemBrowser")]
+        [DefaultValue(1000)]
+        [Range(0, 5000)]
+        public int MaxItemsToShow;
+
+        [OptionStrings(["Yellow", "Blue", "Green"])]
+        [DrawTicks]
+        public string ItemSlotColor = "Blue";
+
         [Header("PlannedFeatures")]
 
         [DefaultValue(false)]

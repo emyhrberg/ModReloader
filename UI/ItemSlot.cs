@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
@@ -29,8 +30,20 @@ namespace SquidTestingMod.UI
             CalculatedStyle dimensions = GetInnerDimensions();
             float bgOpacity = IsMouseHovering ? 1f : 0.4f;
 
+            Config c = ModContent.GetInstance<Config>();
+            Color color = Color.Blue;
+
+            // make a switch for the three cases of c.ColorMode
+            color = c.ItemSlotColor switch
+            {
+                "Yellow" => Color.Yellow,
+                "Blue" => Color.LightSkyBlue,
+                "Green" => Color.Green,
+                _ => Color.Blue,
+            };
+
             // Draw background
-            spriteBatch.Draw(TextureAssets.InventoryBack14.Value, dimensions.ToRectangle(), new Color(56, 58, 134) * bgOpacity);
+            spriteBatch.Draw(TextureAssets.InventoryBack14.Value, dimensions.ToRectangle(), color * bgOpacity);
 
             if (!displayItem.IsAir)
             {
