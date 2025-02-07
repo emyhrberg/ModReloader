@@ -95,9 +95,9 @@ namespace SquidTestingMod.Common.Configs
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             if (ShowToggleButton)
-                sys?.ShowUI();
+                sys?.SetUIStateToMyState();
             else
-                sys?.HideUI();
+                sys?.SetUIStateToNull();
         }
 
         private void ChangeGodModeOutline()

@@ -18,7 +18,7 @@ namespace SquidTestingMod.Common.Commands
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             // literally enables the entire state
-            sys.ShowUI();
+            sys.SetUIStateToMyState();
             // update config state
             ModContent.GetInstance<Config>().ShowToggleButton = true;
         }

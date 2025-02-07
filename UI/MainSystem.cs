@@ -41,12 +41,12 @@ namespace SquidTestingMod.UI
             }
         }
 
-        public void ShowUI()
+        public void SetUIStateToMyState()
         {
             userInterface.SetState(myState);
         }
 
-        public void HideUI()
+        public void SetUIStateToNull()
         {
             userInterface.SetState(null);
         }

@@ -24,13 +24,13 @@ namespace SquidTestingMod.UI
         {
             base.DrawSelf(spriteBatch);
 
-            if (IsMouseHovering)
+            if (IsMouseHovering && !clickStartedOutsideButton)
             {
                 Config c = ModContent.GetInstance<Config>();
                 if (c.ShowTooltips)
                 {
                     MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons \nRight click to drag" : "Show buttons \nRight click to drag";
+                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons  \nRight click to hide" : "Show buttons \nRight click to hide";
                     UICommon.TooltipMouseText(toggleText);
                 }
             }
@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI
 
         public override void UpdateTexture()
         {
-            // Put your custom on/off logic here, ignoring the base's version:
+            // Put custom on/off logic here, ignoring the base's version:
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             if (sys == null || sys.myState == null)
@@ -52,7 +52,7 @@ namespace SquidTestingMod.UI
             bool isOn = sys.myState.AreButtonsVisible;
             Log.Info("showText: " + showText + ", isOn: " + isOn);
 
-            // Skip the base UpdateTexture; pick your on/off texture yourself
+            // Set the texture based on the config and state settings
             SetImage(isOn ? (showText ? Assets.ButtonOn : Assets.ButtonOnNoText)
                           : (showText ? Assets.ButtonOff : Assets.ButtonOffNoText));
         }
@@ -61,26 +61,25 @@ namespace SquidTestingMod.UI
         {
             Log.Info("ToggleButton clicked.");
 
-            // Get ButtonsSystem
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             // Toggle visibility of all buttons
             sys?.myState?.ToggleAllButtonsVisibility();
 
-            // Update textures for ON/OFF and text display
+            // Update textures for ON/OFF and text on buttons
             UpdateTexture();
         }
 
-        public override void RightDoubleClick(UIMouseEvent evt)
+        public override void RightClick(UIMouseEvent evt)
         {
-            CombatText.NewText(Main.LocalPlayer.getRect(), Color.Orange, "Type /toggle to show again!");
+            CombatText.NewText(Main.LocalPlayer.getRect(), Color.Orange, "Hide Toggle Button. Type /toggle to show again!");
 
             // update config state
             ModContent.GetInstance<Config>().ShowToggleButton = false;
 
             // literally disable the entire state
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys.HideUI();
+            sys.SetUIStateToNull();
         }
 
         public override bool ContainsPoint(Vector2 point)
@@ -94,23 +93,37 @@ namespace SquidTestingMod.UI
         #region dragging
         private bool dragging;
         private Vector2 dragOffset;
+        // Track original mouse down position so we know if we moved
+        private Vector2 mouseDownPos;
+        private bool isDrag;
+        private const float DragThreshold = 10f; // you can tweak the threshold
+        // Hotfix click started outside the button
+        private bool clickStartedOutsideButton;
 
-
-
-        public override void RightMouseDown(UIMouseEvent evt)
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
             base.LeftMouseDown(evt);
+
             dragging = true;
+            isDrag = false;
+            mouseDownPos = evt.MousePosition; // store mouse down location
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
-            Main.LocalPlayer.mouseInterface = true;
+            clickStartedOutsideButton = !ContainsPoint(evt.MousePosition);
+            if (!clickStartedOutsideButton)
+                Main.LocalPlayer.mouseInterface = true;
         }
 
-        public override void RightMouseUp(UIMouseEvent evt)
+        public override void LeftMouseUp(UIMouseEvent evt)
         {
             base.LeftMouseUp(evt);
             dragging = false;
             Main.LocalPlayer.mouseInterface = false;
             Recalculate();
+
+            if (isDrag && !clickStartedOutsideButton)
+            {
+                HandleClick();
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -126,8 +139,25 @@ namespace SquidTestingMod.UI
                 needsTextureUpdate = false; // Run once
             }
 
+            if (dragging || (ContainsPoint(Main.MouseScreen) && !clickStartedOutsideButton))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
+            // update the position of all the buttons
             if (dragging)
             {
+                // disable mouse interface
+                Main.LocalPlayer.mouseInterface = true;
+
+                // Check if we moved the mouse more than the threshold
+                var currentPos = new Vector2(Main.mouseX, Main.mouseY);
+                if (Vector2.Distance(currentPos, mouseDownPos) > DragThreshold)
+                {
+                    isDrag = true;
+                }
+
+                // update the position of this button
                 Left.Set(Main.mouseX - dragOffset.X, 0f);
                 Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
