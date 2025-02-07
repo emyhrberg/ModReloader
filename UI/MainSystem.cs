@@ -31,7 +31,7 @@ namespace SquidTestingMod.UI
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "SquidTestingMod: User Interface Draw MainSystem",
+                    "SquidTestingMod: MainSystem",
                     () =>
                     {
                         userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw

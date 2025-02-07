@@ -18,9 +18,6 @@ namespace SquidTestingMod.UI
         public ConfigButton configButton;
         public ToggleButton toggleButton;
 
-        // Panel
-        private ItemsPanel itemsPanel;
-
         public override void OnInitialize()
         {
             // Create the toggle button
@@ -72,7 +69,7 @@ namespace SquidTestingMod.UI
         public void ToggleAllButtonsVisibility()
         {
             AreButtonsVisible = !AreButtonsVisible;
-            Log.Info("Setting buttons visibility to: " + AreButtonsVisible);
+            // Log.Info("Setting buttons visibility to: " + AreButtonsVisible);
 
             if (!AreButtonsVisible)
             {

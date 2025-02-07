@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using log4net.Repository.Hierarchy;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,6 +34,51 @@ namespace SquidTestingMod.UI
             UpdateTexture();
         }
 
+        public override bool ContainsPoint(Vector2 point)
+        {
+            try
+            {
+                if (Main.InGameUI != null)
+                {
+                    // Use reflection to get the "CurrentState" property from Main.InGameUI.
+                    var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
+                    if (currentStateProp != null)
+                    {
+                        var currentState = currentStateProp.GetValue(Main.InGameUI);
+                        if (currentState != null)
+                        {
+                            string stateName = currentState.GetType().Name;
+                            Log.Info($"Current UI State: {stateName}");
+                            // Disable button interaction if the current state indicates config or inventory is open.
+                            if (stateName.Contains("Config") || stateName.Contains("Settings"))
+                            {
+                                Log.Info("Disabling button interaction because UI state is " + stateName);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            // Log.Info("Main.InGameUI.CurrentState is null.");
+                        }
+                    }
+                    else
+                    {
+                        Log.Info("Property 'CurrentState' not found on Main.InGameUI.");
+                    }
+                }
+                else
+                {
+                    // Log.Info("Main.InGameUI is null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
+            }
+
+            return base.ContainsPoint(point);
+        }
+
         public virtual void UpdateTexture()
         {
             Config config = ModContent.GetInstance<Config>();
@@ -43,19 +90,12 @@ namespace SquidTestingMod.UI
 
             // Set VisualScale based on config.ButtonSizes.
             // (Assuming config.ButtonSizes is one of "Small", "Medium", or "Big".)
-            switch (config.ButtonSizes)
+            VisualScale = config.ButtonSizes switch
             {
-                case "Small":
-                    VisualScale = 0.35f;
-                    break;
-                case "Medium":
-                    VisualScale = 0.7f;
-                    break;
-                case "Big":
-                default:
-                    VisualScale = 1.0f;
-                    break;
-            }
+                "Small" => 0.45f,
+                "Medium" => 0.7f,
+                _ => 1.0f,
+            };
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -63,12 +103,14 @@ namespace SquidTestingMod.UI
             CalculatedStyle dimensions = GetInnerDimensions();
             if (CurrentImage != null && CurrentImage.Value != null)
             {
+                float opacity = IsMouseHovering ? 1f : 0.4f;
+
                 // Calculate the drawn size based on VisualScale.
                 float drawWidth = CurrentImage.Value.Width * VisualScale;
                 float drawHeight = CurrentImage.Value.Height * VisualScale;
                 // Center the image within the UI element.
                 Vector2 drawPos = dimensions.Position() + new Vector2((dimensions.Width - drawWidth) / 2f, (dimensions.Height - drawHeight) / 2f);
-                spriteBatch.Draw(CurrentImage.Value, drawPos, null, Color.White, 0f, Vector2.Zero, VisualScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(CurrentImage.Value, drawPos, null, Color.White * opacity, 0f, Vector2.Zero, VisualScale, SpriteEffects.None, 0f);
             }
 
             if (IsMouseHovering)
@@ -79,26 +121,11 @@ namespace SquidTestingMod.UI
             }
         }
 
-        public override bool ContainsPoint(Vector2 point)
-        {
-            // Define a custom clickable area, e.g., make it 20 pixels bigger in all directions
-            float extraSize = 20f;
-
-            Rectangle customArea = new Rectangle(
-                (int)(GetDimensions().X - extraSize),
-                (int)(GetDimensions().Y - extraSize),
-                (int)(Width.Pixels + extraSize * 2),
-                (int)(Height.Pixels + extraSize * 2)
-            );
-
-            return customArea.Contains(point.ToPoint());
-        }
-
         // Abstract HandleClick = force children (all buttons) to implement this method
         public abstract void HandleClick();
 
         #region dragging
-        private bool DRAG_ENABLED = false;
+        private const bool DRAG_ENABLED = false;
         private bool dragging;
         private Vector2 dragOffset;
         // Track original mouse down position so we know if we moved

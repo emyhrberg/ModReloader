@@ -3,9 +3,11 @@ using System.ComponentModel;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Systems;
+using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.Graphics.Shaders;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -87,7 +89,21 @@ namespace SquidTestingMod.Common.Configs
         public override void OnChanged()
         {
             if (ModContent.GetInstance<Config>() == null)
+            {
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                if (sys == null)
+                {
+                    Log.Info("MainSystem is null");
+                    return;
+                }
+                else
+                {
+                    Log.Info("MainSystem is not null");
+                    sys.mainState.configButton.IsConfigOpen = false;
+                }
+
                 return;
+            }
 
             ChangeGodModeOutline();
             ChangeToggleButtonVisibility();
