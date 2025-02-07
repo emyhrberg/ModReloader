@@ -22,7 +22,9 @@ namespace SquidTestingMod.UI
         {
             // Create the toggle button
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Hide buttons", 0f);
-            toggleButton.Activate();
+            // set width and height to be only the center of the button
+            toggleButton.Height.Set(50f, 0f);
+            toggleButton.Width.Set(50f, 0f);
             Append(toggleButton);
 
             // Add all others buttons

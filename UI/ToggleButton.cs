@@ -14,12 +14,16 @@ namespace SquidTestingMod.UI
     public class ToggleButton : BaseButton
     {
 
+        // Variables
+        private bool needsTextureUpdate = true;
+        private bool isSmall = false; // Track if the button is in small mode
+
+        // Constructor
         public ToggleButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : base(buttonImgText, buttonImgNoText, hoverText)
         {
         }
 
-        private bool needsTextureUpdate = true;
-
+        // Methods
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
@@ -30,7 +34,7 @@ namespace SquidTestingMod.UI
                 if (c.ShowTooltips)
                 {
                     MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons  \nRight click to hide" : "Show buttons \nRight click to hide";
+                    string toggleText = sys.myState.AreButtonsVisible ? "Hide buttons" : "Show buttons";
                     UICommon.TooltipMouseText(toggleText);
                 }
             }
@@ -77,18 +81,38 @@ namespace SquidTestingMod.UI
             // update config state
             ModContent.GetInstance<Config>().ShowToggleButton = false;
 
-            // literally disable the entire state
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys.SetUIStateToNull();
+            // check issmall
+            // isSmall = true;
+            // if (isSmall)
+            // {
+            //     Width.Set(50f, 0f);
+            //     Height.Set(50f, 0f);
+            //     Left.Set(Left.Pixels + 25, 0f);
+            //     Top.Set(Top.Pixels + 25, 0f);
+            // }
+            // Recalculate();
+
+            // set state to null
+            ModContent.GetInstance<MainSystem>().myState = null;
         }
 
-        public override bool ContainsPoint(Vector2 point)
-        {
-            // Define the inner 50x50 area for the ON/OFF switch
-            // var innerArea = new Rectangle((int)Left.Pixels + 25, (int)Top.Pixels + 25, 50, 50);
-            // return innerArea.Contains(point.ToPoint());
-            return base.ContainsPoint(point);
-        }
+        // public override bool ContainsPoint(Vector2 point)
+        // {
+        //     // Reduce width by pixels (pixels/2 on each side)
+        //     float shrinkWidth = 10f;
+        //     // Reduce height by pixels (pixels/2 on each side)
+        //     float shrinkHeight = 50f;
+
+        //     Rectangle customArea = new(
+        //         (int)(GetDimensions().X + shrinkWidth / 2),  // Move left side inward
+        //         (int)(GetDimensions().Y + shrinkHeight / 2), // Move top side downward
+        //         (int)(Width.Pixels - shrinkWidth),  // Reduce total width
+        //         (int)(Height.Pixels - shrinkHeight) // Reduce total height
+        //     );
+
+        //     return customArea.Contains(point.ToPoint());
+        // }
+
 
         #region dragging
         private bool dragging;

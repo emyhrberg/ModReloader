@@ -49,9 +49,12 @@ namespace SquidTestingMod.UI
                     Log.Info("Created new ItemsPanel.");
                 }
 
-                Log.Info("Appending ItemsPanel to parent state.");
                 if (!state.Children.Contains(itemsPanel))
+                {
+                    Log.Info("Appending ItemsPanel to parent state.");
                     state.Append(itemsPanel);
+                    itemsPanel.searchBox.Focus();
+                }
 
                 // Force recalculation of the layout.
                 itemsPanel.Recalculate();

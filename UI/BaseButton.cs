@@ -39,6 +39,7 @@ namespace SquidTestingMod.UI
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            // base draws all buttons with hover effect
             base.DrawSelf(spriteBatch);
 
             if (IsMouseHovering)
@@ -49,7 +50,22 @@ namespace SquidTestingMod.UI
             }
         }
 
-        // Abstract click function = force children (all buttons) to implement this method
+        public override bool ContainsPoint(Vector2 point)
+        {
+            // Define a custom clickable area, e.g., make it 20 pixels bigger in all directions
+            float extraSize = 20f;
+
+            Rectangle customArea = new Rectangle(
+                (int)(GetDimensions().X - extraSize),
+                (int)(GetDimensions().Y - extraSize),
+                (int)(Width.Pixels + extraSize * 2),
+                (int)(Height.Pixels + extraSize * 2)
+            );
+
+            return customArea.Contains(point.ToPoint());
+        }
+
+        // Abstract HandleClick = force children (all buttons) to implement this method
         public abstract void HandleClick();
 
         #region dragging

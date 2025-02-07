@@ -8,6 +8,7 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI.Elements;
@@ -20,7 +21,7 @@ namespace SquidTestingMod.UI
         // UI Elements
         private UIGrid grid;
         private UIScrollbar scrollbar;
-        private UIBetterTextBox searchTextBox;
+        public UIBetterTextBox searchBox;
 
         public ItemsPanel()
         {
@@ -43,36 +44,63 @@ namespace SquidTestingMod.UI
             Append(grid);
 
             // Create the search box
-            searchTextBox = CreateSearchTextBox();
-            Append(searchTextBox);
+            searchBox = CreateSearchTextBox();
+            searchBox.OnTextChanged += FilterItems;
+            Append(searchBox);
 
-            // TEST box
-            UITextBox simpleTextBox = CreateSimpleTextBox();
-            Append(simpleTextBox);
+            // log dimensions of searchbox
+            LogInnerOuterDimensions(searchBox);
 
             // Create the item panels.
             CreateItemPanels(grid);
         }
 
-        private static UITextBox CreateSimpleTextBox()
+        private void FilterItems()
         {
-            return new UITextBox("Search for items")
+            string searchText = searchBox.currentString.ToLower();
+            Log.Info($"Search Text: {searchText}");
+
+            grid.Clear();
+            List<string> visibleItems = [];
+
+            for (int i = 1; i <= 1000; i++)
             {
-                Width = { Percent = 1f, Pixels = -40 },
-                Height = { Pixels = 40 }, // minimum height
-                Top = { Pixels = 20 },
-                Left = { Pixels = 5 },
-                BackgroundColor = new Color(56, 58, 134), // inventory dark blue
-                BorderColor = Color.Black * 0.8f,
-            };
+                Item tempItem = new();
+                tempItem.SetDefaults(i);
+                if (tempItem.Name.ToLower().Contains(searchText))
+                {
+                    UIPanel panel = new()
+                    {
+                        Width = { Pixels = 50 },
+                        Height = { Pixels = 50 },
+                        BackgroundColor = new Color(56, 58, 134), // inventory dark blue
+                        BorderColor = Color.Black * 0.8f,
+                        OverflowHidden = true,
+                    };
+
+                    // Attempt to load and draw the item texture
+                    UIImage itemImage = CreateItemImage(i);
+                    panel.Append(itemImage);
+
+                    // Add the panel to the grid
+                    grid.Add(panel);
+
+                    // Add item name to visible items list
+                    visibleItems.Add(tempItem.Name);
+                }
+            }
+
+            // Log visible items
+            Log.Info($"Visible Items: {string.Join(", ", visibleItems)}");
         }
 
         private static UIBetterTextBox CreateSearchTextBox()
         {
             return new UIBetterTextBox("")
             {
+                focused = true,
                 Width = { Percent = 1f, Pixels = -40 },
-                Height = { Pixels = 40 }, // minimum height
+                Height = { Pixels = 30 }, // minimum height
                 Top = { Pixels = 0 },
                 Left = { Pixels = 5 },
                 BackgroundColor = new Color(56, 58, 134), // inventory dark blue
@@ -84,7 +112,7 @@ namespace SquidTestingMod.UI
         {
             int maxItems = TextureAssets.Item.Length - 1;
 
-            for (int i = 1; i <= 60; i++)
+            for (int i = 1; i <= 1000; i++)
             {
                 UIPanel panel = new()
                 {
@@ -102,7 +130,7 @@ namespace SquidTestingMod.UI
                 // Log the item’s name
                 Item tempItem = new();
                 tempItem.SetDefaults(i);
-                Log.Info($"Added item ID: {i} - Name: {tempItem.Name}");
+                // Log.Info($"Added item ID: {i} - Name: {tempItem.Name}");
 
                 // Add the panel to the grid
                 grid.Add(panel);
@@ -113,13 +141,43 @@ namespace SquidTestingMod.UI
         {
             Main.instance.LoadItem(itemIndex);
             Asset<Texture2D> texture = TextureAssets.Item[itemIndex];
-            return new UIImage(texture)
+            UIImage itemImage = new(texture)
             {
                 HAlign = 0.5f,
                 VAlign = 0.5f,
                 ScaleToFit = true,
                 OverflowHidden = true,
             };
+
+            itemImage.OnMouseOver += (evt, element) =>
+            {
+                Item tempItem = new Item();
+                tempItem.SetDefaults(itemIndex);
+                Main.HoverItem = tempItem;
+                Main.hoverItemName = tempItem.Name;
+                Main.instance.MouseText(tempItem.Name, tempItem.rare, 0);
+                Log.Info($"Hovering over item: {tempItem.Name}");
+            };
+
+            itemImage.OnLeftClick += (evt, element) =>
+            {
+                Item tempItem = new Item();
+                tempItem.SetDefaults(itemIndex);
+                // put item in the players hand
+                if (Main.mouseItem.IsAir)
+                {
+                    if (!Main.playerInventory)
+                        Main.playerInventory = true;
+
+                    Main.mouseItem = tempItem.Clone();
+
+                    if (!ItemID.Sets.Deprecated[tempItem.type])
+                        Main.mouseItem.SetDefaults(tempItem.type);
+
+                    // stackDelay = 30;
+                }
+            };
+            return itemImage;
         }
 
         private static UIScrollbar CreateScrollbar()
@@ -164,24 +222,11 @@ namespace SquidTestingMod.UI
         }
         #endregion
 
-        #region dragging
+        #region dragging and update
         private bool dragging;
         private Vector2 dragOffset;
-        public override void LeftMouseDown(UIMouseEvent evt)
-        {
-            base.LeftMouseDown(evt);
-            dragging = true;
-            dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
-            Main.LocalPlayer.mouseInterface = true;
-        }
 
-        public override void LeftMouseUp(UIMouseEvent evt)
-        {
-            base.LeftMouseUp(evt);
-            dragging = false;
-            Main.LocalPlayer.mouseInterface = false;
-            Recalculate();
-        }
+        private bool closeRequested = false;
 
         public override void Update(GameTime gameTime)
         {
@@ -190,7 +235,7 @@ namespace SquidTestingMod.UI
             // close panel if inventory is closed
             if (!Main.playerInventory)
             {
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                closeRequested = true;
             }
 
             if (dragging)
@@ -210,15 +255,58 @@ namespace SquidTestingMod.UI
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
+
+            // close request
+            if (closeRequested)
+            {
+                closeRequested = false;
+                Main.QueueMainThreadAction(() =>
+                {
+                    MainSystem sys = ModContent.GetInstance<MainSystem>();
+                    sys?.myState?.itemBrowserButton?.ToggleItemsPanel();
+                });
+            }
+        }
+
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
+            // prevent dragging if mouse is over scrollbar
+            if (scrollbar.ContainsPoint(evt.MousePosition))
+                return;
+
+            base.LeftMouseDown(evt);
+            dragging = true;
+            dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
+            Main.LocalPlayer.mouseInterface = true;
+        }
+
+        public override void LeftMouseUp(UIMouseEvent evt)
+        {
+            base.LeftMouseUp(evt);
+            dragging = false;
+            Main.LocalPlayer.mouseInterface = false;
+            Recalculate();
         }
 
         // CLICK
         public override void LeftClick(UIMouseEvent evt)
         {
             base.LeftClick(evt);
-            Main.LocalPlayer.mouseInterface = true; // mouseinterface refers to whether the mouse is over a UI element
+            Main.LocalPlayer.mouseInterface = true; // block item usage
         }
 
+        #endregion
+
+        #region usefulcode
+        // https://github.com/ScalarVector1/DragonLens/blob/1b2ca47a5a4d770b256fdffd5dc68c0b4d32d3b2/Content/Tools/Spawners/ItemSpawner.cs#L14
+        //     // Allows for "Hold RMB to get more
+        // 		if (IsMouseHovering && Main.mouseRight && Main.mouseItem.type == item.type)
+        // 		{
+        // 			if (stackDelay > 0)
+        // 				stackDelay--;
+        // 			else if (Main.mouseItem.stack<Main.mouseItem.maxStack)
+        //                 Main.mouseItem.stack++;
+        // }
         #endregion
     }
 }

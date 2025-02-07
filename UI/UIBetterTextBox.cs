@@ -11,7 +11,7 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     //ty jopojelly and darthmorf
-    internal class UIBetterTextBox : UIPanel
+    public class UIBetterTextBox : UIPanel
     {
         internal string currentString = string.Empty;
 
@@ -77,7 +77,7 @@ namespace SquidTestingMod.UI
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 MousePosition = new Vector2(Main.mouseX, Main.mouseY);
+            Vector2 MousePosition = new(Main.mouseX, Main.mouseY);
             if (!ContainsPoint(MousePosition) && (Main.mouseLeft || Main.mouseRight)) //This solution is fine, but we need a way to cleanly "unload" a UIElement
             {
                 //TODO, figure out how to refocus without triggering unfocus while clicking enable button.
@@ -150,9 +150,28 @@ namespace SquidTestingMod.UI
                 displayString += "|";
             }
             CalculatedStyle space = GetDimensions();
-            Color color = Color.Black;
-            Vector2 drawPos = space.Position() + new Vector2(4, 2);
+            Color color = Color.White;
+
+            // position
+            Vector2 drawPos = space.Position() + new Vector2(8, 4);
             DynamicSpriteFont font = FontAssets.MouseText.Value;
+
+            // draw outline
+            Color outlineColor = Color.Black;
+            Vector2[] offsets =
+            [
+                new(-1, -1),
+                new(1, -1),
+                new(-1, 1),
+                new(1, 1)
+            ];
+
+            foreach (var offset in offsets)
+            {
+                spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor);
+            }
+
+            // draw text
             if (currentString.Length == 0 && !focused)
             {
                 color *= 0.5f;
@@ -162,6 +181,8 @@ namespace SquidTestingMod.UI
             {
                 spriteBatch.DrawString(font, displayString, drawPos, color);
             }
+
+
         }
     }
 }
