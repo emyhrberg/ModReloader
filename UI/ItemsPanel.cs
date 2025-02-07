@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
@@ -46,8 +47,10 @@ namespace SquidTestingMod.UI
             Append(searchBox);
 
             // Create the item panels.
-            CreateItemSlots(grid);
+            AddItemsToGrid(grid);
+            Log.Info($"Grid Children Count: {grid.Children.Count()}");
         }
+
 
         private void FilterItems()
         {
@@ -67,7 +70,7 @@ namespace SquidTestingMod.UI
 
                 if (item.Name.ToLower().Contains(searchText))
                 {
-                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.BankItem);
+                    ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ShopItem);
                     itemSlot.Width.Set(50, 0f);
                     itemSlot.Height.Set(50, 0f);
                     grid.Add(itemSlot);
