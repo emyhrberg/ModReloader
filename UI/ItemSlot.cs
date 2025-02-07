@@ -32,7 +32,7 @@ namespace SquidTestingMod.UI
             float bgOpacity = IsMouseHovering ? 0.9f : 0.8f;
 
             Config c = ModContent.GetInstance<Config>();
-            Texture2D t = c.ItemSlotStyle switch
+            Texture2D t = c.ItemBrowser.ItemSlotStyle switch
             {
                 1 => TextureAssets.InventoryBack.Value,
                 2 => TextureAssets.InventoryBack2.Value,
@@ -57,7 +57,7 @@ namespace SquidTestingMod.UI
             };
 
             // Draw background
-            spriteBatch.Draw(t, dimensions.ToRectangle(), c.ItemSlotColor * bgOpacity);
+            spriteBatch.Draw(t, dimensions.ToRectangle(), c.ItemBrowser.ItemSlotColor * bgOpacity);
 
             if (!displayItem.IsAir)
             {

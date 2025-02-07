@@ -77,7 +77,7 @@ namespace SquidTestingMod.UI
                     grid.Add(itemSlot);
 
                     count++;
-                    if (count >= c.MaxItemsToDisplay)
+                    if (count >= c.ItemBrowser.MaxItemsToDisplay)
                         break;
                 }
             }
@@ -101,7 +101,7 @@ namespace SquidTestingMod.UI
                 grid.Add(itemSlot);
 
                 count++;
-                if (count >= c.MaxItemsToDisplay)
+                if (count >= c.ItemBrowser.MaxItemsToDisplay)
                     break;
             }
         }
@@ -140,7 +140,7 @@ namespace SquidTestingMod.UI
                 HAlign = 0.5f,
                 ListPadding = 3f, // distance between items
                 Top = { Pixels = 30f },
-                Left = { Pixels = -7f },
+                Left = { Pixels = -8f },
                 OverflowHidden = true,
             };
         }

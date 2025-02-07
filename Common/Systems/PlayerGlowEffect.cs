@@ -233,7 +233,7 @@ namespace SquidTestingMod.Common.Systems
 
             // get godmode outline config setting
             Config c = ModContent.GetInstance<Config>();
-            if (c.GodModeOutlineSize == "None")
+            if (c.Gameplay.GodModeOutlineSize == "None")
             {
                 return;
             }
@@ -274,11 +274,11 @@ namespace SquidTestingMod.Common.Systems
                 Config c = ModContent.GetInstance<Config>();
                 if (c != null)
                 {
-                    if (c.GodModeOutlineSize == "Small")
+                    if (c.Gameplay.GodModeOutlineSize == "Small")
                     {
                         GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/LessOutlineEffect"), "Pass0"));
                     }
-                    else if (c.GodModeOutlineSize == "Big")
+                    else if (c.Gameplay.GodModeOutlineSize == "Big")
                     {
                         GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
                     }

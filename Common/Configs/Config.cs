@@ -70,29 +70,10 @@ namespace SquidTestingMod.Common.Configs
         public bool ShowUIElementsSizes;
 
         [Header("Gameplay")]
-
-        [DefaultValue(false)]
-        public bool AlwaysSpawnBossOnTopOfPlayer;
-
-        [DefaultValue(false)]
-        public bool StartInGodMode;
-
-        [OptionStrings(["None", "Small", "Big"])]
-        [DefaultValue("Small")]
-        [DrawTicks]
-        public string GodModeOutlineSize = "Small";
+        public GameplayConfig Gameplay = new();
 
         [Header("ItemBrowser")]
-        [DefaultValue(100)]
-        [Range(0, 10000)]
-        public int MaxItemsToDisplay = 1000;
-
-        [DefaultValue(1)]
-        [Range(1, 19)]
-        public int ItemSlotStyle = 1;
-
-        [DefaultValue(typeof(Color), "255, 0, 0, 255"), ColorHSLSlider(false), ColorNoAlpha]
-        public Color ItemSlotColor = new(255, 0, 0, 255);
+        public ItemBrowserConfig ItemBrowser = new();
 
         public override void OnChanged()
         {
@@ -116,6 +97,34 @@ namespace SquidTestingMod.Common.Configs
             ChangeGodModeOutline();
             ChangeToggleButtonVisibility();
             ChangeButtonTextVisibility();
+        }
+
+        public class GameplayConfig
+        {
+            [DefaultValue(false)]
+            public bool AlwaysSpawnBossOnTopOfPlayer;
+
+            [DefaultValue(false)]
+            public bool StartInGodMode;
+
+            [OptionStrings(["None", "Small", "Big"])]
+            [DefaultValue("Small")]
+            [DrawTicks]
+            public string GodModeOutlineSize = "Small";
+        }
+
+        public class ItemBrowserConfig
+        {
+            [DefaultValue(100)]
+            [Range(0, 10000)]
+            public int MaxItemsToDisplay = 1000;
+
+            [DefaultValue(1)]
+            [Range(1, 19)]
+            public int ItemSlotStyle = 1;
+
+            [DefaultValue(typeof(Color), "255, 0, 0, 255"), ColorHSLSlider(false), ColorNoAlpha]
+            public Color ItemSlotColor = new(255, 0, 0, 255);
         }
 
         private void ChangeButtonTextVisibility()
@@ -146,12 +155,12 @@ namespace SquidTestingMod.Common.Configs
 
             int type = ModContent.ItemType<BorderShaderDye>();
 
-            if (GodModeOutlineSize == "Small")
+            if (Gameplay.GodModeOutlineSize == "Small")
             {
                 Asset<Effect> smallOutlineEffect = Mod.Assets.Request<Effect>("Effects/LessOutlineEffect");
                 GameShaders.Armor.BindShader(type, new ArmorShaderData(smallOutlineEffect, "Pass0"));
             }
-            else if (GodModeOutlineSize == "Big")
+            else if (Gameplay.GodModeOutlineSize == "Big")
             {
                 Asset<Effect> bigOutlineEffect = Mod.Assets.Request<Effect>("Effects/OutlineEffect");
                 GameShaders.Armor.BindShader(type, new ArmorShaderData(bigOutlineEffect, "Pass0"));

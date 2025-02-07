@@ -16,7 +16,7 @@ namespace SquidTestingMod.Common.Systems
         public override void OnSpawn(NPC npc, IEntitySource source)
         {
             Config c = ModContent.GetInstance<Config>();
-            if (!c.AlwaysSpawnBossOnTopOfPlayer)
+            if (!c.Gameplay.AlwaysSpawnBossOnTopOfPlayer)
                 return;
 
             // Check if the spawned NPC is a boss

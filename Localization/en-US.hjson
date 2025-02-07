@@ -133,6 +133,16 @@ Mods: {
 					Tooltip: ""
 					Label: Item Slot Style
 				}
+
+				ItemBrowser: {
+					Label: Item Browser
+					Tooltip: ""
+				}
+
+				Gameplay: {
+					Label: Gameplay
+					Tooltip: ""
+				}
 			}
 
 			CustomDefinition: {
@@ -172,6 +182,44 @@ Mods: {
 
 				DisplayName: {
 					Label: Display Name
+					Tooltip: ""
+				}
+			}
+
+			ItemBrowserConfig: {
+				Tooltip: ""
+
+				MaxItemsToDisplay: {
+					Label: Max Items To Display
+					Tooltip: ""
+				}
+
+				ItemSlotStyle: {
+					Label: Item Slot Style
+					Tooltip: ""
+				}
+
+				ItemSlotColor: {
+					Label: Item Slot Color
+					Tooltip: ""
+				}
+			}
+
+			GameplayConfig: {
+				Tooltip: ""
+
+				AlwaysSpawnBossOnTopOfPlayer: {
+					Label: Always Spawn Boss On Top Of Player
+					Tooltip: ""
+				}
+
+				StartInGodMode: {
+					Label: Start In God Mode
+					Tooltip: ""
+				}
+
+				GodModeOutlineSize: {
+					Label: God Mode Outline Size
 					Tooltip: ""
 				}
 			}

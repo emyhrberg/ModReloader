@@ -17,8 +17,8 @@ namespace SquidTestingMod.Common.Systems
         public override void OnEnterWorld()
         {
             Config c = ModContent.GetInstance<Config>();
-            Log.Info("enter world godmode is set to" + c.StartInGodMode);
-            GodMode = c.StartInGodMode;
+            Log.Info("enter world godmode is set to" + c.Gameplay.StartInGodMode);
+            GodMode = c.Gameplay.StartInGodMode;
         }
 
         public override void Load()
