@@ -35,10 +35,8 @@ namespace SquidTestingMod.UI
             // Init some stuff
             c = ModContent.GetInstance<Config>();
 
-            // Create the toggle button
+            // Create all the buttons
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Toggle buttons\nRight click to hide", 0f);
-
-            // Create all the other buttons
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, Assets.ButtonConfigNoText, "Open config", 100f);
             itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse all items", 200f);
             npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse all NPCs", 300f);
@@ -100,22 +98,81 @@ namespace SquidTestingMod.UI
             Recalculate(); // Refresh layout after moving buttons.
         }
 
-        // removes all buttons except the toggle button
-        public void ToggleAllButtonsVisibility()
+        public void ToggleOnOff()
         {
             AreButtonsVisible = !AreButtonsVisible;
+            Log.Info($"Buttons visibility toggled to: {AreButtonsVisible}");
+
+            // Force immediate UI update
+            if (c.General.OnlyShowWhenInventoryOpen && !Main.playerInventory)
+                return;
 
             if (AreButtonsVisible)
+                AddAllExceptToggle();
+            else
+                RemoveAllExceptToggle();
+        }
+
+        public void RemoveAllExceptToggle()
+        {
+            foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
+                if (Children.Contains(btn))
+                    RemoveChild(btn);
+        }
+
+        public void AddAllExceptToggle()
+        {
+            foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
+                if (!Children.Contains(btn))
+                    Append(btn);
+        }
+
+        public void AddAll()
+        {
+            foreach (BaseButton btn in AllButtons)
+                if (!Children.Contains(btn))
+                    Append(btn);
+        }
+
+        public void RemoveAll()
+        {
+            foreach (BaseButton btn in AllButtons)
+                if (Children.Contains(btn))
+                    RemoveChild(btn);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            // Determine whether buttons are allowed to show at all.
+            // When OnlyShowWhenInventoryOpen is enabled, buttons may only be shown if the inventory is open.
+            // When it's disabled, buttons are always allowed.
+            bool configOnlyShow = c.General.OnlyShowWhenInventoryOpen;
+            bool inventoryOpen = Main.playerInventory;
+
+            bool showButtons = !configOnlyShow || (configOnlyShow && inventoryOpen);
+
+            if (showButtons)
             {
-                foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
-                    if (!Children.Contains(btn))
-                        Append(btn);
+                // Now apply the toggle logic.
+                if (AreButtonsVisible)
+                {
+                    // Toggle ON: show all buttons.
+                    AddAll();
+                }
+                else
+                {
+                    // Toggle OFF: show only the toggle button.
+                    RemoveAllExceptToggle();
+                    if (!Children.Contains(toggleButton))
+                        Append(toggleButton);
+                }
             }
             else
             {
-                foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
-                    if (Children.Contains(btn))
-                        RemoveChild(btn);
+                // When buttons are not allowed to be shown (config enabled and inventory closed), remove everything.
+                RemoveAll();
             }
         }
     }

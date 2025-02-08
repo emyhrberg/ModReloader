@@ -57,7 +57,7 @@ namespace SquidTestingMod.UI
             Log.Info("ToggleButton clicked.");
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys?.mainState?.ToggleAllButtonsVisibility();
+            sys?.mainState?.ToggleOnOff();
             UpdateTexture();
 
             // update config
@@ -73,7 +73,7 @@ namespace SquidTestingMod.UI
             if (c == null) return;
             c.General.OnlyShowWhenInventoryOpen = !c.General.OnlyShowWhenInventoryOpen;
 
-            string t = c.General.OnlyShowWhenInventoryOpen ? "Buttons will only show when inventory is open" : "Buttons will always show";
+            string t = c.General.OnlyShowWhenInventoryOpen ? "OnlyShowWhenInventoryOpen [ON]" : "OnlyShowWhenInventoryOpen [OFF]";
             Main.NewText(t, Color.White);
         }
 
