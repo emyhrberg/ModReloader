@@ -1,36 +1,27 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
     public class ToggleButton : BaseButton
     {
-
         // Variables
         private bool needsTextureUpdate = true;
-        private bool isSmall = false; // Track if the button is in small mode
 
         // Constructor
         public ToggleButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : base(buttonImgText, buttonImgNoText, hoverText)
         {
         }
 
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            base.DrawSelf(spriteBatch);
-        }
-
         public override void UpdateTexture()
         {
-            // First update the base (which sets VisualScale and the default image asset).
+            // First update the base (which sets ButtonScale and the default image asset).
             base.UpdateTexture();
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -77,7 +68,6 @@ namespace SquidTestingMod.UI
             ModContent.GetInstance<MainSystem>().SetUIStateToNull();
         }
 
-
         #region dragging
         private bool dragging;
         private Vector2 dragOffset;
@@ -111,7 +101,9 @@ namespace SquidTestingMod.UI
                 HandleClick();
             }
         }
+        #endregion
 
+        #region update
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -142,29 +134,15 @@ namespace SquidTestingMod.UI
                     isDrag = true;
                 }
 
-                // update the position of this ToggleButton
+                // update the position of this
                 Left.Set(Main.mouseX - dragOffset.X, 0f);
                 Top.Set(Main.mouseY - dragOffset.Y, 0f);
 
-                // move all other buttons too
-                if (sys?.mainState?.AreButtonsVisible ?? false)
-                {
-                    // ConfigButton
-                    sys.mainState.configButton.Left.Set(Main.mouseX - dragOffset.X + 100, 0f);
-                    sys.mainState.configButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                // update the positions of all buttons with the ButtonToggle as the anchor
+                Vector2 newAnchorPosition = new(Main.mouseX - dragOffset.X, Main.mouseY - dragOffset.Y);
 
-                    // ItemsButton
-                    sys.mainState.itemButton.Left.Set(Main.mouseX - dragOffset.X + 200, 0f);
-                    sys.mainState.itemButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-
-                    // NPCButton
-                    sys.mainState.npcButton.Left.Set(Main.mouseX - dragOffset.X + 300, 0f);
-                    sys.mainState.npcButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-
-                    // RefreshButton
-                    sys.mainState.refreshButton.Left.Set(Main.mouseX - dragOffset.X + 400, 0f);
-                    sys.mainState.refreshButton.Top.Set(Main.mouseY - dragOffset.Y, 0f);
-                }
+                // Let the main state update the positions of all buttons.
+                sys.mainState.UpdateButtonsPositions(newAnchorPosition);
 
                 Recalculate();
             }

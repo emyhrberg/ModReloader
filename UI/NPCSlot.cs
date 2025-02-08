@@ -70,20 +70,20 @@ namespace SquidTestingMod.UI
             {
                 int x = (int)Main.LocalPlayer.position.X - 200;
                 int y = (int)Main.LocalPlayer.position.Y - 200;
-                NPC.NewNPC(new MyCustomNPCSource("Spawn"), x, y, displayNPC.type);
+                NPC.NewNPC(new MyCustomNPCSource("NPCSpawnFromNPCSlotClass"), x, y, displayNPC.type);
             }
         }
     }
 
     public class MyCustomNPCSource : IEntitySource
     {
-        public string CustomData { get; private set; }
+        public string RandomStringForNoReason { get; private set; }
 
         public string Context => throw new NotImplementedException();
 
         public MyCustomNPCSource(string customData)
         {
-            CustomData = customData;
+            RandomStringForNoReason = customData;
         }
     }
 

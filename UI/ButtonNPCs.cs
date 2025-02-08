@@ -10,7 +10,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class NPCButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class ButtonNPCs(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         public NPCPanel npcPanel;
         private bool isNPCPanelVisible = false;

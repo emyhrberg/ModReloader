@@ -8,10 +8,11 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class RefreshButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class ButtonRefresh(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         public override async void HandleClick()
         {
@@ -33,6 +34,42 @@ namespace SquidTestingMod.UI
             }
 
             // 4) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            // navigate to Main Menu
+            WorldGen.JustQuit();
+            Log.Info("Navigated to Main Menu.");
+            // wait for 2 second
+            Task.Delay(2000);
+            Main.menuMode = 10000;
+            // NavigateToManageMods();
+        }
+
+        private void NavigateToManageMods()
+        {
+            try
+            {
+                Log.Info("Attempting to navigate to Manage Mods...");
+
+                Assembly tModLoaderAssembly = typeof(Main).Assembly;
+                Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
+
+                FieldInfo modBrowserIDField = interfaceType.GetField("modBrowserID", BindingFlags.NonPublic | BindingFlags.Static);
+                int modBrowserID = (int)(modBrowserIDField?.GetValue(null) ?? -1);
+
+                modBrowserID = 10007;
+
+                Main.menuMode = modBrowserID != -1 ? modBrowserID : 10007;
+                // Main.menuMode = Interface.modNameField;
+
+                Log.Info($"Successfully navigated to Manage Mods (MenuMode: {modBrowserID}).");
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
+            }
         }
 
         private async static void ExitWorld(Config c)
@@ -135,6 +172,7 @@ namespace SquidTestingMod.UI
 
                 FieldInfo modSourcesIDField = interfaceType.GetField("modSourcesID", BindingFlags.NonPublic | BindingFlags.Static);
                 int modSourcesID = (int)(modSourcesIDField?.GetValue(null) ?? -1);
+                Log.Info("modSourcesID: " + modSourcesID);
 
                 Main.menuMode = modSourcesID;
 

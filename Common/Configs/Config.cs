@@ -119,23 +119,6 @@ namespace SquidTestingMod.Common.Configs
 
         public override void OnChanged()
         {
-            if (ModContent.GetInstance<Config>() == null)
-            {
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                if (sys == null)
-                {
-                    Log.Info("MainSystem is null");
-                    return;
-                }
-                else
-                {
-                    Log.Info("MainSystem is not null");
-                    sys.mainState.configButton.IsConfigOpen = false;
-                }
-
-                return;
-            }
-
             ChangeGodModeOutline();
             ChangeToggleButtonVisibility();
             ChangeButtonTextVisibility();

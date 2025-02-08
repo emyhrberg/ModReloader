@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
@@ -11,30 +13,40 @@ namespace SquidTestingMod.UI
         // State
         public bool AreButtonsVisible = true;
         public bool IsDrawingTextOnButtons = true;
+        public float ButtonScale = 1.0f;
 
         // Buttons
-        public ItemsButton itemButton;
-        public RefreshButton refreshButton;
-        public ConfigButton configButton;
+        public ButtonItems itemButton;
+        public ButtonRefresh refreshButton;
+        public ButtonConfig configButton;
         public ToggleButton toggleButton;
-        public NPCButton npcButton;
+        public ButtonNPCs npcButton;
+        public ButtonGod godButton;
+
+        // List of all buttons
+        public BaseButton[] Buttons => [itemButton, refreshButton, configButton, npcButton, godButton];
 
         public override void OnInitialize()
         {
             // Create the toggle button
-            toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Toggle buttons", 0f);
-            Append(toggleButton);
+            toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Toggle buttons\nRight click to hide", 0f);
 
-            // Add all others buttons
-            configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, Assets.ButtonConfigNoText, "Open config", 100f);
-            itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse items", 200f);
-            npcButton = CreateButton<NPCButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse NPCs", 300f);
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload selected mod (see config)", 400f);
+            // Create all the other buttons
+            configButton = CreateButton<ButtonConfig>(Assets.ButtonConfig, Assets.ButtonConfigNoText, "Open config", 100f);
+            itemButton = CreateButton<ButtonItems>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse all items", 200f);
+            npcButton = CreateButton<ButtonNPCs>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse all NPCs", 300f);
+            godButton = CreateButton<ButtonGod>(Assets.ButtonGod, Assets.ButtonGodNoText, "God mode", 400f);
+            refreshButton = CreateButton<ButtonRefresh>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Left click to reload mod \nRight click to go to mods", 500f);
+
+            // Add all the buttons to the state
+            Append(toggleButton);
             Append(itemButton);
             Append(refreshButton);
             Append(configButton);
             Append(npcButton);
+            Append(godButton);
 
+            // Initialize the setting of whether to show text on the buttons or not
             ToggleButtonTextVisibility();
         }
 
@@ -54,6 +66,7 @@ namespace SquidTestingMod.UI
             button.HAlign = 0.3f; // start 30% from the left
             button.VAlign = 0.9f; // buttons at bottom
             button.Left.Set(leftOffset, 0f);
+            button.RelativeLeftOffset = leftOffset;
 
             return button;
         }
@@ -65,6 +78,7 @@ namespace SquidTestingMod.UI
             refreshButton.UpdateTexture();
             configButton.UpdateTexture();
             npcButton.UpdateTexture();
+            godButton.UpdateTexture();
         }
 
         public void ToggleAllButtonsVisibility()
@@ -78,6 +92,7 @@ namespace SquidTestingMod.UI
                 RemoveChild(refreshButton);
                 RemoveChild(configButton);
                 RemoveChild(npcButton);
+                RemoveChild(godButton);
             }
             else
             {
@@ -85,7 +100,18 @@ namespace SquidTestingMod.UI
                 Append(refreshButton);
                 Append(configButton);
                 Append(npcButton);
+                Append(godButton);
             }
+        }
+
+        public void UpdateButtonsPositions(Vector2 anchorPosition)
+        {
+            foreach (BaseButton btn in Buttons)
+            {
+                btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
+                btn.Top.Set(anchorPosition.Y, 0f);
+            }
+            Recalculate(); // Refresh layout after moving buttons.
         }
     }
 }
