@@ -28,7 +28,7 @@ namespace SquidTestingMod.UI
         public GodButton godButton;
 
         // List of all buttons
-        public BaseButton[] Buttons => [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton];
+        public BaseButton[] AllButtons => [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton];
 
         public override void OnInitialize()
         {
@@ -78,6 +78,7 @@ namespace SquidTestingMod.UI
             return button;
         }
 
+        // updates image only: for example no text or text, scale, and on/off and god on/off, etc
         public void UpdateAllButtonsTexture()
         {
             toggleButton.UpdateTexture();
@@ -88,15 +89,10 @@ namespace SquidTestingMod.UI
             godButton.UpdateTexture();
         }
 
-        public void ToggleAllButtonsVisibility()
-        {
-            AreButtonsVisible = !AreButtonsVisible;
-            // Update() will handle the visibility of the buttons.
-        }
-
+        // updates position only
         public void UpdateButtonsPositions(Vector2 anchorPosition)
         {
-            foreach (BaseButton btn in Buttons)
+            foreach (BaseButton btn in AllButtons)
             {
                 btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset * ButtonScale, 0f);
                 btn.Top.Set(anchorPosition.Y, 0f);
@@ -104,58 +100,23 @@ namespace SquidTestingMod.UI
             Recalculate(); // Refresh layout after moving buttons.
         }
 
-        public override void Update(GameTime gameTime)
+        // removes all buttons except the toggle button
+        public void ToggleAllButtonsVisibility()
         {
-            // Check if we want to only show buttons when the inventory is open.
-            if (c != null && c.General.OnlyShowWhenInventoryOpen)
-            {
-                // 1. If the inventory is closed, remove ALL buttons.
-                if (!Main.playerInventory)
-                {
-                    foreach (var btn in Buttons)
-                    {
-                        if (Children.Contains(btn))
-                            RemoveChild(btn);
-                    }
-                }
-                else // Inventory is open.
-                {
-                    // 2. If the inventory is open, then use the toggle flag to determine what to show.
-                    if (AreButtonsVisible)
-                    {
-                        // Toggle is ON: show all buttons.
-                        foreach (var btn in Buttons)
-                        {
-                            if (!Children.Contains(btn))
-                                Append(btn);
-                        }
-                    }
-                    else
-                    {
-                        // Toggle is OFF: show only the toggle button.
-                        // Ensure the toggle button is appended.
-                        if (!Children.Contains(toggleButton))
-                            Append(toggleButton);
+            AreButtonsVisible = !AreButtonsVisible;
 
-                        // Remove all other buttons.
-                        foreach (var btn in Buttons)
-                        {
-                            if (btn != toggleButton && Children.Contains(btn))
-                                RemoveChild(btn);
-                        }
-                    }
-                }
-            }
-            else // Config setting is disabled: always show all buttons.
+            if (AreButtonsVisible)
             {
-                foreach (var btn in Buttons)
-                {
+                foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
                     if (!Children.Contains(btn))
                         Append(btn);
-                }
             }
-
-            base.Update(gameTime);
+            else
+            {
+                foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
+                    if (Children.Contains(btn))
+                        RemoveChild(btn);
+            }
         }
     }
 }

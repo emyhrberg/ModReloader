@@ -4,11 +4,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Systems;
-using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.Graphics.Shaders;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -40,7 +38,7 @@ namespace SquidTestingMod.Common.Configs
             public string AutoloadWorld = "None";
 
             [DefaultValue(false)]
-            public bool SaveWorld;
+            public bool SaveAndQuitWorldWithoutSaving;
 
             [DefaultValue(true)]
             public bool InvokeBuildAndReload;
@@ -63,10 +61,10 @@ namespace SquidTestingMod.Common.Configs
             public bool OnlyShowWhenInventoryOpen;
 
             [DefaultValue(true)]
-            public bool ShowButtonText;
+            public bool HideButtonText;
 
             [DefaultValue(true)]
-            public bool ShowTooltips;
+            public bool HideButtonTooltips;
 
             [Range(0.3f, 1f)]
             [Increment(0.1f)]
@@ -77,10 +75,14 @@ namespace SquidTestingMod.Common.Configs
 
         public class GameplayConfig
         {
-            [DefaultValue(true)]
+            [DefaultValue(false)]
+            [ReloadRequired] // this is an IL hook (edited at loadtime), so it requires a reload
+            public bool KeepGameRunningWhenFocusLost;
+
+            [DefaultValue(false)]
             public bool AlwaysSpawnBossOnTopOfPlayer;
 
-            [DefaultValue(true)]
+            [DefaultValue(false)]
             public bool StartInGodMode;
 
             [OptionStrings(["None", "Small", "Big"])]
@@ -108,7 +110,17 @@ namespace SquidTestingMod.Common.Configs
             ChangeGodModeOutline();
             ChangeButtonTextVisibility();
             ChangeButtonSizes();
+            // ChangeFocusSystem();
         }
+
+        // NOT WORKING TO EDIT IL HOOKS ON RUNTIME
+        // private void ChangeFocusSystem()
+        // {
+        //     FocusSystem focusSystem = ModContent.GetInstance<FocusSystem>();
+        //     if (focusSystem == null)
+        //         return;
+        //     IL_Main.DoUpdate -= focusSystem.GameUpdate;
+        // }
 
         private static void ChangeButtonSizes()
         {

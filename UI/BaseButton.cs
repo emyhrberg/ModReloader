@@ -42,11 +42,12 @@ namespace SquidTestingMod.UI
             // 1) CurrentImage.
             Config config = ModContent.GetInstance<Config>();
             // set showtext to config setting. if config is null. default to true
-            bool showText = config?.General.ShowButtonText ?? true;
-            if (showText)
-                CurrentImage = _buttonImgText;
-            else
+            bool hideText = config?.General.HideButtonText ?? true;
+            if (hideText)
                 CurrentImage = _buttonImgNoText;
+            else
+                CurrentImage = _buttonImgText;
+
             SetImage(CurrentImage);
 
             // 2) ButtonScale.
@@ -83,7 +84,7 @@ namespace SquidTestingMod.UI
             if (IsMouseHovering)
             {
                 Config c = ModContent.GetInstance<Config>();
-                if (c.General.ShowTooltips)
+                if (c.General.HideButtonTooltips)
                     UICommon.TooltipMouseText(HoverText);
             }
         }

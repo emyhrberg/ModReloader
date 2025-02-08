@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.UI;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -40,6 +41,10 @@ namespace SquidTestingMod.Common.Systems
             if (ToggleGodModeKeybind.JustPressed)
             {
                 GodMode = !GodMode;
+                // update the button texture
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                sys.mainState.godButton.UpdateTexture();
+                Log.Info("God mode toggled. God mode is now " + GodMode);
             }
         }
 

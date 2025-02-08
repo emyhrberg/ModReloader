@@ -32,14 +32,22 @@ namespace SquidTestingMod.UI
             }
 
             Config c = ModContent.GetInstance<Config>();
-            bool showText = c?.General.ShowButtonText ?? true;
-            bool isOn = sys.mainState.AreButtonsVisible;
+            bool hideText = c?.General.HideButtonText ?? true;
+            bool isButtonsOn = sys.mainState.AreButtonsVisible;
 
             // Now update the current image asset based on the toggle state.
-            if (isOn)
-                CurrentImage = showText ? Assets.ButtonOn : Assets.ButtonOnNoText;
+            if (isButtonsOn)
+                if (hideText)
+                    CurrentImage = Assets.ButtonOnNoText;
+                else
+                    CurrentImage = Assets.ButtonOn;
             else
-                CurrentImage = showText ? Assets.ButtonOff : Assets.ButtonOffNoText;
+            {
+                if (hideText)
+                    CurrentImage = Assets.ButtonOffNoText;
+                else
+                    CurrentImage = Assets.ButtonOff;
+            }
 
             SetImage(CurrentImage);
         }
@@ -49,12 +57,13 @@ namespace SquidTestingMod.UI
             Log.Info("ToggleButton clicked.");
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-
-            // Toggle visibility of all buttons
             sys?.mainState?.ToggleAllButtonsVisibility();
-
-            // Update textures for ON/OFF and text on buttons
             UpdateTexture();
+
+            // update config
+            Config c = ModContent.GetInstance<Config>();
+            if (c == null) return;
+            c.General.OnlyShowWhenInventoryOpen = !c.General.OnlyShowWhenInventoryOpen;
         }
 
         public override void RightClick(UIMouseEvent evt)
@@ -69,10 +78,10 @@ namespace SquidTestingMod.UI
         }
 
         #region dragging
-        private bool dragging;
+        public bool dragging;
         private Vector2 dragOffset;
         private Vector2 mouseDownPos;
-        private bool isDrag;
+        public bool isDrag;
         private const float DragThreshold = 10f; // you can tweak the threshold
         private bool clickStartedOutsideButton;
 

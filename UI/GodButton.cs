@@ -25,13 +25,23 @@ namespace SquidTestingMod.UI
             // GodModePlayer godModePlayer = Main.LocalPlayer.GetModPlayer<GodModePlayer>();
             bool isGodModeOn = GodModePlayer.GodMode;
             Config c = ModContent.GetInstance<Config>();
-            bool showText = c?.General.ShowButtonText ?? true;
+            bool hideText = c?.General.HideButtonText ?? true;
 
             // Now update the current image asset based on the toggle state.
             if (isGodModeOn)
-                CurrentImage = showText ? Assets.ButtonGod : Assets.ButtonGodNoText;
+            {
+                if (hideText)
+                    CurrentImage = Assets.ButtonGodNoText;
+                else
+                    CurrentImage = Assets.ButtonGod;
+            }
             else
-                CurrentImage = showText ? Assets.ButtonGodOff : Assets.ButtonGodOffNoText;
+            {
+                if (hideText)
+                    CurrentImage = Assets.ButtonGodOffNoText;
+                else
+                    CurrentImage = Assets.ButtonGodOff;
+            }
 
             SetImage(CurrentImage);
         }

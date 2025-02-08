@@ -74,16 +74,17 @@ namespace SquidTestingMod.UI
 
         private async static void ExitWorld(Config c)
         {
-            if (c.Reload.SaveWorld)
+            if (c.Reload.SaveAndQuitWorldWithoutSaving)
+            {
+                Log.Warn("Just quitting...");
+                WorldGen.JustQuit();
+
+            }
+            else
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
                 await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
-            }
-            else
-            {
-                Log.Warn("Just quitting...");
-                WorldGen.JustQuit();
             }
         }
 

@@ -79,6 +79,11 @@ Mods: {
 					Label: Waiting Time Before Build And Reload
 					Tooltip: ""
 				}
+
+				SaveAndQuitWorldWithoutSaving: {
+					Label: Save And Quit World Without Saving
+					Tooltip: ""
+				}
 			}
 
 			GeneralConfig: {
@@ -106,6 +111,16 @@ Mods: {
 
 				ButtonSize: {
 					Label: Button Size
+					Tooltip: ""
+				}
+
+				HideButtonText: {
+					Label: Hide Button Text
+					Tooltip: ""
+				}
+
+				HideButtonTooltips: {
+					Label: Hide Button Tooltips
 					Tooltip: ""
 				}
 			}
@@ -144,6 +159,11 @@ Mods: {
 
 				GodModeOutlineSize: {
 					Label: God Mode Outline Size
+					Tooltip: ""
+				}
+
+				KeepGameRunningWhenFocusLost: {
+					Label: Keep Game Running When Focus Lost
 					Tooltip: ""
 				}
 			}
