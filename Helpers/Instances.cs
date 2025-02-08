@@ -13,6 +13,11 @@ namespace SquidTestingMod.Helpers
             ModInstance.Logger.Info(message);
         }
 
+        public static void Debug(string message)
+        {
+            ModInstance.Logger.Info(message);
+        }
+
         public static void Warn(string message)
         {
             ModInstance.Logger.Warn(message);

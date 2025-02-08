@@ -33,7 +33,7 @@ namespace SquidTestingMod.UI
 
             Config c = ModContent.GetInstance<Config>();
             bool hideText = c?.General.HideButtonText ?? true;
-            bool isButtonsOn = sys.mainState.AreButtonsVisible;
+            bool isButtonsOn = sys.mainState.AreButtonsShowing;
 
             // Now update the current image asset based on the toggle state.
             if (isButtonsOn)
@@ -54,16 +54,11 @@ namespace SquidTestingMod.UI
 
         public override void HandleClick()
         {
-            Log.Info("ToggleButton clicked.");
-
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys?.mainState?.ToggleOnOff();
-            UpdateTexture();
-
-            // update config
-            Config c = ModContent.GetInstance<Config>();
-            if (c == null) return;
-            c.General.OnlyShowWhenInventoryOpen = !c.General.OnlyShowWhenInventoryOpen;
+            if (sys?.mainState != null)
+            {
+                sys.mainState.ToggleOnOff();
+            }
         }
 
         public override void RightClick(UIMouseEvent evt)
@@ -73,7 +68,13 @@ namespace SquidTestingMod.UI
             if (c == null) return;
             c.General.OnlyShowWhenInventoryOpen = !c.General.OnlyShowWhenInventoryOpen;
 
-            string t = c.General.OnlyShowWhenInventoryOpen ? "OnlyShowWhenInventoryOpen [ON]" : "OnlyShowWhenInventoryOpen [OFF]";
+            string t;
+
+            if (c.General.OnlyShowWhenInventoryOpen)
+                t = "Only show when inventory is open.";
+            else
+                t = "Always show.";
+
             Main.NewText(t, Color.White);
         }
 

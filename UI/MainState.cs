@@ -14,7 +14,7 @@ namespace SquidTestingMod.UI
     public class MainState : UIState
     {
         // State
-        public bool AreButtonsVisible = true;
+        public bool AreButtonsShowing = true;
         public bool IsDrawingTextOnButtons = true;
         public float ButtonScale = 1.0f;
         private Config c;
@@ -100,36 +100,14 @@ namespace SquidTestingMod.UI
 
         public void ToggleOnOff()
         {
-            AreButtonsVisible = !AreButtonsVisible;
-            Log.Info($"Buttons visibility toggled to: {AreButtonsVisible}");
-
-            // Force immediate UI update
-            if (c.General.OnlyShowWhenInventoryOpen && !Main.playerInventory)
-                return;
-
-            if (AreButtonsVisible)
-                AddAllExceptToggle();
-            else
-                RemoveAllExceptToggle();
-        }
-
-        public void RemoveAllExceptToggle()
-        {
-            foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
-                if (Children.Contains(btn))
-                    RemoveChild(btn);
+            AreButtonsShowing = !AreButtonsShowing;
+            Log.Info($"Buttons visibility toggled to: {AreButtonsShowing}");
+            UpdateAllButtonsTexture();
         }
 
         public void AddAllExceptToggle()
         {
             foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
-                if (!Children.Contains(btn))
-                    Append(btn);
-        }
-
-        public void AddAll()
-        {
-            foreach (BaseButton btn in AllButtons)
                 if (!Children.Contains(btn))
                     Append(btn);
         }
@@ -145,34 +123,27 @@ namespace SquidTestingMod.UI
         {
             base.Update(gameTime);
 
-            // Determine whether buttons are allowed to show at all.
-            // When OnlyShowWhenInventoryOpen is enabled, buttons may only be shown if the inventory is open.
-            // When it's disabled, buttons are always allowed.
-            bool configOnlyShow = c.General.OnlyShowWhenInventoryOpen;
-            bool inventoryOpen = Main.playerInventory;
+            // Check if we should show the buttons
+            bool showOnly = c.General.OnlyShowWhenInventoryOpen;
+            bool invOpen = Main.playerInventory;
 
-            bool showButtons = !configOnlyShow || (configOnlyShow && inventoryOpen);
+            RemoveAll(); // Remove all buttons to build them again
 
-            if (showButtons)
+            // Show only buttons when inventory is open
+            if (showOnly)
             {
-                // Now apply the toggle logic.
-                if (AreButtonsVisible)
+                if (invOpen)
                 {
-                    // Toggle ON: show all buttons.
-                    AddAll();
-                }
-                else
-                {
-                    // Toggle OFF: show only the toggle button.
-                    RemoveAllExceptToggle();
-                    if (!Children.Contains(toggleButton))
-                        Append(toggleButton);
+                    Append(toggleButton);
+                    if (AreButtonsShowing)
+                        AddAllExceptToggle();
                 }
             }
             else
             {
-                // When buttons are not allowed to be shown (config enabled and inventory closed), remove everything.
-                RemoveAll();
+                Append(toggleButton);
+                if (AreButtonsShowing)
+                    AddAllExceptToggle();
             }
         }
     }

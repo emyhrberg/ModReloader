@@ -29,9 +29,6 @@ namespace SquidTestingMod.UI
             _buttonImgText = buttonImgText;
             _buttonImgNoText = buttonImgNoText;
             HoverText = hoverText;
-
-            // Ensure the correct initial texture is set
-            // UpdateTexture();
         }
 
         /// <summary>
