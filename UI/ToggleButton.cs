@@ -59,12 +59,13 @@ namespace SquidTestingMod.UI
 
         public override void RightClick(UIMouseEvent evt)
         {
-            string t = "Hide Toggle Button. Type /toggle to show again!";
-            CombatText.NewText(Main.LocalPlayer.getRect(), Color.Orange, "t");
-            Main.NewText(t, Color.Orange);
+            // flip the switch
+            Config c = ModContent.GetInstance<Config>();
+            if (c == null) return;
+            c.General.OnlyShowWhenInventoryOpen = !c.General.OnlyShowWhenInventoryOpen;
 
-            // update config state
-            ModContent.GetInstance<Config>().General.OnlyShowWhenInventoryOpen = true;
+            string t = c.General.OnlyShowWhenInventoryOpen ? "Buttons will only show when inventory is open" : "Buttons will always show";
+            Main.NewText(t, Color.White);
         }
 
         #region dragging

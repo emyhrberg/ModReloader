@@ -16,3 +16,7 @@ Planned features:
 1. RAM Check per mod/performance check
 2. Open client.log 
 3. Add hitboxes
+4. Main menu option to start 2nd client
+5. Hitboxes for all UIElements/drawing. (config)
+6. Slow motion tool/speedup for everything in the game
+7. Keep Game Running When Unfocused

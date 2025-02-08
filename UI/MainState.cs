@@ -91,23 +91,7 @@ namespace SquidTestingMod.UI
         public void ToggleAllButtonsVisibility()
         {
             AreButtonsVisible = !AreButtonsVisible;
-            // Log.Info("Setting buttons visibility to: " + AreButtonsVisible);
-            // if (!AreButtonsVisible)
-            // {
-            //     RemoveChild(itemButton);
-            //     RemoveChild(refreshButton);
-            //     RemoveChild(configButton);
-            //     RemoveChild(npcButton);
-            //     RemoveChild(godButton);
-            // }
-            // else
-            // {
-            //     Append(itemButton);
-            //     Append(refreshButton);
-            //     Append(configButton);
-            //     Append(npcButton);
-            //     Append(godButton);
-            // }
+            // Update() will handle the visibility of the buttons.
         }
 
         public void UpdateButtonsPositions(Vector2 anchorPosition)
@@ -122,41 +106,52 @@ namespace SquidTestingMod.UI
 
         public override void Update(GameTime gameTime)
         {
+            // Check if we want to only show buttons when the inventory is open.
             if (c != null && c.General.OnlyShowWhenInventoryOpen)
             {
+                // 1. If the inventory is closed, remove ALL buttons.
                 if (!Main.playerInventory)
                 {
-                    // Inventory is closed – remove all non-toggle buttons if they are present.
                     foreach (var btn in Buttons)
                     {
                         if (Children.Contains(btn))
-                        {
                             RemoveChild(btn);
-                        }
                     }
                 }
-                else
+                else // Inventory is open.
                 {
-                    // Inventory is open – make sure all non-toggle buttons are appended.
-                    foreach (var btn in Buttons)
+                    // 2. If the inventory is open, then use the toggle flag to determine what to show.
+                    if (AreButtonsVisible)
                     {
-                        if (!Children.Contains(btn))
+                        // Toggle is ON: show all buttons.
+                        foreach (var btn in Buttons)
                         {
-                            Append(btn);
-                            Log.Info("Appending button: " + btn.GetType().Name); // is only called once, yay
+                            if (!Children.Contains(btn))
+                                Append(btn);
+                        }
+                    }
+                    else
+                    {
+                        // Toggle is OFF: show only the toggle button.
+                        // Ensure the toggle button is appended.
+                        if (!Children.Contains(toggleButton))
+                            Append(toggleButton);
+
+                        // Remove all other buttons.
+                        foreach (var btn in Buttons)
+                        {
+                            if (btn != toggleButton && Children.Contains(btn))
+                                RemoveChild(btn);
                         }
                     }
                 }
             }
-            else
+            else // Config setting is disabled: always show all buttons.
             {
-                // Config setting is disabled – always show all buttons.
                 foreach (var btn in Buttons)
                 {
                     if (!Children.Contains(btn))
-                    {
                         Append(btn);
-                    }
                 }
             }
 

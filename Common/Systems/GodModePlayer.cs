@@ -5,6 +5,7 @@ using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameInput;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Systems
@@ -16,6 +17,9 @@ namespace SquidTestingMod.Common.Systems
 
         public override void OnEnterWorld()
         {
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                return;
+
             Config c = ModContent.GetInstance<Config>();
             Log.Info("enter world godmode is set to" + c.Gameplay.StartInGodMode);
             GodMode = c.Gameplay.StartInGodMode;
@@ -36,7 +40,6 @@ namespace SquidTestingMod.Common.Systems
             if (ToggleGodModeKeybind.JustPressed)
             {
                 GodMode = !GodMode;
-                Main.NewText($"God Mode: {(GodMode ? "Enabled" : "Disabled")}", GodMode ? Color.Green : Color.Red);
             }
         }
 
