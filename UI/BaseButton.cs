@@ -57,13 +57,7 @@ namespace SquidTestingMod.UI
                 return;
             }
 
-            sys.mainState.ButtonScale = config.General.ButtonSizes switch
-            {
-                "Small" => 0.45f,
-                "Medium" => 0.7f,
-                _ => 1.0f,
-            };
-            sys.mainState.ButtonScale = 1f;
+            sys.mainState.ButtonScale = config.General.ButtonSize;
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -94,38 +88,29 @@ namespace SquidTestingMod.UI
             }
         }
 
-        // public override void LeftClick(UIMouseEvent evt)
-        // {
-        //     // base.LeftClick(evt);
-        //     // Mark the mouse click as used by the UI to disable item usage
-        //     // Main.LocalPlayer.mouseInterface = true;
-
-        //     // Execute your custom click behavior
-        //     // HandleClick();
-        // }
-
-        // public override void LeftMouseDown(UIMouseEvent evt)
-        // {
-        //     Main.LocalPlayer.mouseInterface = true; // CANNOT use items.
-        // }
-
-        // public override void LeftMouseUp(UIMouseEvent evt)
-        // {
-        //     Main.LocalPlayer.mouseInterface = false; // ALLOW item usage again.
-        // }
-
         // Abstract HandleClick = force children (all buttons) to implement this method
         public abstract void HandleClick();
 
-        #region disable click
+        #region fix dont use items when clicking buttons
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            // Don't use items when clicking buttons
+            Main.LocalPlayer.mouseInterface = true;
+            base.LeftClick(evt);
+            Main.LocalPlayer.mouseInterface = false;
+        }
+
+        #endregion
+
+        #region ContainsPoint
         public override bool ContainsPoint(Vector2 point)
         {
-            // --- This is a workaround to prevent the buttons from being clicked when the UIModConfig is open. ---
+            // First, if you have any special logic for not accepting clicks (such as the UIModConfig workaround),
+            // perform that check first. (This part is identical to your current code.)
             try
             {
                 if (Main.InGameUI != null)
                 {
-                    // Use reflection to get the "CurrentState" property from Main.InGameUI.
                     var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
                     if (currentStateProp != null)
                     {
@@ -133,7 +118,6 @@ namespace SquidTestingMod.UI
                         if (currentState != null)
                         {
                             string stateName = currentState.GetType().Name;
-                            // UIModConfig will be open when we click config button
                             if (stateName.Contains("Config"))
                                 return false;
                         }
@@ -145,6 +129,35 @@ namespace SquidTestingMod.UI
                 Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
             }
 
+            // Now calculate the clickable area based on the drawn image.
+            CalculatedStyle dimensions = GetInnerDimensions();
+
+            // Get the current ButtonScale from your MainState.
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            float buttonScale = (sys != null && sys.mainState != null)
+                ? sys.mainState.ButtonScale
+                : 1f;
+
+            // Ensure we have a valid image.
+            if (CurrentImage != null && CurrentImage.Value != null)
+            {
+                // Calculate the scaled width and height.
+                float drawWidth = CurrentImage.Value.Width * buttonScale;
+                float drawHeight = CurrentImage.Value.Height * buttonScale;
+
+                // Determine the position where the image is drawn.
+                // (This should match the calculation in DrawSelf.)
+                Vector2 drawPos = dimensions.Position() +
+                                  new Vector2((dimensions.Width - drawWidth) / 2f, (dimensions.Height - drawHeight) / 2f);
+
+                // Build a rectangle for the clickable area.
+                Rectangle hitbox = new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)drawWidth, (int)drawHeight);
+
+                // Return true if the point falls inside this hitbox.
+                return hitbox.Contains(point.ToPoint());
+            }
+
+            // If there's no image, fall back to the base method.
             return base.ContainsPoint(point);
         }
         #endregion

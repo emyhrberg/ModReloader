@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using log4net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,25 +10,25 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ButtonNPCs(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class ItemsButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
-        public NPCPanel npcPanel;
-        private bool isNPCPanelVisible = false;
+        public ItemsPanel itemsPanel;
+        private bool isItemsPanelVisible = false;
 
         public override void HandleClick()
         {
-            ToggleNPCPanel();
+            ToggleItemsPanel();
 
             // open inv if its not already open
             if (!Main.playerInventory)
                 Main.playerInventory = true;
 
             // close inv if we close the panel
-            if (!isNPCPanelVisible)
+            if (!isItemsPanelVisible)
                 Main.playerInventory = false;
         }
 
-        public void ToggleNPCPanel()
+        public void ToggleItemsPanel()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (Parent is not UIState state)
@@ -40,36 +40,36 @@ namespace SquidTestingMod.UI
             // If the NPC panel is open, remove it first.
             if (sys.mainState.npcButton != null && sys.mainState.npcButton.npcPanel != null && state.Children.Contains(sys.mainState.npcButton.npcPanel))
             {
-                Log.Info("Removing Itemspanel because npcPanel is being toggled.");
+                Log.Info("Removing NPCPanel because ItemsPanel is being toggled.");
                 state.RemoveChild(sys.mainState.npcButton.npcPanel);
                 sys.mainState.npcButton.npcPanel = null;
             }
 
             // Toggle the ItemsPanel flag.
-            isNPCPanelVisible = !isNPCPanelVisible;
+            isItemsPanelVisible = !isItemsPanelVisible;
 
-            if (isNPCPanelVisible)
+            if (isItemsPanelVisible)
             {
                 // Create the panel if it doesn't already exist.
-                if (npcPanel == null)
+                if (itemsPanel == null)
                 {
-                    npcPanel = new NPCPanel();
-                    Log.Info("Created new npcPanel.");
+                    itemsPanel = new ItemsPanel();
+                    Log.Info("Created new ItemsPanel.");
                 }
 
                 // Only append if not already present.
-                if (!state.Children.Contains(npcPanel))
+                if (!state.Children.Contains(itemsPanel))
                 {
-                    Log.Info("Appending npcPanel to parent state.");
-                    state.Append(npcPanel);
-                    npcPanel.searchBox.Focus();
+                    Log.Info("Appending ItemsPanel to parent state.");
+                    state.Append(itemsPanel);
+                    itemsPanel.searchBox.Focus();
                 }
             }
             else
             {
-                Log.Info("Removing npcPanel from parent state.");
-                if (state.Children.Contains(npcPanel))
-                    state.RemoveChild(npcPanel);
+                Log.Info("Removing ItemsPanel from parent state.");
+                if (state.Children.Contains(itemsPanel))
+                    state.RemoveChild(itemsPanel);
             }
             state.Recalculate();
         }

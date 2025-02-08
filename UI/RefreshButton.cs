@@ -12,7 +12,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ButtonRefresh(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class RefreshButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         public override async void HandleClick()
         {

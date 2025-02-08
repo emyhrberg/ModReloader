@@ -26,9 +26,6 @@ namespace SquidTestingMod.Common.Configs
         [Header("General")]
         public GeneralConfig General = new();
 
-        [Header("UI")]
-        public UIConfig UI = new();
-
         [Header("Gameplay")]
         public GameplayConfig Gameplay = new();
 
@@ -62,8 +59,8 @@ namespace SquidTestingMod.Common.Configs
 
         public class GeneralConfig
         {
-            [DefaultValue(true)]
-            public bool ShowToggleButton;
+            [DefaultValue(false)]
+            public bool OnlyShowWhenInventoryOpen;
 
             [DefaultValue(true)]
             public bool ShowButtonText;
@@ -71,22 +68,11 @@ namespace SquidTestingMod.Common.Configs
             [DefaultValue(true)]
             public bool ShowTooltips;
 
-            [OptionStrings(["Small", "Medium", "Big"])]
-            [DefaultValue("Big")]
+            [Range(0.3f, 1f)]
+            [Increment(0.1f)]
             [DrawTicks]
-            public string ButtonSizes = "Big";
-        }
-
-        public class UIConfig
-        {
-            [DefaultValue(false)]
-            public bool ShowHitboxes;
-
-            [DefaultValue(false)]
-            public bool ShowUIElementsHitbox;
-
-            [DefaultValue(false)]
-            public bool ShowUIElementsSizes;
+            [DefaultValue(0.7f)]
+            public float ButtonSize;
         }
 
         public class GameplayConfig
@@ -120,27 +106,20 @@ namespace SquidTestingMod.Common.Configs
         public override void OnChanged()
         {
             ChangeGodModeOutline();
-            ChangeToggleButtonVisibility();
             ChangeButtonTextVisibility();
+            ChangeButtonSizes();
         }
 
-        private void ChangeButtonTextVisibility()
+        private static void ChangeButtonSizes()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys?.mainState?.ToggleButtonTextVisibility();
+            sys?.mainState?.UpdateAllButtonsTexture();
         }
 
-        private void ChangeToggleButtonVisibility()
+        private static void ChangeButtonTextVisibility()
         {
-            if (ModContent.GetInstance<Config>() == null)
-                return;
-
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-
-            if (General.ShowToggleButton)
-                sys?.SetUIStateToMyState();
-            else
-                sys?.SetUIStateToNull();
+            sys?.mainState?.UpdateAllButtonsTexture();
         }
 
         private void ChangeGodModeOutline()

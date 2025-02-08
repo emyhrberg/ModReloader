@@ -11,16 +11,13 @@ namespace SquidTestingMod.Common.Commands
     public class ToggleButtonCommand : ModCommand
     {
         public override CommandType Type => CommandType.Chat;
-        public override string Command => "toggle";
+        public override string Command => "show";
         public override string Description => "Show the buttons UI.";
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            // literally enables the entire state
-            sys.SetUIStateToMyState();
             // update config state
-            ModContent.GetInstance<Config>().General.ShowToggleButton = true;
+            ModContent.GetInstance<Config>().General.OnlyShowWhenInventoryOpen = true;
         }
     }
 }

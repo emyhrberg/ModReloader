@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -35,21 +36,13 @@ namespace SquidTestingMod.UI
                     "SquidTestingMod: MainSystem",
                     () =>
                     {
-                        userInterface?.Draw(Main.spriteBatch, new GameTime()); // actual draw
+                        // actual drawing of all UI elements
+                        // dont mess with this
+                        userInterface?.Draw(Main.spriteBatch, new GameTime());
                         return true;
                     },
                     InterfaceScaleType.UI));
             }
-        }
-
-        public void SetUIStateToMyState()
-        {
-            userInterface.SetState(mainState);
-        }
-
-        public void SetUIStateToNull()
-        {
-            userInterface.SetState(null);
         }
     }
 }

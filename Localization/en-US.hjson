@@ -1,146 +1,28 @@
 Mods: {
 	SquidTestingMod: {
-		"Keybinds.Toggle God Mode.DisplayName": Toggle God Mode
+		"Keybinds.Toggle God Mode.DisplayName": Toggle  God  Mode
+
+		Items: {
+			BorderShaderDye: {
+				DisplayName: Border Shader Dye
+				Tooltip: ""
+			}
+		}
 
 		Configs: {
 			Config: {
 				DisplayName: Config
 
 				Headers: {
-					Autoload: Autoload
-					Refresh: Refresh
-					Misc: Misc
-					GodMode: God Mode
-					UI: UI
-					Gameplay: Gameplay
-					General: General
-					Reload: Reload
-					PlannedFeatures: Planned Features
-					ItemBrowser: Item Browser
+					Reload: Reload Header
+					General: General Header
+					UI: U I Header
+					Gameplay: Gameplay Header
+					ItemBrowser: Item Browser Header
 				}
 
-				EnableRefreshButton: {
-					Label: Enable Reload Button
-					Tooltip: This will put a reload button in the middle of the screen.
-				}
-
-				WaitingTime: {
-					Label: Waiting Time
-					Tooltip: After you press reload button, set the time to wait before building, navigating to mod menu.
-				}
-
-				SaveWorld: {
-					Label: Save World
-					Tooltip: ON: Save the world when exiting. OFF: Quit the world without saving.
-				}
-
-				ShowHitboxes: {
-					Label: Show Hitboxes
-					Tooltip: Shows the hitboxes of your own player, town NPCs, enemy NPCs, and enemy bosses.
-				}
-
-				StartInGodMode: {
-					Label: Start In God Mode
-					Tooltip: When you enter the world, choose whether to always start in god mode or not.
-				}
-
-				AutoloadWorld: {
-					Label: Autoload World
-					Tooltip: After mods are reloaded, this option can instantly load into the first compatible player and world in SP or MP.
-				}
-
-				AlwaysSpawnBossOnTopOfPlayer: {
-					Label: Always Spawn Boss On Top Of Player
-					Tooltip: Bosses will spawn above the player, instead of outside the screen as usual.
-				}
-
-				InvokeBuildAndReload: {
-					Label: Invoke Build And Reload
-					Tooltip: After clicking reload at Mod Sources Menu, invokes BuildReload method (experimental, may cause crash/slow behaviour.)
-				}
-
-				GodModeOutlineSize: {
-					Label: God Mode Outline Size
-					Tooltip: ""
-				}
-
-				ChosenPrefix: {
-					Label: Chosen Prefix
-					Tooltip: ""
-				}
-
-				ModToReload: {
-					Label: Mod To Reload
-					Tooltip: ""
-				}
-
-				CustomChooser: {
-					Label: Custom Chooser
-					Tooltip: ""
-				}
-
-				WaitingTimeBeforeNavigatingToModSources: {
-					Label: Waiting Time Before Navigating To Mod Sources (ms)
-					Tooltip: After you click refresh, the time until menu state switching executes.
-				}
-
-				WaitingTimeBeforeBuildAndReload: {
-					Label: Waiting Time Before Build And Reload (ms)
-					Tooltip: When at mod sources menu state, the time until BuildReload executes.
-				}
-
-				ShowToggleButton: {
-					Label: Show Toggle Button
-					Tooltip: Show the On/Off Button
-				}
-
-				ShowButtonText: {
-					Label: Show Button Text
-					Tooltip: ""
-				}
-
-				ShowTooltips: {
-					Label: Show Tooltips
-					Tooltip: ""
-				}
-
-				ShowUIElementsSizes: {
-					Tooltip: ""
-					Label: Show UI Elements Sizes
-				}
-
-				ShowUIElementsHitbox: {
-					Tooltip: ""
-					Label: Show UI Elements Hitbox
-				}
-
-				ButtonSizes: {
-					Tooltip: ""
-					Label: Button Sizes
-				}
-
-				MaxItemsToDisplay: {
-					Label: Max Items To Display
-					Tooltip: Recommended below 1000. There are over 6000 items, but that takes over a second to load.
-				}
-
-				ItemSlotColor: {
-					Label: Item Slot Color
-					Tooltip: Blue looks most natural
-				}
-
-				ItemSlotStyle: {
-					Tooltip: ""
-					Label: Item Slot Style
-				}
-
-				ItemBrowser: {
-					Label: Item Browser
-					Tooltip: ""
-				}
-
-				Gameplay: {
-					Label: Gameplay
+				Reload: {
+					Label: Reload
 					Tooltip: ""
 				}
 
@@ -150,134 +32,17 @@ Mods: {
 				}
 
 				UI: {
-					Label: UI
+					Label: U I
 					Tooltip: ""
 				}
 
-				Reload: {
-					Label: Reload
-					Tooltip: ""
-				}
-			}
-
-			CustomDefinition: {
-				Tooltip: ""
-
-				DisplayName: {
-					Label: Display Name
-					Tooltip: ""
-				}
-			}
-
-			CustomOptionDefinition: {
-				Tooltip: ""
-
-				DisplayName: {
-					Label: Display Name
-					Tooltip: ""
-				}
-			}
-
-			SimplePrefixDefinition: {
-				IsUnloaded: {
-					Label: Is Unloaded
+				Gameplay: {
+					Label: Gameplay
 					Tooltip: ""
 				}
 
-				Tooltip: ""
-
-				DisplayName: {
-					Label: Display Name
-					Tooltip: ""
-				}
-			}
-
-			TestPrefixDefinition: {
-				Tooltip: ""
-
-				DisplayName: {
-					Label: Display Name
-					Tooltip: ""
-				}
-			}
-
-			ItemBrowserConfig: {
-				Tooltip: ""
-
-				MaxItemsToDisplay: {
-					Label: Max Items To Display
-					Tooltip: ""
-				}
-
-				ItemSlotStyle: {
-					Label: Item Slot Style
-					Tooltip: ""
-				}
-
-				ItemSlotColor: {
-					Label: Item Slot Color
-					Tooltip: ""
-				}
-			}
-
-			GameplayConfig: {
-				Tooltip: ""
-
-				AlwaysSpawnBossOnTopOfPlayer: {
-					Label: Always Spawn Boss On Top Of Player
-					Tooltip: ""
-				}
-
-				StartInGodMode: {
-					Label: Start In God Mode
-					Tooltip: ""
-				}
-
-				GodModeOutlineSize: {
-					Label: God Mode Outline Size
-					Tooltip: ""
-				}
-			}
-
-			GeneralConfig: {
-				Tooltip: ""
-
-				ShowToggleButton: {
-					Label: Show Toggle Button
-					Tooltip: ""
-				}
-
-				ShowButtonText: {
-					Label: Show Button Text
-					Tooltip: ""
-				}
-
-				ShowTooltips: {
-					Label: Show Tooltips
-					Tooltip: ""
-				}
-
-				ButtonSizes: {
-					Label: Button Sizes
-					Tooltip: ""
-				}
-			}
-
-			UIConfig: {
-				Tooltip: ""
-
-				ShowHitboxes: {
-					Label: Show Hitboxes
-					Tooltip: ""
-				}
-
-				ShowUIElementsHitbox: {
-					Label: Show UI Elements Hitbox
-					Tooltip: ""
-				}
-
-				ShowUIElementsSizes: {
-					Label: Show UI Elements Sizes
+				ItemBrowser: {
+					Label: Item Browser
 					Tooltip: ""
 				}
 			}
@@ -315,12 +80,91 @@ Mods: {
 					Tooltip: ""
 				}
 			}
-		}
 
-		Items: {
-			BorderShaderDye: {
-				DisplayName: Border Shader Dye
+			GeneralConfig: {
 				Tooltip: ""
+
+				OnlyShowWhenInventoryOpen: {
+					Label: Only Show When Inventory Open
+					Tooltip: ""
+				}
+
+				ShowButtonText: {
+					Label: Show Button Text
+					Tooltip: ""
+				}
+
+				ShowTooltips: {
+					Label: Show Tooltips
+					Tooltip: ""
+				}
+
+				ButtonSizes: {
+					Label: Button Sizes
+					Tooltip: ""
+				}
+
+				ButtonSize: {
+					Label: Button Size
+					Tooltip: ""
+				}
+			}
+
+			UIConfig: {
+				Tooltip: ""
+
+				ShowHitboxes: {
+					Label: Show Hitboxes
+					Tooltip: ""
+				}
+
+				ShowUIElementsHitbox: {
+					Label: Show U I Elements Hitbox
+					Tooltip: ""
+				}
+
+				ShowUIElementsSizes: {
+					Label: Show U I Elements Sizes
+					Tooltip: ""
+				}
+			}
+
+			GameplayConfig: {
+				Tooltip: ""
+
+				AlwaysSpawnBossOnTopOfPlayer: {
+					Label: Always Spawn Boss On Top Of Player
+					Tooltip: ""
+				}
+
+				StartInGodMode: {
+					Label: Start In God Mode
+					Tooltip: ""
+				}
+
+				GodModeOutlineSize: {
+					Label: God Mode Outline Size
+					Tooltip: ""
+				}
+			}
+
+			ItemBrowserConfig: {
+				Tooltip: ""
+
+				MaxItemsToDisplay: {
+					Label: Max Items To Display
+					Tooltip: ""
+				}
+
+				ItemSlotStyle: {
+					Label: Item Slot Style
+					Tooltip: ""
+				}
+
+				ItemSlotColor: {
+					Label: Item Slot Color
+					Tooltip: ""
+				}
 			}
 		}
 	}

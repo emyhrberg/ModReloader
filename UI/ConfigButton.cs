@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.UI
 {
-    public class ButtonConfig(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class ConfigButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         public override void HandleClick()
         {

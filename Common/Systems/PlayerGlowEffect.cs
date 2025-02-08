@@ -226,6 +226,9 @@ namespace SquidTestingMod.Common.Systems
         protected override void Draw(ref PlayerDrawSet _set)
         {
             // get godmodeplayer
+            // GodModePlayer godModePlayer = Main.LocalPlayer.GetModPlayer<GodModePlayer>();
+
+
             if (!GodModePlayer.GodMode)
             {
                 return;

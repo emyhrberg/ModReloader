@@ -64,8 +64,7 @@ namespace SquidTestingMod.UI
             Main.NewText(t, Color.Orange);
 
             // update config state
-            ModContent.GetInstance<Config>().General.ShowToggleButton = false;
-            ModContent.GetInstance<MainSystem>().SetUIStateToNull();
+            ModContent.GetInstance<Config>().General.OnlyShowWhenInventoryOpen = true;
         }
 
         #region dragging
@@ -134,14 +133,10 @@ namespace SquidTestingMod.UI
                     isDrag = true;
                 }
 
-                // update the position of this
-                Left.Set(Main.mouseX - dragOffset.X, 0f);
-                Top.Set(Main.mouseY - dragOffset.Y, 0f);
-
-                // update the positions of all buttons with the ButtonToggle as the anchor
+                // get anchor pos of this button based on what we have dragOffset it with
                 Vector2 newAnchorPosition = new(Main.mouseX - dragOffset.X, Main.mouseY - dragOffset.Y);
 
-                // Let the main state update the positions of all buttons.
+                // update the position of all the buttons
                 sys.mainState.UpdateButtonsPositions(newAnchorPosition);
 
                 Recalculate();

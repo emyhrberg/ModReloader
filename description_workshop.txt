@@ -1,8 +1,18 @@
 This mod introduces some new functionality that makes modding faster, more efficient, and simpler.
 
-For example, when you are building your mod, are you tired of having to exit the world, navigate menus, reload mods and then select a player and world? This is simplified to a reload button in-game which does all this for *faster refresh*!
+Usage Guide:
+When entering a world, a toolbar will show up. You can drag this around and resize it to your liking.
 
-List of functionality:
+The following is a list of options available to the user:
+1. Item Browser (spawn all items in the game)
+2. NPC Browser (spawn all bosses, enemies, and town NPCs in the game)
+3. God Mode (disable enemy damage, toggle with shortcut)
+4. Spawn Boss On Top (spawns every boss close to your position, instead of far away)
+5. Teleport (Right click to teleport anywhere on the map)
+6. Reload Mod Button (will exit world and reload a selected mod)
+7. Autoload Player And World (after mod reloading, selects the first player and enters the first world.)
 
-1. God Mode (toggle with H)
-2. Spawn Boss On Top (will always spawn every boss on top of your position, instead of outside the screen)
+Planned features: 
+1. RAM Check per mod/performance check
+2. Open client.log 
+3. Add hitboxes
