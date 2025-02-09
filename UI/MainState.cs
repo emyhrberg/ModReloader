@@ -54,16 +54,16 @@ namespace SquidTestingMod.UI
             npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse all NPCs", 400f);
             godButton = CreateButton<GodButton>(Assets.ButtonGod, Assets.ButtonGodNoText, "God mode", 500f);
             fastButton = CreateButton<FastButton>(Assets.ButtonFast, Assets.ButtonFastNoText, "Fast mode", 600f);
-            teleportButton = CreateButton<TeleportButton>(Assets.ButtonTeleport, Assets.ButtonTeleportNoText, "Open map and click to teleport", 700f);
-            logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 800f);
-            secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 900f);
-            hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitbox, Assets.ButtonHitboxNoText, "Toggle hitboxes", 1000f);
-            uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, Assets.ButtonUIDebugNoText, "Toggle UI debug drawing", 1100f);
-            enemiesButton = CreateButton<EnemiesButton>(Assets.ButtonEnemies, Assets.ButtonEnemiesNoText, "Change enemy spawn rate", 1200f);
-            timeButton = CreateButton<TimeButton>(Assets.ButtonTime, Assets.ButtonTimeNoText, "Change time speed", 1300f);
+            enemiesButton = CreateButton<EnemiesButton>(Assets.ButtonEnemies, Assets.ButtonEnemiesNoText, "Change enemy spawn rate", 700f);
+            timeButton = CreateButton<TimeButton>(Assets.ButtonTime, Assets.ButtonTimeNoText, "Change time speed", 800f);
+            hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitbox, Assets.ButtonHitboxNoText, "Toggle hitboxes", 900f);
+            uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, Assets.ButtonUIDebugNoText, "Toggle UI debug drawing", 1000f);
+            teleportButton = CreateButton<TeleportButton>(Assets.ButtonTeleport, Assets.ButtonTeleportNoText, "Open map and click to teleport", 1100f);
+            logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 1200f);
+            secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 1300f);
 
             // Add all buttons to AllButtons
-            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, fastButton, teleportButton, logButton, secondClientButton, hitboxButton, uiDebugButton, enemiesButton, timeButton];
+            AllButtons = [toggleButton, configButton, refreshButton, itemButton, npcButton, godButton, fastButton, enemiesButton, timeButton, hitboxButton, uiDebugButton, teleportButton, logButton, secondClientButton];
 
             // Initialize the setting of whether to show text on the buttons or not
             UpdateAllButtonsTexture();

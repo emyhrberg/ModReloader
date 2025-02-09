@@ -8,8 +8,8 @@ namespace SquidTestingMod.UI
 {
     public class TimeButton : BaseButton
     {
-        private EnemiesSlider slider = new EnemiesSlider();
-        private bool isSliderVisible = false;
+        private TimeSlider slider = new TimeSlider();
+        private bool isTimeSliderVisible = false;
 
         public TimeButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText)
             : base(buttonImgText, buttonImgNoText, hoverText)
@@ -21,8 +21,8 @@ namespace SquidTestingMod.UI
 
         public override void LeftClick(Terraria.UI.UIMouseEvent evt)
         {
-            isSliderVisible = !isSliderVisible;
-            if (isSliderVisible)
+            isTimeSliderVisible = !isTimeSliderVisible;
+            if (isTimeSliderVisible)
             {
                 // NOTE: WE ADD THE SLIDER TO THE BUTTON, NOT THE MAINSTATE, SO ITS KINDA WEIRD WHEN WE MOVE IT
                 Append(slider);

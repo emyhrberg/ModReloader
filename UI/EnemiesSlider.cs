@@ -10,7 +10,7 @@ namespace SquidTestingMod.UI
 {
     public class EnemiesSlider : UIElement
     {
-        public float progress = 0.1f; // 0 = 1x, 1 = 10x
+        public float progress = 0.03f; // 0 = 0x, 1 = 30x, 0.03 = 1x
         private bool dragging;
 
         public EnemiesSlider()
@@ -19,7 +19,7 @@ namespace SquidTestingMod.UI
             Height.Set(20f, 0f);
             // set leftoffset to half of width
             Left.Set(-Width.Pixels / 2, 0.5f);
-            Top.Set(-10, 0);
+            Top.Set(10, 0);
             Recalculate();
         }
 
@@ -43,7 +43,7 @@ namespace SquidTestingMod.UI
                 CalculatedStyle dims = GetDimensions();
                 float relative = (Main.MouseScreen.X - dims.X) / dims.Width;
                 progress = MathHelper.Clamp(relative, 0f, 1f);
-                SpawnSystem.spawnRateModifier = MathHelper.Lerp(0f, 10f, progress);
+                SpawnSystem.spawnRateModifier = MathHelper.Lerp(0f, 30f, progress);
             }
             base.Update(gameTime);
         }
@@ -53,7 +53,7 @@ namespace SquidTestingMod.UI
             CalculatedStyle dims = GetDimensions();
             float relative = (evt.MousePosition.X - dims.X) / dims.Width;
             progress = MathHelper.Clamp(relative, 0f, 1f);
-            SpawnSystem.spawnRateModifier = MathHelper.Lerp(0f, 10f, progress);
+            SpawnSystem.spawnRateModifier = MathHelper.Lerp(0f, 30f, progress);
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -75,7 +75,7 @@ namespace SquidTestingMod.UI
             Rectangle knobRect = new Rectangle(knobX, sliderRect.Y, knobWidth, sliderRect.Height);
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, knobRect, Color.Yellow);
 
-            float displayValue = MathHelper.Lerp(0f, 10f, progress);
+            float displayValue = MathHelper.Lerp(0f, 30f, progress);
             string valueText = $"{displayValue:0.0}x";
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(valueText);
             Vector2 textPos = new Vector2(knobRect.Center.X - textSize.X / 2, sliderRect.Y - textSize.Y - 2);

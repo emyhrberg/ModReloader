@@ -24,8 +24,7 @@ namespace SquidTestingMod.UI
             maxSpawns = (int)(maxSpawns * spawnRateModifier);
         }
 
-        // Add the following to your SpawnSystem class:
-
+        // Log enemies on screen
         public override void PostAI(NPC npc)
         {
             if (npc.whoAmI == 0)
@@ -36,7 +35,7 @@ namespace SquidTestingMod.UI
                     if (n.active && !n.friendly)
                         enemyCount++;
                 }
-                Log.Info("Enemies on screen: " + enemyCount);
+                // Log.Info("Enemies on screen: " + enemyCount);
             }
         }
 

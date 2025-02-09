@@ -105,6 +105,27 @@ namespace SquidTestingMod.Common.Configs
             public Color ItemSlotColor = new(255, 0, 0, 255);
         }
 
+        public class DisableButtonConfig
+        {
+            [DefaultValue(false)]
+            public bool DisableConfig;
+
+            [DefaultValue(false)]
+            public bool DisableReload;
+
+            [DefaultValue(false)]
+            public bool DisableItemBrowser;
+
+            [DefaultValue(false)]
+            public bool DisableNPCBrowser;
+
+            [DefaultValue(false)]
+            public bool DisableGod;
+
+            [DefaultValue(false)]
+            public bool DisableFast;
+        }
+
         public override void OnChanged()
         {
             ChangeGodModeOutline();
