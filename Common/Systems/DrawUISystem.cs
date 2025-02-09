@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Helpers;
+using SquidTestingMod.UI;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.Common.Systems
 {
     public class DrawUISystem : ModSystem
     {
@@ -29,11 +30,11 @@ namespace SquidTestingMod.UI
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            int index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+            int index = layers.FindIndex(l => l.Name == "Vanilla: Mouse Text");
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "SquidTestingMod: DebugUI",
+                    "SquidTestingMod: DrawUISystem",
                     () =>
                     {
                         ui?.Draw(Main.spriteBatch, new GameTime());
@@ -47,16 +48,33 @@ namespace SquidTestingMod.UI
         {
             orig(self, spriteBatch); // Keep normal UI behavior
 
+            // Get MainSystem safely
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            bool isUIDebugDrawing = sys.mainState.uiDebugButton.IsUIDebugDrawing;
+            if (sys == null || sys.mainState?.uiDebugButton == null)
+                return;
 
-            if (!Main.dedServ && !Main.gameMenu && isUIDebugDrawing)
-            {
-                if (self is not MainState && self is not DrawUIState) // Skip full-screen UI elements
-                {
-                    drawUIState.DrawHitbox(self, spriteBatch);
-                }
-            }
+            // ensure we are drawing the UI debug hitboxes
+            bool isUIDebugDrawing = sys.mainState.uiDebugButton.IsUIDebugDrawing;
+            if (!isUIDebugDrawing)
+                return;
+
+            // ensure we are not in a dedicated server and not in the main menu
+            if (Main.dedServ || Main.gameMenu)
+                return;
+
+            // Log the gamemenu
+            Log.Info($"Main.gameMenu: {Main.gameMenu}");
+
+            // ensure we are not drawing the hitbox of a full-screen UI element
+            if (self is MainState || self is DrawUIState)
+                return;
+
+            // ensure the UIelement is not bigger than 600, either by width or height
+            if (self.GetOuterDimensions().Width > 600 || self.GetOuterDimensions().Height > 600)
+                return;
+
+            // OK, all checks passed, now draw the hitbox for the UI element
+            drawUIState.DrawHitbox(self, spriteBatch);
         }
     }
 }

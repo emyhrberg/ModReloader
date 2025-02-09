@@ -41,11 +41,14 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonNPC;
         public static Asset<Texture2D> ButtonGod;
         public static Asset<Texture2D> ButtonGodOff;
+        public static Asset<Texture2D> ButtonFast;
+        public static Asset<Texture2D> ButtonFastOff;
         public static Asset<Texture2D> ButtonTeleport;
         public static Asset<Texture2D> ButtonLog;
         public static Asset<Texture2D> ButtonSecondClient;
         public static Asset<Texture2D> ButtonHitbox;
         public static Asset<Texture2D> ButtonUIDebug;
+        public static Asset<Texture2D> ButtonEnemies;
 
         // No text buttons
         public static Asset<Texture2D> ButtonOnNoText;
@@ -56,12 +59,14 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonNPCNoText;
         public static Asset<Texture2D> ButtonGodNoText;
         public static Asset<Texture2D> ButtonGodOffNoText;
+        public static Asset<Texture2D> ButtonFastNoText;
+        public static Asset<Texture2D> ButtonFastOffNoText;
         public static Asset<Texture2D> ButtonTeleportNoText;
         public static Asset<Texture2D> ButtonLogNoText;
         public static Asset<Texture2D> ButtonSecondClientNoText;
         public static Asset<Texture2D> ButtonHitboxNoText;
         public static Asset<Texture2D> ButtonUIDebugNoText;
-
+        public static Asset<Texture2D> ButtonEnemiesNoText;
 
         public static void PreloadAllAssets()
         {
@@ -76,11 +81,14 @@ namespace SquidTestingMod.Helpers
             ButtonNPC = PreloadAsset("ButtonNPC");
             ButtonGod = PreloadAsset("ButtonGod");
             ButtonGodOff = PreloadAsset("ButtonGodOff");
+            ButtonFast = PreloadAsset("ButtonFast");
+            ButtonFastOff = PreloadAsset("ButtonFastOff");
             ButtonTeleport = PreloadAsset("ButtonTeleport");
             ButtonLog = PreloadAsset("ButtonLog");
             ButtonSecondClient = PreloadAsset("ButtonSecond");
             ButtonHitbox = PreloadAsset("ButtonHitboxes");
             ButtonUIDebug = PreloadAsset("ButtonUI");
+            ButtonEnemies = PreloadAsset("ButtonEnemies");
 
             // NO TEXT BUTTONS
             ButtonOnNoText = PreloadAsset("ButtonOnNoText");
@@ -91,11 +99,14 @@ namespace SquidTestingMod.Helpers
             ButtonNPCNoText = PreloadAsset("ButtonNPCNoText");
             ButtonGodNoText = PreloadAsset("ButtonGodNoText");
             ButtonGodOffNoText = PreloadAsset("ButtonGodOffNoText");
+            ButtonFastNoText = PreloadAsset("ButtonFastNoText");
+            ButtonFastOffNoText = PreloadAsset("ButtonFastOffNoText");
             ButtonTeleportNoText = PreloadAsset("ButtonTeleportNoText");
             ButtonLogNoText = PreloadAsset("ButtonLogNoText");
             ButtonSecondClientNoText = PreloadAsset("ButtonSecondNoText");
             ButtonHitboxNoText = PreloadAsset("ButtonHitboxesNoText");
             ButtonUIDebugNoText = PreloadAsset("ButtonUINoText");
+            ButtonEnemiesNoText = PreloadAsset("ButtonEnemiesNoText");
 
             s.Stop();
             Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");

@@ -16,7 +16,7 @@ namespace SquidTestingMod.Common.Systems
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             // Use a null-safe check if needed.
-            return sys?.mainState?.godButton?.IsFastMode ?? false;
+            return sys?.mainState?.fastButton?.IsFastMode ?? false;
         }
 
         // 1) Infinite Flight:
