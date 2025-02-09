@@ -101,6 +101,16 @@ namespace SquidTestingMod.UI
             Main.LocalPlayer.mouseInterface = true;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+        }
+
         #endregion
 
         #region ContainsPoint

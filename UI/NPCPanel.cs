@@ -58,8 +58,10 @@ namespace SquidTestingMod.UI
             Log.Info($"Search Text: {searchText}");
             grid.Clear();
 
-            int allNPCs = NPCID.Count;
+            Config c = ModContent.GetInstance<Config>();
             int count = 0;
+
+            int allNPCs = NPCID.Count;
 
             for (int i = 1; i < allNPCs; i++)  // NPC IDs generally start at 1
             {
@@ -69,10 +71,16 @@ namespace SquidTestingMod.UI
                 // Use npc.FullName (or another property) to filter
                 if (npc.FullName.ToLower().Contains(searchText))
                 {
+                    count++;
+                    if (count > c.ItemBrowser.MaxItemsToDisplay)
+                        break;
+
                     NPCSlot npcSlot = new(npc, Terraria.UI.ItemSlot.Context.ShopItem);
                     npcSlot.Width.Set(50, 0f);
                     npcSlot.Height.Set(50, 0f);
                     grid.Add(npcSlot);
+
+
                 }
             }
             Log.Info($"Filtered {count} NPCs");
@@ -149,17 +157,6 @@ namespace SquidTestingMod.UI
         {
             element.Recalculate();
             Log.Info($"{element.GetType().Name} Outer: {element.GetOuterDimensions().Width} x {element.GetOuterDimensions().Height} Inner: {element.GetInnerDimensions().Width} x {element.GetInnerDimensions().Height}");
-        }
-        #endregion
-
-        #region draw
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
-
-            // Draw the panel border for debugging
-            CalculatedStyle dimensions = GetInnerDimensions();
-            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, dimensions.Position(), null, Color.Orange * 0.2f, 0f, Vector2.Zero, new Vector2(dimensions.Width, dimensions.Height), SpriteEffects.None, 0f);
         }
         #endregion
 

@@ -26,17 +26,6 @@ namespace SquidTestingMod.UI
             // close inv if we close the panel
             if (!isNPCPanelVisible)
                 Main.playerInventory = false;
-
-            // close npcpanel if we open the panel
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            bool isItemsPanelVisible = sys.mainState.itemButton.itemsPanel != null;
-
-            if (isItemsPanelVisible)
-            {
-                Log.Info("Removing ItemPanel because npcpanel is being toggled.");
-                sys.mainState.RemoveChild(sys.mainState.itemButton.itemsPanel);
-                sys.mainState.itemButton.itemsPanel = null;
-            }
         }
 
         public void ToggleNPCPanel()

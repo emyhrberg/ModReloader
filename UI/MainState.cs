@@ -28,9 +28,10 @@ namespace SquidTestingMod.UI
         public GodButton godButton;
         public TeleportButton teleportButton;
         public LogButton logButton;
+        public SecondClientButton secondClientButton;
 
         // List of all buttons
-        public BaseButton[] AllButtons => [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton];
+        public BaseButton[] AllButtons = [];
 
         public override void OnInitialize()
         {
@@ -45,19 +46,18 @@ namespace SquidTestingMod.UI
             godButton = CreateButton<GodButton>(Assets.ButtonGod, Assets.ButtonGodNoText, "God mode", 400f);
             teleportButton = CreateButton<TeleportButton>(Assets.ButtonTeleport, Assets.ButtonTeleportNoText, "Open map and click to teleport", 500f);
             logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 600f);
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload mod (see Config) \nRight click to go to mods", 700f);
+            secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 700f);
+            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload mod (see Config) \nRight click to go to mods", 800f);
 
-            // Add all the buttons to the state
-            Append(toggleButton);
-            Append(itemButton);
-            Append(refreshButton);
-            Append(configButton);
-            Append(npcButton);
-            Append(godButton);
-            Append(teleportButton);
+            // Add all buttons to AllButtons
+            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton, secondClientButton];
 
             // Initialize the setting of whether to show text on the buttons or not
             UpdateAllButtonsTexture();
+
+            // TODO create default anchor at h=0.3, v=0.9 and leftoffset 0
+            // Vector2 anchorPosition = new Vector2(100, 500);
+            // UpdateButtonsPositions(anchorPosition);
         }
 
         // Utility to create & position any T : BaseButton
@@ -66,9 +66,6 @@ namespace SquidTestingMod.UI
         {
             // We create the button via reflection
             T button = (T)Activator.CreateInstance(typeof(T), buttonImgText, buttonImgNoText, hoverText);
-
-            // Wire up all buttons OnLeftClick to call their own HandleClick
-            // button.OnLeftClick += (evt, element) => button.HandleClick();
 
             // Set up positions, alignment, etc.
             button.Width.Set(100f, 0f);

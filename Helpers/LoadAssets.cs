@@ -43,6 +43,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonGodOff;
         public static Asset<Texture2D> ButtonTeleport;
         public static Asset<Texture2D> ButtonLog;
+        public static Asset<Texture2D> ButtonSecondClient;
 
         // No text buttons
         public static Asset<Texture2D> ButtonOnNoText;
@@ -55,6 +56,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonGodOffNoText;
         public static Asset<Texture2D> ButtonTeleportNoText;
         public static Asset<Texture2D> ButtonLogNoText;
+        public static Asset<Texture2D> ButtonSecondClientNoText;
 
         public static void PreloadAllAssets()
         {
@@ -71,6 +73,7 @@ namespace SquidTestingMod.Helpers
             ButtonGodOff = PreloadAsset("ButtonGodOff");
             ButtonTeleport = PreloadAsset("ButtonTeleport");
             ButtonLog = PreloadAsset("ButtonLog");
+            ButtonSecondClient = PreloadAsset("ButtonSecond");
 
             // NO TEXT BUTTONS
             ButtonOnNoText = PreloadAsset("ButtonOnNoText");
@@ -83,6 +86,7 @@ namespace SquidTestingMod.Helpers
             ButtonGodOffNoText = PreloadAsset("ButtonGodOffNoText");
             ButtonTeleportNoText = PreloadAsset("ButtonTeleportNoText");
             ButtonLogNoText = PreloadAsset("ButtonLogNoText");
+            ButtonSecondClientNoText = PreloadAsset("ButtonSecondNoText");
 
             s.Stop();
             Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
