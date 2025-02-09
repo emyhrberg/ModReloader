@@ -85,6 +85,7 @@ namespace SquidTestingMod.UI
         public bool isDrag;
         private const float DragThreshold = 10f; // you can tweak the threshold
         private bool clickStartedOutsideButton;
+        public Vector2 anchorPos;
 
         public override void LeftMouseDown(UIMouseEvent evt)
         {
@@ -145,10 +146,10 @@ namespace SquidTestingMod.UI
                 }
 
                 // get anchor pos of this button based on what we have dragOffset it with
-                Vector2 newAnchorPosition = new(Main.mouseX - dragOffset.X, Main.mouseY - dragOffset.Y);
+                anchorPos = new(Main.mouseX - dragOffset.X, Main.mouseY - dragOffset.Y);
 
                 // update the position of all the buttons
-                sys.mainState.UpdateButtonsPositions(newAnchorPosition);
+                sys.mainState.UpdateButtonsPositions(anchorPos);
 
                 Recalculate();
             }

@@ -29,6 +29,7 @@ namespace SquidTestingMod.UI
         public TeleportButton teleportButton;
         public LogButton logButton;
         public SecondClientButton secondClientButton;
+        public HitboxButton hitboxButton;
 
         // List of all buttons
         public BaseButton[] AllButtons = [];
@@ -41,23 +42,21 @@ namespace SquidTestingMod.UI
             // Create all the buttons
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, Assets.ButtonOnNoText, "Toggle buttons\nRight click to hide", 0f);
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, Assets.ButtonConfigNoText, "Open config", 100f);
-            itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse all items", 200f);
-            npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse all NPCs", 300f);
-            godButton = CreateButton<GodButton>(Assets.ButtonGod, Assets.ButtonGodNoText, "God mode", 400f);
-            teleportButton = CreateButton<TeleportButton>(Assets.ButtonTeleport, Assets.ButtonTeleportNoText, "Open map and click to teleport", 500f);
-            logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 600f);
-            secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 700f);
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload mod (see Config) \nRight click to go to mods", 800f);
+            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload mod (see Config) \nRight click to go to mods", 200f);
+            itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse all items", 300f);
+            npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse all NPCs", 400f);
+            godButton = CreateButton<GodButton>(Assets.ButtonGod, Assets.ButtonGodNoText, "God mode\nRight click for fast mode", 500f);
+            teleportButton = CreateButton<TeleportButton>(Assets.ButtonTeleport, Assets.ButtonTeleportNoText, "Open map and click to teleport", 600f);
+            logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 700f);
+            secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 800f);
+            hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitbox, Assets.ButtonHitboxNoText, "Toggle hitboxes", 900f);
 
             // Add all buttons to AllButtons
-            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton, secondClientButton];
+            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton, secondClientButton, hitboxButton];
 
             // Initialize the setting of whether to show text on the buttons or not
             UpdateAllButtonsTexture();
-
-            // TODO create default anchor at h=0.3, v=0.9 and leftoffset 0
-            // Vector2 anchorPosition = new Vector2(100, 500);
-            // UpdateButtonsPositions(anchorPosition);
+            UpdateButtonsPositions(toggleButton.anchorPos);
         }
 
         // Utility to create & position any T : BaseButton
@@ -120,6 +119,8 @@ namespace SquidTestingMod.UI
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Check if we should show the buttons
             bool showOnly = c.General.OnlyShowWhenInventoryOpen;
