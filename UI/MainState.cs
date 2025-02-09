@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
@@ -30,9 +31,12 @@ namespace SquidTestingMod.UI
         public LogButton logButton;
         public SecondClientButton secondClientButton;
         public HitboxButton hitboxButton;
+        public UIDebugButton uiDebugButton;
 
         // List of all buttons
         public BaseButton[] AllButtons = [];
+
+        // Draw all UI elements
 
         public override void OnInitialize()
         {
@@ -50,9 +54,10 @@ namespace SquidTestingMod.UI
             logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 700f);
             secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 800f);
             hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitbox, Assets.ButtonHitboxNoText, "Toggle hitboxes", 900f);
+            uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, Assets.ButtonUIDebugNoText, "Toggle UI debug drawing", 1000f);
 
             // Add all buttons to AllButtons
-            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton, secondClientButton, hitboxButton];
+            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton, secondClientButton, hitboxButton, uiDebugButton];
 
             // Initialize the setting of whether to show text on the buttons or not
             UpdateAllButtonsTexture();
@@ -91,6 +96,8 @@ namespace SquidTestingMod.UI
             {
                 btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset * ButtonScale, 0f);
                 btn.Top.Set(anchorPosition.Y, 0f);
+                btn.Width.Set(100f * ButtonScale, 0f);
+                btn.Height.Set(100f * ButtonScale, 0f);
             }
             Recalculate(); // Refresh layout after moving buttons.
         }

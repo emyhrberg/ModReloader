@@ -49,7 +49,7 @@ namespace SquidTestingMod.Common.Systems
                     hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
                     hitbox = Main.ReverseGravitySupport(hitbox);
                     DrawHitbox(sb, hitbox, Color.Yellow * 0.5f);
-                    DrawHitboxOutline(sb, hitbox);
+                    DrawOutlineHitbox(sb, hitbox);
                     HitboxesGlobalItem.meleeHitbox[i] = null;
                 }
             }
@@ -84,7 +84,7 @@ namespace SquidTestingMod.Common.Systems
 
                 // Draw projectile hitbox (semi-transparent green)
                 DrawHitbox(spriteBatch, hitbox, Color.Green * 0.5f);
-                DrawHitboxOutline(spriteBatch, hitbox);
+                DrawOutlineHitbox(spriteBatch, hitbox);
             }
         }
 
@@ -97,7 +97,7 @@ namespace SquidTestingMod.Common.Systems
 
             // Draw hitbox
             DrawHitbox(spriteBatch, hitbox, Color.Blue);
-            DrawHitboxOutline(spriteBatch, hitbox);
+            DrawOutlineHitbox(spriteBatch, hitbox);
         }
 
         private void DrawHitbox(SpriteBatch spriteBatch, Rectangle hitbox, Color color)
@@ -105,7 +105,7 @@ namespace SquidTestingMod.Common.Systems
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, color * 0.5f);
         }
 
-        private void DrawHitboxOutline(SpriteBatch spriteBatch, Rectangle hitbox)
+        private void DrawOutlineHitbox(SpriteBatch spriteBatch, Rectangle hitbox)
         {
             // draw a outline 2 pixels thick around the hitbox
             hitbox.Inflate(2, 2);
@@ -128,7 +128,7 @@ namespace SquidTestingMod.Common.Systems
 
                     // Draw NPC hitbox (semi-transparent red)
                     DrawHitbox(spriteBatch, hitbox, Color.Red * 0.5f);
-                    DrawHitboxOutline(spriteBatch, hitbox);
+                    DrawOutlineHitbox(spriteBatch, hitbox);
                 }
             }
         }

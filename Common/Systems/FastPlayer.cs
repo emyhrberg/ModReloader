@@ -38,8 +38,6 @@ namespace SquidTestingMod.Common.Systems
             if (!IsFastModeEnabled())
                 return;
 
-            Log.Info("Fast mode is on");
-
             // 3) Set running speed to a fixed value.
             // (This value sets the maximum running speed.)
             Player.maxRunSpeed = 5f;  // Adjust this value for your desired ground speed.
@@ -86,11 +84,11 @@ namespace SquidTestingMod.Common.Systems
                 flightTimer += 1f / 60f;
 
                 // If flying for 2 seconds or more, boost horizontal speed.
-                if (flightTimer >= 4f)
+                if (flightTimer >= 2f)
                 {
                     Player.velocity.X *= 5f;
                 }
-                else if (flightTimer >= 2f)
+                else if (flightTimer >= 1f)
                 {
                     Player.velocity.X *= 1.5f;
                 }

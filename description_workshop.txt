@@ -12,14 +12,17 @@ The following is a list of options available to the user:
 6. Reload Mod Button (will exit world and reload a selected mod)
 7. Autoload Player And World (after mod reloading, selects the first player and enters the first world.)
 8. Keep Game Running When Out Of Focus
+9. Open client.log 
+10. Open another client
+11. Hitboxes (player, NPCs, projectiles, melee)
+12. Fast Mode (Infinite placement, mining, speed, hover, etc)
 
 Planned features: 
-1. RAM Check per mod/performance check
-2. Open client.log 
-3. Add hitboxes
-4. Main menu option to start 2nd client
-5. Hitboxes for all UIElements/drawing. (config)
-6. Slow motion tool/speedup for everything in the game
+1. Slow motion tool/speedup (0.1x to 10x)
+2. Hitboxes for all UIElements. 
+3. Change time slider (dragonlens).
+4. Enemy spawn rate slider. 0 means to remove all from world aswell
+5. RAM Check per mod/performance check overall
 
 Notes:
 The mod is client-side only.
