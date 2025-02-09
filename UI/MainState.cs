@@ -34,6 +34,7 @@ namespace SquidTestingMod.UI
         public HitboxButton hitboxButton;
         public UIDebugButton uiDebugButton;
         public EnemiesButton enemiesButton;
+        public TimeButton timeButton;
 
         // List of all buttons
         public BaseButton[] AllButtons = [];
@@ -59,9 +60,10 @@ namespace SquidTestingMod.UI
             hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitbox, Assets.ButtonHitboxNoText, "Toggle hitboxes", 1000f);
             uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, Assets.ButtonUIDebugNoText, "Toggle UI debug drawing", 1100f);
             enemiesButton = CreateButton<EnemiesButton>(Assets.ButtonEnemies, Assets.ButtonEnemiesNoText, "Change enemy spawn rate", 1200f);
+            timeButton = CreateButton<TimeButton>(Assets.ButtonTime, Assets.ButtonTimeNoText, "Change time speed", 1300f);
 
             // Add all buttons to AllButtons
-            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, fastButton, teleportButton, logButton, secondClientButton, hitboxButton, uiDebugButton, enemiesButton];
+            AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, fastButton, teleportButton, logButton, secondClientButton, hitboxButton, uiDebugButton, enemiesButton, timeButton];
 
             // Initialize the setting of whether to show text on the buttons or not
             UpdateAllButtonsTexture();
