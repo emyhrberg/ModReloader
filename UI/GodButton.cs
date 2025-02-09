@@ -6,12 +6,14 @@ using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
     public class GodButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
-        public override void HandleClick()
+
+        public override void LeftClick(UIMouseEvent evt)
         {
             GodModePlayer.GodMode = !GodModePlayer.GodMode;
             Log.Info("God mode clicked. God mode is now " + GodModePlayer.GodMode);

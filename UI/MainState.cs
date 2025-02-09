@@ -26,9 +26,11 @@ namespace SquidTestingMod.UI
         public ToggleButton toggleButton;
         public NPCsButton npcButton;
         public GodButton godButton;
+        public TeleportButton teleportButton;
+        public LogButton logButton;
 
         // List of all buttons
-        public BaseButton[] AllButtons => [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton];
+        public BaseButton[] AllButtons => [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, teleportButton, logButton];
 
         public override void OnInitialize()
         {
@@ -41,7 +43,9 @@ namespace SquidTestingMod.UI
             itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, Assets.ButtonItemsNoText, "Browse all items", 200f);
             npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, Assets.ButtonNPCNoText, "Browse all NPCs", 300f);
             godButton = CreateButton<GodButton>(Assets.ButtonGod, Assets.ButtonGodNoText, "God mode", 400f);
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload mod (see Config) \nRight click to go to mods", 500f);
+            teleportButton = CreateButton<TeleportButton>(Assets.ButtonTeleport, Assets.ButtonTeleportNoText, "Open map and click to teleport", 500f);
+            logButton = CreateButton<LogButton>(Assets.ButtonLog, Assets.ButtonLogNoText, "Open log", 600f);
+            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, Assets.ButtonReloadNoText, "Reload mod (see Config) \nRight click to go to mods", 700f);
 
             // Add all the buttons to the state
             Append(toggleButton);
@@ -50,6 +54,7 @@ namespace SquidTestingMod.UI
             Append(configButton);
             Append(npcButton);
             Append(godButton);
+            Append(teleportButton);
 
             // Initialize the setting of whether to show text on the buttons or not
             UpdateAllButtonsTexture();
@@ -63,7 +68,7 @@ namespace SquidTestingMod.UI
             T button = (T)Activator.CreateInstance(typeof(T), buttonImgText, buttonImgNoText, hoverText);
 
             // Wire up all buttons OnLeftClick to call their own HandleClick
-            button.OnLeftClick += (evt, element) => button.HandleClick();
+            // button.OnLeftClick += (evt, element) => button.HandleClick();
 
             // Set up positions, alignment, etc.
             button.Width.Set(100f, 0f);
@@ -79,12 +84,8 @@ namespace SquidTestingMod.UI
         // updates image only: for example no text or text, scale, and on/off and god on/off, etc
         public void UpdateAllButtonsTexture()
         {
-            toggleButton.UpdateTexture();
-            itemButton.UpdateTexture();
-            refreshButton.UpdateTexture();
-            configButton.UpdateTexture();
-            npcButton.UpdateTexture();
-            godButton.UpdateTexture();
+            foreach (BaseButton btn in AllButtons)
+                btn.UpdateTexture();
         }
 
         // updates position only

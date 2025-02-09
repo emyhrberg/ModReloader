@@ -1,6 +1,6 @@
 Mods: {
 	SquidTestingMod: {
-		"Keybinds.Toggle God Mode.DisplayName": Toggle  God  Mode
+		"Keybinds.Toggle God Mode.DisplayName": Toggle God Mode
 
 		Items: {
 			BorderShaderDye: {
@@ -14,11 +14,10 @@ Mods: {
 				DisplayName: Config
 
 				Headers: {
-					Reload: Reload Header
-					General: General Header
-					UI: U I Header
-					Gameplay: Gameplay Header
-					ItemBrowser: Item Browser Header
+					Reload: Reload
+					General: General
+					Gameplay: Gameplay
+					ItemBrowser: Item Browser
 				}
 
 				Reload: {
@@ -28,11 +27,6 @@ Mods: {
 
 				General: {
 					Label: General
-					Tooltip: ""
-				}
-
-				UI: {
-					Label: U I
 					Tooltip: ""
 				}
 
@@ -52,37 +46,32 @@ Mods: {
 
 				AutoloadWorld: {
 					Label: Autoload World
-					Tooltip: ""
-				}
-
-				SaveWorld: {
-					Label: Save World
-					Tooltip: ""
+					Tooltip: Enter a world as soon as mods have been reloaded, singleplayer works best
 				}
 
 				InvokeBuildAndReload: {
 					Label: Invoke Build And Reload
-					Tooltip: ""
+					Tooltip: Will manually click Build and Reload when at the Mod Sources menu
 				}
 
 				ModToReload: {
 					Label: Mod To Reload
-					Tooltip: ""
+					Tooltip: Here, you type in the mod to reload, must be in your Mod Sources menu
 				}
 
 				WaitingTimeBeforeNavigatingToModSources: {
 					Label: Waiting Time Before Navigating To Mod Sources
-					Tooltip: ""
+					Tooltip: After clicking reload, the time spent waiting before changing menu modes (ms)
 				}
 
 				WaitingTimeBeforeBuildAndReload: {
 					Label: Waiting Time Before Build And Reload
-					Tooltip: ""
+					Tooltip: When at Mod Sources menu, the time spent waiting before invoking build and reload (ms)
 				}
 
 				SaveAndQuitWorldWithoutSaving: {
 					Label: Save And Quit World Without Saving
-					Tooltip: ""
+					Tooltip: You can reload faster by turning this on, but player and world data will not saved
 				}
 			}
 
@@ -91,22 +80,7 @@ Mods: {
 
 				OnlyShowWhenInventoryOpen: {
 					Label: Only Show When Inventory Open
-					Tooltip: ""
-				}
-
-				ShowButtonText: {
-					Label: Show Button Text
-					Tooltip: ""
-				}
-
-				ShowTooltips: {
-					Label: Show Tooltips
-					Tooltip: ""
-				}
-
-				ButtonSizes: {
-					Label: Button Sizes
-					Tooltip: ""
+					Tooltip: Hides the buttons by default and only shows them when the inventory is open.
 				}
 
 				ButtonSize: {
@@ -121,26 +95,7 @@ Mods: {
 
 				HideButtonTooltips: {
 					Label: Hide Button Tooltips
-					Tooltip: ""
-				}
-			}
-
-			UIConfig: {
-				Tooltip: ""
-
-				ShowHitboxes: {
-					Label: Show Hitboxes
-					Tooltip: ""
-				}
-
-				ShowUIElementsHitbox: {
-					Label: Show U I Elements Hitbox
-					Tooltip: ""
-				}
-
-				ShowUIElementsSizes: {
-					Label: Show U I Elements Sizes
-					Tooltip: ""
+					Tooltip: Hide the tooltips at the bottom of each button
 				}
 			}
 
@@ -149,22 +104,22 @@ Mods: {
 
 				AlwaysSpawnBossOnTopOfPlayer: {
 					Label: Always Spawn Boss On Top Of Player
-					Tooltip: ""
+					Tooltip: Will spawn every boss close to the player, as opposed to far away
 				}
 
 				StartInGodMode: {
 					Label: Start In God Mode
-					Tooltip: ""
+					Tooltip: When entering the world, start with god mode enabled by default
 				}
 
 				GodModeOutlineSize: {
 					Label: God Mode Outline Size
-					Tooltip: ""
+					Tooltip: The visual effect of the god mode, set to disabled for no effect
 				}
 
 				KeepGameRunningWhenFocusLost: {
 					Label: Keep Game Running When Focus Lost
-					Tooltip: ""
+					Tooltip: When alt+tabbed or minimized out of the game, keep the game running
 				}
 			}
 
@@ -173,17 +128,17 @@ Mods: {
 
 				MaxItemsToDisplay: {
 					Label: Max Items To Display
-					Tooltip: ""
+					Tooltip: Maximum items to show at one point, recommend <1000 since all items take a while to load
 				}
 
 				ItemSlotStyle: {
 					Label: Item Slot Style
-					Tooltip: ""
+					Tooltip: Select style of each item slot in the browser, number 10 is quite special
 				}
 
 				ItemSlotColor: {
 					Label: Item Slot Color
-					Tooltip: ""
+					Tooltip: Select the color of the background of each item slot
 				}
 			}
 		}

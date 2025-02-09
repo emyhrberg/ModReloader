@@ -52,7 +52,7 @@ namespace SquidTestingMod.UI
             SetImage(CurrentImage);
         }
 
-        public override void HandleClick()
+        public override void LeftClick(UIMouseEvent evt)
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (sys?.mainState != null)
@@ -108,7 +108,7 @@ namespace SquidTestingMod.UI
 
             if (isDrag && !clickStartedOutsideButton)
             {
-                HandleClick();
+                LeftClick(evt);
             }
         }
         #endregion

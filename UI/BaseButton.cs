@@ -81,21 +81,24 @@ namespace SquidTestingMod.UI
             if (IsMouseHovering)
             {
                 Config c = ModContent.GetInstance<Config>();
-                if (c.General.HideButtonTooltips)
+                if (!c.General.HideButtonTooltips)
                     UICommon.TooltipMouseText(HoverText);
             }
         }
 
-        // Abstract HandleClick = force children (all buttons) to implement this method
-        public abstract void HandleClick();
-
         #region fix dont use items when clicking buttons
-        public override void LeftClick(UIMouseEvent evt)
+
+        public override void LeftMouseDown(UIMouseEvent evt)
         {
-            // Don't use items when clicking buttons
             Main.LocalPlayer.mouseInterface = true;
-            base.LeftClick(evt);
-            Main.LocalPlayer.mouseInterface = false;
+            base.LeftMouseDown(evt);
+        }
+
+        public override void LeftMouseUp(UIMouseEvent evt)
+        {
+            base.LeftMouseUp(evt);
+            // Keep mouseInterface true while over UI.
+            Main.LocalPlayer.mouseInterface = true;
         }
 
         #endregion

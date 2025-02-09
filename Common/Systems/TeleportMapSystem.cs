@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Systems
 {
-    public class MapTeleportSystem : ModSystem
+    public class TeleportMapSystem : ModSystem
     {
         private bool mouseRightLastUpdate;
 

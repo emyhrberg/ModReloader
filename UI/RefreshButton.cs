@@ -14,7 +14,7 @@ namespace SquidTestingMod.UI
 {
     public class RefreshButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
-        public override async void HandleClick()
+        public override async void LeftClick(UIMouseEvent evt)
         {
             Config c = ModContent.GetInstance<Config>();
 

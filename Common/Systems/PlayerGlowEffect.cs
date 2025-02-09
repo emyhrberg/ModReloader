@@ -236,7 +236,7 @@ namespace SquidTestingMod.Common.Systems
 
             // get godmode outline config setting
             Config c = ModContent.GetInstance<Config>();
-            if (c.Gameplay.GodModeOutlineSize == "None")
+            if (c.Gameplay.GodModeOutlineSize == "Disabled")
             {
                 return;
             }

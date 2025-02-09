@@ -32,10 +32,10 @@ namespace SquidTestingMod.Common.Configs
 
         public class ReloadConfig
         {
-            [OptionStrings(["None", "Singleplayer", "Multiplayer"])]
-            [DefaultValue("None")]
+            [OptionStrings(["Disabled", "Singleplayer", "Multiplayer"])]
+            [DefaultValue("Disabled")]
             [DrawTicks]
-            public string AutoloadWorld = "None";
+            public string AutoloadWorld = "Disabled";
 
             [DefaultValue(false)]
             public bool SaveAndQuitWorldWithoutSaving;
@@ -85,7 +85,7 @@ namespace SquidTestingMod.Common.Configs
             [DefaultValue(false)]
             public bool StartInGodMode;
 
-            [OptionStrings(["None", "Small", "Big"])]
+            [OptionStrings(["Disabled", "Small", "Big"])]
             [DefaultValue("Small")]
             [DrawTicks]
             public string GodModeOutlineSize = "Small";

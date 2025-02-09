@@ -13,9 +13,9 @@ namespace SquidTestingMod.UI
     public class ItemsButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
     {
         public ItemsPanel itemsPanel;
-        private bool isItemsPanelVisible = false;
+        public bool isItemsPanelVisible = false;
 
-        public override void HandleClick()
+        public override void LeftClick(UIMouseEvent evt)
         {
             ToggleItemsPanel();
 
@@ -26,6 +26,17 @@ namespace SquidTestingMod.UI
             // close inv if we close the panel
             if (!isItemsPanelVisible)
                 Main.playerInventory = false;
+
+            // close npcpanel if we open the panel
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            bool isNpcPanelVisible = sys.mainState.npcButton != null;
+
+            if (isNpcPanelVisible)
+            {
+                Log.Info("Removing NPCPanel because ItemsPanel is being toggled.");
+                sys.mainState.RemoveChild(sys.mainState.npcButton.npcPanel);
+                sys.mainState.npcButton.npcPanel = null;
+            }
         }
 
         public void ToggleItemsPanel()
