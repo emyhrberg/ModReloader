@@ -78,7 +78,7 @@ namespace SquidTestingMod.UI
             // Set up positions, alignment, etc.
             button.Width.Set(100f, 0f);
             button.Height.Set(100f, 0f);
-            button.HAlign = 0.3f; // start 30% from the left
+            button.HAlign = 0.15f; // start 30% from the left
             button.VAlign = 0.9f; // buttons at bottom
             button.Left.Set(leftOffset, 0f);
             button.RelativeLeftOffset = leftOffset;

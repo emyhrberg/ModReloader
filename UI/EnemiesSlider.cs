@@ -27,13 +27,13 @@ namespace SquidTestingMod.UI
         {
             dragging = true;
             UpdateValue(evt);
-            base.LeftMouseDown(evt);
+            // Removed base call to prevent event propagation
         }
 
         public override void LeftMouseUp(UIMouseEvent evt)
         {
             dragging = false;
-            base.LeftMouseUp(evt);
+            // Removed base call to prevent event propagation
         }
 
         public override void Update(GameTime gameTime)

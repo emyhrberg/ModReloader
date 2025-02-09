@@ -15,8 +15,8 @@ namespace SquidTestingMod.UI
             : base(buttonImgText, buttonImgNoText, hoverText)
         {
             // Position slider right above the button, centered above it
-            slider.Left.Set(-30, 0.5f);
-            slider.Top.Set(-slider.Height.Pixels - 10, 0);
+            // slider.Left.Set(-30, 0.5f);
+            // slider.Top.Set(-slider.Height.Pixels - 10, 0);
         }
 
         public override void LeftClick(Terraria.UI.UIMouseEvent evt)
