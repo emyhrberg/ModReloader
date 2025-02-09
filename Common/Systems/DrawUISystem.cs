@@ -8,7 +8,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class UIElementDebugger : ModSystem
+    public class DrawUISystem : ModSystem
     {
         private UserInterface ui;
         private DrawUIState drawUIState;

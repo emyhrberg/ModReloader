@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.UI.Chat;
 
 namespace SquidTestingMod.UI
 {
@@ -32,6 +33,29 @@ namespace SquidTestingMod.UI
 
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, hitboxColor);
             DrawOutline(spriteBatch, hitbox);
+            DrawElementLabel(spriteBatch, element, hitbox.Location);
+        }
+
+        private void DrawElementLabel(SpriteBatch spriteBatch, UIElement element, Point position)
+        {
+            // round width and height to whole numbers
+            int width = (int)element.GetOuterDimensions().Width;
+            int height = (int)element.GetOuterDimensions().Height;
+
+            string sizeText = $"{width}x{height}";
+
+            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(sizeText) * 0.7f; // Smaller text
+            Vector2 textPosition = new(position.X - 5, position.Y - textSize.Y - 2); // Offset to the left by 5px
+
+            ChatManager.DrawColorCodedStringWithShadow(
+                spriteBatch,
+                FontAssets.MouseText.Value,
+                sizeText,
+                textPosition,
+                Color.White,
+                0f,
+                Vector2.Zero,
+                new Vector2(0.7f)); // Scale down text
         }
 
         private void DrawOutline(SpriteBatch spriteBatch, Rectangle hitbox)
@@ -46,7 +70,7 @@ namespace SquidTestingMod.UI
 
         private void GenerateRainbowColors(int count)
         {
-            rainbowColors = new List<Color>();
+            rainbowColors = [];
             for (int i = 0; i < count; i++)
             {
                 float hue = (float)i / count;

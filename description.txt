@@ -1,18 +1,9 @@
-This mod introduces some new functionality that makes modding faster, more efficient, and simpler.
+SquidTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
 
-For example, when you are building your mod, are you tired of having to exit the world, navigate menus, reload mods and then select a player and world? This is simplified to a reload button in-game which does all this for *faster refresh*!
+🔹 Spawn anything instantly – items, NPCs, bosses, and more!
+🔹 Enable God Mode – take no damage, move fast, and break limits.
+🔹 Teleport anywhere – right-click to instantly move across the map.
+🔹 Reload mods without restarting – quickly test changes.
+🔹 See hitboxes – visualize players, NPCs, projectiles, and UI with cool effects.
 
-List of functionality that exists right now:
-
-1. God Mode (toggle with H)
-2. Spawn Boss On Top (will always spawn every boss on top of your position, instead of outside the screen)
-
-List of functionality that I plan to implement in the future:
-
-1. Autoload Singleplayer and multiplayer
-2. Fast reload (one click)
-3. Item browser
-4. NPC browser
-5. Light hack
-6. Teleport anywhere on map
-7. Copy structures
+Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀

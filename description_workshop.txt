@@ -4,29 +4,34 @@ How To Use:
 When entering a world, a toolbar will show up. You can use the options to your liking.
 
 The following is a list of options available to the user:
-1. Item Browser (spawn all items in the game)
-2. NPC Browser (spawn all bosses, enemies, and town NPCs in the game)
-3. God Mode (disable enemy damage, toggle with shortcut)
-4. Spawn Boss On Top (spawns every boss close to your position, instead of far away)
-5. Teleport (Right click to teleport anywhere on the map)
-6. Reload Mod Button (will exit world and reload a selected mod)
-7. Autoload Player And World (after mod reloading, selects the first player and enters the first world.)
-8. Keep Game Running When Out Of Focus
-9. Open client.log 
-10. Open another client
-11. Hitboxes (player, NPCs, projectiles, melee)
-12. Fast Mode (Infinite placement, mining, speed, hover, etc)
+
+General:
+- Keep Game Running When Out Of Focus
+- Reload Mod Button (Exit world & reload selected mod)
+- Autoload Player And World (Auto-selects first player & world after mod reload)
+- Open Client.log
+- Open Another Client
+
+Gameplay & World Control:
+- God Mode (Disable enemy damage, toggle with shortcut)
+- Fast Mode (Infinite placement, mining, speed, super fast hover speed, etc.)
+- Teleport (Right-Click to teleport anywhere)
+- Item Browser (Spawn all items)
+- NPC Browser (Spawn bosses, enemies, and town NPCs)
+- Spawn Boss On Top (Spawns bosses closer instead of far away)
+
+Debugging & UI Tools:
+- Hitboxes (Player, NPCs, Projectiles, Melee)
+- Hitboxes of UIElements
 
 Planned features: 
-1. Slow motion tool/speedup (0.1x to 10x)
-2. Hitboxes for all UIElements. 
-3. Change time slider (dragonlens).
+1. Time slider. Slow down or speed up the game. (0.1x to 10x)
+3. In-game time slider (dragonlens).
 4. Enemy spawn rate slider. 0 means to remove all from world aswell
 5. RAM Check per mod/performance check overall
 
 Notes:
 The mod is client-side only.
-
 
 Known bugs:
 1. Keep Game Running: Rain particles do not update. Also when in Settings or Config menu, game does not update.
