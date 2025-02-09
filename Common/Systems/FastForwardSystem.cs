@@ -24,7 +24,7 @@ namespace SquidTestingMod.Common.Systems
             // Always call the original method once
             orig(self, ref gameTime);
 
-            Log.Info($"Speedup: {speedup}");
+            // Log.Info($"Speedup: {speedup}");
 
             // Then call it 'speedup' more times for the extra speed.
             for (int k = 0; k < speedup; k++)

@@ -61,20 +61,16 @@ namespace SquidTestingMod.UI
             CalculatedStyle dims = GetDimensions();
             Rectangle sliderRect = dims.ToRectangle();
 
+            // Draw the slider background
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, sliderRect, Color.DarkGray);
 
-            for (int i = 0; i < 10; i++)
-            {
-                int tickX = sliderRect.X + (int)(i / 9f * sliderRect.Width);
-                Rectangle tickRect = new Rectangle(tickX - 1, sliderRect.Y - 4, 2, sliderRect.Height + 8);
-                spriteBatch.Draw(TextureAssets.MagicPixel.Value, tickRect, Color.LightGray);
-            }
-
+            // Draw the slider knob
             int knobWidth = 10;
             int knobX = sliderRect.X + (int)(progress * (sliderRect.Width - knobWidth));
             Rectangle knobRect = new Rectangle(knobX, sliderRect.Y, knobWidth, sliderRect.Height);
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, knobRect, Color.Yellow);
 
+            // Draw the value text
             float displayValue = MathHelper.Lerp(0f, 30f, progress);
             string valueText = $"{displayValue:0.0}x";
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(valueText);

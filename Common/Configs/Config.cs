@@ -30,6 +30,9 @@ namespace SquidTestingMod.Common.Configs
         [Header("ItemBrowser")]
         public ItemBrowserConfig ItemBrowser = new();
 
+        [Header("DisableButtons")]
+        public DisableButtonConfig DisableButton = new();
+
         public class ReloadConfig
         {
             [OptionStrings(["Disabled", "Singleplayer", "Multiplayer"])]
@@ -108,22 +111,56 @@ namespace SquidTestingMod.Common.Configs
         public class DisableButtonConfig
         {
             [DefaultValue(false)]
+            [ReloadRequired]
             public bool DisableConfig;
 
             [DefaultValue(false)]
+            [ReloadRequired]
             public bool DisableReload;
 
             [DefaultValue(false)]
+            [ReloadRequired]
             public bool DisableItemBrowser;
 
             [DefaultValue(false)]
+            [ReloadRequired]
             public bool DisableNPCBrowser;
 
             [DefaultValue(false)]
+            [ReloadRequired]
             public bool DisableGod;
 
             [DefaultValue(false)]
+            [ReloadRequired]
             public bool DisableFast;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableEnemies;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableTime;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableHitboxes;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableUIHitboxes;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableTeleport;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableLog;
+
+            [DefaultValue(false)]
+            [ReloadRequired]
+            public bool DisableSecondClient;
         }
 
         public override void OnChanged()

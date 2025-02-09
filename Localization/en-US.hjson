@@ -18,6 +18,7 @@ Mods: {
 					General: General
 					Gameplay: Gameplay
 					ItemBrowser: Item Browser
+					DisableButtons: Disable Buttons
 				}
 
 				Reload: {
@@ -38,6 +39,11 @@ Mods: {
 				ItemBrowser: {
 					Label: Item Browser
 					Tooltip: ""
+				}
+
+				DisableButton: {
+					Tooltip: ""
+					Label: Disable Button
 				}
 			}
 
@@ -140,6 +146,75 @@ Mods: {
 					Label: Item Slot Color
 					Tooltip: Select the color of the background of each item slot
 				}
+			}
+
+			DisableButtonConfig: {
+				DisableSecondClient: {
+					Tooltip: ""
+					Label: Disable Second Client
+				}
+
+				DisableLog: {
+					Tooltip: ""
+					Label: Disable Log
+				}
+
+				DisableTeleport: {
+					Tooltip: ""
+					Label: Disable Teleport
+				}
+
+				DisableUIHitboxes: {
+					Tooltip: ""
+					Label: Disable UI Hitboxes
+				}
+
+				DisableHitboxes: {
+					Tooltip: ""
+					Label: Disable Hitboxes
+				}
+
+				DisableTime: {
+					Tooltip: ""
+					Label: Disable Time
+				}
+
+				DisableEnemies: {
+					Tooltip: ""
+					Label: Disable Enemies
+				}
+
+				DisableFast: {
+					Tooltip: ""
+					Label: Disable Fast
+				}
+
+				DisableGod: {
+					Tooltip: ""
+					Label: Disable God
+				}
+
+				DisableNPCBrowser: {
+					Tooltip: ""
+					Label: Disable NPC Browser
+				}
+
+				DisableItemBrowser: {
+					Tooltip: ""
+					Label: Disable Item Browser
+				}
+
+				DisableReload: {
+					Tooltip: ""
+					Label: Disable Reload
+				}
+
+				DisableConfig: {
+					Tooltip: ""
+					Label: Disable Config
+				}
+
+				Tooltip: ""
 			}
 		}
 	}

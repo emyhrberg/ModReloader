@@ -11,7 +11,7 @@ namespace SquidTestingMod.UI
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
 
-            Log.Info($"Modifier: {spawnRateModifier} | Spawn rate: {spawnRate}, max spawns: {maxSpawns}");
+            // Log.Info($"Modifier: {spawnRateModifier} | Spawn rate: {spawnRate}, max spawns: {maxSpawns}");
 
             if (spawnRateModifier == 0)
             {

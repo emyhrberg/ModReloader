@@ -11,7 +11,7 @@ namespace SquidTestingMod.UI
 {
     public class TimeSlider : UIElement
     {
-        public float progress = 0.1f; // 0 = 1x, 1 = 4x
+        public float progress = 0.1f; // 0 = 1x, 1 = 2x
         private bool dragging;
 
         public TimeSlider()
@@ -43,10 +43,12 @@ namespace SquidTestingMod.UI
             {
                 CalculatedStyle dims = GetDimensions();
                 float relative = (Main.MouseScreen.X - dims.X) / dims.Width;
-                progress = MathHelper.Clamp(relative, 0f, 1f);
+                // Clamp the relative value and then snap it to 0 or 1:
+                progress = MathHelper.Clamp(relative, 0f, 1f) < 0.5f ? 0f : 1f;
 
-                // update some value based on progress here
-
+                // Update the time scale based on the snapped progress:
+                float timeScale = MathHelper.Lerp(1f, 2f, progress);
+                FastForwardSystem.speedup = (int)(timeScale - 1f);
             }
             base.Update(gameTime);
         }
@@ -55,11 +57,10 @@ namespace SquidTestingMod.UI
         {
             CalculatedStyle dims = GetDimensions();
             float relative = (evt.MousePosition.X - dims.X) / dims.Width;
-            progress = MathHelper.Clamp(relative, 0f, 1f);
+            // Snap the value:
+            progress = MathHelper.Clamp(relative, 0f, 1f) < 0.5f ? 0f : 1f;
 
-            // update some value based on progress here
-
-            float timeScale = MathHelper.Lerp(1f, 4f, progress);
+            float timeScale = MathHelper.Lerp(1f, 2f, progress);
             FastForwardSystem.speedup = (int)(timeScale - 1f);
         }
 
@@ -70,20 +71,21 @@ namespace SquidTestingMod.UI
 
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, sliderRect, Color.DarkGray);
 
-            for (int i = 0; i <= 3; i++)
+            // draw 2 ticks
+            for (int i = 0; i < 2; i++)
             {
-                float fraction = i / 3f;
-                int tickX = sliderRect.X + (int)(fraction * sliderRect.Width);
+                int tickX = sliderRect.X + (int)(i / 1f * sliderRect.Width);
                 Rectangle tickRect = new(tickX - 1, sliderRect.Y - 4, 2, sliderRect.Height + 8);
                 spriteBatch.Draw(TextureAssets.MagicPixel.Value, tickRect, Color.LightGray);
             }
 
+            // knob
             int knobWidth = 10;
-            int knobX = sliderRect.X + (int)(progress * (sliderRect.Width - knobWidth));
-            Rectangle knobRect = new(knobX, sliderRect.Y, knobWidth, sliderRect.Height);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, knobRect, Color.Red);
+            Rectangle knobRect = new((int)(sliderRect.X + progress * sliderRect.Width - knobWidth / 2), sliderRect.Y - 4, knobWidth, sliderRect.Height + 8);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, knobRect, Color.White);
 
-            float displayValue = MathHelper.Lerp(1f, 4f, progress);
+            // display value
+            float displayValue = MathHelper.Lerp(1f, 2f, progress);
             string valueText = $"{displayValue:0.0}x";
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(valueText);
             Vector2 textPos = new(knobRect.Center.X - textSize.X / 2, sliderRect.Y - textSize.Y - 2);
