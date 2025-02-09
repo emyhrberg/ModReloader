@@ -10,7 +10,7 @@ namespace SquidTestingMod.UI
 {
     public class EnemiesSlider : UIElement
     {
-        public float progress = 0.3f; // 0 = 1x, 1 = 10x
+        public float progress = 0.1f; // 0 = 1x, 1 = 10x
         private bool dragging;
 
         public EnemiesSlider()
@@ -43,7 +43,7 @@ namespace SquidTestingMod.UI
                 CalculatedStyle dims = GetDimensions();
                 float relative = (Main.MouseScreen.X - dims.X) / dims.Width;
                 progress = MathHelper.Clamp(relative, 0f, 1f);
-                SpawnSystem.spawnRateModifier = MathHelper.Lerp(1f, 10f, progress);
+                SpawnSystem.spawnRateModifier = MathHelper.Lerp(0f, 10f, progress);
             }
             base.Update(gameTime);
         }
@@ -53,7 +53,7 @@ namespace SquidTestingMod.UI
             CalculatedStyle dims = GetDimensions();
             float relative = (evt.MousePosition.X - dims.X) / dims.Width;
             progress = MathHelper.Clamp(relative, 0f, 1f);
-            SpawnSystem.spawnRateModifier = MathHelper.Lerp(1f, 10f, progress);
+            SpawnSystem.spawnRateModifier = MathHelper.Lerp(0f, 10f, progress);
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -65,7 +65,7 @@ namespace SquidTestingMod.UI
 
             for (int i = 0; i < 10; i++)
             {
-                int tickX = sliderRect.X + (int)((i / 9f) * sliderRect.Width);
+                int tickX = sliderRect.X + (int)(i / 9f * sliderRect.Width);
                 Rectangle tickRect = new Rectangle(tickX - 1, sliderRect.Y - 4, 2, sliderRect.Height + 8);
                 spriteBatch.Draw(TextureAssets.MagicPixel.Value, tickRect, Color.LightGray);
             }
@@ -75,7 +75,7 @@ namespace SquidTestingMod.UI
             Rectangle knobRect = new Rectangle(knobX, sliderRect.Y, knobWidth, sliderRect.Height);
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, knobRect, Color.Yellow);
 
-            float displayValue = MathHelper.Lerp(1f, 10f, progress);
+            float displayValue = MathHelper.Lerp(0f, 10f, progress);
             string valueText = $"{displayValue:0.0}x";
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(valueText);
             Vector2 textPos = new Vector2(knobRect.Center.X - textSize.X / 2, sliderRect.Y - textSize.Y - 2);

@@ -62,9 +62,6 @@ namespace SquidTestingMod.Common.Systems
             if (Main.dedServ || Main.gameMenu)
                 return;
 
-            // Log the gamemenu
-            Log.Info($"Main.gameMenu: {Main.gameMenu}");
-
             // ensure we are not drawing the hitbox of a full-screen UI element
             if (self is MainState || self is DrawUIState)
                 return;

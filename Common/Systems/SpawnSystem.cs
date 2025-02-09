@@ -1,3 +1,4 @@
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -9,9 +10,12 @@ namespace SquidTestingMod.UI
 
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
-            if (spawnRate == 0)
+
+            Log.Info($"Modifier: {spawnRateModifier} | Spawn rate: {spawnRate}, max spawns: {maxSpawns}");
+
+            if (spawnRateModifier == 0)
             {
-                spawnRate = int.MaxValue;
+                spawnRate = 0;
                 maxSpawns = 0;
                 return;
             }
@@ -19,5 +23,22 @@ namespace SquidTestingMod.UI
             spawnRate = (int)(spawnRate / spawnRateModifier);
             maxSpawns = (int)(maxSpawns * spawnRateModifier);
         }
+
+        // Add the following to your SpawnSystem class:
+
+        public override void PostAI(NPC npc)
+        {
+            if (npc.whoAmI == 0)
+            {
+                int enemyCount = 0;
+                foreach (NPC n in Main.npc)
+                {
+                    if (n.active && !n.friendly)
+                        enemyCount++;
+                }
+                Log.Info("Enemies on screen: " + enemyCount);
+            }
+        }
+
     }
 }

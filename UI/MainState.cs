@@ -58,7 +58,7 @@ namespace SquidTestingMod.UI
             secondClientButton = CreateButton<SecondClientButton>(Assets.ButtonSecondClient, Assets.ButtonSecondClientNoText, "Open second client", 900f);
             hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitbox, Assets.ButtonHitboxNoText, "Toggle hitboxes", 1000f);
             uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, Assets.ButtonUIDebugNoText, "Toggle UI debug drawing", 1100f);
-            enemiesButton = CreateButton<EnemiesButton>(Assets.ButtonEnemies, Assets.ButtonEnemiesNoText, "Browse all enemies", 1200f);
+            enemiesButton = CreateButton<EnemiesButton>(Assets.ButtonEnemies, Assets.ButtonEnemiesNoText, "Change enemy spawn rate", 1200f);
 
             // Add all buttons to AllButtons
             AllButtons = [toggleButton, itemButton, refreshButton, configButton, npcButton, godButton, fastButton, teleportButton, logButton, secondClientButton, hitboxButton, uiDebugButton, enemiesButton];

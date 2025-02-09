@@ -24,6 +24,7 @@ namespace SquidTestingMod.UI
             isSliderVisible = !isSliderVisible;
             if (isSliderVisible)
             {
+                // NOTE: WE ADD THE SLIDER TO THE BUTTON, NOT THE MAINSTATE, SO ITS KINDA WEIRD WHEN WE MOVE IT
                 Append(slider);
                 slider.Recalculate();
             }
