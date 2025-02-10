@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -62,6 +63,47 @@ namespace SquidTestingMod.Common.Systems
                 Mod.Logger.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/_START_SERVER" + e.Message);
                 return;
             }
+        }
+
+        public void RestartServer()
+        {
+            // Path to the server executable or launcher
+            string serverPath = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\_START_SERVER";
+            // Extract the file name without extension. This is used to search for running processes.
+            string serverFileName = Path.GetFileNameWithoutExtension(serverPath);
+
+            // Find any processes that have the same name as our server file.
+            Process[] processes = Process.GetProcessesByName(serverFileName);
+
+            foreach (Process process in processes)
+            {
+                try
+                {
+                    // Compare the process's main module filename with our server path.
+                    // This ensures that we only kill the process that matches the specific executable.
+                    if (string.Equals(process.MainModule.FileName, serverPath, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine($"Terminating server process {process.Id}...");
+                        process.Kill();           // Terminate the process
+                        process.WaitForExit();    // Optionally wait for the process to exit
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // You might not have access to process.MainModule for some processes,
+                    // or the process might already be exiting.
+                    Console.WriteLine($"Could not terminate process {process.Id}: {ex.Message}");
+                }
+            }
+
+            // Now start a new instance of the server.
+            ProcessStartInfo startServer = new ProcessStartInfo(serverPath)
+            {
+                UseShellExecute = true
+            };
+
+            Process.Start(startServer);
+            Console.WriteLine("Started a new server instance.");
         }
 
         private void StartServerAndEnterMultiplayerWorld()
