@@ -40,7 +40,7 @@ namespace SquidTestingMod.Common.Configs
             [DrawTicks]
             public string AutoloadWorld = "Disabled";
 
-            [DefaultValue(false)]
+            [DefaultValue(true)]
             public bool SaveAndQuitWorldWithoutSaving;
 
             [DefaultValue(true)]

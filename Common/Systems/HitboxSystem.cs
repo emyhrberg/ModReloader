@@ -25,17 +25,80 @@ namespace SquidTestingMod.Common.Systems
             if (!drawHitboxFlag)
                 return;
 
-            setupSB(sb);
+            restartSB(sb);
             DrawPlayerHitbox(sb);
             DrawNPCHitboxes(sb);
             DrawProjectileHitboxes(sb);
             DrawPlayerMeleeHitboxes(sb);
         }
 
-        private void setupSB(SpriteBatch sb)
+        private void restartSB(SpriteBatch sb)
         {
             sb.End();
-            sb.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
+            sb.Begin(default, default, default, default, default, default, Main.GameViewMatrix.ZoomMatrix); ;
+        }
+
+        private void DrawPlayerHitbox(SpriteBatch spriteBatch)
+        {
+            // Get hitbox of player
+            Player p = Main.LocalPlayer;
+            Rectangle hitbox = p.Hitbox;
+            hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
+
+            // Draw hitbox
+            DrawHitbox(spriteBatch, hitbox, Color.Blue);
+            DrawOutlineHitbox(spriteBatch, hitbox);
+        }
+
+        private void DrawNPCHitboxes(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                NPC npc = Main.npc[i];
+                if (npc.active)
+                {
+                    Rectangle hitbox = npc.getRect();
+                    hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
+                    hitbox = Main.ReverseGravitySupport(hitbox);
+
+                    // Draw NPC hitbox (semi-transparent red)
+                    DrawHitbox(spriteBatch, hitbox, Color.Red * 0.5f);
+                    DrawOutlineHitbox(spriteBatch, hitbox);
+                }
+            }
+        }
+
+        private void DrawProjectileHitboxes(SpriteBatch spriteBatch)
+        {
+            for (int i = 0; i < Main.maxProjectiles; i++)
+            {
+                Projectile proj = Main.projectile[i];
+                if (!proj.active || proj.type == ProjectileID.None) continue;
+
+                // Get projectile hitbox and offset it
+                Rectangle hitbox = proj.getRect();
+                hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
+
+                // Draw projectile hitbox (semi-transparent green)
+                DrawHitbox(spriteBatch, hitbox, Color.Green * 0.5f);
+                DrawOutlineHitbox(spriteBatch, hitbox);
+            }
+        }
+
+
+        private void DrawHitbox(SpriteBatch spriteBatch, Rectangle hitbox, Color color)
+        {
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, color * 0.5f);
+        }
+
+        private void DrawOutlineHitbox(SpriteBatch spriteBatch, Rectangle hitbox)
+        {
+            // draw a outline 2 pixels thick around the hitbox
+            hitbox.Inflate(2, 2);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, 2), Color.Black);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, 2, hitbox.Height), Color.Black);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X + hitbox.Width - 2, hitbox.Y, 2, hitbox.Height), Color.Black);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y + hitbox.Height - 2, hitbox.Width, 2), Color.Black);
         }
 
         private void DrawPlayerMeleeHitboxes(SpriteBatch sb)
@@ -68,68 +131,6 @@ namespace SquidTestingMod.Common.Systems
             public override void PostUpdate(Item item)
             {
                 base.PostUpdate(item);
-            }
-        }
-
-        private void DrawProjectileHitboxes(SpriteBatch spriteBatch)
-        {
-            for (int i = 0; i < Main.maxProjectiles; i++)
-            {
-                Projectile proj = Main.projectile[i];
-                if (!proj.active || proj.type == ProjectileID.None) continue;
-
-                // Get projectile hitbox and offset it
-                Rectangle hitbox = proj.getRect();
-                hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
-
-                // Draw projectile hitbox (semi-transparent green)
-                DrawHitbox(spriteBatch, hitbox, Color.Green * 0.5f);
-                DrawOutlineHitbox(spriteBatch, hitbox);
-            }
-        }
-
-        private void DrawPlayerHitbox(SpriteBatch spriteBatch)
-        {
-            // Get hitbox of player
-            Player p = Main.LocalPlayer;
-            Rectangle hitbox = p.getRect();
-            hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
-
-            // Draw hitbox
-            DrawHitbox(spriteBatch, hitbox, Color.Blue);
-            DrawOutlineHitbox(spriteBatch, hitbox);
-        }
-
-        private void DrawHitbox(SpriteBatch spriteBatch, Rectangle hitbox, Color color)
-        {
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, color * 0.5f);
-        }
-
-        private void DrawOutlineHitbox(SpriteBatch spriteBatch, Rectangle hitbox)
-        {
-            // draw a outline 2 pixels thick around the hitbox
-            hitbox.Inflate(2, 2);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, 2), Color.Black);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, 2, hitbox.Height), Color.Black);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X + hitbox.Width - 2, hitbox.Y, 2, hitbox.Height), Color.Black);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y + hitbox.Height - 2, hitbox.Width, 2), Color.Black);
-        }
-
-        private void DrawNPCHitboxes(SpriteBatch spriteBatch)
-        {
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (npc.active)
-                {
-                    Rectangle hitbox = npc.getRect();
-                    hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
-                    hitbox = Main.ReverseGravitySupport(hitbox);
-
-                    // Draw NPC hitbox (semi-transparent red)
-                    DrawHitbox(spriteBatch, hitbox, Color.Red * 0.5f);
-                    DrawOutlineHitbox(spriteBatch, hitbox);
-                }
             }
         }
     }
