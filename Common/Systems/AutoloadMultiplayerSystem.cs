@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using System.Security.Cryptography.Pkcs;
 using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
@@ -21,8 +23,13 @@ namespace SquidTestingMod.Common.Systems
     /// 3. connect to the server as a client once the server is ready.
     /// </summary>
     [Autoload(Side = ModSide.Client)]
+
     public class AutoloadMultiplayerSystem : ModSystem
     {
+
+        // Variables
+        private int serverProcessID;
+
         public override void OnModLoad()
         {
             // Get the OnSuccessfulLoad field using reflection
@@ -54,61 +61,73 @@ namespace SquidTestingMod.Common.Systems
         {
             try
             {
-                ProcessStartInfo a = new(@"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\_START_SERVER") { UseShellExecute = true };
-                Process.Start(a);
+                // get filenames
+                Config c = ModContent.GetInstance<Config>();
+                string worldName = c.Reload.WorldToLoad;
+                string fileNameWorld = $@"%UserProfile%\Documents\My Games\Terraria\tModLoader\Worlds\{worldName}.wld";
+                string fileNameStartProcess = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\start-tModLoaderServer.bat";
+
+                // create a process
+                ProcessStartInfo process = new(fileNameStartProcess)
+                {
+                    UseShellExecute = true,
+                    Arguments = $"-nosteam -world {fileNameWorld}"
+                };
+
+                // start the process
+                Process serverProcess = Process.Start(process);
+                serverProcessID = serverProcess.Id;
+                Log.Info("Server process started with ID: " + serverProcessID + " and name: " + serverProcess.ProcessName);
             }
             catch (Exception e)
             {
                 // log it
-                Mod.Logger.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/_START_SERVER" + e.Message);
+                Mod.Logger.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
                 return;
             }
         }
 
-        public void RestartServer()
+        private void EndPreviousServer()
         {
-            // Path to the server executable or launcher
-            string serverPath = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\_START_SERVER";
-            // Extract the file name without extension. This is used to search for running processes.
-            string serverFileName = Path.GetFileNameWithoutExtension(serverPath);
+            Log.Info("EndPreviousServer() called!");
+            Process[] processes = Process.GetProcesses();
+            bool foundServerProcess = false;
 
-            // Find any processes that have the same name as our server file.
-            Process[] processes = Process.GetProcessesByName(serverFileName);
-
-            foreach (Process process in processes)
+            foreach (Process proc in processes)
             {
-                try
+                string title = proc.MainWindowTitle;
+                Log.Info($"Process: ID: {proc.Id}, Name: {proc.ProcessName}, Title: '{title}', Handle: {proc.MainWindowHandle}");
+
+                if (!string.IsNullOrEmpty(title) && title.StartsWith("Terraria Server", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Compare the process's main module filename with our server path.
-                    // This ensures that we only kill the process that matches the specific executable.
-                    if (string.Equals(process.MainModule.FileName, serverPath, StringComparison.InvariantCultureIgnoreCase))
+                    Log.Info($"Found Terraria Server process: ID: {proc.Id}, Name: {proc.ProcessName}, Title: '{title}', Handle: {proc.MainWindowHandle}");
+                    try
                     {
-                        Console.WriteLine($"Terminating server process {process.Id}...");
-                        process.Kill();           // Terminate the process
-                        process.WaitForExit();    // Optionally wait for the process to exit
+                        proc.Kill();
+                        Log.Info($"Killed process with ID: {proc.Id}");
+                        foundServerProcess = true;
                     }
-                }
-                catch (Exception ex)
-                {
-                    // You might not have access to process.MainModule for some processes,
-                    // or the process might already be exiting.
-                    Console.WriteLine($"Could not terminate process {process.Id}: {ex.Message}");
+                    catch (Exception ex)
+                    {
+                        Log.Info($"Failed to kill process with ID {proc.Id}: {ex.Message}");
+                    }
                 }
             }
 
-            // Now start a new instance of the server.
-            ProcessStartInfo startServer = new ProcessStartInfo(serverPath)
+            if (!foundServerProcess)
             {
-                UseShellExecute = true
-            };
-
-            Process.Start(startServer);
-            Console.WriteLine("Started a new server instance.");
+                Log.Info("No processes with main window title starting with 'Terraria Server' were found.");
+            }
         }
 
         private void StartServerAndEnterMultiplayerWorld()
         {
-            Mod.Logger.Info("StartServer() called!");
+            Mod.Logger.Info("AutoloadMultiplayerSystem:StartServerAndEnterMultiplayerWorld called!");
+
+            Config c = ModContent.GetInstance<Config>();
+            if (c.Reload.AttemptToKillServer)
+                EndPreviousServer();
+
             StartServer();
 
             Mod.Logger.Info("EnterMultiplayerWorld() called!");
@@ -121,12 +140,12 @@ namespace SquidTestingMod.Common.Systems
             PlayerFileData firstFavorite = favoritePlayersNonJourney[0];
 
             // get world with name "MyWorld" since that is the name of the server specified in serverconfig.txt
-            string WORLD_NAME_IN_CONFIG = "MyWorld";
+            string WORLD_NAME_IN_CONFIG = c.Reload.WorldToLoad;
 
             WorldFileData w = Main.WorldList.FirstOrDefault(world => world.Name == WORLD_NAME_IN_CONFIG);
             if (w == null || string.IsNullOrEmpty(w.Path))
             {
-                Mod.Logger.Error("Could not find world named 'MyWorld'");
+                Log.Error("Could not find world named " + WORLD_NAME_IN_CONFIG);
                 return;
             }
 

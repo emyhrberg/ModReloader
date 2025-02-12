@@ -18,12 +18,12 @@ namespace SquidTestingMod.Common.Systems
 
         public override void OnEnterWorld()
         {
-            if (Main.netMode != NetmodeID.SinglePlayer)
+            if (Main.dedServ)
                 return;
 
             Config c = ModContent.GetInstance<Config>();
-            Log.Info("Enter world: GodMode is set to " + c.Gameplay.StartInGodMode);
             GodMode = c.Gameplay.StartInGodMode;
+            Log.Info("Enter world: GodMode is set to " + c.Gameplay.StartInGodMode);
         }
 
         public override void Load()

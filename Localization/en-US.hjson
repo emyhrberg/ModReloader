@@ -79,6 +79,16 @@ Mods: {
 					Label: Save And Quit World Without Saving
 					Tooltip: You can reload faster by turning this on, but player and world data will not saved
 				}
+
+				WorldToLoad: {
+					Label: World To Load
+					Tooltip: ""
+				}
+
+				AttemptToKillServer: {
+					Label: Attempt To Kill Server
+					Tooltip: ""
+				}
 			}
 
 			GeneralConfig: {

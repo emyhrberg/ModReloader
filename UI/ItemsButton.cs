@@ -34,7 +34,7 @@ namespace SquidTestingMod.UI
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (Parent is not UIState state)
             {
-                Log.Warn("ItemsButton has no parent UIState!");
+                // Log.Warn("ItemsButton has no parent UIState!");
                 return;
             }
 

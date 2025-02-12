@@ -56,6 +56,12 @@ namespace SquidTestingMod.Common.Configs
             [DefaultValue(100)]
             [Range(100, 5000)]
             public int WaitingTimeBeforeBuildAndReload;
+
+            [DefaultValue(false)]
+            public bool AttemptToKillServer;
+
+            [DefaultValue("MyWorld")]
+            public string WorldToLoad;
         }
 
         public class GeneralConfig

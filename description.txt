@@ -1,9 +1,53 @@
-SquidTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
+This mod introduces new options that makes modding faster, simpler, and more efficient.
 
-🔹 Spawn anything instantly – items, NPCs, bosses, and more!
-🔹 Enable God Mode – take no damage, move fast, and break limits.
-🔹 Teleport anywhere – right-click to instantly move across the map.
-🔹 Reload mods without restarting – quickly test changes.
-🔹 See hitboxes – visualize players, NPCs, projectiles, and UI with cool effects.
+How To Use:
+When entering a world, a toolbar will show up. You can use the options to your liking.
 
-Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀
+The following is a list of options available to the user:
+
+General:
+- Keep Game Running When Out Of Focus
+- Reload Mod Button (Exit world & reload selected mod)
+- Autoload Player And World (Auto-selects first player & world after mod reload)
+- Open Client.log
+- Open Another Client
+
+Gameplay & World Control:
+- God Mode (Disable enemy damage, toggle with shortcut)
+- Fast Mode (Infinite placement, mining, speed, super fast hover speed, etc.)
+- Teleport (Right-Click to teleport anywhere)
+- Item Browser (Spawn all items)
+- NPC Browser (Spawn bosses, enemies, and town NPCs)
+- Spawn Boss On Top (Spawns bosses closer instead of far away)
+
+Debugging & UI Tools:
+- Hitboxes (Player, NPCs, Projectiles, Melee)
+- Hitboxes of UIElements
+
+Planned features: 
+1. Time slider. Slow down or speed up the game. (0.1x to 10x)
+3. In-game time slider (dragonlens).
+4. Enemy spawn rate slider. 0 means to remove all from world aswell
+5. RAM Check per mod/performance check overall
+
+Notes:
+The mod is client-side only.
+
+Known bugs:
+1. Keep Game Running: Rain particles do not update. Also when in Settings or Config menu, game does not update.
+
+Description of how reload works:
+1. RefreshButton calls WorldGen.JustQuit() or WorldGen.SaveAndQuit()
+2. RefreshButton sets Main.menuMode = 10001 (ModSourcesID)
+3. RefreshButton gets your mod [UIModSourceItem] and calls "BuildAndReload" via reflection. 
+
+// 4-6: Singleplayer.
+4. AutoloadSingleplayerSystem uses reflection to hook into "OnSuccessfulLoad". This hook is called when all mods have been reloaded. 
+5. AutoloadSingleplayerSystem finds and selects the first player-world compatible pair.
+6. AutoloadSingleplayerSystem calls WorldGen.playWorld() to start playing on the world.
+
+// 4-6: Multiplayer.
+TODO: Exit any running server / terminal instance. Wait until its finished.
+4. AutoloadMultiplayerSystem calls Process.Start("...\Steamapps\...start-tModLoaderServer.bat") with -nosteam -world "WorldX"
+5. AutoloadMultiplayerSystem finds and selects the first player-world compatible pair.
+6. 

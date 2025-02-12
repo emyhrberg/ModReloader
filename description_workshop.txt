@@ -1,37 +1,9 @@
-This mod introduces new options that makes modding faster, simpler, and more efficient.
+SquidTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
 
-How To Use:
-When entering a world, a toolbar will show up. You can use the options to your liking.
+🔹 Spawn anything instantly – items, NPCs, bosses, and more!
+🔹 Enable God Mode – take no damage, move fast, and break limits.
+🔹 Teleport anywhere – right-click to instantly move across the map.
+🔹 Reload mods without restarting – quickly test changes.
+🔹 See hitboxes – visualize players, NPCs, projectiles, and UI with cool effects.
 
-The following is a list of options available to the user:
-
-General:
-- Keep Game Running When Out Of Focus
-- Reload Mod Button (Exit world & reload selected mod)
-- Autoload Player And World (Auto-selects first player & world after mod reload)
-- Open Client.log
-- Open Another Client
-
-Gameplay & World Control:
-- God Mode (Disable enemy damage, toggle with shortcut)
-- Fast Mode (Infinite placement, mining, speed, super fast hover speed, etc.)
-- Teleport (Right-Click to teleport anywhere)
-- Item Browser (Spawn all items)
-- NPC Browser (Spawn bosses, enemies, and town NPCs)
-- Spawn Boss On Top (Spawns bosses closer instead of far away)
-
-Debugging & UI Tools:
-- Hitboxes (Player, NPCs, Projectiles, Melee)
-- Hitboxes of UIElements
-
-Planned features: 
-1. Time slider. Slow down or speed up the game. (0.1x to 10x)
-3. In-game time slider (dragonlens).
-4. Enemy spawn rate slider. 0 means to remove all from world aswell
-5. RAM Check per mod/performance check overall
-
-Notes:
-The mod is client-side only.
-
-Known bugs:
-1. Keep Game Running: Rain particles do not update. Also when in Settings or Config menu, game does not update.
+Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀

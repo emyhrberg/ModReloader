@@ -17,9 +17,9 @@ namespace SquidTestingMod.UI
             {
                 string default_file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\start-tModLoader.bat";
 
-                string my_file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\_START_CLIENT.bat";
+                // string my_file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\_START_CLIENT.bat";
 
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{my_file}") { UseShellExecute = true });
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{default_file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {

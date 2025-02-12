@@ -43,7 +43,7 @@ namespace SquidTestingMod.UI
             Log.Info("Navigated to Main Menu.");
             // wait for 2 second
             Task.Delay(2000);
-            Main.menuMode = 10000;
+            Main.menuMode = 10000; // mod browser
             // NavigateToManageMods();
         }
 
