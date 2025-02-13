@@ -1,12 +1,7 @@
-using System.Linq;
-using System.Threading;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,15 +18,6 @@ namespace SquidTestingMod.UI
         public UIBetterTextBox searchBox;
 
         public NPCPanel()
-        {
-            OnInitialize();
-        }
-
-        /// <summary>
-        /// Main function to create the item panel, 
-        /// containing all the items in the game.
-        /// </summary>
-        public override void OnInitialize()
         {
             SetupPanelDimensions();
 
@@ -50,7 +36,6 @@ namespace SquidTestingMod.UI
             // Create the item panels.
             CreateNPCSlots(grid);
         }
-
 
         private void FilterItems()
         {
