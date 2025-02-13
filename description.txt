@@ -35,19 +35,3 @@ The mod is client-side only.
 
 Known bugs:
 1. Keep Game Running: Rain particles do not update. Also when in Settings or Config menu, game does not update.
-
-Description of how reload works:
-1. RefreshButton calls WorldGen.JustQuit() or WorldGen.SaveAndQuit()
-2. RefreshButton sets Main.menuMode = 10001 (ModSourcesID)
-3. RefreshButton gets your mod [UIModSourceItem] and calls "BuildAndReload" via reflection. 
-
-// 4-6: Singleplayer.
-4. AutoloadSingleplayerSystem uses reflection to hook into "OnSuccessfulLoad". This hook is called when all mods have been reloaded. 
-5. AutoloadSingleplayerSystem finds and selects the first player-world compatible pair.
-6. AutoloadSingleplayerSystem calls WorldGen.playWorld() to start playing on the world.
-
-// 4-6: Multiplayer.
-TODO: Exit any running server / terminal instance. Wait until its finished.
-4. AutoloadMultiplayerSystem calls Process.Start("...\Steamapps\...start-tModLoaderServer.bat") with -nosteam -world "WorldX"
-5. AutoloadMultiplayerSystem finds and selects the first player-world compatible pair.
-6. 

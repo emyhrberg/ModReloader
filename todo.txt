@@ -1,0 +1,20 @@
+2025-02-13:
+    --- HOW RELOAD WORKS ---
+    1. ReloadButton calls WorldGen.JustQuit() or WorldGen.SaveAndQuit() which exits the world and sends the user to main menu
+    2. ReloadButton sets Main.menuMode = 10001 (ModSourcesID) to navigate to Mod Sources menu.
+    3. ReloadButton gets your mod [UIModSourceItem] as specified in the ReloadConfig and calls "BuildAndReload" via reflection. 
+
+    --- SINGLEPLAYER RELOAD ---
+    4. AutoloadSingleplayerSystem uses reflection to hook into "OnSuccessfulLoad". This hook is called when all mods have been reloaded. 
+    5. AutoloadSingleplayerSystem finds and selects the first player-world compatible pair.
+    6. AutoloadSingleplayerSystem calls WorldGen.playWorld() to start playing on the world.
+
+    --- MULTIPLAYER RELOAD ---
+    TODO: Exit any running server / terminal instance. Wait until its finished.
+    4. AutoloadMultiplayerSystem calls Process.Start("...\Steamapps\...start-tModLoaderServer.bat") with -nosteam -world "WorldX" where WorldX is set in ReloadConfig.
+    5. AutoloadMultiplayerSystem finds and selects the first player-world compatible pair.
+    6. AutoloadMultiplayerSystem connects to localhost (127.0.0.1) using Netplay.StartTcpClient();
+    TODO: Handle 2 clients open simultaneously. Reload both, maybe check for lost connection, maybe differentiate/identify instances.
+
+    Note:
+    - We should only reload when we press reload button, not when we e.g launch the game. Perhaps set a flag to keep track of if the refreshbutton was clicked, and then reset it when we enter the world again.

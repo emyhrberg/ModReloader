@@ -41,7 +41,7 @@ namespace SquidTestingMod.UI
 
         // Draw all UI elements
 
-        public override void OnInitialize()
+        public MainState()
         {
             // Initialize config reference
             c = ModContent.GetInstance<Config>();

@@ -3,6 +3,7 @@ using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Systems
@@ -37,10 +38,10 @@ namespace SquidTestingMod.Common.Systems
                     npc.Center = spawnPosition;
 
                     // Sync the NPC's new position with all clients
-                    // if (Main.netMode == NetmodeID.Server)
-                    // {
-                    //     NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
-                    // }
+                    if (Main.netMode == NetmodeID.Server)
+                    {
+                        NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
+                    }
 
                     // Optional: Log the spawn modification for debugging
                     Mod.Logger.Info($"Spawned {npc.FullName} at {npc.Center}");
