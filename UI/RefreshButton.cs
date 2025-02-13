@@ -7,6 +7,7 @@ using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -18,22 +19,32 @@ namespace SquidTestingMod.UI
         {
             Config c = ModContent.GetInstance<Config>();
 
-            // 1) Exit world 
+            // 1) Kill a server
+            if (Main.netMode == NetmodeID.MultiplayerClient && c.Reload.AttemptToKillServer)
+            {
+                //TODO: Steal PacketHandler from https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
+                ModPacket killServerPacket = ModContent.GetInstance<SquidTestingMod>().GetPacket();
+                killServerPacket.Write(true);
+                killServerPacket.Send();
+            }
+
+            // 2) Exit world (maybe no longer needed if server is killed but idk)
             ExitWorld(c);
 
-            // 2) Navigate to Develop Mods
+            // 3) Navigate to Develop Mods
             if (c.Reload.WaitingTimeBeforeNavigatingToModSources > 0)
                 await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
             object modSourcesInstance = NavigateToDevelopMods();
 
-            // 3) Build and reload
+            // 4) Build and reload
             if (c.Reload.InvokeBuildAndReload)
             {
                 await Task.Delay(c.Reload.WaitingTimeBeforeBuildAndReload);
                 BuildReload(modSourcesInstance);
             }
 
-            // 4) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
+            // 5) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
+            
         }
 
         public override void RightClick(UIMouseEvent evt)

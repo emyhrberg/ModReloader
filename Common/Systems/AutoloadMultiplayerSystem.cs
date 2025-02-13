@@ -18,9 +18,8 @@ namespace SquidTestingMod.Common.Systems
 {
     /// <summary>
     /// This system will do the following when mod has been loaded (when you click Build & Reload in tModLoader):
-    /// 1. terminate a server (if its running)
-    /// 2. restart the server with the same world, port, password and other settings.
-    /// 3. connect to the server as a client once the server is ready.
+    /// 1. restart the server with the same world, port, password and other settings.
+    /// 2. connect to the server as a client once the server is ready.
     /// </summary>
     [Autoload(Side = ModSide.Client)]
 
@@ -64,7 +63,11 @@ namespace SquidTestingMod.Common.Systems
                 // get filenames
                 Config c = ModContent.GetInstance<Config>();
                 string worldName = c.Reload.WorldToLoad;
-                string fileNameWorld = $@"%UserProfile%\Documents\My Games\Terraria\tModLoader\Worlds\{worldName}.wld";
+
+                Main.LoadWorlds();
+                var choosenWorlds = Main.WorldList.ToList().Where(w => w.Name == worldName).ToList();
+                string fileNameWorld = choosenWorlds[0].Path;
+
                 string fileNameStartProcess = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\start-tModLoaderServer.bat";
 
                 // create a process
@@ -87,47 +90,11 @@ namespace SquidTestingMod.Common.Systems
             }
         }
 
-        private void EndPreviousServer()
-        {
-            Log.Info("EndPreviousServer() called!");
-            Process[] processes = Process.GetProcesses();
-            bool foundServerProcess = false;
-
-            foreach (Process proc in processes)
-            {
-                string title = proc.MainWindowTitle;
-                Log.Info($"Process: ID: {proc.Id}, Name: {proc.ProcessName}, Title: '{title}', Handle: {proc.MainWindowHandle}");
-
-                if (!string.IsNullOrEmpty(title) && title.StartsWith("Terraria Server", StringComparison.OrdinalIgnoreCase))
-                {
-                    Log.Info($"Found Terraria Server process: ID: {proc.Id}, Name: {proc.ProcessName}, Title: '{title}', Handle: {proc.MainWindowHandle}");
-                    try
-                    {
-                        proc.Kill();
-                        Log.Info($"Killed process with ID: {proc.Id}");
-                        foundServerProcess = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Info($"Failed to kill process with ID {proc.Id}: {ex.Message}");
-                    }
-                }
-            }
-
-            if (!foundServerProcess)
-            {
-                Log.Info("No processes with main window title starting with 'Terraria Server' were found.");
-            }
-        }
-
         private void StartServerAndEnterMultiplayerWorld()
         {
             Mod.Logger.Info("AutoloadMultiplayerSystem:StartServerAndEnterMultiplayerWorld called!");
 
             Config c = ModContent.GetInstance<Config>();
-            if (c.Reload.AttemptToKillServer)
-                EndPreviousServer();
-
             StartServer();
 
             Mod.Logger.Info("EnterMultiplayerWorld() called!");
