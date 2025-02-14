@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.PacketHandlers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -17,17 +18,28 @@ namespace SquidTestingMod.UI
     {
         public override async void LeftClick(UIMouseEvent evt)
         {
+            
             Config c = ModContent.GetInstance<Config>();
 
             // 1) Kill a server
             if (Main.netMode == NetmodeID.MultiplayerClient && c.Reload.AttemptToKillServer)
             {
-                //TODO: Steal PacketHandler from https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
-                ModPacket killServerPacket = ModContent.GetInstance<SquidTestingMod>().GetPacket();
-                killServerPacket.Write(true);
-                killServerPacket.Send();
-            }
 
+                ModNetHandler.RefreshServer.SendKillingServer(255, -1);
+            }
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                await Task.Run(RefreshClient);
+            }
+            //Huge TODO: return RefreshClient() back here and instead of that create "KillClient" in RefreshServerPacketHandler
+            //Also make something so new clients do not create new servers if one exist
+            //And maybe preserving their players (maybe somehow in config???)
+            //And open all killed clients back after reloading
+        }
+
+        public async static void RefreshClient()
+        {
+            Config c = ModContent.GetInstance<Config>();
             // 2) Exit world (maybe no longer needed if server is killed but idk)
             ExitWorld(c);
 
@@ -44,7 +56,6 @@ namespace SquidTestingMod.UI
             }
 
             // 5) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
-            
         }
 
         public override void RightClick(UIMouseEvent evt)
