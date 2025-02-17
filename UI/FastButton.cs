@@ -11,10 +11,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class FastButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class FastButton : BaseButton
     {
         // Fast player
         public bool IsFastMode = false;
+
+        public FastButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
 
         public override void LeftClick(UIMouseEvent evt)
         {
@@ -27,26 +31,13 @@ namespace SquidTestingMod.UI
         {
             base.UpdateTexture();
 
-            Config c = ModContent.GetInstance<Config>();
-            bool hideText = c?.General.HideButtonText ?? true;
-
             // Now update the current image asset based on the toggle state.
             if (IsFastMode)
-            {
-                if (hideText)
-                    CurrentImage = Assets.ButtonFastNoText;
-                else
-                    CurrentImage = Assets.ButtonFast;
-            }
+                _Texture = Assets.ButtonFastOn;
             else
-            {
-                if (hideText)
-                    CurrentImage = Assets.ButtonFastOffNoText;
-                else
-                    CurrentImage = Assets.ButtonFastOff;
-            }
+                _Texture = Assets.ButtonFastOff;
 
-            SetImage(CurrentImage);
+            SetImage(_Texture);
         }
 
         // some useless code for drawing a string on the button

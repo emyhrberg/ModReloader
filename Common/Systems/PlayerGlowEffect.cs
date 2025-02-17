@@ -234,13 +234,6 @@ namespace SquidTestingMod.Common.Systems
                 return;
             }
 
-            // get godmode outline config setting
-            Config c = ModContent.GetInstance<Config>();
-            if (c.Gameplay.GodModeOutlineSize == "Disabled")
-            {
-                return;
-            }
-
             if (PlayerGlowEffect.ready)
             {
                 // draw the draw data 4 times, but shifted in different
@@ -274,18 +267,7 @@ namespace SquidTestingMod.Common.Systems
         {
             if (!Main.dedServ)
             {
-                Config c = ModContent.GetInstance<Config>();
-                if (c != null)
-                {
-                    if (c.Gameplay.GodModeOutlineSize == "Small")
-                    {
-                        GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/LessOutlineEffect"), "Pass0"));
-                    }
-                    else if (c.Gameplay.GodModeOutlineSize == "Big")
-                    {
-                        GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
-                    }
-                }
+                GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
             }
         }
 

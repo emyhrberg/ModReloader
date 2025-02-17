@@ -10,22 +10,18 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class NPCsButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class NPCsButton : BaseButton
     {
         public NPCPanel npcPanel;
         public bool isNPCPanelVisible = false;
 
+        public NPCsButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
+
         public override void LeftClick(UIMouseEvent evt)
         {
             ToggleNPCPanel();
-
-            // open inv if its not already open
-            if (!Main.playerInventory)
-                Main.playerInventory = true;
-
-            // close inv if we close the panel
-            if (!isNPCPanelVisible)
-                Main.playerInventory = false;
         }
 
         public void ToggleNPCPanel()
@@ -35,14 +31,6 @@ namespace SquidTestingMod.UI
             {
                 Log.Warn("ItemsButton has no parent UIState!");
                 return;
-            }
-
-            // If the NPC panel is open, remove it first.
-            if (sys.mainState.npcButton != null && sys.mainState.npcButton.npcPanel != null && state.Children.Contains(sys.mainState.npcButton.npcPanel))
-            {
-                Log.Info("Removing Itemspanel because npcPanel is being toggled.");
-                state.RemoveChild(sys.mainState.npcButton.npcPanel);
-                sys.mainState.npcButton.npcPanel = null;
             }
 
             // Toggle the isNPCPanelVisible flag.

@@ -14,7 +14,7 @@ namespace SquidTestingMod.Common.Systems
     {
         private List<Color> rainbowColors;
 
-        public override void OnInitialize()
+        public DrawUIState()
         {
             GenerateRainbowColors(20);
         }

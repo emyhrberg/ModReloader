@@ -1,53 +1,111 @@
-using System;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.GameContent;
+using System.IO;
 using Terraria.ID;
-using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace SquidTestingMod.Common.Systems
 {
-    public class TeleportMapSystem : ModSystem
+    internal class MapTeleport : Tool
     {
-        private bool mouseRightLastUpdate;
+        public static bool active = true;
 
-        public override void PostDrawFullscreenMap(ref string mouseText)
+        public override string IconKey => "MapTeleport";
+
+        public override void OnActivate()
         {
-            base.PostDrawFullscreenMap(ref mouseText);
+            active = !active;
+        }
 
-            if (Main.netMode == NetmodeID.SinglePlayer)
-                return;
+        public override void DrawIcon(SpriteBatch spriteBatch, Rectangle position)
+        {
+            base.DrawIcon(spriteBatch, position);
 
-            // draw text
-            string teleportText = "Right click to teleport";
-            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(teleportText);
-            Vector2 position = new(10f, Main.screenHeight - textSize.Y - 10f);
-            Utils.DrawBorderString(Main.spriteBatch, teleportText, position, Color.White);
-
-            if (!Main.mouseRight && this.mouseRightLastUpdate)
+            if (active)
             {
-                // get player
-                Player player = Main.LocalPlayer;
+                GUIHelper.DrawOutline(spriteBatch, new Rectangle(position.X - 4, position.Y - 4, 46, 46), ThemeHandler.ButtonColor.InvertColor());
 
-                // get target position
-                Vector2 mapCentrePos = Main.mapFullscreenPos;
-                Vector2 targetTile = (new Vector2(Main.mouseX, Main.mouseY) - new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f)) / Main.mapFullscreenScale + mapCentrePos;
-                Vector2 targetPos = targetTile * 16f;
-                targetPos.Y -= player.height;
+                Texture2D tex = Assets.Misc.GlowAlpha.Value;
+                var color = new Color(255, 100, 200)
+                {
+                    A = 0
+                };
+                var target = new Rectangle(position.X, position.Y, 38, 38);
 
-                // clamp target position
-                int worldWidth = Main.maxTilesX * 16;
-                int worldHeight = Main.maxTilesY * 16;
-                targetPos.X = Math.Clamp(targetPos.X, 0f, worldWidth - player.width);
-                targetPos.Y = Math.Clamp(targetPos.Y, 0f, worldHeight - player.height);
-
-                // teleport player
-                player.Teleport(targetPos, 0, 0);
-
-                // close map
-                // Main.mapFullscreen = false;
+                spriteBatch.Draw(tex, target, color);
             }
-            mouseRightLastUpdate = Main.mouseRight;
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            tag["active"] = active;
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            active = tag.GetBool("active");
+        }
+
+        public override void SendPacket(BinaryWriter writer)
+        {
+            writer.WriteVector2(MapTeleportSystem.lastTarget);
+            writer.Write(MapTeleportSystem.whoTeleported);
+        }
+
+        public override void RecievePacket(BinaryReader reader, int sender)
+        {
+            Vector2 target = reader.ReadVector2();
+            int who = reader.ReadInt32();
+
+            Main.player[who].Center = target;
+
+            if (Main.netMode == NetmodeID.Server)
+            {
+                MapTeleportSystem.lastTarget = target;
+                MapTeleportSystem.whoTeleported = who;
+
+                NetSend(-1, sender);
+            }
+        }
+    }
+
+    internal class MapTeleportSystem : ModSystem
+    {
+        public static Vector2 lastTarget; //These are here for MP sync purposes
+        public static int whoTeleported;
+
+        public override void Load()
+        {
+            Main.OnPostFullscreenMapDraw += TeleportFromMap;
+        }
+
+        public override void Unload()
+        {
+            Main.OnPostFullscreenMapDraw -= TeleportFromMap;
+        }
+
+        private void TeleportFromMap(Vector2 arg1, float arg2)
+        {
+            if (MapTeleport.active && PermissionHandler.CanUseTools(Main.LocalPlayer) && Main.mouseRight)
+            {
+                Vector2 screenSize = new Vector2(Main.screenWidth, Main.screenHeight) * Main.UIScale;
+                Vector2 target = ((Main.MouseScreen - screenSize / 2) / 16 * (16 / Main.mapFullscreenScale) + Main.mapFullscreenPos) * 16;
+
+                if (WorldGen.InWorld((int)target.X / 16, (int)target.Y / 16))
+                {
+                    Main.LocalPlayer.Center = target;
+
+                    if (Main.LocalPlayer.GetModPlayer<NoClipPlayer>().active)
+                        Main.LocalPlayer.GetModPlayer<NoClipPlayer>().desiredPos = target;
+
+                    lastTarget = target;
+                    whoTeleported = Main.LocalPlayer.whoAmI;
+
+                    Main.LocalPlayer.fallStart = (int)Main.LocalPlayer.position.Y;
+                }
+                else
+                {
+                    Main.NewText(LocalizationHelper.GetToolText("MapTeleport.OutsideWorldWarning"));
+                }
+            }
         }
     }
 }

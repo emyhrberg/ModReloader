@@ -23,7 +23,8 @@ namespace SquidTestingMod.Helpers
 
         public override void PostSetupContent()
         {
-            Assets.PreloadAllItems();
+            base.PostSetupContent();
+            // Assets.PreloadAllAssets();
         }
     }
 
@@ -39,36 +40,14 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonItems;
         public static Asset<Texture2D> ButtonReload;
         public static Asset<Texture2D> ButtonNPC;
-        public static Asset<Texture2D> ButtonGod;
+        public static Asset<Texture2D> ButtonGodOn;
         public static Asset<Texture2D> ButtonGodOff;
-        public static Asset<Texture2D> ButtonFast;
+        public static Asset<Texture2D> ButtonFastOn;
         public static Asset<Texture2D> ButtonFastOff;
-        public static Asset<Texture2D> ButtonTeleport;
         public static Asset<Texture2D> ButtonLog;
         public static Asset<Texture2D> ButtonSecondClient;
         public static Asset<Texture2D> ButtonHitbox;
         public static Asset<Texture2D> ButtonUIDebug;
-        public static Asset<Texture2D> ButtonEnemies;
-        public static Asset<Texture2D> ButtonTime;
-
-        // No text buttons
-        public static Asset<Texture2D> ButtonOnNoText;
-        public static Asset<Texture2D> ButtonOffNoText;
-        public static Asset<Texture2D> ButtonConfigNoText;
-        public static Asset<Texture2D> ButtonItemsNoText;
-        public static Asset<Texture2D> ButtonReloadNoText;
-        public static Asset<Texture2D> ButtonNPCNoText;
-        public static Asset<Texture2D> ButtonGodNoText;
-        public static Asset<Texture2D> ButtonGodOffNoText;
-        public static Asset<Texture2D> ButtonFastNoText;
-        public static Asset<Texture2D> ButtonFastOffNoText;
-        public static Asset<Texture2D> ButtonTeleportNoText;
-        public static Asset<Texture2D> ButtonLogNoText;
-        public static Asset<Texture2D> ButtonSecondClientNoText;
-        public static Asset<Texture2D> ButtonHitboxNoText;
-        public static Asset<Texture2D> ButtonUIDebugNoText;
-        public static Asset<Texture2D> ButtonEnemiesNoText;
-        public static Asset<Texture2D> ButtonTimeNoText;
 
         public static void PreloadAllAssets()
         {
@@ -81,73 +60,17 @@ namespace SquidTestingMod.Helpers
             ButtonItems = PreloadAsset("ButtonItems");
             ButtonReload = PreloadAsset("ButtonReload");
             ButtonNPC = PreloadAsset("ButtonNPC");
-            ButtonGod = PreloadAsset("ButtonGod");
+            ButtonGodOn = PreloadAsset("ButtonGodOn");
             ButtonGodOff = PreloadAsset("ButtonGodOff");
-            ButtonFast = PreloadAsset("ButtonFast");
+            ButtonFastOn = PreloadAsset("ButtonFastOn");
             ButtonFastOff = PreloadAsset("ButtonFastOff");
-            ButtonTeleport = PreloadAsset("ButtonTeleport");
             ButtonLog = PreloadAsset("ButtonLog");
             ButtonSecondClient = PreloadAsset("ButtonSecond");
             ButtonHitbox = PreloadAsset("ButtonHitboxes");
             ButtonUIDebug = PreloadAsset("ButtonUI");
-            ButtonEnemies = PreloadAsset("ButtonEnemies");
-            ButtonTime = PreloadAsset("ButtonTime");
-
-            // NO TEXT BUTTONS
-            ButtonOnNoText = PreloadAsset("ButtonOnNoText");
-            ButtonOffNoText = PreloadAsset("ButtonOffNoText");
-            ButtonConfigNoText = PreloadAsset("ButtonConfigNoText");
-            ButtonItemsNoText = PreloadAsset("ButtonItemsNoText");
-            ButtonReloadNoText = PreloadAsset("ButtonReloadNoText");
-            ButtonNPCNoText = PreloadAsset("ButtonNPCNoText");
-            ButtonGodNoText = PreloadAsset("ButtonGodNoText");
-            ButtonGodOffNoText = PreloadAsset("ButtonGodOffNoText");
-            ButtonFastNoText = PreloadAsset("ButtonFastNoText");
-            ButtonFastOffNoText = PreloadAsset("ButtonFastOffNoText");
-            ButtonTeleportNoText = PreloadAsset("ButtonTeleportNoText");
-            ButtonLogNoText = PreloadAsset("ButtonLogNoText");
-            ButtonSecondClientNoText = PreloadAsset("ButtonSecondNoText");
-            ButtonHitboxNoText = PreloadAsset("ButtonHitboxesNoText");
-            ButtonUIDebugNoText = PreloadAsset("ButtonUINoText");
-            ButtonEnemiesNoText = PreloadAsset("ButtonEnemiesNoText");
-            ButtonTimeNoText = PreloadAsset("ButtonTimeNoText");
 
             s.Stop();
             Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
-        }
-
-        public static HashSet<Item> PreloadedItems = [];
-        public static HashSet<ItemSlot> PreloadedItemSlots = [];
-        public static UIGrid grid;
-
-        public static void PreloadAllItems()
-        {
-            int allItems = TextureAssets.Item.Length - 1;
-
-            Stopwatch s = Stopwatch.StartNew();
-
-            for (int i = 1; i <= allItems; i++)
-            {
-                Item item = new();
-                item.SetDefaults(i);
-                PreloadedItems.Add(item);
-
-                ItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ShopItem);
-                itemSlot.Width.Set(50, 0f);
-                itemSlot.Height.Set(50, 0f);
-                PreloadedItemSlots.Add(itemSlot);
-            }
-
-            // Add all preloaded slots at once
-            if (grid == null)
-            {
-                Log.Info("Creating new grid");
-                grid = new UIGrid();
-                grid.AddRange(PreloadedItemSlots);
-            }
-
-            s.Stop();
-            Log.Info($"Preloaded {PreloadedItemSlots.Count} item slots in {s.ElapsedMilliseconds} ms");
         }
 
         /// <summary>

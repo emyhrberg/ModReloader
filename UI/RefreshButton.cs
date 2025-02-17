@@ -13,20 +13,15 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class RefreshButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class RefreshButton : BaseButton
     {
+        public RefreshButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
+
         public override async void LeftClick(UIMouseEvent evt)
         {
             Config c = ModContent.GetInstance<Config>();
-
-            // 1) Kill a server
-            if (Main.netMode == NetmodeID.MultiplayerClient && c.Reload.AttemptToKillServer)
-            {
-                //TODO: Steal PacketHandler from https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
-                ModPacket killServerPacket = ModContent.GetInstance<SquidTestingMod>().GetPacket();
-                killServerPacket.Write(true);
-                killServerPacket.Send();
-            }
 
             // 2) Exit world (maybe no longer needed if server is killed but idk)
             ExitWorld(c);
@@ -44,43 +39,7 @@ namespace SquidTestingMod.UI
             }
 
             // 5) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
-            
-        }
 
-        public override void RightClick(UIMouseEvent evt)
-        {
-            // navigate to Main Menu
-            WorldGen.JustQuit();
-            Log.Info("Navigated to Main Menu.");
-            // wait for 2 second
-            Task.Delay(2000);
-            Main.menuMode = 10000; // mod browser
-            // NavigateToManageMods();
-        }
-
-        private void NavigateToManageMods()
-        {
-            try
-            {
-                Log.Info("Attempting to navigate to Manage Mods...");
-
-                Assembly tModLoaderAssembly = typeof(Main).Assembly;
-                Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
-
-                FieldInfo modBrowserIDField = interfaceType.GetField("modBrowserID", BindingFlags.NonPublic | BindingFlags.Static);
-                int modBrowserID = (int)(modBrowserIDField?.GetValue(null) ?? -1);
-
-                modBrowserID = 10007;
-
-                Main.menuMode = modBrowserID != -1 ? modBrowserID : 10007;
-                // Main.menuMode = Interface.modNameField;
-
-                Log.Info($"Successfully navigated to Manage Mods (MenuMode: {modBrowserID}).");
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
-            }
         }
 
         private async static void ExitWorld(Config c)
@@ -89,7 +48,6 @@ namespace SquidTestingMod.UI
             {
                 Log.Warn("Just quitting...");
                 WorldGen.JustQuit();
-
             }
             else
             {

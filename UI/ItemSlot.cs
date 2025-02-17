@@ -29,34 +29,10 @@ namespace SquidTestingMod.UI
         {
             CalculatedStyle dimensions = GetInnerDimensions();
             float bgOpacity = IsMouseHovering ? 0.9f : 0.8f;
-
-            Config c = ModContent.GetInstance<Config>();
-            Texture2D t = c.ItemBrowser.ItemSlotStyle switch
-            {
-                1 => TextureAssets.InventoryBack.Value,
-                2 => TextureAssets.InventoryBack2.Value,
-                3 => TextureAssets.InventoryBack3.Value,
-                4 => TextureAssets.InventoryBack4.Value,
-                5 => TextureAssets.InventoryBack5.Value,
-                6 => TextureAssets.InventoryBack6.Value,
-                7 => TextureAssets.InventoryBack7.Value,
-                8 => TextureAssets.InventoryBack8.Value,
-                9 => TextureAssets.InventoryBack9.Value,
-                10 => TextureAssets.InventoryBack10.Value,
-                11 => TextureAssets.InventoryBack11.Value,
-                12 => TextureAssets.InventoryBack12.Value,
-                13 => TextureAssets.InventoryBack13.Value,
-                14 => TextureAssets.InventoryBack14.Value,
-                15 => TextureAssets.InventoryBack15.Value,
-                16 => TextureAssets.InventoryBack16.Value,
-                17 => TextureAssets.InventoryBack17.Value,
-                18 => TextureAssets.InventoryBack18.Value,
-                19 => TextureAssets.InventoryBack19.Value,
-                _ => TextureAssets.InventoryBack.Value,
-            };
+            Texture2D inventoryBack = TextureAssets.InventoryBack.Value;
 
             // Draw background
-            spriteBatch.Draw(t, dimensions.ToRectangle(), c.ItemBrowser.ItemSlotColor * bgOpacity);
+            spriteBatch.Draw(inventoryBack, dimensions.ToRectangle(), Color.White * bgOpacity);
 
             if (!displayItem.IsAir)
             {

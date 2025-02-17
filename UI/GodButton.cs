@@ -11,13 +11,16 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class GodButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class GodButton : BaseButton
     {
+        // constructor
+        public GodButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
 
         public override void LeftClick(UIMouseEvent evt)
         {
             GodModePlayer.GodMode = !GodModePlayer.GodMode;
-            Log.Info("God mode clicked. God mode is now " + GodModePlayer.GodMode);
             UpdateTexture();
         }
 
@@ -26,20 +29,18 @@ namespace SquidTestingMod.UI
             base.UpdateTexture();
 
             bool isGodModeOn = GodModePlayer.GodMode;
-            Config c = ModContent.GetInstance<Config>();
-            bool hideText = c?.General.HideButtonText ?? true;
 
             // Now update the current image asset based on the toggle state.
             if (isGodModeOn)
             {
-                CurrentImage = hideText ? Assets.ButtonGodNoText : Assets.ButtonGod;
+                _Texture = Assets.ButtonGodOn;
             }
             else
             {
-                CurrentImage = hideText ? Assets.ButtonGodOffNoText : Assets.ButtonGodOff;
+                _Texture = Assets.ButtonGodOff;
             }
 
-            SetImage(CurrentImage);
+            SetImage(_Texture);
         }
     }
 }

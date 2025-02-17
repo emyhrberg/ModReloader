@@ -149,7 +149,6 @@ namespace SquidTestingMod.UI
         public bool IsDragging = false;
         private bool dragging;
         private Vector2 dragOffset;
-        private bool closeRequested = false;
 
         // more
         private Vector2 mouseDownPos;
@@ -175,27 +174,6 @@ namespace SquidTestingMod.UI
                 IsDragging = false; // Reset when not dragging
             }
 
-            // close panel if escape is pressed
-            if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
-            {
-                if (Main.playerInventory)
-                {
-                    Main.playerInventory = false;
-                    closeRequested = true;
-                    if (dragging)
-                    {
-                        dragging = false;
-                    }
-                    searchBox.Unfocus();
-                }
-            }
-
-            // close panel if inventory is closed
-            if (!Main.playerInventory)
-            {
-                closeRequested = true;
-            }
-
             if (dragging)
             {
                 Left.Set(Main.mouseX - dragOffset.X, 0f);
@@ -212,17 +190,6 @@ namespace SquidTestingMod.UI
             else if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
-            }
-
-            // close request
-            if (closeRequested)
-            {
-                closeRequested = false;
-                Main.QueueMainThreadAction(() =>
-                {
-                    MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    sys?.mainState?.itemButton?.ToggleItemsPanel();
-                });
             }
         }
 

@@ -91,30 +91,6 @@ Mods: {
 				}
 			}
 
-			GeneralConfig: {
-				Tooltip: ""
-
-				OnlyShowWhenInventoryOpen: {
-					Label: Only Show When Inventory Open
-					Tooltip: Hides the buttons by default and only shows them when the inventory is open.
-				}
-
-				ButtonSize: {
-					Label: Button Size
-					Tooltip: ""
-				}
-
-				HideButtonText: {
-					Label: Hide Button Text
-					Tooltip: ""
-				}
-
-				HideButtonTooltips: {
-					Label: Hide Button Tooltips
-					Tooltip: Hide the tooltips at the bottom of each button
-				}
-			}
-
 			GameplayConfig: {
 				Tooltip: ""
 
@@ -127,16 +103,6 @@ Mods: {
 					Label: Start In God Mode
 					Tooltip: When entering the world, start with god mode enabled by default
 				}
-
-				GodModeOutlineSize: {
-					Label: God Mode Outline Size
-					Tooltip: The visual effect of the god mode, set to disabled for no effect
-				}
-
-				KeepGameRunningWhenFocusLost: {
-					Label: Keep Game Running When Focus Lost
-					Tooltip: When alt+tabbed or minimized out of the game, keep the game running
-				}
 			}
 
 			ItemBrowserConfig: {
@@ -145,16 +111,6 @@ Mods: {
 				MaxItemsToDisplay: {
 					Label: Max Items To Display
 					Tooltip: Maximum items to show at one point, recommend <1000 since all items take a while to load
-				}
-
-				ItemSlotStyle: {
-					Label: Item Slot Style
-					Tooltip: Select style of each item slot in the browser, number 10 is quite special
-				}
-
-				ItemSlotColor: {
-					Label: Item Slot Color
-					Tooltip: Select the color of the background of each item slot
 				}
 			}
 

@@ -38,10 +38,10 @@ namespace SquidTestingMod.Common.Systems
                     npc.Center = spawnPosition;
 
                     // Sync the NPC's new position with all clients
-                    if (Main.netMode == NetmodeID.Server)
-                    {
-                        NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
-                    }
+                    // if (Main.netMode == NetmodeID.Server)
+                    // {
+                    //     NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
+                    // }
 
                     // Optional: Log the spawn modification for debugging
                     Mod.Logger.Info($"Spawned {npc.FullName} at {npc.Center}");

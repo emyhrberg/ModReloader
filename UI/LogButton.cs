@@ -6,15 +6,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class LogButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class LogButton : BaseButton
     {
+        public LogButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
+
         public override void LeftClick(UIMouseEvent evt)
         {
-            // open client.log at 
-            // C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs\client.log 
-            // string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
-            // System.Diagnostics.Process.Start(file);
-
             try
             {
                 string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";

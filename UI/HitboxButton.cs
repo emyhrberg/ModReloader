@@ -6,9 +6,13 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class HitboxButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class HitboxButton : BaseButton
     {
         public bool DrawHitboxFlag = false;
+
+        public HitboxButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
 
         public override void LeftClick(UIMouseEvent evt)
         {

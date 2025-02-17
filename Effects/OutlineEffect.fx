@@ -21,45 +21,45 @@ float4 uShaderSpecificData;
 
 float4 PixelShaderFunction(float4 sampleColor : COLOR0, float2 coords : TEXCOORD0) : COLOR0
 {
-	float4 col = tex2D(uImage0, coords);
-	if (!any(col))
-	{
-		float w = 2.0 / uImageSize0.x;
-		float h = 2.0 / uImageSize0.y;
-		
-		// Expand the border outline and enhance the glow
-		if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||
-			any(tex2D(uImage0, coords + float2(0, h))) || any(tex2D(uImage0, coords - float2(0, h))))
-		{
-			return float4(1.0, 0.8, 0.3, 1.0) * 0.8; // Bright gold glow
-		}
-		else
-		{
-			w = w * 2;
-			h = h * 2;
-			if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||
-				any(tex2D(uImage0, coords + float2(0, h))) || any(tex2D(uImage0, coords - float2(0, h))))
-			{
-				return float4(1.0, 0.7, 0.2, 1.0) * 0.6; // Slightly dimmer gold
-			}
-			else
-			{
-				w = w * 2;
-				h = h * 2;
-				if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||
-					any(tex2D(uImage0, coords + float2(0, h))) || any(tex2D(uImage0, coords - float2(0, h))))
-				{
-					return float4(1.0, 0.6, 0.1, 1.0) * 0.4; // Soft golden fade-out
-				}
-			}
-		}
-		
-		return float4(0, 0, 0, 0);
-	}
+    float4 col = tex2D(uImage0, coords);
+    if (!any(col))
+    {
+        float w = 1.0 / uImageSize0.x; // Reduced initial outline width
+        float h = 1.0 / uImageSize0.y; // Reduced initial outline height
+        
+        // Expand the border outline and enhance the glow
+        if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||
+            any(tex2D(uImage0, coords + float2(0, h))) || any(tex2D(uImage0, coords - float2(0, h))))
+        {
+            return float4(1.0, 0.8, 0.3, 1.0) * 0.8; // Bright gold glow
+        }
+        else
+        {
+            w = w * 2; // Adjusted multiplier for the second outline width
+            h = h * 2; // Adjusted multiplier for the second outline height
+            if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||
+                any(tex2D(uImage0, coords + float2(0, h))) || any(tex2D(uImage0, coords - float2(0, h))))
+            {
+                return float4(1.0, 0.7, 0.2, 1.0) * 0.6; // Slightly dimmer gold
+            }
+            else
+            {
+                w = w * 2; // Adjusted multiplier for the third outline width
+                h = h * 2; // Adjusted multiplier for the third outline height
+                if (any(tex2D(uImage0, coords + float2(w, 0))) || any(tex2D(uImage0, coords - float2(w, 0))) ||
+                    any(tex2D(uImage0, coords + float2(0, h))) || any(tex2D(uImage0, coords - float2(0, h))))
+                {
+                    return float4(1.0, 0.6, 0.1, 1.0) * 0.4; // Soft golden fade-out
+                }
+            }
+        }
+        
+        return float4(0, 0, 0, 0);
+    }
 
-	// Boost brightness and gold tint
-	float3 goldTint = float3(1.2, 1.0, 0.6); // Enhanced gold tone
-	return sampleColor * float4(goldTint, 1.0) * 1.2; // Brighter, golden effect
+    // Boost brightness and gold tint
+    float3 goldTint = float3(1.2, 1.0, 0.6); // Enhanced gold tone
+    return sampleColor * float4(goldTint, 1.0) * 1.2; // Brighter, golden effect
 }
 
 technique Technique1

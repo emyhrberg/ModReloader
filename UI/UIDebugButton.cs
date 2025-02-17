@@ -6,9 +6,13 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class UIDebugButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class UIDebugButton : BaseButton
     {
         public bool IsUIDebugDrawing = false;
+
+        public UIDebugButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
 
         public override void LeftClick(UIMouseEvent evt)
         {

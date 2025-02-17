@@ -6,8 +6,12 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ConfigButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : BaseButton(buttonImgText, buttonImgNoText, hoverText)
+    public class ConfigButton : BaseButton
     {
+        public ConfigButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+        }
+
         public override void LeftClick(UIMouseEvent evt)
         {
             Config c = ModContent.GetInstance<Config>();

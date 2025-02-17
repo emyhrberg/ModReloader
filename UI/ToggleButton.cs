@@ -11,11 +11,8 @@ namespace SquidTestingMod.UI
 {
     public class ToggleButton : BaseButton
     {
-        // Variables
-        private bool needsTextureUpdate = true;
-
         // Constructor
-        public ToggleButton(Asset<Texture2D> buttonImgText, Asset<Texture2D> buttonImgNoText, string hoverText) : base(buttonImgText, buttonImgNoText, hoverText)
+        public ToggleButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
         {
         }
 
@@ -31,51 +28,19 @@ namespace SquidTestingMod.UI
                 return;
             }
 
-            Config c = ModContent.GetInstance<Config>();
-            bool hideText = c?.General.HideButtonText ?? true;
-            bool isButtonsOn = sys.mainState.AreButtonsShowing;
-
             // Now update the current image asset based on the toggle state.
-            if (isButtonsOn)
-                if (hideText)
-                    CurrentImage = Assets.ButtonOnNoText;
-                else
-                    CurrentImage = Assets.ButtonOn;
+            if (sys.mainState.AreButtonsShowing)
+                _Texture = Assets.ButtonOn;
             else
-            {
-                if (hideText)
-                    CurrentImage = Assets.ButtonOffNoText;
-                else
-                    CurrentImage = Assets.ButtonOff;
-            }
+                _Texture = Assets.ButtonOff;
 
-            SetImage(CurrentImage);
+            SetImage(_Texture);
         }
 
         public override void LeftClick(UIMouseEvent evt)
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys?.mainState != null)
-            {
-                sys.mainState.ToggleOnOff();
-            }
-        }
-
-        public override void RightClick(UIMouseEvent evt)
-        {
-            // flip the switch
-            Config c = ModContent.GetInstance<Config>();
-            if (c == null) return;
-            c.General.OnlyShowWhenInventoryOpen = !c.General.OnlyShowWhenInventoryOpen;
-
-            string t;
-
-            if (c.General.OnlyShowWhenInventoryOpen)
-                t = "Only show when inventory is open.";
-            else
-                t = "Always show.";
-
-            Main.NewText(t, Color.White);
+            sys?.mainState.ToggleOnOff();
         }
 
         #region dragging
@@ -84,7 +49,6 @@ namespace SquidTestingMod.UI
         private Vector2 mouseDownPos;
         public bool isDrag;
         private const float DragThreshold = 10f; // you can tweak the threshold
-        private bool clickStartedOutsideButton;
         public Vector2 anchorPos;
 
         public override void LeftMouseDown(UIMouseEvent evt)
@@ -95,19 +59,15 @@ namespace SquidTestingMod.UI
             isDrag = false;
             mouseDownPos = evt.MousePosition; // store mouse down location
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
-            clickStartedOutsideButton = !ContainsPoint(evt.MousePosition);
-            if (!clickStartedOutsideButton)
-                Main.LocalPlayer.mouseInterface = true;
         }
 
         public override void LeftMouseUp(UIMouseEvent evt)
         {
             base.LeftMouseUp(evt);
             dragging = false;
-            Main.LocalPlayer.mouseInterface = false;
             Recalculate();
 
-            if (isDrag && !clickStartedOutsideButton)
+            if (isDrag)
             {
                 LeftClick(evt);
             }
@@ -119,25 +79,8 @@ namespace SquidTestingMod.UI
         {
             base.Update(gameTime);
 
-            // fix update texture
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (needsTextureUpdate && sys?.mainState != null)
-            {
-                UpdateTexture();
-                needsTextureUpdate = false; // Run once
-            }
-
-            if (dragging || (ContainsPoint(Main.MouseScreen) && !clickStartedOutsideButton))
-            {
-                Main.LocalPlayer.mouseInterface = true;
-            }
-
-            // update the position of all the buttons
             if (dragging)
             {
-                // disable mouse interface
-                Main.LocalPlayer.mouseInterface = true;
-
                 // Check if we moved the mouse more than the threshold
                 var currentPos = new Vector2(Main.mouseX, Main.mouseY);
                 if (Vector2.Distance(currentPos, mouseDownPos) > DragThreshold)
@@ -149,7 +92,8 @@ namespace SquidTestingMod.UI
                 anchorPos = new(Main.mouseX - dragOffset.X, Main.mouseY - dragOffset.Y);
 
                 // update the position of all the buttons
-                sys.mainState.UpdateButtonsPositions(anchorPos);
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                sys?.mainState.UpdateButtonsPositions(anchorPos);
 
                 Recalculate();
             }

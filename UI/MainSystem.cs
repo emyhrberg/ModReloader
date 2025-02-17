@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Configs;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
