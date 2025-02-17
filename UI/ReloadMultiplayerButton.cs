@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.PacketHandlers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -21,7 +22,15 @@ namespace SquidTestingMod.UI
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            WorldGen.JustQuit();
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                WorldGen.JustQuit();
+                //TODO: add server 
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer);
+            }
         }
     }
 }
