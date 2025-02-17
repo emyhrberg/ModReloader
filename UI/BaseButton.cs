@@ -1,6 +1,9 @@
+using System;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -55,16 +58,39 @@ namespace SquidTestingMod.UI
             SetImage(_Texture);
         }
 
-        // Dont allow clicking if button is disabled.
+        #region Disable button click if config window is open
         public override bool ContainsPoint(Vector2 point)
         {
-            if (!Active)
+            if (!Active) // Dont allow clicking if button is disabled.
                 return false;
+
+            try
+            {
+                if (Main.InGameUI != null)
+                {
+                    var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
+                    if (currentStateProp != null)
+                    {
+                        var currentState = currentStateProp.GetValue(Main.InGameUI);
+                        if (currentState != null)
+                        {
+                            string stateName = currentState.GetType().Name;
+                            if (stateName.Contains("Config"))
+                                return false;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
+            }
 
             return base.ContainsPoint(point);
         }
+        #endregion
 
-        // Disable use on button click
+        #region Disable item use on button click
         public override void LeftMouseDown(UIMouseEvent evt)
         {
             Main.LocalPlayer.mouseInterface = true;
@@ -86,5 +112,6 @@ namespace SquidTestingMod.UI
                 Main.LocalPlayer.mouseInterface = true;
             }
         }
+        #endregion
     }
 }

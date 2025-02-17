@@ -18,12 +18,12 @@ namespace SquidTestingMod.UI
 
         public FastButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
         {
+            UpdateTexture();
         }
 
         public override void LeftClick(UIMouseEvent evt)
         {
             IsFastMode = !IsFastMode;
-            Log.Info("Fast mode clicked. Fast mode is now " + IsFastMode);
             UpdateTexture();
         }
 

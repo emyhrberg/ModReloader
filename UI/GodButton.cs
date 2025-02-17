@@ -20,7 +20,7 @@ namespace SquidTestingMod.UI
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            GodModePlayer.GodMode = !GodModePlayer.GodMode;
+            GodModePlayer.IsGodModeOn = !GodModePlayer.IsGodModeOn;
             UpdateTexture();
         }
 
@@ -28,17 +28,13 @@ namespace SquidTestingMod.UI
         {
             base.UpdateTexture();
 
-            bool isGodModeOn = GodModePlayer.GodMode;
+            bool isGodModeOn = GodModePlayer.IsGodModeOn;
 
             // Now update the current image asset based on the toggle state.
             if (isGodModeOn)
-            {
                 _Texture = Assets.ButtonGodOn;
-            }
             else
-            {
                 _Texture = Assets.ButtonGodOff;
-            }
 
             SetImage(_Texture);
         }

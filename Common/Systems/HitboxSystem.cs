@@ -21,7 +21,7 @@ namespace SquidTestingMod.Common.Systems
 
             // get hitbox flag
             MainSystem mainSystem = ModContent.GetInstance<MainSystem>();
-            bool drawHitboxFlag = mainSystem.mainState.hitboxButton.DrawHitboxFlag;
+            bool drawHitboxFlag = mainSystem.mainState.hitboxButton.IsDrawingHitboxes;
             if (!drawHitboxFlag)
                 return;
 

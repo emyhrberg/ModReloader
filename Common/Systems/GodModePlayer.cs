@@ -13,7 +13,8 @@ namespace SquidTestingMod.Common.Systems
 {
     public class GodModePlayer : ModPlayer
     {
-        public static bool GodMode;
+        public static bool IsGodModeOn;
+
         private static ModKeybind ToggleGodModeKeybind;
 
         public override void OnEnterWorld()
@@ -22,7 +23,7 @@ namespace SquidTestingMod.Common.Systems
                 return;
 
             Config c = ModContent.GetInstance<Config>();
-            GodMode = c.Gameplay.StartInGodMode;
+            IsGodModeOn = c.Gameplay.StartInGodMode;
             Log.Info("Enter world: GodMode is set to " + c.Gameplay.StartInGodMode);
         }
 
@@ -40,31 +41,31 @@ namespace SquidTestingMod.Common.Systems
         {
             if (ToggleGodModeKeybind.JustPressed)
             {
-                GodMode = !GodMode;
+                IsGodModeOn = !IsGodModeOn;
                 // Update the button texture
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
                 sys.mainState.godButton.UpdateTexture();
-                Log.Info("God mode toggled. Now: " + GodMode);
+                Log.Info("God mode toggled. Now: " + IsGodModeOn);
             }
         }
 
         // *** HOOKS TO DISABLE TAKING DAMAGE ***
         public override void PostUpdate()
         {
-            if (GodMode)
+            if (IsGodModeOn)
                 Player.statLife = Player.statLifeMax2;
         }
 
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
-            if (GodMode)
+            if (IsGodModeOn)
                 return true;
             return false;
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (GodMode)
+            if (IsGodModeOn)
             {
                 // Don't kill the player
                 Player.statLife = Player.statLifeMax2;

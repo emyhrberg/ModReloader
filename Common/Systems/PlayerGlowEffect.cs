@@ -229,7 +229,7 @@ namespace SquidTestingMod.Common.Systems
             // GodModePlayer godModePlayer = Main.LocalPlayer.GetModPlayer<GodModePlayer>();
 
 
-            if (!GodModePlayer.GodMode)
+            if (!GodModePlayer.IsGodModeOn)
             {
                 return;
             }

@@ -115,11 +115,6 @@ Mods: {
 			}
 
 			DisableButtonConfig: {
-				DisableSecondClient: {
-					Tooltip: ""
-					Label: Disable Second Client
-				}
-
 				DisableLog: {
 					Tooltip: ""
 					Label: Disable Log
@@ -181,6 +176,11 @@ Mods: {
 				}
 
 				Tooltip: ""
+
+				DisableUIElements: {
+					Label: Disable U I Elements
+					Tooltip: ""
+				}
 			}
 		}
 	}

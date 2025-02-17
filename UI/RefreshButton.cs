@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.PacketHandlers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;

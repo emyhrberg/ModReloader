@@ -24,6 +24,8 @@ namespace SquidTestingMod.UI
         private UIScrollbar scrollbar;
         public UIBetterTextBox searchBox;
 
+        // X button
+
         public ItemsPanel()
         {
             SetupPanelDimensions();
@@ -43,6 +45,29 @@ namespace SquidTestingMod.UI
             // Create the item panels.
             CreateItemSlots(grid);
             Log.Info($"Grid Children Count: {grid.Children.Count()}");
+
+            // Add the title and image.
+            AddTitleAndImage();
+        }
+
+        private void AddTitleAndImage()
+        {
+            // Create and position the title text ("Item Browser") at the top-left of the panel.
+            UIText title = new("Item Browser", 1.0f)
+            {
+                Left = { Pixels = 10 },
+                Top = { Pixels = 5 }
+            };
+            Append(title);
+
+            ClosePanelButton closePanelButton = new()
+            {
+                HAlign = 1f,
+                Top = { Pixels = 5 },
+                Left = { Pixels = -5 }
+            };
+
+            Append(closePanelButton);
         }
 
         private void FilterItems()
@@ -71,8 +96,6 @@ namespace SquidTestingMod.UI
                     itemSlot.Width.Set(50, 0f);
                     itemSlot.Height.Set(50, 0f);
                     grid.Add(itemSlot);
-
-
                 }
             }
         }
@@ -102,12 +125,12 @@ namespace SquidTestingMod.UI
 
         private static UIBetterTextBox CreateSearchTextBox()
         {
-            return new UIBetterTextBox("")
+            return new UIBetterTextBox("Enter item here...")
             {
                 focused = true,
                 Width = { Percent = 1f, Pixels = -40 },
                 Height = { Pixels = 30 }, // minimum height
-                Top = { Pixels = 0 },
+                Top = { Pixels = 30 },
                 Left = { Pixels = 5 },
                 BackgroundColor = new Color(56, 58, 134), // inventory dark blue
                 BorderColor = Color.Black * 0.8f,
@@ -119,8 +142,9 @@ namespace SquidTestingMod.UI
             return new UIScrollbar()
             {
                 HAlign = 1f,
-                Height = { Percent = 1f },
+                Height = { Percent = 0.8f },
                 Width = { Pixels = 20 },
+                Top = { Pixels = 60 },
             };
         }
 
@@ -128,12 +152,12 @@ namespace SquidTestingMod.UI
         {
             return new UIGrid()
             {
-                Height = { Percent = 1f, Pixels = -45 },
+                Height = { Percent = 0.8f, Pixels = -45 },
                 Width = { Percent = 1f, Pixels = -40 },
                 VAlign = 0.5f,
                 HAlign = 0.5f,
                 ListPadding = 3f, // distance between items
-                Top = { Pixels = 30f },
+                Top = { Pixels = 60f },
                 Left = { Pixels = -8f },
                 OverflowHidden = true,
             };
@@ -141,8 +165,8 @@ namespace SquidTestingMod.UI
 
         private void SetupPanelDimensions()
         {
-            Width.Set(340f, 0f);
-            Height.Set(340f, 0f);
+            Width.Set(370f, 0f);
+            Height.Set(370f, 0f);
             HAlign = 0.5f;
             VAlign = 0.6f;
             BackgroundColor = new Color(63, 82, 151) * 0.8f; // light blue

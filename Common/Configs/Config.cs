@@ -114,10 +114,6 @@ namespace SquidTestingMod.Common.Configs
             [DefaultValue(false)]
             [ReloadRequired]
             public bool DisableLog;
-
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableSecondClient;
         }
 
         public override void OnChanged()

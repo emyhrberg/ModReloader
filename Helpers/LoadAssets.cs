@@ -33,7 +33,7 @@ namespace SquidTestingMod.Helpers
     /// </summary>
     public static class Assets
     {
-        // Preloaded assets
+        // TEXT BUTTONS
         public static Asset<Texture2D> ButtonOn;
         public static Asset<Texture2D> ButtonOff;
         public static Asset<Texture2D> ButtonConfig;
@@ -46,8 +46,14 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonFastOff;
         public static Asset<Texture2D> ButtonLog;
         public static Asset<Texture2D> ButtonSecondClient;
-        public static Asset<Texture2D> ButtonHitbox;
+        public static Asset<Texture2D> ButtonHitboxOn;
+        public static Asset<Texture2D> ButtonHitboxOff;
         public static Asset<Texture2D> ButtonUIDebug;
+        public static Asset<Texture2D> ButtonReloadSingleplayer;
+        public static Asset<Texture2D> ButtonReloadMultiplayer;
+
+        // MORE ASSETS
+        public static Asset<Texture2D> X;
 
         public static void PreloadAllAssets()
         {
@@ -66,8 +72,14 @@ namespace SquidTestingMod.Helpers
             ButtonFastOff = PreloadAsset("ButtonFastOff");
             ButtonLog = PreloadAsset("ButtonLog");
             ButtonSecondClient = PreloadAsset("ButtonSecond");
-            ButtonHitbox = PreloadAsset("ButtonHitboxes");
+            ButtonHitboxOn = PreloadAsset("ButtonHitboxOn");
+            ButtonHitboxOff = PreloadAsset("ButtonHitboxOff");
             ButtonUIDebug = PreloadAsset("ButtonUI");
+            ButtonReloadSingleplayer = PreloadAsset("ButtonReloadSingleplayer");
+            ButtonReloadMultiplayer = PreloadAsset("ButtonReloadMultiplayer");
+
+            // MORE ASSETS
+            X = PreloadAsset("X_32x32");
 
             s.Stop();
             Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
