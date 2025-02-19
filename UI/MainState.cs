@@ -29,7 +29,7 @@ namespace SquidTestingMod.UI
         public FastButton fastButton;
         public LogButton logButton;
         public HitboxButton hitboxButton;
-        public UIDebugButton uiDebugButton;
+        public DebugUIButton uiDebugButton;
         public ReloadSingleplayerButton reloadSingleplayerButton;
         public ReloadMultiplayerButton reloadMultiplayerButton;
 
@@ -52,7 +52,7 @@ namespace SquidTestingMod.UI
             godButton = CreateButton<GodButton>(Assets.ButtonGodOn, "Toggle player god mode");
             fastButton = CreateButton<FastButton>(Assets.ButtonFastOn, "Toggle player fast mode");
             hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitboxOn, "Show player, enemy, and projectile hitboxes");
-            uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, "Show all UIElements from mods");
+            uiDebugButton = CreateButton<DebugUIButton>(Assets.ButtonUIDebug, "Show all UIElements from mods");
             logButton = CreateButton<LogButton>(Assets.ButtonLog, "Open client.log");
             reloadSingleplayerButton = CreateButton<ReloadSingleplayerButton>(Assets.ButtonReloadSingleplayer, "Reload singleplayer");
             reloadMultiplayerButton = CreateButton<ReloadMultiplayerButton>(Assets.ButtonReloadMultiplayer, "Reload multiplayer");

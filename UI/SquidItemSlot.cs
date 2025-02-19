@@ -13,13 +13,13 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     // Instead of inheriting the vanilla behavior we override the drawing and click behavior.
-    public class CustomItemSlot : UIItemSlot
+    public class SquidItemSlot : UIItemSlot
     {
         // We store the item that should be shown in the browser.
         private Item displayItem;
         private int _itemSlotContext;
 
-        public CustomItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
+        public SquidItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
             displayItem = itemArray[itemIndex].Clone();
             _itemSlotContext = itemSlotContext;

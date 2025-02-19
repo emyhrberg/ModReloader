@@ -8,7 +8,8 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class UIDebugButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
+    public class DebugUIButton
+    (Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
         public bool IsUIDebugDrawing = false;
 

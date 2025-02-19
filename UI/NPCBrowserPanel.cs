@@ -1,7 +1,12 @@
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
+using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,132 +15,204 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
+    /// <summary>
+    /// Main function to create the item panel, 
+    /// containing all the items in the game.
+    /// </summary>
     public class NPCBrowserPanel : UIPanel
     {
+        // Colors
+        private Color lighterBlue = new(69, 89, 162);
+        private Color lightBlue = new(63, 82, 151);
+        private Color darkBlue = new(40, 47, 82);
+        private Color darkerBlue = new(22, 25, 55);
+
         // UI Elements
-        private UIGrid grid;
-        private UIScrollbar scrollbar;
-        public UIBetterTextBox searchBox;
+        private UIGrid ItemsGrid;
+        private UIScrollbar Scrollbar;
+        private UIPanel ItemBackgroundPanel;
+        private UIPanel CloseButtonPanel;
+        public UIPanel TitlePanel;
+        public SquidTextBox SearchTextBox;
 
         public NPCBrowserPanel()
         {
-            SetupPanelDimensions();
+            // Set the panel properties
+            Width.Set(370f, 0f);
+            Height.Set(370f, 0f);
+            HAlign = 0.6f;
+            VAlign = 0.6f;
+            BackgroundColor = darkBlue * 0.5f;
 
-            // Create the scrollbar and grid.
-            scrollbar = CreateScrollbar();
-            grid = CreateGrid();
-            grid.SetScrollbar(scrollbar);
-            Append(scrollbar);
-            Append(grid);
+            // Add all content in the panel
+            AddHeaderTextPanel();
+            AddClosePanel();
+            AddSearchTextBox();
+            AddItemsBackgroundPanel();
+            AddScrollbar();
+            AddItemsGrid();
 
-            // Create the search box
-            searchBox = CreateSearchTextBox();
-            searchBox.OnTextChanged += FilterItems;
-            Append(searchBox);
-
-            // Create the item panels.
-            CreateNPCSlots(grid);
+            // Add items to the grid
+            AddItemSlotsToGrid(ItemsGrid);
         }
 
-        private void FilterItems()
+        #region adding content
+
+        private void AddClosePanel()
         {
-            string searchText = searchBox.currentString.ToLower();
-            Log.Info($"Search Text: {searchText}");
-            grid.Clear();
+            CloseButtonPanel = new CloseButtonPanel();
+            Append(CloseButtonPanel);
+        }
 
-            Config c = ModContent.GetInstance<Config>();
-            int count = 0;
-
-            int allNPCs = NPCID.Count;
-
-            for (int i = 1; i < allNPCs; i++)  // NPC IDs generally start at 1
+        private void AddHeaderTextPanel()
+        {
+            int h = 45;
+            TitlePanel = new UIPanel()
             {
-                NPC npc = new NPC();
+                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
+                Height = { Pixels = h },
+                Top = { Pixels = -12 - h / 2 },
+                Left = { Pixels = 0 },
+                BackgroundColor = darkBlue,
+            };
+            Append(TitlePanel);
+
+            // add UIText to TitlePanel
+            UIText text = new(text: "NPC Spawner", textScale: 0.6f, large: true)
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f,
+            };
+            TitlePanel.Append(text);
+        }
+
+        private void AddItemSlotsToGrid(UIGrid grid)
+        {
+            int allItems = NPCID.Count;
+            int count = 0;
+            Config c = ModContent.GetInstance<Config>();
+
+            for (int i = 1; i <= allItems - 1; i++)
+            {
+                NPC npc = new();
                 npc.SetDefaults(i);
 
-                // Use npc.FullName (or another property) to filter
+                // note: you can use BankItem for red color, ChestItem for blue color, etc.
+                // UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
+                SquidNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
+                // itemSlot.Width.Set(19.5f, 0f);
+                // itemSlot.Height.Set(19.5f, 0f);
+                grid.Add(npcSlot);
+
+                count++;
+                if (count >= c.ItemBrowser.MaxItemsToDisplay)
+                    break;
+            }
+        }
+
+        private void AddItemsBackgroundPanel()
+        {
+            ItemBackgroundPanel = new UIPanel()
+            {
+                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
+                Height = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 },
+                HAlign = 0.5f,
+                Top = { Pixels = 60 },
+                Left = { Pixels = -24 },
+                BackgroundColor = darkBlue * 0.8f,
+            };
+            Append(ItemBackgroundPanel);
+        }
+
+        private void AddScrollbar()
+        {
+            Scrollbar = new UIScrollbar()
+            {
+                HAlign = 1f,
+                Height = { Pixels = 275 },
+                Width = { Pixels = 20 },
+                Top = { Pixels = 60 + 5 },
+                Left = { Pixels = -5 },
+            };
+            Scrollbar.OnLeftMouseUp += (evt, element) => SearchTextBox.Focus();
+            Append(Scrollbar);
+        }
+
+        private void AddSearchTextBox()
+        {
+            SearchTextBox = new("")
+            {
+                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
+                Height = { Pixels = 30 },
+                Top = { Pixels = 25 },
+                BackgroundColor = Color.White,
+                BorderColor = Color.Black * 1f, // TODO 1f or 0.8 for the search box?
+            };
+            SearchTextBox.OnTextChanged += FilterItems;
+            Append(SearchTextBox);
+        }
+
+        private void AddItemsGrid()
+        {
+            ItemsGrid = new UIGrid()
+            {
+                // MaxHeight = { Pixels = 250 + 5 * 5 + 12 * 2 }, // 250 pixels + 5 pixels padding + 12 pixels padding
+                Height = { Percent = 0f, Pixels = 250 + 5 * 5 },
+                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
+                HAlign = 0.5f,
+                ListPadding = 5f, // distance between items
+                Top = { Pixels = 0f }, // (12 since cornerBox is 12 pixels)
+                Left = { Pixels = 0f }, // (12 since cornerBox is 12 pixels)
+                OverflowHidden = true, // hide items outside the grid
+            };
+            ItemsGrid.SetScrollbar(Scrollbar);
+            ItemBackgroundPanel.Append(ItemsGrid);
+        }
+        #endregion
+
+        #region filteritems
+        private void FilterItems()
+        {
+            string searchText = SearchTextBox.currentString.ToLower();
+            Log.Info($"Search Text: {searchText}");
+            Config c = ModContent.GetInstance<Config>();
+
+            ItemsGrid.Clear();
+
+            int allItems = NPCID.Count;
+            int count = 0;
+
+            Stopwatch s = Stopwatch.StartNew();
+            for (int i = 1; i <= allItems - 1; i++)
+            {
+                NPC npc = new();
+                npc.SetDefaults(i);
+
                 if (npc.FullName.ToLower().Contains(searchText))
                 {
                     count++;
-                    if (count > c.ItemBrowser.MaxItemsToDisplay)
+                    if (count >= c.ItemBrowser.MaxItemsToDisplay)
                         break;
 
-                    NPCSlot npcSlot = new(npc, Terraria.UI.ItemSlot.Context.ShopItem);
-                    npcSlot.Width.Set(50, 0f);
-                    npcSlot.Height.Set(50, 0f);
-                    grid.Add(npcSlot);
-
-
+                    SquidNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
+                    ItemsGrid.Add(npcSlot);
                 }
             }
-            Log.Info($"Filtered {count} NPCs");
+            s.Stop();
+            Log.Info($"Filtering {count} items took {s.ElapsedMilliseconds} ms");
         }
+        #endregion
 
-
-        private void CreateNPCSlots(UIGrid grid)
+        #region containspoint
+        public override bool ContainsPoint(Vector2 point)
         {
-            int allNPCs = NPCID.Count;
+            // if it contains the TitlePanel, also return true
+            if (TitlePanel.ContainsPoint(point))
+                return true;
 
-            for (int i = 1; i < allNPCs; i++)
-            {
-                NPC npc = new NPC();
-                npc.SetDefaults(i);
-
-                NPCSlot npcSlot = new(npc, Terraria.UI.ItemSlot.Context.ShopItem);
-                npcSlot.Width.Set(50, 0f);
-                npcSlot.Height.Set(50, 0f);
-                grid.Add(npcSlot);
-            }
+            return base.ContainsPoint(point);
         }
-
-
-        private static UIBetterTextBox CreateSearchTextBox()
-        {
-            return new UIBetterTextBox("")
-            {
-                focused = true,
-                Width = { Percent = 1f, Pixels = -40 },
-                Height = { Pixels = 30 }, // minimum height
-                Top = { Pixels = 0 },
-                Left = { Pixels = 5 },
-                BackgroundColor = new Color(56, 58, 134), // inventory dark blue
-                BorderColor = Color.Black * 0.8f,
-            };
-        }
-
-        private static UIScrollbar CreateScrollbar()
-        {
-            return new UIScrollbar()
-            {
-                HAlign = 1f,
-                Height = { Percent = 1f },
-                Width = { Pixels = 20 },
-            };
-        }
-
-        private static UIGrid CreateGrid()
-        {
-            return new UIGrid()
-            {
-                Height = { Percent = 1f, Pixels = -45 },
-                Width = { Percent = 1f, Pixels = -40 },
-                VAlign = 0.5f,
-                HAlign = 0.5f,
-                ListPadding = 3f, // distance between items
-                Top = { Pixels = 30f },
-                Left = { Pixels = -8f },
-                OverflowHidden = true,
-            };
-        }
-
-        private void SetupPanelDimensions()
-        {
-            Width.Set(340f, 0f);
-            Height.Set(340f, 0f);
-            HAlign = 0.5f;
-            VAlign = 0.6f;
-            BackgroundColor = new Color(63, 82, 151) * 0.8f; // light blue
-        }
+        #endregion
 
         #region helpers
         private static void LogInnerOuterDimensions(UIElement element)
@@ -156,6 +233,10 @@ namespace SquidTestingMod.UI
 
         public override void Update(GameTime gameTime)
         {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys?.mainState?.npcButton.isNPCPanelVisible == false)
+                return;
+
             base.Update(gameTime);
 
             // Check if we moved the mouse more than the threshold
@@ -196,7 +277,7 @@ namespace SquidTestingMod.UI
         public override void LeftMouseDown(UIMouseEvent evt)
         {
             // prevent dragging if mouse is over scrollbar
-            if (scrollbar.ContainsPoint(evt.MousePosition))
+            if (Scrollbar != null && Scrollbar.ContainsPoint(evt.MousePosition))
                 return;
 
             mouseDownPos = evt.MousePosition; // store mouse down location

@@ -17,6 +17,9 @@ namespace SquidTestingMod.UI
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            // force open inventory
+            Main.playerInventory = true;
+
             ToggleNPCPanel();
         }
 
@@ -46,7 +49,7 @@ namespace SquidTestingMod.UI
                 {
                     Log.Info("Appending npcPanel to parent state.");
                     state.Append(npcPanel);
-                    npcPanel.searchBox.Focus();
+                    npcPanel.SearchTextBox.Focus();
                 }
             }
             else

@@ -16,8 +16,8 @@ Gameplay & World Control:
 - God Mode (Disable enemy damage, toggle with shortcut)
 - Fast Mode (Infinite placement, mining, speed, super fast hover speed, etc.)
 - Teleport (Right-Click to teleport anywhere)
-- Item Browser (Spawn all items)
-- NPC Browser (Spawn bosses, enemies, and town NPCs)
+- Item Spawner (Spawn all items)
+- NPC Spawner (Spawn bosses, enemies, and town NPCs)
 - Spawn Boss On Top (Spawns bosses closer instead of far away)
 
 Debugging & UI Tools:

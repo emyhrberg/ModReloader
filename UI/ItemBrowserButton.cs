@@ -19,6 +19,9 @@ namespace SquidTestingMod.UI
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            // force open inventory
+            Main.playerInventory = true;
+
             ToggleItemsPanel();
         }
 

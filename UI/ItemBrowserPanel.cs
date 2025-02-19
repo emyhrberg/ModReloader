@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
@@ -31,16 +32,16 @@ namespace SquidTestingMod.UI
         private UIPanel ItemBackgroundPanel;
         private UIPanel CloseButtonPanel;
         public UIPanel TitlePanel;
-        public UIBetterTextBox SearchTextBox;
+        public SquidTextBox SearchTextBox;
 
         public ItemBrowserPanel()
         {
             // Set the panel properties
             Width.Set(370f, 0f);
             Height.Set(370f, 0f);
-            HAlign = 0.5f;
+            HAlign = 0.2f;
             VAlign = 0.6f;
-            BackgroundColor = lighterBlue * 0.6f;
+            BackgroundColor = darkBlue * 0.5f;
 
             // Add all content in the panel
             AddHeaderTextPanel();
@@ -76,7 +77,7 @@ namespace SquidTestingMod.UI
             Append(TitlePanel);
 
             // add UIText to TitlePanel
-            UIText text = new(text: "Item Browser", textScale: 1.6f, large: false)
+            UIText text = new(text: "Item Spawner", textScale: 0.6f, large: true)
             {
                 HAlign = 0.5f,
                 VAlign = 0.5f,
@@ -97,7 +98,7 @@ namespace SquidTestingMod.UI
 
                 // note: you can use BankItem for red color, ChestItem for blue color, etc.
                 // UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
-                CustomItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
+                SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                 // itemSlot.Width.Set(19.5f, 0f);
                 // itemSlot.Height.Set(19.5f, 0f);
                 grid.Add(itemSlot);
@@ -117,7 +118,7 @@ namespace SquidTestingMod.UI
                 HAlign = 0.5f,
                 Top = { Pixels = 60 },
                 Left = { Pixels = -24 },
-                BackgroundColor = darkBlue,
+                BackgroundColor = darkBlue * 0.8f,
             };
             Append(ItemBackgroundPanel);
         }
@@ -177,16 +178,27 @@ namespace SquidTestingMod.UI
 
             ItemsGrid.Clear();
 
-            // Filter cached items instead of rebuilding them each time.
-            var filteredItems = ItemCache.AllItems
-                .Where(item => item.Name.ToLower().Contains(searchText))
-                .Take(c.ItemBrowser.MaxItemsToDisplay);
+            int allItems = TextureAssets.Item.Length - 1;
+            int count = 0;
 
-            foreach (Item item in filteredItems)
+            Stopwatch s = Stopwatch.StartNew();
+            for (int i = 1; i <= allItems; i++)
             {
-                CustomItemSlot itemSlot = new(new Item[] { item }, 0, Terraria.UI.ItemSlot.Context.ShopItem);
-                ItemsGrid.Add(itemSlot);
+                Item item = new();
+                item.SetDefaults(i);
+
+                if (item.Name.ToLower().Contains(searchText))
+                {
+                    count++;
+                    if (count >= c.ItemBrowser.MaxItemsToDisplay)
+                        break;
+
+                    SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ShopItem);
+                    ItemsGrid.Add(itemSlot);
+                }
             }
+            s.Stop();
+            Log.Info($"Filtering {count} items took {s.ElapsedMilliseconds} ms");
         }
         #endregion
 
