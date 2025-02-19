@@ -9,6 +9,5 @@ namespace SquidTestingMod
     [Autoload(Side = ModSide.Client)]
     public class SquidTestingMod : Mod
     {
-
     }
 }

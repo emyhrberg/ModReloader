@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Appender;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
@@ -16,6 +19,25 @@ namespace SquidTestingMod.UI
 {
     public class RefreshButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
+        private void ClearLogFile()
+        {
+            // Get all file appenders from log4net's repository
+            var appenders = LogManager.GetRepository().GetAppenders().OfType<FileAppender>();
+
+            foreach (var appender in appenders)
+            {
+                // Close the file to release the lock.
+                var closeFileMethod = typeof(FileAppender).GetMethod("CloseFile", BindingFlags.NonPublic | BindingFlags.Instance);
+                closeFileMethod?.Invoke(appender, null);
+
+                // Overwrite the file with an empty string.
+                File.WriteAllText(appender.File, string.Empty);
+
+                // Reactivate the appender so that logging resumes.
+                appender.ActivateOptions();
+            }
+        }
+
         public override async void LeftClick(UIMouseEvent evt)
         {
             Log.Info("Left Clicked Refresh Button.");
@@ -25,27 +47,7 @@ namespace SquidTestingMod.UI
             if (c.Reload.ClearClientLogOnReload)
             {
                 Log.Info("Clearing client logs....");
-
-                // Access the file at C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs\client.log
-                string folderPath = "C:/Program Files (x86)/Steam/steamapps/common/tModLoader/tModLoader-Logs/";
-
-                // find all filepaths for client2, client3, ..., client10
-                string filePath = folderPath + "client.log";
-                // option 1
-                try
-                {
-                    // Open the file with Create mode (which overwrites) and allow read/write sharing.
-                    // When opening the log file for writing, allow other processes to read/write it.
-                    var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
-                    Log.Info($"Clearing {filePath}...");
-                    fs.SetLength(0);
-                    Log.Info($"Successfully cleared {filePath}.");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error($"Error clearing {filePath}: {ex.Message}");
-                    // If needed, you can add alternative handling here.
-                }
+                ClearLogFile();
             }
 
             // 2) Exit world (maybe no longer needed if server is killed but idk)
