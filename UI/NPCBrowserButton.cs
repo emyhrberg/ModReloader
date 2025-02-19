@@ -10,14 +10,10 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class NPCsButton : BaseButton
+    public class NPCBrowserButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public NPCPanel npcPanel;
+        public NPCBrowserPanel npcPanel;
         public bool isNPCPanelVisible = false;
-
-        public NPCsButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
 
         public override void LeftClick(UIMouseEvent evt)
         {
@@ -41,7 +37,7 @@ namespace SquidTestingMod.UI
                 // Create the panel if it doesn't already exist.
                 if (npcPanel == null)
                 {
-                    npcPanel = new NPCPanel();
+                    npcPanel = new NPCBrowserPanel();
                     Log.Info("Created new npcPanel.");
                 }
 

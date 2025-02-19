@@ -13,15 +13,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ReloadMultiplayerButton : BaseButton
+    public class ReloadMultiplayerButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public ReloadMultiplayerButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
-
         public override void LeftClick(UIMouseEvent evt)
         {
+            // Main.menuMode 
+            // = Terraria.ModLoader.UI.Interface.modsMenuID;
             WorldGen.JustQuit();
+            Main.menuMode = 10007;
         }
     }
 }

@@ -174,11 +174,13 @@ namespace SquidTestingMod.UI
             // draw text
             if (currentString.Length == 0 && !focused)
             {
-                color *= 0.5f;
+                // Draw hintText
+                color = Color.DimGray;
                 spriteBatch.DrawString(font, hintText, drawPos, color);
             }
             else
             {
+                // Draw currentString
                 spriteBatch.DrawString(font, displayString, drawPos, color);
             }
 

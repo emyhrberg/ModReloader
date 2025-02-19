@@ -6,12 +6,8 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class LogButton : BaseButton
+    public class LogButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public LogButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
-
         public override void LeftClick(UIMouseEvent evt)
         {
             try

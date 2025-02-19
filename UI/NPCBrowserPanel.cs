@@ -10,14 +10,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class NPCPanel : UIPanel
+    public class NPCBrowserPanel : UIPanel
     {
         // UI Elements
         private UIGrid grid;
         private UIScrollbar scrollbar;
         public UIBetterTextBox searchBox;
 
-        public NPCPanel()
+        public NPCBrowserPanel()
         {
             SetupPanelDimensions();
 

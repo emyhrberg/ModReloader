@@ -32,33 +32,29 @@ namespace SquidTestingMod.Common.Configs
 
         public class ReloadConfig
         {
+            [DefaultValue("SquidTestingMod")]
+            public string ModToReload;
+
+            [DefaultValue(false)]
+            public bool SaveWorldOnReload;
+
+            [DefaultValue(false)]
+            public bool ClearClientLogOnReload = false;
+
             [OptionStrings(["Disabled", "Singleplayer", "Multiplayer"])]
             [DefaultValue("Disabled")]
             [DrawTicks]
             public string AutoloadWorld = "Disabled";
 
-            [DefaultValue(true)]
-            public bool SaveAndQuitWorldWithoutSaving;
-
-            [DefaultValue(true)]
-            public bool InvokeBuildAndReload;
-
-            [DefaultValue("SquidTestingMod")]
-            public string ModToReload;
-
             [DefaultValue(100)]
             [Range(100, 5000)]
+            [Increment(100)]
             public int WaitingTimeBeforeNavigatingToModSources;
 
             [DefaultValue(100)]
+            [Increment(100)]
             [Range(100, 5000)]
             public int WaitingTimeBeforeBuildAndReload;
-
-            [DefaultValue(false)]
-            public bool AttemptToKillServer;
-
-            [DefaultValue("MyWorld")]
-            public string WorldToLoad;
         }
 
         public class GameplayConfig
@@ -74,6 +70,7 @@ namespace SquidTestingMod.Common.Configs
         {
             [DefaultValue(100)]
             [Range(0, 10000)]
+            [Increment(500)]
             public int MaxItemsToDisplay = 1000;
         }
 

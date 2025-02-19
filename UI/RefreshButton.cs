@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,16 +14,39 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class RefreshButton : BaseButton
+    public class RefreshButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public RefreshButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
-
         public override async void LeftClick(UIMouseEvent evt)
         {
-
+            Log.Info("Left Clicked Refresh Button.");
             Config c = ModContent.GetInstance<Config>();
+
+            // 1) Clear client.log if needed
+            if (c.Reload.ClearClientLogOnReload)
+            {
+                Log.Info("Clearing client logs....");
+
+                // Access the file at C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs\client.log
+                string folderPath = "C:/Program Files (x86)/Steam/steamapps/common/tModLoader/tModLoader-Logs/";
+
+                // find all filepaths for client2, client3, ..., client10
+                string filePath = folderPath + "client.log";
+                // option 1
+                try
+                {
+                    // Open the file with Create mode (which overwrites) and allow read/write sharing.
+                    // When opening the log file for writing, allow other processes to read/write it.
+                    var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                    Log.Info($"Clearing {filePath}...");
+                    fs.SetLength(0);
+                    Log.Info($"Successfully cleared {filePath}.");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Error clearing {filePath}: {ex.Message}");
+                    // If needed, you can add alternative handling here.
+                }
+            }
 
             // 2) Exit world (maybe no longer needed if server is killed but idk)
             ExitWorld(c);
@@ -33,11 +57,8 @@ namespace SquidTestingMod.UI
             object modSourcesInstance = NavigateToDevelopMods();
 
             // 4) Build and reload
-            if (c.Reload.InvokeBuildAndReload)
-            {
-                await Task.Delay(c.Reload.WaitingTimeBeforeBuildAndReload);
-                BuildReload(modSourcesInstance);
-            }
+            await Task.Delay(c.Reload.WaitingTimeBeforeBuildAndReload);
+            BuildReload(modSourcesInstance);
 
             // 5) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
 
@@ -45,16 +66,17 @@ namespace SquidTestingMod.UI
 
         private async static void ExitWorld(Config c)
         {
-            if (c.Reload.SaveAndQuitWorldWithoutSaving)
-            {
-                Log.Warn("Just quitting...");
-                WorldGen.JustQuit();
-            }
-            else
+            if (c.Reload.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
                 await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
+
+            }
+            else
+            {
+                Log.Warn("Just quitting...");
+                WorldGen.JustQuit();
             }
         }
 
@@ -114,7 +136,7 @@ namespace SquidTestingMod.UI
 
             if (modSourceItem == null)
             {
-                Log.Warn("Second UIModSourceItem not found.");
+                Log.Warn("UIModSourceItem not found.");
                 return;
             }
 

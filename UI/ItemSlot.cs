@@ -13,50 +13,36 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     // Instead of inheriting the vanilla behavior we override the drawing and click behavior.
-    public class ItemSlot : UIItemSlot
+    public class CustomItemSlot : UIItemSlot
     {
         // We store the item that should be shown in the browser.
-        private int itemSlotContext;
         private Item displayItem;
+        private int _itemSlotContext;
 
-        public ItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
+        public CustomItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
-            this.itemSlotContext = itemSlotContext;
             displayItem = itemArray[itemIndex].Clone();
+            _itemSlotContext = itemSlotContext;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // Draw inventory background
             CalculatedStyle dimensions = GetInnerDimensions();
-            float bgOpacity = IsMouseHovering ? 0.9f : 0.8f;
-            Texture2D inventoryBack = TextureAssets.InventoryBack.Value;
-
-            // Draw background
+            float bgOpacity = IsMouseHovering ? 0.9f : 0.6f; // 0.9 when hovering, 0.6 when not
+            Texture2D inventoryBack = TextureAssets.InventoryBack9.Value;
             spriteBatch.Draw(inventoryBack, dimensions.ToRectangle(), Color.White * bgOpacity);
 
-            if (!displayItem.IsAir)
-            {
-                // Load the item’s texture.
-                Main.instance.LoadItem(displayItem.type);
-                Asset<Texture2D> textureAsset = TextureAssets.Item[displayItem.type];
-                Texture2D itemTexture = textureAsset.Value;
-                int desiredSize = 25; // target size in pixels
-
-                float scale = desiredSize / (float)Math.Max(itemTexture.Width, itemTexture.Height);
-                float x = (dimensions.Width - itemTexture.Width * scale) / 2f;
-                float y = (dimensions.Height - itemTexture.Height * scale) / 2f;
-                Vector2 drawPos = dimensions.Position() + new Vector2(x, y);
-
-                spriteBatch.Draw(itemTexture, drawPos, null, Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
-            }
-
-            // Draw a black border (1 pixel thick) around the slot.
-            // Rectangle r = dimensions.ToRectangle();
-            // int thickness = 1;
-            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, r.Width, thickness), Color.Black); // Top border
-            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Bottom - thickness, r.Width, thickness), Color.Black); // Bottom border
-            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.X, r.Y, thickness, r.Height), Color.Black); // Left border
-            // spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(r.Right - thickness, r.Y, thickness, r.Height), Color.Black); // Right border
+            // Draw the item
+            ItemSlot.DrawItemIcon(
+                item: displayItem,
+                context: _itemSlotContext,
+                spriteBatch: spriteBatch,
+                screenPositionForItemCenter: GetDimensions().Center(),
+                scale: 1f,
+                sizeLimit: 24f,
+                environmentColor: Color.White
+                );
 
             // draw the hovering tooltip for each item slot
             if (IsMouseHovering)
@@ -69,7 +55,7 @@ namespace SquidTestingMod.UI
         // When the user left-clicks, we want to give them a full-stack copy without removing the item from our browser.
         public override void LeftClick(UIMouseEvent evt)
         {
-            // check if dragging
+            // if dragging, do not perform any action
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (sys.mainState.itemButton.itemsPanel.IsDragging)
             {
@@ -77,35 +63,55 @@ namespace SquidTestingMod.UI
                 return;
             }
 
-            if (Main.mouseItem.IsAir)
-            {
-                // Clone our display item and give the clone the max stack.
-                Main.mouseItem = displayItem.Clone();
-                Main.mouseItem.stack = displayItem.maxStack;
-            }
-        }
+            // force player inventory to open
+            Main.playerInventory = true;
 
-        // When the user right-clicks, we want to give them an incrementing stack of the item.
-
-        public override void RightClick(UIMouseEvent evt)
-        {
-            if (Main.mouseItem.IsAir)
-            {
-                // Clone our display item and give the clone a stack of 1.
-                Main.mouseItem = displayItem.Clone();
-                if (Main.mouseItem.stack < Main.mouseItem.maxStack)
-                    Main.mouseItem.stack++;
-            }
+            // Clone our display item and give the clone the max stack.
+            Main.mouseItem = displayItem.Clone();
+            Main.mouseItem.stack = displayItem.maxStack;
         }
 
         public override void RightMouseDown(UIMouseEvent evt)
         {
-            base.RightMouseDown(evt);
+            // if dragging, do not perform any action
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys.mainState.itemButton.itemsPanel.IsDragging)
+            {
+                Log.Info("Dragging");
+                return;
+            }
+
+            // force player inventory to open
+            Main.playerInventory = true;
+
+            // Clone our display item and give the clone a stack of 1.
+            Main.mouseItem = displayItem.Clone();
+            Main.mouseItem.stack = 1;
         }
 
         public override void Update(GameTime gameTime)
         {
             // base.Update(gameTime);
+
+            // Check if the mouse is over this UI element and the right mouse button is down.
+            if (IsMouseHovering && Main.mouseRight)
+            {
+                // Execute your "holding" logic here.
+                // You might want to add a timer so it doesn't execute every frame.
+                Log.Info("Right mouse is being held down on " + displayItem.Name);
+                // For example, increment the item stack gradually:
+                if (Main.mouseItem.IsAir)
+                {
+                    Main.mouseItem = displayItem.Clone();
+                    Main.mouseItem.stack = 1;
+                }
+                else if (Main.mouseItem.type == displayItem.type && Main.mouseItem.stack < displayItem.maxStack)
+                {
+                    Main.superFastStack = 1;
+                    Main.mouseItem.stack++;
+                }
+            }
         }
+
     }
 }

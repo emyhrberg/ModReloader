@@ -10,28 +10,33 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ItemsButton : BaseButton
+    public class ItemBrowserButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public ItemsPanel itemsPanel;
+        public ItemBrowserPanel itemsPanel;
         public bool isItemsPanelVisible = false;
 
-        public ItemsButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
+        private bool _needsToggle = false;
 
         public override void LeftClick(UIMouseEvent evt)
         {
             ToggleItemsPanel();
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            // If we press escape, close the ItemsPanel.
+            if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                _needsToggle = true;
+            }
+
+            base.Update(gameTime);
+        }
+
         public void ToggleItemsPanel()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (Parent is not UIState state)
-            {
-                Log.Warn("ItemsButton has no parent UIState!");
-                return;
-            }
+            MainState mainState = sys?.mainState;
 
             // Toggle the ItemsPanel flag.
             isItemsPanelVisible = !isItemsPanelVisible;
@@ -41,25 +46,25 @@ namespace SquidTestingMod.UI
                 // Create the panel if it doesn't already exist.
                 if (itemsPanel == null)
                 {
-                    itemsPanel = new ItemsPanel();
+                    itemsPanel = new ItemBrowserPanel();
                     Log.Info("Created new ItemsPanel.");
                 }
 
                 // Only append if not already present.
-                if (!state.Children.Contains(itemsPanel))
+                if (!mainState.Children.Contains(itemsPanel))
                 {
                     Log.Info("Appending ItemsPanel to parent state.");
-                    state.Append(itemsPanel);
-                    itemsPanel.searchBox.Focus();
+                    mainState.Append(itemsPanel);
+                    itemsPanel.SearchTextBox?.Focus();
                 }
             }
             else
             {
                 Log.Info("Removing ItemsPanel from parent state.");
-                if (state.Children.Contains(itemsPanel))
-                    state.RemoveChild(itemsPanel);
+                if (mainState.Children.Contains(itemsPanel))
+                    mainState.RemoveChild(itemsPanel);
             }
-            state.Recalculate();
+            mainState.Recalculate();
         }
     }
 }

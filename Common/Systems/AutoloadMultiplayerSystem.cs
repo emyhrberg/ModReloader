@@ -62,7 +62,8 @@ namespace SquidTestingMod.Common.Systems
             {
                 // get filenames
                 Config c = ModContent.GetInstance<Config>();
-                string worldName = c.Reload.WorldToLoad;
+                // string worldName = c.Reload.WorldToLoad;
+                string worldName = "MyWorld";
 
                 Main.LoadWorlds();
                 var choosenWorlds = Main.WorldList.ToList().Where(w => w.Name == worldName).ToList();
@@ -107,7 +108,8 @@ namespace SquidTestingMod.Common.Systems
             PlayerFileData firstFavorite = favoritePlayersNonJourney[0];
 
             // get world with name "MyWorld" since that is the name of the server specified in serverconfig.txt
-            string WORLD_NAME_IN_CONFIG = c.Reload.WorldToLoad;
+            // string WORLD_NAME_IN_CONFIG = c.Reload.WorldToLoad;
+            string WORLD_NAME_IN_CONFIG = "MyWorld";
 
             WorldFileData w = Main.WorldList.FirstOrDefault(world => world.Name == WORLD_NAME_IN_CONFIG);
             if (w == null || string.IsNullOrEmpty(w.Path))

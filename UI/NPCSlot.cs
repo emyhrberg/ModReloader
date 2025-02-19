@@ -75,16 +75,11 @@ namespace SquidTestingMod.UI
         }
     }
 
-    public class MyCustomNPCSource : IEntitySource
+    public class MyCustomNPCSource(string customData) : IEntitySource
     {
-        public string RandomStringForNoReason { get; private set; }
+        public string RandomStringForNoReason { get; private set; } = customData;
 
         public string Context => throw new NotImplementedException();
-
-        public MyCustomNPCSource(string customData)
-        {
-            RandomStringForNoReason = customData;
-        }
     }
 
 }

@@ -19,6 +19,7 @@ namespace SquidTestingMod.Helpers
         {
             // Preload assets early (before PostSetupContent, etc.)
             Assets.PreloadAllAssets();
+            ItemCache.Initialize();
         }
 
         public override void PostSetupContent()
@@ -33,7 +34,7 @@ namespace SquidTestingMod.Helpers
     /// </summary>
     public static class Assets
     {
-        // TEXT BUTTONS
+        // ALL ASSETS
         public static Asset<Texture2D> ButtonOn;
         public static Asset<Texture2D> ButtonOff;
         public static Asset<Texture2D> ButtonConfig;
@@ -51,15 +52,13 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonUIDebug;
         public static Asset<Texture2D> ButtonReloadSingleplayer;
         public static Asset<Texture2D> ButtonReloadMultiplayer;
-
-        // MORE ASSETS
         public static Asset<Texture2D> X;
 
         public static void PreloadAllAssets()
         {
             Stopwatch s = Stopwatch.StartNew();
 
-            // TEXT BUTTONS
+            // ALL ASSETS
             ButtonOn = PreloadAsset("ButtonOn");
             ButtonOff = PreloadAsset("ButtonOff");
             ButtonConfig = PreloadAsset("ButtonConfig");
@@ -77,13 +76,12 @@ namespace SquidTestingMod.Helpers
             ButtonUIDebug = PreloadAsset("ButtonUI");
             ButtonReloadSingleplayer = PreloadAsset("ButtonReloadSingleplayer");
             ButtonReloadMultiplayer = PreloadAsset("ButtonReloadMultiplayer");
-
-            // MORE ASSETS
             X = PreloadAsset("X_32x32");
 
             s.Stop();
             Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
         }
+
 
         /// <summary>
         /// Preloads an asset with ImmediateLoad mode in the "SquidTestingMod/Assets" directory.

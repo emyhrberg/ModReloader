@@ -20,11 +20,11 @@ namespace SquidTestingMod.UI
         public float ButtonSize = 70f;
 
         // Buttons
-        public ItemsButton itemButton;
+        public ItemBrowserButton itemButton;
         public RefreshButton refreshButton;
         public ConfigButton configButton;
         public ToggleButton toggleButton;
-        public NPCsButton npcButton;
+        public NPCBrowserButton npcButton;
         public GodButton godButton;
         public FastButton fastButton;
         public LogButton logButton;
@@ -47,8 +47,8 @@ namespace SquidTestingMod.UI
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons");
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, "Open config");
             refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, "Reload the selected mod");
-            itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, "Open item browser");
-            npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, "Open NPC browser");
+            itemButton = CreateButton<ItemBrowserButton>(Assets.ButtonItems, "Open item browser");
+            npcButton = CreateButton<NPCBrowserButton>(Assets.ButtonNPC, "Open NPC browser\nContains town NPCs, enemies, and bosses");
             godButton = CreateButton<GodButton>(Assets.ButtonGodOn, "Toggle player god mode");
             fastButton = CreateButton<FastButton>(Assets.ButtonFastOn, "Toggle player fast mode");
             hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitboxOn, "Show player, enemy, and projectile hitboxes");
@@ -107,7 +107,7 @@ namespace SquidTestingMod.UI
             T button = (T)Activator.CreateInstance(typeof(T), buttonImgText, hoverText);
 
             // setup center position
-            Log.Info($"Screen width: {Main.screenWidth}, Button count: 10, Button size: {ButtonSize}");
+            // Log.Info($"Screen width: {Main.screenWidth}, Button count: 10, Button size: {ButtonSize}");
             // 1600 - 70 * 10 = 900 (center)
             // 900 / 2 = 450
             // convert to percent 450 / 1600 = 0.28125

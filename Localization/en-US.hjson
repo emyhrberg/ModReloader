@@ -55,11 +55,6 @@ Mods: {
 					Tooltip: Enter a world as soon as mods have been reloaded, singleplayer works best
 				}
 
-				InvokeBuildAndReload: {
-					Label: Invoke Build And Reload
-					Tooltip: Will manually click Build and Reload when at the Mod Sources menu
-				}
-
 				ModToReload: {
 					Label: Mod To Reload
 					Tooltip: Here, you type in the mod to reload, must be in your Mod Sources menu
@@ -88,6 +83,21 @@ Mods: {
 				AttemptToKillServer: {
 					Label: Attempt To Kill Server
 					Tooltip: ""
+				}
+
+				SaveWorldWhenReloading: {
+					Label: Save World When Reloading
+					Tooltip: ""
+				}
+
+				ClearClientLogOnReload: {
+					Tooltip: ""
+					Label: Clear Client Log On Reload
+				}
+
+				SaveWorldOnReload: {
+					Tooltip: ""
+					Label: Save World On Reload
 				}
 			}
 
@@ -178,7 +188,7 @@ Mods: {
 				Tooltip: ""
 
 				DisableUIElements: {
-					Label: Disable U I Elements
+					Label: Disable UI Elements
 					Tooltip: ""
 				}
 			}

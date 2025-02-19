@@ -13,15 +13,12 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ReloadSingleplayerButton : BaseButton
+    public class ReloadSingleplayerButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public ReloadSingleplayerButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
-
         public override void LeftClick(UIMouseEvent evt)
         {
             WorldGen.JustQuit();
+            Main.menuMode = 10000;
         }
     }
 }

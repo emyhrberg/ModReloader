@@ -14,6 +14,8 @@ namespace SquidTestingMod.Common.Systems
         private UserInterface ui;
         private DrawUIState drawUIState;
 
+        private List<UIElement> elementsLogged = new();
+
         public override void Load()
         {
             ui = new UserInterface();
@@ -72,6 +74,15 @@ namespace SquidTestingMod.Common.Systems
 
             // OK, all checks passed, now draw the hitbox for the UI element
             drawUIState.DrawHitbox(self, spriteBatch);
+
+            // Also, log the element like this: Name: "UIElement", Inner: 100x100, Outer: 100x100
+            // But only log it once, so track which elements we already logged
+            if (elementsLogged.Contains(self))
+                return;
+
+            elementsLogged.Add(self);
+
+            Main.NewText($"Name: \"{self.GetType().Name}\", Inner: {self.GetInnerDimensions().Width}x{self.GetInnerDimensions().Height}, Outer: {self.GetOuterDimensions().Width}x{self.GetOuterDimensions().Height}");
         }
     }
 }

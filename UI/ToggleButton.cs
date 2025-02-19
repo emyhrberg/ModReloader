@@ -9,13 +9,8 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ToggleButton : BaseButton
+    public class ToggleButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        // Constructor
-        public ToggleButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
-
         public override void UpdateTexture()
         {
             // First update the base (which sets ButtonScale and the default image asset).
