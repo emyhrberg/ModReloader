@@ -11,8 +11,13 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class GodButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
+    public class GodButton : BaseButton
     {
+        public GodButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        {
+            UpdateTexture();
+        }
+
         public override void LeftClick(UIMouseEvent evt)
         {
             GodModePlayer.IsGodModeOn = !GodModePlayer.IsGodModeOn;

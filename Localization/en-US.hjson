@@ -1,158 +1,69 @@
 Mods: {
 	SquidTestingMod: {
-		"Keybinds.Toggle God Mode.DisplayName": Toggle God Mode
-
-		Items: {
-			BorderShaderDye: {
-				DisplayName: Border Shader Dye
-				Tooltip: ""
-			}
-		}
-
 		Configs: {
 			Config: {
-				DisplayName: Config
-
 				Headers: {
-					Reload: Reload
-					General: General
-					Gameplay: Gameplay
-					ItemBrowser: Item Browser
 					DisableButtons: Disable Buttons
+					ItemNPCBrowser: Item/NPC Browser
+					Gameplay: Gameplay
+					Reload: Reload
 				}
 
-				Reload: {
-					Label: Reload
+				MaxItemsToDisplay: {
 					Tooltip: ""
+					Label: Max Items To Display
 				}
 
-				General: {
-					Label: General
+				StartInGodMode: {
 					Tooltip: ""
-				}
-
-				Gameplay: {
-					Label: Gameplay
-					Tooltip: ""
-				}
-
-				ItemBrowser: {
-					Label: Item Browser
-					Tooltip: ""
-				}
-
-				DisableButton: {
-					Tooltip: ""
-					Label: Disable Button
-				}
-			}
-
-			ReloadConfig: {
-				Tooltip: ""
-
-				AutoloadWorld: {
-					Label: Autoload World
-					Tooltip: Enter a world as soon as mods have been reloaded, singleplayer works best
-				}
-
-				ModToReload: {
-					Label: Mod To Reload
-					Tooltip: Here, you type in the mod to reload, must be in your Mod Sources menu
-				}
-
-				WaitingTimeBeforeNavigatingToModSources: {
-					Label: Waiting Time Before Navigating To Mod Sources
-					Tooltip: After clicking reload, the time spent waiting before changing menu modes (ms)
+					Label: Start In God Mode
 				}
 
 				WaitingTimeBeforeBuildAndReload: {
+					Tooltip: ""
 					Label: Waiting Time Before Build And Reload
-					Tooltip: When at Mod Sources menu, the time spent waiting before invoking build and reload (ms)
 				}
 
-				SaveAndQuitWorldWithoutSaving: {
-					Label: Save And Quit World Without Saving
-					Tooltip: You can reload faster by turning this on, but player and world data will not saved
-				}
-
-				WorldToLoad: {
-					Label: World To Load
+				WaitingTimeBeforeNavigatingToModSources: {
 					Tooltip: ""
+					Label: Waiting Time Before Navigating To Mod Sources
 				}
 
-				AttemptToKillServer: {
-					Label: Attempt To Kill Server
+				AutoloadWorld: {
 					Tooltip: ""
-				}
-
-				SaveWorldWhenReloading: {
-					Label: Save World When Reloading
-					Tooltip: ""
+					Label: Autoload World
 				}
 
 				ClearClientLogOnReload: {
 					Tooltip: ""
-					Label: Clear Client Log On Reload
+					Label: Clear 'client.log' between reloads
 				}
 
 				SaveWorldOnReload: {
 					Tooltip: ""
-					Label: Save World On Reload
-				}
-			}
-
-			GameplayConfig: {
-				Tooltip: ""
-
-				AlwaysSpawnBossOnTopOfPlayer: {
-					Label: Always Spawn Boss On Top Of Player
-					Tooltip: Will spawn every boss close to the player, as opposed to far away
+					Label: Save world when reloading
 				}
 
-				StartInGodMode: {
-					Label: Start In God Mode
-					Tooltip: When entering the world, start with god mode enabled by default
+				ModToReload: {
+					Tooltip: Enter the mod that you wish to reload
+					Label: Mod To Reload
 				}
-			}
 
-			ItemBrowserConfig: {
-				Tooltip: ""
+				DisplayName: Config
 
-				MaxItemsToDisplay: {
-					Label: Max Items To Display
-					Tooltip: Maximum items to show at one point, recommend <1000 since all items take a while to load
-				}
-			}
-
-			DisableButtonConfig: {
 				DisableLog: {
 					Tooltip: ""
 					Label: Disable Log
 				}
 
-				DisableTeleport: {
+				DisableUIElements: {
 					Tooltip: ""
-					Label: Disable Teleport
-				}
-
-				DisableUIHitboxes: {
-					Tooltip: ""
-					Label: Disable UI Hitboxes
+					Label: Disable UI Elements
 				}
 
 				DisableHitboxes: {
 					Tooltip: ""
 					Label: Disable Hitboxes
-				}
-
-				DisableTime: {
-					Tooltip: ""
-					Label: Disable Time
-				}
-
-				DisableEnemies: {
-					Tooltip: ""
-					Label: Disable Enemies
 				}
 
 				DisableFast: {
@@ -167,12 +78,12 @@ Mods: {
 
 				DisableNPCBrowser: {
 					Tooltip: ""
-					Label: Disable NPC Browser
+					Label: Disable NPC Spawner
 				}
 
 				DisableItemBrowser: {
 					Tooltip: ""
-					Label: Disable Item Browser
+					Label: Disable Item Spawner
 				}
 
 				DisableReload: {
@@ -181,17 +92,64 @@ Mods: {
 				}
 
 				DisableConfig: {
-					Tooltip: ""
 					Label: Disable Config
-				}
-
-				Tooltip: ""
-
-				DisableUIElements: {
-					Label: Disable UI Elements
 					Tooltip: ""
 				}
 			}
+
+			DisableLog: {
+				Tooltip: ""
+				Label: Disable Log
+			}
+
+			DisableUIElements: {
+				Tooltip: ""
+				Label: Disable UI Elements
+			}
+
+			DisableHitboxes: {
+				Tooltip: ""
+				Label: Disable Hitboxes
+			}
+
+			DisableFast: {
+				Tooltip: ""
+				Label: Disable Fast
+			}
+
+			DisableGod: {
+				Tooltip: ""
+				Label: Disable God
+			}
+
+			DisableNPCBrowser: {
+				Tooltip: ""
+				Label: Disable NPC Browser
+			}
+
+			DisableItemBrowser: {
+				Tooltip: ""
+				Label: Disable Item Browser
+			}
+
+			DisableReload: {
+				Tooltip: ""
+				Label: Disable Reload
+			}
+
+			DisableConfig: {
+				Tooltip: ""
+				Label: Disable Config
+			}
 		}
+
+		Items: {
+			BorderShaderDye: {
+				Tooltip: Custom Item For God Glow Effect
+				DisplayName: Border Shader Dye
+			}
+		}
+
+		"Keybinds.Toggle God Mode.DisplayName": Toggle God Mode
 	}
 }

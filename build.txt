@@ -1,6 +1,6 @@
 displayName = SquidTestingMod
 author = Erky
 version = 0.1
-side = both
+side = client
 hideCode = true
 buildIgnore = Assets\Button.psd, Assets\Old*, icon_workshop.psd

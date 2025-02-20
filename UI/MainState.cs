@@ -32,6 +32,7 @@ namespace SquidTestingMod.UI
         public DebugUIButton uiDebugButton;
         public ReloadSingleplayerButton reloadSingleplayerButton;
         public ReloadMultiplayerButton reloadMultiplayerButton;
+        public MinimalItemBrowserButton minimalItemButton;
 
         // List of all buttons
         public HashSet<BaseButton> AllButtons;
@@ -47,8 +48,8 @@ namespace SquidTestingMod.UI
             toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons");
             configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, "Open config");
             refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, "Reload the selected mod");
-            itemButton = CreateButton<ItemBrowserButton>(Assets.ButtonItems, "Open item browser");
-            npcButton = CreateButton<NPCBrowserButton>(Assets.ButtonNPC, "Open NPC browser\nContains town NPCs, enemies, and bosses");
+            itemButton = CreateButton<ItemBrowserButton>(Assets.ButtonItems, "Open item spawner\nContains all items in the game");
+            npcButton = CreateButton<NPCBrowserButton>(Assets.ButtonNPC, "Open NPC spawner\nContains town NPCs, enemies, and bosses");
             godButton = CreateButton<GodButton>(Assets.ButtonGodOn, "Toggle player god mode");
             fastButton = CreateButton<FastButton>(Assets.ButtonFastOn, "Toggle player fast mode");
             hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitboxOn, "Show player, enemy, and projectile hitboxes");
@@ -56,24 +57,30 @@ namespace SquidTestingMod.UI
             logButton = CreateButton<LogButton>(Assets.ButtonLog, "Open client.log");
             reloadSingleplayerButton = CreateButton<ReloadSingleplayerButton>(Assets.ButtonReloadSingleplayer, "Reload singleplayer");
             reloadMultiplayerButton = CreateButton<ReloadMultiplayerButton>(Assets.ButtonReloadMultiplayer, "Reload multiplayer");
+            minimalItemButton = CreateButton<MinimalItemBrowserButton>(Assets.ButtonItems, "Open minimal item spawner\nContains all items in the game");
 
             // Append buttons conditionally based on disable flags.
             // Build list of buttons to append.
             var buttons = new List<BaseButton> { toggleButton }; // always include toggleButton
 
-            if (!c.DisableButton.DisableConfig) buttons.Add(configButton);
-            if (!c.DisableButton.DisableReload) buttons.Add(refreshButton);
-            if (!c.DisableButton.DisableItemBrowser) buttons.Add(itemButton);
-            if (!c.DisableButton.DisableNPCBrowser) buttons.Add(npcButton);
-            if (!c.DisableButton.DisableGod) buttons.Add(godButton);
-            if (!c.DisableButton.DisableFast) buttons.Add(fastButton);
-            if (!c.DisableButton.DisableHitboxes) buttons.Add(hitboxButton);
-            if (!c.DisableButton.DisableUIElements) buttons.Add(uiDebugButton);
-            if (!c.DisableButton.DisableLog) buttons.Add(logButton);
+            if (!c.DisableConfig) buttons.Add(configButton);
+            if (!c.DisableReload) buttons.Add(refreshButton);
+            if (!c.DisableItemBrowser) buttons.Add(itemButton);
+            if (!c.DisableNPCBrowser) buttons.Add(npcButton);
+            if (!c.DisableGod) buttons.Add(godButton);
+            if (!c.DisableFast) buttons.Add(fastButton);
+            if (!c.DisableHitboxes) buttons.Add(hitboxButton);
+            if (!c.DisableUIElements) buttons.Add(uiDebugButton);
+            if (!c.DisableLog) buttons.Add(logButton);
 
             // Append reload button to on multiplayer/singleplayer
             buttons.Add(reloadSingleplayerButton);
             buttons.Add(reloadMultiplayerButton); //TODO maybe only in multiplayer client
+
+            // Add minimal item browser
+            buttons.Add(minimalItemButton);
+            // Add the minimalitembrowserpanel to the state
+            // Append(new MinimalItemBrowserPanel());
 
             // Append all buttons and set AllButtons.
             buttons.ForEach(Append);
@@ -132,8 +139,14 @@ namespace SquidTestingMod.UI
         // updates position only
         public void UpdateButtonsPositions(Vector2 anchorPosition)
         {
+            int index = 0;
             foreach (BaseButton btn in AllButtons)
             {
+                if (btn == toggleButton)
+                    btn.RelativeLeftOffset = 0;
+                else
+                    btn.RelativeLeftOffset = ButtonSize * (++index);
+
                 btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
                 btn.Top.Set(anchorPosition.Y, 0f);
             }
@@ -162,5 +175,56 @@ namespace SquidTestingMod.UI
                 }
             }
         }
+
+        #region Update Buttons
+        // Method to remove buttons based on config
+        public void UpdateButtons()
+        {
+            Config c = ModContent.GetInstance<Config>();
+
+            // Remove buttons based on config
+            if (c.DisableConfig) RemoveButton(configButton);
+            if (c.DisableReload) RemoveButton(refreshButton);
+            if (c.DisableItemBrowser) RemoveButton(itemButton);
+            if (c.DisableNPCBrowser) RemoveButton(npcButton);
+            if (c.DisableGod) RemoveButton(godButton);
+            if (c.DisableFast) RemoveButton(fastButton);
+            if (c.DisableHitboxes) RemoveButton(hitboxButton);
+            if (c.DisableUIElements) RemoveButton(uiDebugButton);
+            if (c.DisableLog) RemoveButton(logButton);
+
+            // Add buttons based on config
+            if (!c.DisableConfig) AppendButton(configButton);
+            if (!c.DisableReload) AppendButton(refreshButton);
+            if (!c.DisableItemBrowser) AppendButton(itemButton);
+            if (!c.DisableNPCBrowser) AppendButton(npcButton);
+            if (!c.DisableGod) AppendButton(godButton);
+            if (!c.DisableFast) AppendButton(fastButton);
+            if (!c.DisableHitboxes) AppendButton(hitboxButton);
+            if (!c.DisableUIElements) AppendButton(uiDebugButton);
+            if (!c.DisableLog) AppendButton(logButton);
+
+            // Update positions of remaining buttons
+            UpdateButtonsPositions(toggleButton.anchorPos);
+        }
+
+        private void AppendButton(BaseButton button)
+        {
+            if (!AllButtons.Contains(button))
+            {
+                AllButtons.Add(button);
+                Append(button);
+            }
+        }
+
+        private void RemoveButton(BaseButton button)
+        {
+            if (button != null)
+            {
+                AllButtons.Remove(button);
+                RemoveChild(button);
+            }
+        }
+        #endregion
     }
 }

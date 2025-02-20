@@ -21,6 +21,10 @@ namespace SquidTestingMod.UI
 
         public SquidItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
+            // set size
+            Width.Set(40, 0f);
+            Height.Set(40, 0f);
+
             displayItem = itemArray[itemIndex].Clone();
             _itemSlotContext = itemSlotContext;
         }
@@ -98,7 +102,7 @@ namespace SquidTestingMod.UI
             {
                 // Execute your "holding" logic here.
                 // You might want to add a timer so it doesn't execute every frame.
-                Log.Info("Right mouse is being held down on " + displayItem.Name);
+                // Log.Info("Right mouse is being held down on " + displayItem.Name);
                 // For example, increment the item stack gradually:
                 if (Main.mouseItem.IsAir)
                 {

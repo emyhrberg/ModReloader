@@ -17,7 +17,7 @@ namespace SquidTestingMod.UI
 
         internal bool focused = false;
 
-        private readonly int _maxLength = int.MaxValue;
+        private readonly int _maxLength = 20;
 
         private readonly string hintText;
         private int textBlinkerCount;

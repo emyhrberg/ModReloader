@@ -44,7 +44,7 @@ namespace SquidTestingMod.UI
             Config c = ModContent.GetInstance<Config>();
 
             // 1) Clear client.log if needed
-            if (c.Reload.ClearClientLogOnReload)
+            if (c.ClearClientLogOnReload)
             {
                 Log.Info("Clearing client logs....");
                 ClearLogFile();
@@ -54,12 +54,12 @@ namespace SquidTestingMod.UI
             ExitWorld(c);
 
             // 3) Navigate to Develop Mods
-            if (c.Reload.WaitingTimeBeforeNavigatingToModSources > 0)
-                await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
+            if (c.WaitingTimeBeforeNavigatingToModSources > 0)
+                await Task.Delay(c.WaitingTimeBeforeNavigatingToModSources);
             object modSourcesInstance = NavigateToDevelopMods();
 
             // 4) Build and reload
-            await Task.Delay(c.Reload.WaitingTimeBeforeBuildAndReload);
+            await Task.Delay(c.WaitingTimeBeforeBuildAndReload);
             BuildReload(modSourcesInstance);
 
             // 5) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
@@ -68,11 +68,11 @@ namespace SquidTestingMod.UI
 
         private async static void ExitWorld(Config c)
         {
-            if (c.Reload.SaveWorldOnReload)
+            if (c.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
-                await Task.Delay(c.Reload.WaitingTimeBeforeNavigatingToModSources);
+                await Task.Delay(c.WaitingTimeBeforeNavigatingToModSources);
 
             }
             else
@@ -121,7 +121,7 @@ namespace SquidTestingMod.UI
                             string modName = uiText.Text;
                             Log.Info($"Mod Name: {modName}");
                             Config c = ModContent.GetInstance<Config>();
-                            if (modName == c.Reload.ModToReload)
+                            if (modName == c.ModToReload)
                             {
                                 modSourceItem = item;
                                 modNameFound = modName;

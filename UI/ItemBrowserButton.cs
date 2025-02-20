@@ -15,7 +15,7 @@ namespace SquidTestingMod.UI
         public ItemBrowserPanel itemsPanel;
         public bool isItemsPanelVisible = false;
 
-        private bool _needsToggle = false;
+        // private bool _needsToggle = false;
 
         public override void LeftClick(UIMouseEvent evt)
         {
@@ -28,10 +28,11 @@ namespace SquidTestingMod.UI
         public override void Update(GameTime gameTime)
         {
             // If we press escape, close the ItemsPanel.
-            if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
-            {
-                _needsToggle = true;
-            }
+            // TODO currently not implemented.
+            // if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            // {
+            // _needsToggle = true;
+            // }
 
             base.Update(gameTime);
         }

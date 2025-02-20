@@ -13,9 +13,7 @@ namespace SquidTestingMod.Common.Systems
 {
     public class GodModePlayer : ModPlayer
     {
-        public static bool IsGodModeOn;
-
-        private static ModKeybind ToggleGodModeKeybind;
+        public static bool IsGodModeOn = false;
 
         public override void OnEnterWorld()
         {
@@ -23,30 +21,8 @@ namespace SquidTestingMod.Common.Systems
                 return;
 
             Config c = ModContent.GetInstance<Config>();
-            IsGodModeOn = c.Gameplay.StartInGodMode;
-            Log.Info("Enter world: GodMode is set to " + c.Gameplay.StartInGodMode);
-        }
-
-        public override void Load()
-        {
-            ToggleGodModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle God Mode", Keys.H);
-        }
-
-        public override void Unload()
-        {
-            ToggleGodModeKeybind = null;
-        }
-
-        public override void ProcessTriggers(TriggersSet triggersSet)
-        {
-            if (ToggleGodModeKeybind.JustPressed)
-            {
-                IsGodModeOn = !IsGodModeOn;
-                // Update the button texture
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                sys.mainState.godButton.UpdateTexture();
-                Log.Info("God mode toggled. Now: " + IsGodModeOn);
-            }
+            IsGodModeOn = c.StartInGodMode;
+            Log.Info("Enter world: GodMode is set to " + c.StartInGodMode);
         }
 
         // *** HOOKS TO DISABLE TAKING DAMAGE ***
@@ -72,6 +48,20 @@ namespace SquidTestingMod.Common.Systems
                 return false;
             }
             return true;
+        }
+
+        // *** TODO HOOKS TO DISABLE DEBUFFS ***
+        // Use player.buffimmune for each debuff
+        public override void UpdateBadLifeRegen()
+        {
+            if (IsGodModeOn)
+            {
+                // Make the player immune to all debuffs
+                for (int i = 0; i < Player.buffImmune.Length; i++)
+                {
+                    Player.buffImmune[i] = true;
+                }
+            }
         }
     }
 }

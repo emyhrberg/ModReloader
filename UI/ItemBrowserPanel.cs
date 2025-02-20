@@ -27,7 +27,7 @@ namespace SquidTestingMod.UI
         private Color darkerBlue = new(22, 25, 55);
 
         // UI Elements
-        private UIGrid ItemsGrid;
+        private MinimalGrid ItemsGrid;
         private UIScrollbar Scrollbar;
         private UIPanel ItemBackgroundPanel;
         private UIPanel CloseButtonPanel;
@@ -52,7 +52,7 @@ namespace SquidTestingMod.UI
             AddItemsGrid();
 
             // Add items to the grid
-            AddItemSlotsToGrid(ItemsGrid);
+            AddItemSlotsToGrid();
         }
 
         #region adding content
@@ -85,7 +85,7 @@ namespace SquidTestingMod.UI
             TitlePanel.Append(text);
         }
 
-        private void AddItemSlotsToGrid(UIGrid grid)
+        private void AddItemSlotsToGrid()
         {
             int allItems = TextureAssets.Item.Length - 1;
             int count = 0;
@@ -99,12 +99,12 @@ namespace SquidTestingMod.UI
                 // note: you can use BankItem for red color, ChestItem for blue color, etc.
                 // UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
                 SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
-                // itemSlot.Width.Set(19.5f, 0f);
-                // itemSlot.Height.Set(19.5f, 0f);
-                grid.Add(itemSlot);
+                itemSlot.Width.Set(40f, 0f);
+                itemSlot.Height.Set(40f, 0f);
+                ItemsGrid.Add(itemSlot);
 
                 count++;
-                if (count >= c.ItemBrowser.MaxItemsToDisplay)
+                if (count >= c.MaxItemsToDisplay)
                     break;
             }
         }
@@ -153,7 +153,7 @@ namespace SquidTestingMod.UI
 
         private void AddItemsGrid()
         {
-            ItemsGrid = new UIGrid()
+            ItemsGrid = new MinimalGrid()
             {
                 // MaxHeight = { Pixels = 250 + 5 * 5 + 12 * 2 }, // 250 pixels + 5 pixels padding + 12 pixels padding
                 Height = { Percent = 0f, Pixels = 250 + 5 * 5 },
@@ -161,9 +161,10 @@ namespace SquidTestingMod.UI
                 HAlign = 0.5f,
                 ListPadding = 5f, // distance between items
                 Top = { Pixels = 0f }, // (12 since cornerBox is 12 pixels)
-                Left = { Pixels = 0f }, // (12 since cornerBox is 12 pixels)
+                Left = { Pixels = 3f }, // weird custom offset
                 OverflowHidden = true, // hide items outside the grid
             };
+            ItemsGrid.ManualSortMethod = (listUIElement) => { };
             ItemsGrid.SetScrollbar(Scrollbar);
             ItemBackgroundPanel.Append(ItemsGrid);
         }
@@ -173,7 +174,6 @@ namespace SquidTestingMod.UI
         private void FilterItems()
         {
             string searchText = SearchTextBox.currentString.ToLower();
-            Log.Info($"Search Text: {searchText}");
             Config c = ModContent.GetInstance<Config>();
 
             ItemsGrid.Clear();
@@ -190,15 +190,15 @@ namespace SquidTestingMod.UI
                 if (item.Name.ToLower().Contains(searchText))
                 {
                     count++;
-                    if (count >= c.ItemBrowser.MaxItemsToDisplay)
+                    if (count >= c.MaxItemsToDisplay)
                         break;
 
-                    SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ShopItem);
+                    SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                     ItemsGrid.Add(itemSlot);
                 }
             }
             s.Stop();
-            Log.Info($"Filtering {count} items took {s.ElapsedMilliseconds} ms");
+            Log.Info($"Searching for '{searchText}', found {count} items in {s.ElapsedMilliseconds} ms");
         }
         #endregion
 

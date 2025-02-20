@@ -38,7 +38,7 @@ namespace SquidTestingMod.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
                 Config c = ModContent.GetInstance<Config>();
-                if (c.Reload.AutoloadWorld == "Multiplayer")
+                if (c.AutoloadWorld == "Multiplayer")
                 {
                     onSuccessfulLoad += StartServerAndEnterMultiplayerWorld;
                 }

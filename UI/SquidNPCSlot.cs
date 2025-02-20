@@ -35,8 +35,8 @@ namespace SquidTestingMod.UI
             this.slotContext = slotContext;
             displayNPC = npc;
             // Set desired clickable area (adjust as needed)
-            Width.Set(50, 0f);
-            Height.Set(50, 0f);
+            Width.Set(40, 0f);
+            Height.Set(40, 0f);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
