@@ -72,11 +72,11 @@ namespace SquidTestingMod.UI
             // Change flag
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            if (parent is ItemBrowserPanel)
+            if (parent is ItemSpawnerPanel)
             {
                 sys.mainState.itemButton.isItemsPanelVisible = false;
             }
-            else if (parent is NPCBrowserPanel)
+            else if (parent is NPCSpawnerPanel)
             {
                 sys.mainState.npcButton.isNPCPanelVisible = false;
             }

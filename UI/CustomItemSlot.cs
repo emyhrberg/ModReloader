@@ -13,13 +13,13 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     // Instead of inheriting the vanilla behavior we override the drawing and click behavior.
-    public class SquidItemSlot : UIItemSlot
+    public class CustomItemSlot : UIItemSlot
     {
-        // We store the item that should be shown in the browser.
+        // We store the item that should be shown in the panel.
         private Item displayItem;
         private int _itemSlotContext;
 
-        public SquidItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
+        public CustomItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
             // set size
             Width.Set(40, 0f);
@@ -56,7 +56,7 @@ namespace SquidTestingMod.UI
             }
         }
 
-        // When the user left-clicks, we want to give them a full-stack copy without removing the item from our browser.
+        // When the user left-clicks, we want to give them a full-stack copy without removing the item from our panel.
         public override void LeftClick(UIMouseEvent evt)
         {
             // if dragging, do not perform any action

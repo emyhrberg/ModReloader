@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using Microsoft.Xna.Framework;
 using SquidTestingMod.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -26,14 +27,13 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue("Disabled")]
         [DrawTicks]
         public string AutoloadWorld = "Disabled";
-
         [DefaultValue(100)]
         [Range(100, 5000)]
-        [Increment(100)]
+        [Increment(1000)]
         public int WaitingTimeBeforeNavigatingToModSources;
 
         [DefaultValue(100)]
-        [Increment(100)]
+        [Increment(1000)]
         [Range(100, 5000)]
         public int WaitingTimeBeforeBuildAndReload;
 
@@ -44,51 +44,20 @@ namespace SquidTestingMod.Common.Configs
         public bool StartInGodMode;
 
         // ITEM SPAWNER CONFIG
-        [Header("ItemNPCBrowser")]
+        [Header("ItemNPCSpawner")]
         [DefaultValue(1000)]
-        [Range(500, 2000)]
-        [Increment(500)]
+        [Range(200, 2000)]
+        [Increment(200)]
         public int MaxItemsToDisplay;
 
-        // DISABLE BUTTON CONFIG
-        [Header("DisableButtons")]
-        [DefaultValue(false)]
-        public bool DisableConfig;
-
-        [DefaultValue(false)]
-        public bool DisableReload;
-
-        [DefaultValue(false)]
-        public bool DisableItemBrowser;
-
-        [DefaultValue(false)]
-        public bool DisableNPCBrowser;
-
-        [DefaultValue(false)]
-        public bool DisableGod;
-
-        [DefaultValue(false)]
-        public bool DisableFast;
-
-        [DefaultValue(false)]
-        public bool DisableHitboxes;
-
-        [DefaultValue(false)]
-        public bool DisableUIElements;
-
-        [DefaultValue(false)]
-        public bool DisableLog;
+        [Range(-500f, 500f)]
+        [Increment(100f)]
+        [DefaultValue(typeof(Vector2), "0, -300")]
+        public Vector2 NPCSpawnLocation;
 
         public override void OnChanged()
         {
             // Here we can update the game based on the new config values
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys == null)
-            {
-                return;
-            }
-
-            sys.mainState.UpdateButtons();
         }
     }
 }

@@ -10,7 +10,7 @@ using Terraria.UI;
 namespace Terraria.ModLoader.UI.Elements;
 
 //TODO: wow that's a lot of redundant this.
-public class MinimalGrid : UIElement
+public class CustomGrid : UIElement
 {
     public delegate bool ElementSearchMethod(UIElement element);
 
@@ -39,7 +39,7 @@ public class MinimalGrid : UIElement
 
     public List<UIElement> _items = new List<UIElement>();
     protected UIScrollbar _scrollbar;
-    internal UIElement _innerList = new MinimalGrid.UIInnerList();
+    internal UIElement _innerList = new CustomGrid.UIInnerList();
     private float _innerListHeight;
     public float ListPadding = 5f;
 
@@ -55,7 +55,7 @@ public class MinimalGrid : UIElement
     public Action<List<UIElement>> ManualSortMethod;
 
     // todo, vertical/horizontal orientation, left to right, etc?
-    public MinimalGrid()
+    public CustomGrid()
     {
         this._innerList.OverflowHidden = false;
         this._innerList.Width.Set(0f, 1f);
@@ -184,7 +184,7 @@ public class MinimalGrid : UIElement
     {
         if (ManualSortMethod != null)
         {
-            Log.Info("Manual sort with " + _items.Count + " items");
+            // Log.Info("Manual sort with " + _items.Count + " items");
             ManualSortMethod(_items);
         }
         else

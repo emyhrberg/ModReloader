@@ -56,6 +56,7 @@ namespace SquidTestingMod.Helpers
 
         public static void PreloadAllAssets()
         {
+            // Start timer
             Stopwatch s = Stopwatch.StartNew();
 
             // ALL ASSETS
@@ -78,6 +79,7 @@ namespace SquidTestingMod.Helpers
             ButtonReloadMultiplayer = PreloadAsset("ButtonReloadMultiplayer");
             X = PreloadAsset("X_32x32");
 
+            // Stop timer
             s.Stop();
             Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
         }

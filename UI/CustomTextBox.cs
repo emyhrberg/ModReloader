@@ -11,7 +11,7 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     //ty jopojelly and darthmorf
-    public class SquidTextBox : UIPanel
+    public class CustomTextBox : UIPanel
     {
         internal string currentString = string.Empty;
 
@@ -37,7 +37,7 @@ namespace SquidTestingMod.UI
 
         internal bool unfocusOnTab = true;
 
-        internal SquidTextBox(string hintText, string text = "")
+        internal CustomTextBox(string hintText, string text = "")
         {
             this.hintText = hintText;
             currentString = text;

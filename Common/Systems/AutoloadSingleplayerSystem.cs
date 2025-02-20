@@ -87,7 +87,19 @@ namespace SquidTestingMod.Common.Systems
             else
             {
                 string log = "Error: No compatible player-world pair found. \n" +
-                    "Please favorite a player and a world";
+                        "Please favorite a player and a world";
+                // Try to select any player-world pair
+                if (TryFindCompatiblePair(Main.PlayerList, Main.WorldList, out player, out world))
+                {
+                    StartGameWithPair(player, world);
+                }
+                else
+                {
+
+                    Mod.Logger.Info(log);
+                    throw new Exception(log);
+                }
+
                 Mod.Logger.Info(log);
                 throw new Exception(log);
             }

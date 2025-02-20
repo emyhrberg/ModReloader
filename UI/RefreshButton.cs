@@ -40,6 +40,9 @@ namespace SquidTestingMod.UI
 
         public override async void LeftClick(UIMouseEvent evt)
         {
+            // Register autoload callback
+            RegisterAutoloadCallback();
+
             Log.Info("Left Clicked Refresh Button.");
             Config c = ModContent.GetInstance<Config>();
 
@@ -62,8 +65,45 @@ namespace SquidTestingMod.UI
             await Task.Delay(c.WaitingTimeBeforeBuildAndReload);
             BuildReload(modSourcesInstance);
 
-            // 5) Autoload player into world. Handled automatically in AutoloadSingleplayerSystem)
+            // 5) Autoload player into world
+            Log.Info("Done with build and reload. Autoloading player into world...");
+        }
 
+        private void RegisterAutoloadCallback()
+        {
+            FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);
+            if (onSuccessfulLoadField != null)
+            {
+                Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
+                onSuccessfulLoad += EnterSingleplayerWorld;
+                onSuccessfulLoadField.SetValue(null, onSuccessfulLoad);
+                Log.Info("Autoload callback registered successfully.");
+            }
+            else
+            {
+                Log.Warn("Failed to access OnSuccessfulLoad field.");
+            }
+        }
+
+        private void EnterSingleplayerWorld()
+        {
+            Log.Info("[RefreshButton] EnterSingleplayerWorld() called!");
+
+            // Load worlds and players
+            Main.LoadWorlds();
+            Main.LoadPlayers();
+
+            // Get first world and player
+            var world = Main.WorldList.FirstOrDefault();
+            var player = Main.PlayerList.FirstOrDefault();
+
+            // Select world and player
+            Main.ActiveWorldFileData = world;
+            Main.SelectPlayer(player);
+            Log.Info($"Selected world: {world.Name}, Selected player: {player.Name}");
+
+            // Enter world with the selected world and player
+            WorldGen.playWorld();
         }
 
         private async static void ExitWorld(Config c)
@@ -142,15 +182,15 @@ namespace SquidTestingMod.UI
                 return;
             }
 
-            var method = modSourceItem.GetType().GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (method == null)
+            var BuildAndReloadMethod = modSourceItem.GetType().GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (BuildAndReloadMethod == null)
             {
                 Log.Warn("BuildAndReload method not found.");
                 return;
             }
 
             Log.Info($"Invoking BuildAndReload method with {modNameFound} UIModSourceItem...");
-            method.Invoke(modSourceItem, [null, null]);
+            BuildAndReloadMethod.Invoke(modSourceItem, [null, null]);
         }
 
         private static object NavigateToDevelopMods()

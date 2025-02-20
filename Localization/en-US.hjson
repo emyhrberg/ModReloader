@@ -2,15 +2,16 @@ Mods: {
 	SquidTestingMod: {
 		Configs: {
 			Config: {
+				DisplayName: Config
+
 				Headers: {
-					DisableButtons: Disable Buttons
-					ItemNPCBrowser: Item/NPC Browser
+					ItemNPCSpawner: Item Spawner and NPC Spawner
 					Gameplay: Gameplay
 					Reload: Reload
 				}
 
 				MaxItemsToDisplay: {
-					Tooltip: ""
+					Tooltip: The maximum number of items to display at one time in the Item Spawner and NPC Spawner.
 					Label: Max Items To Display
 				}
 
@@ -19,23 +20,13 @@ Mods: {
 					Label: Start In God Mode
 				}
 
-				WaitingTimeBeforeBuildAndReload: {
-					Tooltip: ""
-					Label: Waiting Time Before Build And Reload
-				}
-
-				WaitingTimeBeforeNavigatingToModSources: {
-					Tooltip: ""
-					Label: Waiting Time Before Navigating To Mod Sources
-				}
-
 				AutoloadWorld: {
-					Tooltip: ""
+					Tooltip: After a successful mod reload, you will automatically enter a world with the first compatible player-world pair.
 					Label: Autoload World
 				}
 
 				ClearClientLogOnReload: {
-					Tooltip: ""
+					Tooltip: When you click reload, the file 'client.log' will be cleared.
 					Label: Clear 'client.log' between reloads
 				}
 
@@ -46,100 +37,23 @@ Mods: {
 
 				ModToReload: {
 					Tooltip: Enter the mod that you wish to reload
-					Label: Mod To Reload
+					Label: Mod to reload
 				}
 
-				DisplayName: Config
-
-				DisableLog: {
-					Tooltip: ""
-					Label: Disable Log
-				}
-
-				DisableUIElements: {
-					Tooltip: ""
-					Label: Disable UI Elements
-				}
-
-				DisableHitboxes: {
-					Tooltip: ""
-					Label: Disable Hitboxes
-				}
-
-				DisableFast: {
-					Tooltip: ""
-					Label: Disable Fast
-				}
-
-				DisableGod: {
-					Tooltip: ""
-					Label: Disable God
-				}
-
-				DisableNPCBrowser: {
-					Tooltip: ""
-					Label: Disable NPC Spawner
-				}
-
-				DisableItemBrowser: {
-					Tooltip: ""
-					Label: Disable Item Spawner
-				}
-
-				DisableReload: {
-					Tooltip: ""
-					Label: Disable Reload
-				}
-
-				DisableConfig: {
-					Label: Disable Config
+				WaitingTimeBeforeNavigatingToModSources: {
+					Label: Waiting Time Before Navigating To Mod Sources
 					Tooltip: ""
 				}
-			}
 
-			DisableLog: {
-				Tooltip: ""
-				Label: Disable Log
-			}
+				WaitingTimeBeforeBuildAndReload: {
+					Label: Waiting Time Before Build And Reload
+					Tooltip: ""
+				}
 
-			DisableUIElements: {
-				Tooltip: ""
-				Label: Disable UI Elements
-			}
-
-			DisableHitboxes: {
-				Tooltip: ""
-				Label: Disable Hitboxes
-			}
-
-			DisableFast: {
-				Tooltip: ""
-				Label: Disable Fast
-			}
-
-			DisableGod: {
-				Tooltip: ""
-				Label: Disable God
-			}
-
-			DisableNPCBrowser: {
-				Tooltip: ""
-				Label: Disable NPC Browser
-			}
-
-			DisableItemBrowser: {
-				Tooltip: ""
-				Label: Disable Item Browser
-			}
-
-			DisableReload: {
-				Tooltip: ""
-				Label: Disable Reload
-			}
-
-			DisableConfig: {
-				Tooltip: ""
-				Label: Disable Config
+				NPCSpawnLocation: {
+					Label: NPC Spawn Location
+					Tooltip: ""
+				}
 			}
 		}
 

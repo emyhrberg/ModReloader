@@ -19,7 +19,7 @@ namespace SquidTestingMod.UI
     /// Main function to create the item panel, 
     /// containing all the items in the game.
     /// </summary>
-    public class NPCBrowserPanel : UIPanel
+    public class NPCSpawnerPanel : UIPanel
     {
         // Colors
         private Color lighterBlue = new(69, 89, 162);
@@ -28,14 +28,14 @@ namespace SquidTestingMod.UI
         private Color darkerBlue = new(22, 25, 55);
 
         // UI Elements
-        private MinimalGrid ItemsGrid;
+        private CustomGrid ItemsGrid;
         private UIScrollbar Scrollbar;
         private UIPanel ItemBackgroundPanel;
         private UIPanel CloseButtonPanel;
         public UIPanel TitlePanel;
-        public SquidTextBox SearchTextBox;
+        public CustomTextBox SearchTextBox;
 
-        public NPCBrowserPanel()
+        public NPCSpawnerPanel()
         {
             // Set the panel properties
             Width.Set(370f, 0f);
@@ -102,10 +102,10 @@ namespace SquidTestingMod.UI
 
                 // note: you can use BankItem for red color, ChestItem for blue color, etc.
                 // UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
-                SquidNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
+                CustomNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
                 ItemsGrid.Add(npcSlot);
 
-                Log.Info("Added " + npc.FullName + ", total: " + count);
+                // Log.Info("Added " + npc.FullName + ", total: " + count);
 
                 count++;
                 if (count >= c.MaxItemsToDisplay)
@@ -157,7 +157,7 @@ namespace SquidTestingMod.UI
 
         private void AddItemsGrid()
         {
-            ItemsGrid = new MinimalGrid()
+            ItemsGrid = new CustomGrid()
             {
                 // MaxHeight = { Pixels = 250 + 5 * 5 + 12 * 2 }, // 250 pixels + 5 pixels padding + 12 pixels padding
                 Height = { Percent = 0f, Pixels = 250 + 5 * 5 },
@@ -198,7 +198,7 @@ namespace SquidTestingMod.UI
                     if (count >= c.MaxItemsToDisplay)
                         break;
 
-                    SquidNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
+                    CustomNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
                     ItemsGrid.Add(npcSlot);
                 }
             }

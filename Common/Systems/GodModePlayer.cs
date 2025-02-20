@@ -22,7 +22,6 @@ namespace SquidTestingMod.Common.Systems
 
             Config c = ModContent.GetInstance<Config>();
             IsGodModeOn = c.StartInGodMode;
-            Log.Info("Enter world: GodMode is set to " + c.StartInGodMode);
         }
 
         // *** HOOKS TO DISABLE TAKING DAMAGE ***
@@ -52,16 +51,17 @@ namespace SquidTestingMod.Common.Systems
 
         // *** TODO HOOKS TO DISABLE DEBUFFS ***
         // Use player.buffimmune for each debuff
-        public override void UpdateBadLifeRegen()
-        {
-            if (IsGodModeOn)
-            {
-                // Make the player immune to all debuffs
-                for (int i = 0; i < Player.buffImmune.Length; i++)
-                {
-                    Player.buffImmune[i] = true;
-                }
-            }
-        }
+        // This did not work, it kinda disabled all permanent good buffs like campfire, heart lantern, etc.
+        // public override void UpdateBadLifeRegen()
+        // {
+        //     if (IsGodModeOn)
+        //     {
+        //         // Make the player immune to all debuffs
+        //         for (int i = 0; i < Player.buffImmune.Length; i++)
+        //         {
+        //             Player.buffImmune[i] = true;
+        //         }
+        //     }
+        // }
     }
 }

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
@@ -18,7 +19,7 @@ namespace SquidTestingMod.UI
     /// Main function to create the item panel, 
     /// containing all the items in the game.
     /// </summary>
-    public class ItemBrowserPanel : UIPanel
+    public class ItemSpawnerPanel : UIPanel
     {
         // Colors
         private Color lighterBlue = new(69, 89, 162);
@@ -27,19 +28,19 @@ namespace SquidTestingMod.UI
         private Color darkerBlue = new(22, 25, 55);
 
         // UI Elements
-        private MinimalGrid ItemsGrid;
+        private CustomGrid ItemsGrid;
         private UIScrollbar Scrollbar;
         private UIPanel ItemBackgroundPanel;
         private UIPanel CloseButtonPanel;
         public UIPanel TitlePanel;
-        public SquidTextBox SearchTextBox;
+        public CustomTextBox SearchTextBox;
 
-        public ItemBrowserPanel()
+        public ItemSpawnerPanel()
         {
             // Set the panel properties
             Width.Set(370f, 0f);
             Height.Set(370f, 0f);
-            HAlign = 0.2f;
+            HAlign = 0.3f;
             VAlign = 0.6f;
             BackgroundColor = darkBlue * 0.5f;
 
@@ -98,7 +99,7 @@ namespace SquidTestingMod.UI
 
                 // note: you can use BankItem for red color, ChestItem for blue color, etc.
                 // UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
-                SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
+                CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                 itemSlot.Width.Set(40f, 0f);
                 itemSlot.Height.Set(40f, 0f);
                 ItemsGrid.Add(itemSlot);
@@ -153,7 +154,7 @@ namespace SquidTestingMod.UI
 
         private void AddItemsGrid()
         {
-            ItemsGrid = new MinimalGrid()
+            ItemsGrid = new CustomGrid()
             {
                 // MaxHeight = { Pixels = 250 + 5 * 5 + 12 * 2 }, // 250 pixels + 5 pixels padding + 12 pixels padding
                 Height = { Percent = 0f, Pixels = 250 + 5 * 5 },
@@ -193,7 +194,7 @@ namespace SquidTestingMod.UI
                     if (count >= c.MaxItemsToDisplay)
                         break;
 
-                    SquidItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
+                    CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                     ItemsGrid.Add(itemSlot);
                 }
             }
@@ -307,6 +308,16 @@ namespace SquidTestingMod.UI
         }
 
         #endregion
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys?.mainState?.itemButton?.isItemsPanelVisible != true)
+            {
+                return;
+            }
+            base.Draw(spriteBatch);
+        }
 
         #region usefulcode
         // https://github.com/ScalarVector1/DragonLens/blob/1b2ca47a5a4d770b256fdffd5dc68c0b4d32d3b2/Content/Tools/Spawners/ItemSpawner.cs#L14

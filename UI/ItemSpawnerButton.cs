@@ -10,9 +10,9 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI
 {
-    public class ItemBrowserButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
+    public class ItemSpawnerButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public ItemBrowserPanel itemsPanel;
+        public ItemSpawnerPanel itemsPanel;
         public bool isItemsPanelVisible = false;
 
         // private bool _needsToggle = false;
@@ -50,7 +50,7 @@ namespace SquidTestingMod.UI
                 // Create the panel if it doesn't already exist.
                 if (itemsPanel == null)
                 {
-                    itemsPanel = new ItemBrowserPanel();
+                    itemsPanel = new ItemSpawnerPanel();
                     Log.Info("Created new ItemsPanel.");
                 }
 

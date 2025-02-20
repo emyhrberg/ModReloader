@@ -17,7 +17,7 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     // A minimal NPCSlot that displays an NPC in a shop-style slot.
-    public class SquidNPCSlot : UIElement
+    public class CustomNPCSlot : UIElement
     {
         private int slotContext;
         private NPC displayNPC;
@@ -30,7 +30,7 @@ namespace SquidTestingMod.UI
         private const int frameDelay = 7; // Adjust as needed
 
         // Constructor: takes an NPC and a slot context.
-        public SquidNPCSlot(NPC npc, int slotContext)
+        public CustomNPCSlot(NPC npc, int slotContext)
         {
             this.slotContext = slotContext;
             displayNPC = npc;
@@ -111,10 +111,14 @@ namespace SquidTestingMod.UI
                 {
                     return;
                 }
+                Config c = ModContent.GetInstance<Config>();
 
-                int x = (int)Main.LocalPlayer.position.X + 200;
-                int y = (int)Main.LocalPlayer.position.Y - 200;
-                NPC.NewNPC(new MyCustomNPCSource("CustomData"), x, y, displayNPC.type);
+                float playerX = Main.LocalPlayer.position.X;
+                float playerY = Main.LocalPlayer.position.Y;
+
+                int desiredX = (int)(playerX + c.NPCSpawnLocation.X);
+                int desiredY = (int)(playerY + c.NPCSpawnLocation.Y);
+                NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
             }
         }
 
@@ -127,9 +131,15 @@ namespace SquidTestingMod.UI
                 return;
             }
 
-            int x = (int)Main.LocalPlayer.position.X + 200;
-            int y = (int)Main.LocalPlayer.position.Y - 200;
-            NPC.NewNPC(new MyCustomNPCSource("CustomData"), x, y, displayNPC.type);
+            Config c = ModContent.GetInstance<Config>();
+
+            float playerX = Main.LocalPlayer.position.X;
+            float playerY = Main.LocalPlayer.position.Y;
+
+            int desiredX = (int)(playerX + c.NPCSpawnLocation.X);
+            int desiredY = (int)(playerY + c.NPCSpawnLocation.Y);
+            NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
+            Log.Info("Spawned NPC " + displayNPC.FullName + " at " + desiredX + ", " + desiredY);
         }
     }
 
