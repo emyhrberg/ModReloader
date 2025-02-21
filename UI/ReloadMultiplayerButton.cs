@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
@@ -20,17 +21,20 @@ namespace SquidTestingMod.UI
         {
         }
 
-        public override void LeftClick(UIMouseEvent evt)
+        public async override void LeftClick(UIMouseEvent evt)
         {
+            ReloadUtilities.PrepareClient(ClientMode.MPMain);
+
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                WorldGen.JustQuit();
-                //TODO: add server 
+                ReloadUtilities.ExitWorldOrServer();
             }
             else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer);
+                ReloadUtilities.ExitAndKillServer();
             }
+
+            await ReloadUtilities.ReloadOrBuildAndReloadAsync(true);
         }
     }
 }

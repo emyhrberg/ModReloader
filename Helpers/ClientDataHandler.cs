@@ -7,32 +7,43 @@ using Terraria;
 
 namespace SquidTestingMod.Helpers
 {
+    public enum ClientMode
+    {
+        FreshClient,
+        SinglePlayer,
+        MPMain,
+        MPMinor,
+    }
+
     internal static class ClientDataHandler
     {
         //Function that handles writing info that shoud survive modlreload
-        public static void WriteData(int playerId, int worldId, bool shoudServerBeOpened)
+        static int _mode = (int)ClientMode.FreshClient;
+        static int _playerId = 0;
+        static int _worldId = 0;
+
+        public static ClientMode Mode { get { return (ClientMode)_mode; } set { _mode = ((int)value); } }
+        public static int PlayerId { get { return _playerId; } set { _playerId = value; } }
+        public static int WorldId { get { return _worldId; } set { _worldId = value; } }
+        public static void WriteData()
         {
-            Main.instance.Window.Title = $"{playerId}, {worldId}, {(shoudServerBeOpened ? 1 : 0)}";
+            Log.Info("Writing Data");
+            Main.instance.Window.Title = $"{_mode}, {_playerId}, {_worldId}";
         }
 
-        public static string[] ReadDataRaw()
+        public static void ReadData()
         {
-            return Main.instance.Window.Title.Split(", ");
-        }
+            Log.Info("Reading Data");
+            if (!string.IsNullOrEmpty(Main.instance.Window.Title))
+            {
+                string[] list = Main.instance.Window.Title.Split(", ");
 
-        public static int ReadDataPlayerId()
-        {
-            return Convert.ToInt32(ReadDataRaw()[0]);
-        }
+                _mode = int.Parse(list[0]);
+                _playerId = int.Parse(list[1]);
+                _worldId = int.Parse(list[2]);
+            }
+            Main.instance.Window.Title = "SquidTestingMod: this is hard";
 
-        public static int ReadDataWorldId()
-        {
-            return Convert.ToInt32(ReadDataRaw()[1]);
-        }
-
-        public static bool ReadDataShoudServerBeOpened()
-        {
-            return Convert.ToInt32(ReadDataRaw()[2]) == 1;
         }
     }
 }

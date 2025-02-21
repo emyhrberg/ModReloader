@@ -16,5 +16,15 @@ namespace SquidTestingMod
             ModNetHandler.HandlePacket(reader, whoAmI);
         }
 
+        public override void Load()
+        {
+            ClientDataHandler.ReadData();
+        }
+
+        public override void Unload()
+        {
+            ClientDataHandler.WriteData();
+        }
+
     }
 }

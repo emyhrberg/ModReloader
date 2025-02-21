@@ -27,10 +27,11 @@ namespace SquidTestingMod.PacketHandlers
                     break;
             }
         }
-        public void SendKillingServer(int toWho, int fromWho)
+        public void SendKillingServer(int toWho, int fromWho, bool shoudSevrerBeSaved)
         {
             Log.Info($"Sending SendKillingServer to {toWho} from {fromWho}");
             ModPacket packet = GetPacket(KillingServer, fromWho);
+            packet.Write(shoudSevrerBeSaved);
             packet.Send(toWho, fromWho);
         }
         public void SendRefreshClients(int toWho, int fromWho)
@@ -42,12 +43,13 @@ namespace SquidTestingMod.PacketHandlers
         public void ReceiveKillingServer(BinaryReader reader, int fromWho)
         {
             Log.Info($"Receiving ReceiveKillingServer to {Main.myPlayer} from {fromWho}");
+
+            bool shoudServerBeSaved = reader.ReadBoolean();
+
             if (Main.netMode == NetmodeID.Server)
             {
-                //Refreshes even the one that invoked KillingServer client, so thats why second argument is -1 instead of fromWho
-                //Or else it would ignore fromWho client
-                //When RefreshClients would be replaced with KillingClients it should be back to fromWho :)
-                SendRefreshClients(-1, -1);
+                SendRefreshClients(-1, fromWho);
+                Netplay.SaveOnServerExit = shoudServerBeSaved;
                 //delay??
                 Log.Info("Attempting to close the server");
                 Netplay.Disconnect = true;
@@ -58,7 +60,18 @@ namespace SquidTestingMod.PacketHandlers
             Log.Info($"Receiving ReceiveRefreshClients to {Main.myPlayer} from {fromWho}");
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                //Task.Run(RefreshButton.RefreshClient);
+                ReloadUtilities.PrepareClient(ClientMode.MPMain);
+
+                if (Main.netMode == NetmodeID.SinglePlayer)
+                {
+                    ReloadUtilities.ExitWorldOrServer();
+                }
+                else if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ReloadUtilities.ExitAndKillServer();
+                }
+
+                Task.Run(() => ReloadUtilities.ReloadOrBuildAndReloadAsync(false));
             }
         }
     }

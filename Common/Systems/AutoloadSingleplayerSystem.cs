@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
@@ -38,7 +39,8 @@ namespace SquidTestingMod.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
                 Config c = ModContent.GetInstance<Config>();
-                if (c.Reload.AutoloadWorld == "Singleplayer")
+
+                if (ClientDataHandler.Mode == ClientMode.SinglePlayer)
                 {
                     onSuccessfulLoad += EnterSingleplayerWorld;
                 }
@@ -67,6 +69,12 @@ namespace SquidTestingMod.Common.Systems
             if (Main.PlayerList.Count == 0 || Main.WorldList.Count == 0)
                 throw new Exception("No players or worlds found.");
 
+            var player = Main.PlayerList[ClientDataHandler.PlayerId];
+            var world = Main.WorldList[ClientDataHandler.WorldId];
+
+            StartGameWithPair(player, world);
+
+            /*
             // Players 
             var journeyPlayers = Main.PlayerList.ToList().Where(IsJourneyPlayer).ToList();
             var favoritePlayersNonJourney = Main.PlayerList.Where(p => p.IsFavorite).Except(journeyPlayers).ToList();
@@ -91,6 +99,8 @@ namespace SquidTestingMod.Common.Systems
                 Mod.Logger.Info(log);
                 throw new Exception(log);
             }
+            */
+
         }
 
         private bool TryFindCompatiblePair(List<PlayerFileData> players, List<WorldFileData> worlds, out PlayerFileData player, out WorldFileData world)

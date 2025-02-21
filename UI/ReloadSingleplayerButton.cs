@@ -19,9 +19,20 @@ namespace SquidTestingMod.UI
         {
         }
 
-        public override void LeftClick(UIMouseEvent evt)
+        public async override void LeftClick(UIMouseEvent evt)
         {
-            WorldGen.JustQuit();
+            ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
+
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                ReloadUtilities.ExitWorldOrServer();
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ReloadUtilities.ExitAndKillServer();
+            }
+
+            await ReloadUtilities.ReloadOrBuildAndReloadAsync(true);
         }
     }
 }
