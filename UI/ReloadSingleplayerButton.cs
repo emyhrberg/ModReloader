@@ -26,7 +26,7 @@ namespace SquidTestingMod.UI
             // 1 Clear logs if needed
             if (c.ClearClientLogOnReload)
                 ClearClientLog();
-
+            /*
             if (c.SaveWorldOnReload)
             {
                 Log.Info("Saving world and quitting...");
@@ -41,6 +41,19 @@ namespace SquidTestingMod.UI
                 WorldGen.JustQuit();
                 NavigateToModSourcesMenu();
             }
+            */
+            ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
+
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                ReloadUtilities.ExitWorldOrServer();
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ReloadUtilities.ExitAndKillServer();
+            }
+
+            Task.Run(() => ReloadUtilities.ReloadOrBuildAndReloadAsync(true));
 
         }
 
