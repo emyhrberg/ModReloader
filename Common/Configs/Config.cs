@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -14,28 +13,14 @@ namespace SquidTestingMod.Common.Configs
 
         // RELOAD CONFIG
         [Header("Reload")]
-        [DefaultValue("SquidTestingMod")]
-        public string ModToReload;
+        [DefaultValue("EnterYourModHere")]
+        public string ModToReload = "EnterYourModHere";
 
         [DefaultValue(false)]
-        public bool SaveWorldOnReload;
+        public bool SaveWorldOnReload = false;
 
         [DefaultValue(false)]
         public bool ClearClientLogOnReload = false;
-
-        [OptionStrings(["Disabled", "Singleplayer", "Multiplayer"])]
-        [DefaultValue("Disabled")]
-        [DrawTicks]
-        public string AutoloadWorld = "Disabled";
-        [DefaultValue(100)]
-        [Range(100, 2000)]
-        [Increment(1000)]
-        public int WaitingTimeBeforeNavigatingToModSources;
-
-        [DefaultValue(100)]
-        [Increment(1000)]
-        [Range(100, 2000)]
-        public int WaitingTimeBeforeBuildAndReload;
 
         // GAMEPLAY CONFIG
         [Header("Gameplay")]
@@ -52,7 +37,7 @@ namespace SquidTestingMod.Common.Configs
 
         [Range(-500f, 500f)]
         [Increment(100f)]
-        [DefaultValue(typeof(Vector2), "0, -300")]
+        [DefaultValue(typeof(Vector2), "0, 0")]
         public Vector2 NPCSpawnLocation;
 
         public override void OnChanged()

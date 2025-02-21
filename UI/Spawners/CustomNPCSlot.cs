@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.ItemSpawner
+namespace SquidTestingMod.UI.Spawners
 {
     // A minimal NPCSlot that displays an NPC in a shop-style slot.
     public class CustomNPCSlot : UIElement

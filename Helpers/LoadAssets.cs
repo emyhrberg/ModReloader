@@ -17,15 +17,8 @@ namespace SquidTestingMod.Helpers
     {
         public override void Load()
         {
-            // Preload assets early (before PostSetupContent, etc.)
+            // Preload all assets
             Assets.PreloadAllAssets();
-            ItemCache.Initialize();
-        }
-
-        public override void PostSetupContent()
-        {
-            base.PostSetupContent();
-            // Assets.PreloadAllAssets();
         }
     }
 
@@ -34,12 +27,11 @@ namespace SquidTestingMod.Helpers
     /// </summary>
     public static class Assets
     {
-        // ALL ASSETS
+        // Button textures
         public static Asset<Texture2D> ButtonOn;
         public static Asset<Texture2D> ButtonOff;
         public static Asset<Texture2D> ButtonConfig;
         public static Asset<Texture2D> ButtonItems;
-        public static Asset<Texture2D> ButtonReload;
         public static Asset<Texture2D> ButtonNPC;
         public static Asset<Texture2D> ButtonGodOn;
         public static Asset<Texture2D> ButtonGodOff;
@@ -50,8 +42,8 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonHitboxOn;
         public static Asset<Texture2D> ButtonHitboxOff;
         public static Asset<Texture2D> ButtonUIDebug;
-        public static Asset<Texture2D> ButtonReloadSingleplayer;
-        public static Asset<Texture2D> ButtonReloadMultiplayer;
+        public static Asset<Texture2D> ButtonReloadSP;
+        public static Asset<Texture2D> ButtonReloadMP;
 
         // Filter buttons
         public static Asset<Texture2D> FilterAll;
@@ -70,7 +62,6 @@ namespace SquidTestingMod.Helpers
             ButtonOff = PreloadAsset("ButtonOff");
             ButtonConfig = PreloadAsset("ButtonConfig");
             ButtonItems = PreloadAsset("ButtonItems");
-            ButtonReload = PreloadAsset("ButtonReload");
             ButtonNPC = PreloadAsset("ButtonNPC");
             ButtonGodOn = PreloadAsset("ButtonGodOn");
             ButtonGodOff = PreloadAsset("ButtonGodOff");
@@ -81,8 +72,8 @@ namespace SquidTestingMod.Helpers
             ButtonHitboxOn = PreloadAsset("ButtonHitboxOn");
             ButtonHitboxOff = PreloadAsset("ButtonHitboxOff");
             ButtonUIDebug = PreloadAsset("ButtonUI");
-            ButtonReloadSingleplayer = PreloadAsset("ButtonReloadSingleplayer");
-            ButtonReloadMultiplayer = PreloadAsset("ButtonReloadMultiplayer");
+            ButtonReloadSP = PreloadAsset("ButtonReloadSP");
+            ButtonReloadMP = PreloadAsset("ButtonReloadMP");
             FilterAll = PreloadAsset("FilterAll");
             FilterMelee = PreloadAsset("FilterMelee");
             FilterRanged = PreloadAsset("FilterRanged");
@@ -100,7 +91,7 @@ namespace SquidTestingMod.Helpers
         /// </summary>
         private static Asset<Texture2D> PreloadAsset(string path)
         {
-            return ModContent.Request<Texture2D>("SquidTestingMod/Assets/" + path, AssetRequestMode.ImmediateLoad);
+            return ModContent.Request<Texture2D>("SquidTestingMod/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }
 }

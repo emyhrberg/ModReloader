@@ -1,22 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
-using XPT.Core.Audio.MP3Sharp.Decoding;
 
-namespace SquidTestingMod.UI.ItemSpawner
+namespace SquidTestingMod.UI.Spawners
 {
     /// <summary>
     /// A panel containing a grid of all items in the game that can be spawned.

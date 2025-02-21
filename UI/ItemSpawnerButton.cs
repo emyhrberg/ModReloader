@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.UI.ItemSpawner;
+using SquidTestingMod.UI.Spawners;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;

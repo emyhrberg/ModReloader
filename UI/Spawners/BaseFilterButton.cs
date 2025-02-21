@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.ItemSpawner
+namespace SquidTestingMod.UI.Spawners
 {
     public class BaseFilterButton : UIImageButton
     {

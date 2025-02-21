@@ -2,17 +2,20 @@ Mods: {
 	SquidTestingMod: {
 		Configs: {
 			Config: {
-				DisplayName: Config
-
-				Headers: {
-					ItemNPCSpawner: Item Spawner and NPC Spawner
-					Gameplay: Gameplay
-					Reload: Reload
+				NPCSpawnLocation: {
+					Tooltip: ""
+					Label: N P C Spawn Location
 				}
 
 				MaxItemsToDisplay: {
-					Tooltip: The maximum number of items to display at one time in the Item Spawner and NPC Spawner.
+					Tooltip: ""
 					Label: Max Items To Display
+				}
+
+				Headers: {
+					ItemNPCSpawner: Item N P C Spawner Header
+					Gameplay: Gameplay Header
+					Reload: Reload Header
 				}
 
 				StartInGodMode: {
@@ -20,50 +23,30 @@ Mods: {
 					Label: Start In God Mode
 				}
 
-				AutoloadWorld: {
-					Tooltip: After a successful mod reload, you will automatically enter a world with the first compatible player-world pair.
-					Label: Autoload World
-				}
-
 				ClearClientLogOnReload: {
-					Tooltip: When you click reload, the file 'client.log' will be cleared.
-					Label: Clear 'client.log' between reloads
+					Tooltip: ""
+					Label: Clear Client Log On Reload
 				}
 
 				SaveWorldOnReload: {
 					Tooltip: ""
-					Label: Save world when reloading
+					Label: Save World On Reload
 				}
 
 				ModToReload: {
-					Tooltip: Enter the mod that you wish to reload
-					Label: Mod to reload
+					Tooltip: ""
+					Label: Mod To Reload
 				}
 
-				WaitingTimeBeforeNavigatingToModSources: {
-					Label: Waiting Time Before Navigating To Mod Sources
-					Tooltip: ""
-				}
-
-				WaitingTimeBeforeBuildAndReload: {
-					Label: Waiting Time Before Build And Reload
-					Tooltip: ""
-				}
-
-				NPCSpawnLocation: {
-					Label: NPC Spawn Location
-					Tooltip: ""
-				}
+				DisplayName: Config
 			}
 		}
 
 		Items: {
 			BorderShaderDye: {
-				Tooltip: Custom Item For God Glow Effect
+				Tooltip: ""
 				DisplayName: Border Shader Dye
 			}
 		}
-
-		"Keybinds.Toggle God Mode.DisplayName": Toggle God Mode
 	}
 }

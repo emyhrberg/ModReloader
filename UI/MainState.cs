@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.ItemSpawner;
+using SquidTestingMod.UI.Spawners;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -22,7 +22,6 @@ namespace SquidTestingMod.UI
 
         // Buttons
         public ItemSpawnerButton itemButton;
-        public RefreshButton refreshButton;
         public ConfigButton configButton;
         public ToggleButton toggleButton;
         public NPCSpawnerButton npcButton;
@@ -44,7 +43,6 @@ namespace SquidTestingMod.UI
             // Create all buttons with a single line per button:
             toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons");
             configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Open config");
-            refreshButton = AddButton<RefreshButton>(Assets.ButtonReload, "Reload the selected mod");
             itemButton = AddButton<ItemSpawnerButton>(Assets.ButtonItems, "Open Item Spawner\nContains all items in the game");
             npcButton = AddButton<NPCSpawnerButton>(Assets.ButtonNPC, "Open NPC Spawner\nContains town NPCs, enemies, and bosses");
             godButton = AddButton<GodButton>(Assets.ButtonGodOn, "Toggle player god mode");
@@ -52,11 +50,13 @@ namespace SquidTestingMod.UI
             hitboxButton = AddButton<HitboxButton>(Assets.ButtonHitboxOn, "Show player, enemy, and projectile hitboxes");
             uiDebugButton = AddButton<DebugUIButton>(Assets.ButtonUIDebug, "Show all UIElements from mods");
             logButton = AddButton<LogButton>(Assets.ButtonLog, "Open client.log");
+            reloadSingleplayerButton = AddButton<ReloadSingleplayerButton>(Assets.ButtonReloadSP, "Reload mod in singleplayer");
+            reloadMultiplayerButton = AddButton<ReloadMultiplayerButton>(Assets.ButtonReloadMP, "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
 
-            // Add the panels (invisible)
+            // Add the panels (invisible by default)
             itemSpawnerPanel = new ItemSpawnerPanel();
             npcSpawnerPanel = new NPCSpawnerPanel();
             Append(itemSpawnerPanel);
