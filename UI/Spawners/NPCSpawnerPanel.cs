@@ -118,22 +118,29 @@ namespace SquidTestingMod.UI.Spawners
 
         private void AddItemSlotsToGrid()
         {
-            int allNPCs = NPCID.Count;
+            int allNPCs = NPCLoader.NPCCount; // Use total count including modded NPCs
             int count = 0;
-
             Stopwatch s = Stopwatch.StartNew();
 
-            for (int i = 1; i <= allNPCs - 1; i++)
+            for (int i = 1; i < allNPCs; i++)
             {
-                NPC npc = new();
-                npc.SetDefaults(i);
+                try
+                {
+                    NPC npc = new();
+                    npc.SetDefaults(i);
 
-                CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);
-                ItemsGrid.Add(npcSlot);
+                    CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);
+                    ItemsGrid.Add(npcSlot);
 
-                count++;
-                if (count >= Conf.MaxItemsToDisplay)
-                    break;
+                    count++;
+                    if (count >= Conf.MaxItemsToDisplay)
+                        break;
+                }
+                catch (Exception ex)
+                {
+                    Log.Warn($"Skipping NPC index {i} due to error: {ex.Message}");
+                    // Optionally continue without adding this NPC
+                }
             }
 
             s.Stop();
@@ -150,7 +157,8 @@ namespace SquidTestingMod.UI.Spawners
 
             ItemsGrid.Clear();
 
-            int allNPCs = NPCID.Count;
+            // int allNPCs = NPCID.Count;
+            int allNPCs = NPCLoader.NPCCount;
             int count = 0;
 
             Stopwatch s = Stopwatch.StartNew();
