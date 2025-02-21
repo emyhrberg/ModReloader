@@ -46,8 +46,8 @@ namespace SquidTestingMod.Common.Configs
         // ITEM SPAWNER CONFIG
         [Header("ItemNPCSpawner")]
         [DefaultValue(1000)]
-        [Range(200, 2000)]
-        [Increment(200)]
+        [Range(100, 6000)]
+        [Increment(1000)]
         public int MaxItemsToDisplay;
 
         [Range(-500f, 500f)]

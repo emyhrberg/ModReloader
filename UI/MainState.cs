@@ -19,6 +19,10 @@ namespace SquidTestingMod.UI
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
         public float ButtonSize = 70f;
 
+        // ItemSpawner and NPCSpawner panels
+        public ItemSpawnerPanel itemSpawnerPanel;
+        public NPCSpawnerPanel npcSpawnerPanel;
+
         // Buttons
         public ItemSpawnerButton itemButton;
         public RefreshButton refreshButton;
@@ -54,6 +58,12 @@ namespace SquidTestingMod.UI
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
+
+            // Add the panels (invisible)
+            itemSpawnerPanel = new ItemSpawnerPanel();
+            npcSpawnerPanel = new NPCSpawnerPanel();
+            Append(itemSpawnerPanel);
+            Append(npcSpawnerPanel);
         }
 
         private T AddButton<T>(Asset<Texture2D> buttonImgText, string hoverText)
@@ -64,7 +74,7 @@ namespace SquidTestingMod.UI
             button.Width.Set(ButtonSize, 0f);
             button.Height.Set(ButtonSize, 0f);
             button.VAlign = 0.9f;
-            button.HAlign = 0.28f;
+            button.HAlign = 0.4f;
             button.MaxWidth = new StyleDimension(ButtonSize, 0);
             button.MaxHeight = new StyleDimension(ButtonSize, 0);
             button.MinHeight = new StyleDimension(ButtonSize, 0);

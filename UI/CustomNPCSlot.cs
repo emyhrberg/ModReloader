@@ -1,14 +1,11 @@
 using System;
-using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
@@ -105,6 +102,13 @@ namespace SquidTestingMod.UI
             // Check if the right mouse button is being held down
             if (IsMouseHovering && Main.mouseRight)
             {
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                if (sys.mainState.npcSpawnerPanel.IsDraggingNPCPanel || sys.mainState.npcSpawnerPanel.GetNPCPanelActive() == false)
+                {
+                    Log.Info("Dont spawn NPC, panel is hidden");
+                    return;
+                }
+
                 // Spawn the NPC 200 tiles above and 200 tiles to the left of players pos
                 // Only singleplayer
                 if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -131,6 +135,13 @@ namespace SquidTestingMod.UI
                 return;
             }
 
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys.mainState.npcSpawnerPanel.IsDraggingNPCPanel || sys.mainState.npcSpawnerPanel.GetNPCPanelActive() == false)
+            {
+                Log.Info("Dont spawn NPC, panel is hidden");
+                return;
+            }
+
             Config c = ModContent.GetInstance<Config>();
 
             float playerX = Main.LocalPlayer.position.X;
@@ -145,7 +156,7 @@ namespace SquidTestingMod.UI
 
     public class MyCustomNPCSource(string customData) : IEntitySource
     {
-        public string RandomStringForNoReason { get; private set; } = customData;
+        public string RandomStringForNoReason = customData;
 
         public string Context => "NPCSpawnFromNPCSlotClass";
     }

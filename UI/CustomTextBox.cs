@@ -108,7 +108,7 @@ namespace SquidTestingMod.UI
         {
             Rectangle hitbox = GetInnerDimensions().ToRectangle();
 
-            //Draw panel
+            // Draw panel
             base.DrawSelf(spriteBatch);
 
             if (focused)
@@ -152,39 +152,38 @@ namespace SquidTestingMod.UI
             CalculatedStyle space = GetDimensions();
             Color color = Color.White;
 
-            // position
-            Vector2 drawPos = space.Position() + new Vector2(8, 4);
+            // Position
+            Vector2 drawPos = space.Position() + new Vector2(8, 6);
             DynamicSpriteFont font = FontAssets.MouseText.Value;
+            float textScale = 0.9f; // Adjust this value to resize the text
 
-            // draw outline
+            // Draw outline
             Color outlineColor = Color.Black;
             Vector2[] offsets =
-            [
+            {
                 new(-1, -1),
                 new(1, -1),
-                new(-1, 1),
+                new (-1, 1),
                 new(1, 1)
-            ];
+            };
 
             foreach (var offset in offsets)
             {
-                spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor);
+                spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
             }
 
-            // draw text
+            // Draw text
             if (currentString.Length == 0 && !focused)
             {
                 // Draw hintText
                 color = Color.DimGray;
-                spriteBatch.DrawString(font, hintText, drawPos, color);
+                spriteBatch.DrawString(font, hintText, drawPos, color, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
             }
             else
             {
                 // Draw currentString
-                spriteBatch.DrawString(font, displayString, drawPos, color);
+                spriteBatch.DrawString(font, displayString, drawPos, color, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
             }
-
-
         }
     }
 }

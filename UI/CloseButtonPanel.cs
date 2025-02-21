@@ -5,7 +5,6 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -16,73 +15,55 @@ namespace SquidTestingMod.UI
 
         public CloseButtonPanel()
         {
-            closeTexture = Assets.X;
-            Left.Set(3f, 0f);
-            Top.Set(-3f, 0f);
-            Width.Set(30, 0f);
-            Height.Set(30, 0f);
+            // closeTexture = Assets.X;
+            Left.Set(12f, 0f);
+            Top.Set(-12f, 0f);
+            Width.Set(35, 0f);
+            Height.Set(35, 0f);
+            MaxWidth.Set(35, 0f);
+            MaxHeight.Set(35, 0f);
             HAlign = 1f;
+
+            // create a UIText
+            UIText text = new UIText("X", 0.4f, true);
+            text.HAlign = 0.5f;
+            text.VAlign = 0.5f;
+            Append(text);
         }
 
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            // draw the panel
-            base.DrawSelf(spriteBatch);
+        // public override void MouseOver(UIMouseEvent evt)
+        // {
+        //     BorderColor = Color.Yellow;
+        // }
 
-            // draw the closeTexture with 20x20 size in the center of the panel
-            CalculatedStyle dimensions = GetDimensions();
-            float panelCenterX = dimensions.X + (dimensions.Width / 2f);
-            float panelCenterY = dimensions.Y + (dimensions.Height / 2f);
-            int closeButtonSize = 20;
-            Rectangle closeButtonRect = new((int)(panelCenterX - closeButtonSize / 2), (int)(panelCenterY - closeButtonSize / 2), closeButtonSize, closeButtonSize);
-            spriteBatch.Draw(closeTexture.Value, closeButtonRect, Color.White);
-        }
-
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            // make the panel border color yellow when hovering
-            BorderColor = Color.Yellow;
-            // UICommon.TooltipMouseText("Close");
-            Main.hoverItemName = "Close";
-        }
-
-        public override void MouseOut(UIMouseEvent evt)
-        {
-            BorderColor = Color.Black;
-        }
+        // public override void MouseOut(UIMouseEvent evt)
+        // {
+        //     BorderColor = Color.Black;
+        // }
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Close the item panel for now.
-            // TODO close any parent panel.
-            // sys.mainState.itemButton.ToggleItemsPanel();
-
-            // Get parent
-            UIElement parent = Parent;
-
-            if (parent == null)
-            {
-                Log.Info($"parent {parent.GetType().Name} is null");
-                return;
-            }
-
-            // If parent is itemspanel, close it.
-            // If parent is npcpanel, close it.
-
-            // Change flag
+            // Check which our parent panel is and toggle its active.
+            // Its gonna be either the itemSpawnerPanel or the npcSpawnerPanel.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            if (parent is ItemSpawnerPanel)
-            {
-                sys.mainState.itemButton.isItemsPanelVisible = false;
-            }
-            else if (parent is NPCSpawnerPanel)
-            {
-                sys.mainState.npcButton.isNPCPanelVisible = false;
-            }
+            var itemSpawnerPanel = sys?.mainState?.itemSpawnerPanel;
+            var npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
 
-            // Remove the parent from the UI
-            parent.Remove();
+            if (Parent is ItemSpawnerPanel && itemSpawnerPanel.GetActive() == true)
+            {
+                if (itemSpawnerPanel != null && itemSpawnerPanel.GetActive() == true)
+                {
+                    itemSpawnerPanel.SetActive(false);
+                }
+            }
+            else if (Parent is NPCSpawnerPanel && npcSpawnerPanel.GetNPCPanelActive() == true)
+            {
+                if (npcSpawnerPanel != null && npcSpawnerPanel.GetNPCPanelActive() == true)
+                {
+                    npcSpawnerPanel.SetNPCPanelActive(false);
+                }
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
@@ -16,263 +16,202 @@ using Terraria.UI;
 namespace SquidTestingMod.UI
 {
     /// <summary>
-    /// Main function to create the item panel, 
-    /// containing all the items in the game.
+    /// NPC Spawner Panel – now structured to match the Item Spawner Panel in size, proportions, and behavior.
     /// </summary>
     public class NPCSpawnerPanel : UIPanel
     {
+        // Panel constants
+        private bool NPCPanelActive = false; // true for visible and update, false for not visible and not update
+        private const int padding = 12;
+        private const int W = 530 + padding; // same as ItemSpawnerPanel width
+        private const int H = 570;           // same as ItemSpawnerPanel height
+
         // Colors
-        private Color lighterBlue = new(69, 89, 162);
         private Color lightBlue = new(63, 82, 151);
         private Color darkBlue = new(40, 47, 82);
-        private Color darkerBlue = new(22, 25, 55);
 
         // UI Elements
         private CustomGrid ItemsGrid;
         private UIScrollbar Scrollbar;
-        private UIPanel ItemBackgroundPanel;
         private UIPanel CloseButtonPanel;
-        public UIPanel TitlePanel;
-        public CustomTextBox SearchTextBox;
+        private UIPanel TitlePanel;
+        private CustomTextBox SearchTextBox;
+        private UIText NPCCountText;
+        private UIText HeaderText;
+
+        // Dragging fields
+        public bool IsDraggingNPCPanel;
+        private bool dragging;
+        private Vector2 dragOffset;
+        private const float DragThreshold = 3f;
+        private Vector2 mouseDownPos;
 
         public NPCSpawnerPanel()
         {
-            // Set the panel properties
-            Width.Set(370f, 0f);
-            Height.Set(370f, 0f);
-            HAlign = 0.6f;
+            // Set panel properties to mirror the ItemSpawnerPanel
+            Width.Set(W, 0f);
+            Height.Set(H, 0f);
+            HAlign = 0.3f;
             VAlign = 0.6f;
-            BackgroundColor = darkBlue * 0.5f;
+            BackgroundColor = darkBlue * 1f;
 
-            // Add all content in the panel
-            AddHeaderTextPanel();
-            AddClosePanel();
-            AddSearchTextBox();
-            AddItemsBackgroundPanel();
-            AddScrollbar();
-            AddItemsGrid();
+            // Create header and title elements
+            TitlePanel = new CustomTitlePanel(padding, lightBlue, 35);
+            HeaderText = new UIText("NPC Spawner", 0.4f, true);
+            CloseButtonPanel = new CloseButtonPanel();
+            NPCCountText = new CustomItemCountText("0 NPCs", 0.4f);
 
-            // Add items to the grid
+            // Create the search text box
+            SearchTextBox = new CustomTextBox("Search for NPCs")
+            {
+                Width = { Pixels = 200 },
+                Height = { Pixels = 35 },
+                HAlign = 1f,
+                // Position matches ItemSpawnerPanel: -padding + 35 + padding = 35 pixels.
+                Top = { Pixels = -padding + 35 + padding },
+                BackgroundColor = Color.White,
+                BorderColor = Color.Black
+            };
+            SearchTextBox.OnTextChanged += FilterItems;
+
+            // Create the scrollbar
+            Scrollbar = new UIScrollbar()
+            {
+                HAlign = 1f,
+                // Height: 440 - 10 to account for padding (same as ItemSpawnerPanel)
+                Height = { Pixels = 440 - 10 },
+                Width = { Pixels = 20 },
+                // Top: -padding + 30 + padding + 35 + padding + 5 (evaluates to 82 pixels with padding=12)
+                Top = { Pixels = -padding + 30 + padding + 35 + padding + 5 },
+                Left = { Pixels = 0f }
+            };
+
+            // Create the grid for NPC slots
+            ItemsGrid = new CustomGrid()
+            {
+                Height = { Pixels = 440 },
+                // Width takes full width minus scrollbar width (–20 pixels)
+                Width = { Percent = 1f, Pixels = -20 },
+                ListPadding = 0f,
+                // Top: -padding + 30 + padding + 35 + padding (evaluates to 77 pixels with padding=12)
+                Top = { Pixels = -padding + 30 + padding + 35 + padding },
+                Left = { Pixels = 0f },
+                OverflowHidden = true,
+            };
+            ItemsGrid.ManualSortMethod = (listUIElement) => { };
+            ItemsGrid.SetScrollbar(Scrollbar);
+
+            // Append all elements in order
+            Append(TitlePanel);
+            Append(HeaderText);
+            Append(CloseButtonPanel);
+            Append(NPCCountText);
+            Append(SearchTextBox);
+            Append(Scrollbar);
+            Append(ItemsGrid);
+
+            // Populate the grid with NPC slots
             AddItemSlotsToGrid();
         }
 
-        #region adding content
-
-        private void AddClosePanel()
-        {
-            CloseButtonPanel = new CloseButtonPanel();
-            Append(CloseButtonPanel);
-        }
-
-        private void AddHeaderTextPanel()
-        {
-            int h = 45;
-            TitlePanel = new UIPanel()
-            {
-                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
-                Height = { Pixels = h },
-                Top = { Pixels = -12 - h / 2 },
-                Left = { Pixels = 0 },
-                BackgroundColor = darkBlue,
-            };
-            Append(TitlePanel);
-
-            // add UIText to TitlePanel
-            UIText text = new(text: "NPC Spawner", textScale: 0.6f, large: true)
-            {
-                HAlign = 0.5f,
-                VAlign = 0.5f,
-            };
-            TitlePanel.Append(text);
-        }
+        #region Adding NPC Slots
 
         private void AddItemSlotsToGrid()
         {
-            int allItems = NPCID.Count;
+            int allNPCs = NPCID.Count;
             int count = 0;
             Config c = ModContent.GetInstance<Config>();
 
-            for (int i = 1; i <= allItems - 1; i++)
+            Stopwatch s = Stopwatch.StartNew();
+
+            for (int i = 1; i <= allNPCs - 1; i++)
             {
                 NPC npc = new();
                 npc.SetDefaults(i);
 
-                // if (npc.FullName != "Ogre" && npc.FullName != "Zombie")
-                // continue; // only show ogres and zombies
-
-                // note: you can use BankItem for red color, ChestItem for blue color, etc.
-                // UIItemSlot itemSlot = new([item], 0, Terraria.UI.ItemSlot.Context.ChestItem);
-                CustomNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
+                CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);
                 ItemsGrid.Add(npcSlot);
-
-                // Log.Info("Added " + npc.FullName + ", total: " + count);
 
                 count++;
                 if (count >= c.MaxItemsToDisplay)
                     break;
             }
+
+            s.Stop();
+            NPCCountText.SetText(ItemsGrid.Count + " NPCs in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
         }
 
-        private void AddItemsBackgroundPanel()
-        {
-            ItemBackgroundPanel = new UIPanel()
-            {
-                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
-                Height = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 },
-                HAlign = 0.5f,
-                Top = { Pixels = 60 },
-                Left = { Pixels = -24 },
-                BackgroundColor = darkBlue * 0.8f,
-            };
-            Append(ItemBackgroundPanel);
-        }
-
-        private void AddScrollbar()
-        {
-            Scrollbar = new UIScrollbar()
-            {
-                HAlign = 1f,
-                Height = { Pixels = 275 },
-                Width = { Pixels = 20 },
-                Top = { Pixels = 60 + 5 },
-                Left = { Pixels = -5 },
-            };
-            Scrollbar.OnLeftMouseUp += (evt, element) => SearchTextBox.Focus();
-            Append(Scrollbar);
-        }
-
-        private void AddSearchTextBox()
-        {
-            SearchTextBox = new("")
-            {
-                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
-                Height = { Pixels = 30 },
-                Top = { Pixels = 25 },
-                BackgroundColor = Color.White,
-                BorderColor = Color.Black * 1f, // TODO 1f or 0.8 for the search box?
-            };
-            SearchTextBox.OnTextChanged += FilterItems;
-            Append(SearchTextBox);
-        }
-
-        private void AddItemsGrid()
-        {
-            ItemsGrid = new CustomGrid()
-            {
-                // MaxHeight = { Pixels = 250 + 5 * 5 + 12 * 2 }, // 250 pixels + 5 pixels padding + 12 pixels padding
-                Height = { Percent = 0f, Pixels = 250 + 5 * 5 },
-                Width = { Percent = 0f, Pixels = 250 + 5 * 5 + 12 * 2 },
-                HAlign = 0.5f,
-                ListPadding = 5f, // distance between items
-                Top = { Pixels = 0f }, // (12 since cornerBox is 12 pixels)
-                Left = { Pixels = 3f }, // weird custom offset
-                OverflowHidden = true, // hide items outside the grid
-            };
-            ItemsGrid.ManualSortMethod = (listUIElement) => { };
-            ItemsGrid.SetScrollbar(Scrollbar);
-            ItemBackgroundPanel.Append(ItemsGrid);
-        }
         #endregion
 
-        #region filteritems
+        #region Filtering NPCs
+
         private void FilterItems()
         {
             string searchText = SearchTextBox.currentString.ToLower();
-            Log.Info($"Search Text: {searchText}");
             Config c = ModContent.GetInstance<Config>();
 
             ItemsGrid.Clear();
 
-            int allItems = NPCID.Count;
+            int allNPCs = NPCID.Count;
             int count = 0;
 
             Stopwatch s = Stopwatch.StartNew();
-            for (int i = 1; i <= allItems - 1; i++)
+            for (int i = 1; i <= allNPCs - 1; i++)
             {
                 NPC npc = new();
                 npc.SetDefaults(i);
 
-                if (npc.FullName.ToLower().Contains(searchText))
+                if (npc.FullName.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                 {
                     count++;
                     if (count >= c.MaxItemsToDisplay)
                         break;
 
-                    CustomNPCSlot npcSlot = new(npc: npc, slotContext: ItemSlot.Context.ShopItem);
+                    CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);
                     ItemsGrid.Add(npcSlot);
                 }
             }
             s.Stop();
-            Log.Info($"Filtering {count} items took {s.ElapsedMilliseconds} ms");
+            NPCCountText.SetText(ItemsGrid.Count + " NPCs in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
         }
+
         #endregion
 
-        #region containspoint
+        #region Dragging & Update
+
         public override bool ContainsPoint(Vector2 point)
         {
-            // if it contains the TitlePanel, also return true
-            if (TitlePanel.ContainsPoint(point))
-                return true;
+            if (!NPCPanelActive)
+                return false;
 
             return base.ContainsPoint(point);
         }
-        #endregion
-
-        #region helpers
-        private static void LogInnerOuterDimensions(UIElement element)
-        {
-            element.Recalculate();
-            Log.Info($"{element.GetType().Name} Outer: {element.GetOuterDimensions().Width} x {element.GetOuterDimensions().Height} Inner: {element.GetInnerDimensions().Width} x {element.GetInnerDimensions().Height}");
-        }
-        #endregion
-
-        #region dragging and update
-        public bool IsDragging = false;
-        private bool dragging;
-        private Vector2 dragOffset;
-
-        // more
-        private Vector2 mouseDownPos;
-        private const float DragThreshold = 10f; // you can tweak the threshold
 
         public override void Update(GameTime gameTime)
         {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys?.mainState?.npcButton.isNPCPanelVisible == false)
+            if (!NPCPanelActive)
                 return;
 
             base.Update(gameTime);
 
-            // Check if we moved the mouse more than the threshold
-            Vector2 currentPos = new(Main.mouseX, Main.mouseY);
             if (dragging)
             {
-                float dragDistance = Vector2.Distance(currentPos, mouseDownPos);
-
+                float dragDistance = Vector2.Distance(new Vector2(Main.mouseX, Main.mouseY), mouseDownPos);
                 if (dragDistance > DragThreshold)
                 {
-                    IsDragging = true; // Now we are officially dragging
+                    IsDraggingNPCPanel = true;
+                    Left.Set(Main.mouseX - dragOffset.X, 0f);
+                    Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                    Recalculate();
+                    Main.LocalPlayer.mouseInterface = true;
                 }
             }
             else
             {
-                IsDragging = false; // Reset when not dragging
+                IsDraggingNPCPanel = false;
             }
 
-            if (dragging)
-            {
-                Left.Set(Main.mouseX - dragOffset.X, 0f);
-                Top.Set(Main.mouseY - dragOffset.Y, 0f);
-                Recalculate();
-            }
-
-            // DISABLE CLICKS HOTFIX
-            if (dragging)
-            {
-                Main.LocalPlayer.mouseInterface = true;
-            }
-            // Or if the mouse is currently over the panel, also block usage
-            else if (ContainsPoint(Main.MouseScreen))
+            if (dragging || ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
@@ -280,15 +219,13 @@ namespace SquidTestingMod.UI
 
         public override void LeftMouseDown(UIMouseEvent evt)
         {
-            // prevent dragging if mouse is over scrollbar
-            if (Scrollbar != null && Scrollbar.ContainsPoint(evt.MousePosition))
+            if (!NPCPanelActive)
                 return;
 
-            mouseDownPos = evt.MousePosition; // store mouse down location
-
+            mouseDownPos = evt.MousePosition;
             base.LeftMouseDown(evt);
             dragging = true;
-            IsDragging = false;
+            IsDraggingNPCPanel = false;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
             Main.LocalPlayer.mouseInterface = true;
         }
@@ -297,24 +234,34 @@ namespace SquidTestingMod.UI
         {
             base.LeftMouseUp(evt);
             dragging = false;
-            IsDragging = false;
+            IsDraggingNPCPanel = false;
             Main.LocalPlayer.mouseInterface = false;
             Recalculate();
         }
 
-        // CLICK
         public override void LeftClick(UIMouseEvent evt)
         {
-            if (IsDragging)
+            if (IsDraggingNPCPanel)
                 return;
+
             base.LeftClick(evt);
-            Main.LocalPlayer.mouseInterface = true; // block item usage
+            Main.LocalPlayer.mouseInterface = true;
         }
 
         #endregion
 
-        #region usefulcode
-        // https://github.com/ScalarVector1/DragonLens/blob/1b2ca47a5a4d770b256fdffd5dc68c0b4d32d3b2/Content/Tools/Spawners/ItemSpawner.cs#L14
+        #region Toggle Visibility
+
+        public bool GetNPCPanelActive() => NPCPanelActive;
+        public bool SetNPCPanelActive(bool active) => NPCPanelActive = active;
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            if (!NPCPanelActive)
+                return;
+            base.Draw(spriteBatch);
+        }
+
         #endregion
     }
 }

@@ -22,8 +22,8 @@ namespace SquidTestingMod.UI
         public CustomItemSlot(Item[] itemArray, int itemIndex, int itemSlotContext) : base(itemArray, itemIndex, itemSlotContext)
         {
             // set size
-            Width.Set(40, 0f);
-            Height.Set(40, 0f);
+            Width.Set(44, 0f);
+            Height.Set(44, 0f);
 
             displayItem = itemArray[itemIndex].Clone();
             _itemSlotContext = itemSlotContext;
@@ -61,9 +61,9 @@ namespace SquidTestingMod.UI
         {
             // if dragging, do not perform any action
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.itemButton.itemsPanel.IsDragging)
+            if (sys.mainState.itemSpawnerPanel.IsDraggingItemPanel || sys.mainState.itemSpawnerPanel.GetActive() == false)
             {
-                Log.Info("Dragging");
+                Log.Info("Dont spawn item, panel is hidden");
                 return;
             }
 
@@ -79,9 +79,9 @@ namespace SquidTestingMod.UI
         {
             // if dragging, do not perform any action
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.itemButton.itemsPanel.IsDragging)
+            if (sys.mainState.itemSpawnerPanel.IsDraggingItemPanel || sys.mainState.itemSpawnerPanel.GetActive() == false)
             {
-                Log.Info("Dragging");
+                Log.Info("Dont spawn item, panel is hidden");
                 return;
             }
 
