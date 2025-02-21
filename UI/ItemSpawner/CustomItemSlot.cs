@@ -10,7 +10,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.UI.ItemSpawner
 {
     // Instead of inheriting the vanilla behavior we override the drawing and click behavior.
     public class CustomItemSlot : UIItemSlot
@@ -27,6 +27,11 @@ namespace SquidTestingMod.UI
 
             displayItem = itemArray[itemIndex].Clone();
             _itemSlotContext = itemSlotContext;
+        }
+
+        public Item GetDisplayItem()
+        {
+            return displayItem;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

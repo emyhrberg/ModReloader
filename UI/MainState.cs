@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
-using Terraria;
-using Terraria.ModLoader;
+using SquidTestingMod.UI.ItemSpawner;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -74,7 +71,7 @@ namespace SquidTestingMod.UI
             button.Width.Set(ButtonSize, 0f);
             button.Height.Set(ButtonSize, 0f);
             button.VAlign = 0.9f;
-            button.HAlign = 0.4f;
+            button.HAlign = 0.35f;
             button.MaxWidth = new StyleDimension(ButtonSize, 0);
             button.MaxHeight = new StyleDimension(ButtonSize, 0);
             button.MinHeight = new StyleDimension(ButtonSize, 0);

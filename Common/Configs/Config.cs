@@ -28,13 +28,13 @@ namespace SquidTestingMod.Common.Configs
         [DrawTicks]
         public string AutoloadWorld = "Disabled";
         [DefaultValue(100)]
-        [Range(100, 5000)]
+        [Range(100, 2000)]
         [Increment(1000)]
         public int WaitingTimeBeforeNavigatingToModSources;
 
         [DefaultValue(100)]
         [Increment(1000)]
-        [Range(100, 5000)]
+        [Range(100, 2000)]
         public int WaitingTimeBeforeBuildAndReload;
 
         // GAMEPLAY CONFIG

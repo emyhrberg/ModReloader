@@ -1,22 +1,28 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.UI.ItemSpawner
 {
-    public abstract class BaseFilterButton : UIImageButton
+    public class BaseFilterButton : UIImageButton
     {
         protected Asset<Texture2D> _Texture;
         public string TooltipText = "";
-        public float RelativeLeftOffset = 0f;
         public bool Active = true;
 
-        protected BaseFilterButton(Asset<Texture2D> texture, string hoverText) : base(texture)
+        public BaseFilterButton(Asset<Texture2D> texture, string hoverText) : base(texture)
         {
+            Width.Set(21, 0f);
+            Height.Set(21, 0f);
+            MaxWidth.Set(21, 0f);
+            MaxHeight.Set(21, 0f);
+            Top.Set(50, 0f);
+
             _Texture = texture;
             TooltipText = hoverText;
             SetImage(_Texture);
@@ -26,9 +32,8 @@ namespace SquidTestingMod.UI
         {
             if (_Texture != null && _Texture.Value != null)
             {
-                // Get the forced button size from MainState (default to 70 if not set)
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                float buttonSize = sys?.mainState?.ButtonSize ?? 70f;
+                // Get the button size.
+                float buttonSize = 21f;
 
                 // Determine opacity based on mouse hover.
                 float opacity = IsMouseHovering ? 1f : 0.4f;
@@ -43,7 +48,7 @@ namespace SquidTestingMod.UI
 
             // Draw tooltip text if hovering.
             if (IsMouseHovering)
-                UICommon.TooltipMouseText(TooltipText);
+                Main.hoverItemName = TooltipText;
         }
     }
 }

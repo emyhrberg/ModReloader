@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.UI.ItemSpawner;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -51,7 +52,7 @@ namespace SquidTestingMod.UI
             // Set panel properties to mirror the ItemSpawnerPanel
             Width.Set(W, 0f);
             Height.Set(H, 0f);
-            HAlign = 0.3f;
+            HAlign = 0.42f;
             VAlign = 0.6f;
             BackgroundColor = darkBlue * 1f;
 

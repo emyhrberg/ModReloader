@@ -7,7 +7,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.UI.ItemSpawner
 {
     public class CloseButtonPanel : UIPanel
     {

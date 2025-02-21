@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -15,11 +16,10 @@ using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 using XPT.Core.Audio.MP3Sharp.Decoding;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.UI.ItemSpawner
 {
     /// <summary>
-    /// Main function to create the item panel, 
-    /// containing all the items in the game.
+    /// A panel containing a grid of all items in the game that can be spawned.
     /// </summary>
     public class ItemSpawnerPanel : UIPanel
     {
@@ -41,6 +41,13 @@ namespace SquidTestingMod.UI
         private CustomTextBox SearchTextBox;
         private UIText ItemCountText;
         private UIText HeaderText;
+        public CustomTextBox GetCustomTextBox() => SearchTextBox;
+
+        // Store item slots
+        private List<CustomItemSlot> allItemSlots = [];
+
+        // Add this field at the top of your class (outside any function)
+        private Func<Item, bool> currentCategoryPredicate = item => true;
 
         #region Constructor
         public ItemSpawnerPanel()
@@ -51,10 +58,10 @@ namespace SquidTestingMod.UI
             HAlign = 0.0f;
             Left.Set(pixels: 20f, precent: 0.0f);
             VAlign = 0.9f;
-            BackgroundColor = darkBlue * 1f;
+            BackgroundColor = lightBlue;
 
             // Create all content in the panel
-            TitlePanel = new CustomTitlePanel(padding: padding, bgColor: lightBlue, height: 35);
+            TitlePanel = new CustomTitlePanel(padding: padding, bgColor: darkBlue, height: 35);
             HeaderText = new UIText(text: "Item Spawner", textScale: 0.4f, large: true);
             CloseButtonPanel = new CloseButtonPanel();
             ItemCountText = new CustomItemCountText("0 Items", textScale: 0.4f);
@@ -91,6 +98,46 @@ namespace SquidTestingMod.UI
             ItemsGrid.ManualSortMethod = (listUIElement) => { };
             ItemsGrid.SetScrollbar(Scrollbar);
 
+            // Filter All Items (5000+ items)
+            BaseFilterButton all = new(Assets.FilterAll, "Filter All");
+            all.Left.Set(0, 0);
+            all.OnLeftClick += (evt, element) =>
+            {
+                currentCategoryPredicate = item => true;
+                FilterItems();
+            };
+            Append(all);
+
+            // Filter All Weapons (no damage class filter)
+            BaseFilterButton allWeps = new(Assets.FilterMelee, "Filter All Weapons");
+            allWeps.Left.Set(25, 0);
+            allWeps.OnLeftClick += (evt, element) => FilterItemsByType(null);
+            Append(allWeps);
+
+            // Filter Melee Weapons
+            BaseFilterButton melee = new(Assets.FilterMelee, "Filter Melee Weapons");
+            melee.Left.Set(50, 0);
+            melee.OnLeftClick += (evt, element) => FilterItemsByType(DamageClass.Melee);
+            Append(melee);
+
+            // Filter Ranged Weapons
+            BaseFilterButton ranged = new(Assets.FilterRanged, "Filter Ranged Weapons");
+            ranged.Left.Set(75, 0);
+            ranged.OnLeftClick += (evt, element) => FilterItemsByType(DamageClass.Ranged);
+            Append(ranged);
+
+            // Filter Magic Weapons
+            BaseFilterButton magic = new(Assets.FilterMagic, "Filter Magic Weapons");
+            magic.Left.Set(100, 0);
+            magic.OnLeftClick += (evt, element) => FilterItemsByType(DamageClass.Magic);
+            Append(magic);
+
+            // Filter Summon Weapons
+            BaseFilterButton summon = new(Assets.FilterSummon, "Filter Summon Weapons");
+            summon.Left.Set(125, 0);
+            summon.OnLeftClick += (evt, element) => FilterItemsByType(DamageClass.Summon);
+            Append(summon);
+
             // Add all content in the panel
             Append(TitlePanel);
             Append(HeaderText);
@@ -102,6 +149,24 @@ namespace SquidTestingMod.UI
 
             // Add items to the grid
             AddItemSlotsToGrid();
+        }
+        #endregion
+
+        #region FilterItemsByType
+        private void FilterItemsByType(DamageClass damageClass = null)
+        {
+            // If damageClass is null, assume "All Weapons" button was clicked.
+            // (For "All Items", you can directly call FilterItems or create a dedicated button that sets the predicate to always true.)
+            if (damageClass == null)
+            {
+                currentCategoryPredicate = item => item.damage > 0;
+            }
+            else
+            {
+                currentCategoryPredicate = item => item.damage > 0 && item.DamageType == damageClass;
+            }
+            // Reapply the search text filter with the new category filter.
+            FilterItems();
         }
         #endregion
 
@@ -118,23 +183,23 @@ namespace SquidTestingMod.UI
             for (int i = 1; i <= allItems; i++)
             {
                 Item item = new();
-                if (item == null)
-                {
-                    Log.Warn("Item is null");
-                    continue;
-                }
                 item.SetDefaults(i);
                 CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
-                ItemsGrid.Add(itemSlot);
+                allItemSlots.Add(itemSlot);
 
                 count++;
                 if (count >= c.MaxItemsToDisplay)
                     break;
             }
 
+            foreach (var itemSlot in allItemSlots)
+            {
+                ItemsGrid.Add(itemSlot);
+            }
+
             // update item count text
             s.Stop();
-            ItemCountText.SetText(ItemsGrid.Count + " Items in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
+            ItemCountText.SetText(ItemsGrid.Count + " Items" + " in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
         }
 
         #endregion
@@ -143,31 +208,20 @@ namespace SquidTestingMod.UI
         private void FilterItems()
         {
             string searchText = SearchTextBox.currentString.ToLower();
-            Config c = ModContent.GetInstance<Config>();
-
             ItemsGrid.Clear();
-
-            int allItems = TextureAssets.Item.Length - 1;
-            int count = 0;
-
             Stopwatch s = Stopwatch.StartNew();
-            for (int i = 1; i <= allItems; i++)
+            foreach (var itemSlot in allItemSlots)
             {
-                Item item = new();
-                item.SetDefaults(i);
-
-                if (item.Name.Contains(searchText, System.StringComparison.CurrentCultureIgnoreCase))
+                Item item = itemSlot.GetDisplayItem();
+                // Apply both the search filter and the current category filter.
+                if (item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase) &&
+                    currentCategoryPredicate(item))
                 {
-                    count++;
-                    if (count >= c.MaxItemsToDisplay)
-                        break;
-
-                    CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                     ItemsGrid.Add(itemSlot);
                 }
             }
             s.Stop();
-            ItemCountText.SetText(ItemsGrid.Count + " Items in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
+            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.ElapsedMilliseconds / 1000.0, 3)} seconds");
         }
         #endregion
 

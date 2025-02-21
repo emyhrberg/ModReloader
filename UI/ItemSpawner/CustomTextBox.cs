@@ -8,7 +8,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.UI.ItemSpawner
 {
     //ty jopojelly and darthmorf
     public class CustomTextBox : UIPanel

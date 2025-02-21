@@ -52,7 +52,13 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonUIDebug;
         public static Asset<Texture2D> ButtonReloadSingleplayer;
         public static Asset<Texture2D> ButtonReloadMultiplayer;
-        public static Asset<Texture2D> X;
+
+        // Filter buttons
+        public static Asset<Texture2D> FilterAll;
+        public static Asset<Texture2D> FilterMelee;
+        public static Asset<Texture2D> FilterRanged;
+        public static Asset<Texture2D> FilterMagic;
+        public static Asset<Texture2D> FilterSummon;
 
         public static void PreloadAllAssets()
         {
@@ -77,7 +83,11 @@ namespace SquidTestingMod.Helpers
             ButtonUIDebug = PreloadAsset("ButtonUI");
             ButtonReloadSingleplayer = PreloadAsset("ButtonReloadSingleplayer");
             ButtonReloadMultiplayer = PreloadAsset("ButtonReloadMultiplayer");
-            X = PreloadAsset("X_32x32");
+            FilterAll = PreloadAsset("FilterAll");
+            FilterMelee = PreloadAsset("FilterMelee");
+            FilterRanged = PreloadAsset("FilterRanged");
+            FilterMagic = PreloadAsset("FilterMagic");
+            FilterSummon = PreloadAsset("FilterSummon");
 
             // Stop timer
             s.Stop();

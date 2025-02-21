@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using log4net;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
+using SquidTestingMod.UI.ItemSpawner;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -25,6 +22,9 @@ namespace SquidTestingMod.UI
             {
                 // toggle Active flag if its true to false vice versa
                 itemSpawnerPanel.SetActive(!itemSpawnerPanel.GetActive());
+
+                // focus on the text box
+                itemSpawnerPanel.GetCustomTextBox().Focus();
             }
         }
     }
