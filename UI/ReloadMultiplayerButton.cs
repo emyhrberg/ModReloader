@@ -1,16 +1,8 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.PacketHandlers;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -24,14 +16,14 @@ namespace SquidTestingMod.UI
 
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                ReloadUtilities.ExitWorldOrServer();
+                await ReloadUtilities.ExitWorldOrServer();
             }
             else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                ReloadUtilities.ExitAndKillServer();
+                await ReloadUtilities.ExitAndKillServer();
             }
 
-            await ReloadUtilities.ReloadOrBuildAndReloadAsync(true);
+            ReloadUtilities.ReloadMod();
         }
     }
 }

@@ -1,62 +1,16 @@
-﻿using SquidTestingMod.PacketHandlers;
+﻿using SquidTestingMod.Common.Configs;
+using SquidTestingMod.PacketHandlers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
-using Terraria;
-using SquidTestingMod.Common.Configs;
 using System.Reflection;
+using System.Threading.Tasks;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
-using static SquidTestingMod.Common.Configs.Config;
-using Terraria.ModLoader.UI;
 
 namespace SquidTestingMod.Helpers
 {
     //All functions, related to reload
     internal class ReloadUtilities
     {
-        public async static void PrepareMainMPClient()
-        {
-
-            ClientDataHandler.Mode = ClientMode.MPMain;
-            ClientDataHandler.PlayerId = Utilities.FindPlayerId();
-            ClientDataHandler.WriteData();
-
-            ExitAndKillServer();
-
-            await Task.Delay(1200);
-
-            object modSourcesInstance = NavigateToDevelopMods();
-
-            await Task.Delay(600);
-            BuildAndReloadMod(modSourcesInstance);
-
-        }
-
-        public async static void PrepareMinorMPClient()
-        {
-            ClientDataHandler.Mode = ClientMode.MPMinor;
-            ClientDataHandler.PlayerId = Utilities.FindPlayerId();
-            ClientDataHandler.WriteData();
-
-            ExitWorldOrServer();
-
-            await Task.Delay(1200);
-
-            ReloadMod();
-        }
-
-        public async static void PrepareSPClient()
-        {
-            PrepareClient(ClientMode.SinglePlayer);
-
-            ExitWorldOrServer();
-
-            await ReloadOrBuildAndReloadAsync(true);
-        }
-
         public static void PrepareClient(ClientMode clientMode)
         {
             ClientDataHandler.Mode = clientMode;
@@ -64,61 +18,59 @@ namespace SquidTestingMod.Helpers
             ClientDataHandler.WorldId = Utilities.FindWorldId();
         }
 
-        public static async Task ReloadOrBuildAndReloadAsync(bool shoudBeBuilded)
-        {
-            object modSourcesInstance = null;
 
 
-            await Task.Delay(1200);
-
-            if (shoudBeBuilded)
-            {
-                modSourcesInstance = NavigateToDevelopMods();
-            }
-
-            if (shoudBeBuilded)
-            {
-                await Task.Delay(600);
-                BuildAndReloadMod(modSourcesInstance);
-            }
-            else
-            {
-                ReloadMod();
-            }
-
-
-        }
-
-
-
-        public static void ExitWorldOrServer()
+        public static Task ExitWorldOrServer()
         {
 
             if (Conf.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
-                WorldGen.SaveAndQuit();
+                var tcs = new TaskCompletionSource();
+
+                void Callback()
+                {
+                    tcs.SetResult();
+                }
+
+                WorldGen.SaveAndQuit(Callback);
+                return tcs.Task;
             }
             else
             {
                 Log.Warn("Just quitting...");
                 WorldGen.JustQuit();
+                return Task.CompletedTask;
             }
+
         }
 
-        public static void ExitAndKillServer()
+        public static Task ExitAndKillServer()
         {
             ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.SaveWorldOnReload);
-            WorldGen.SaveAndQuit();
+            var tcs = new TaskCompletionSource();
+
+            void Callback()
+            {
+                tcs.SetResult();
+            }
+
+            WorldGen.SaveAndQuit(Callback);
+            return tcs.Task;
         }
 
-        private static void ReloadMod()
+        public static void ReloadMod()
         {
             Main.menuMode = 10002;
         }
 
-        private static void BuildAndReloadMod(object modSourcesInstance)
+        public async static Task BuildAndReloadMod()
         {
+            object modSourcesInstance = null;
+            modSourcesInstance = NavigateToDevelopMods();
+            await Task.Delay(600);
+
+
             if (modSourcesInstance == null)
             {
                 Log.Warn("modSourcesInstance is null.");

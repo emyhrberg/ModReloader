@@ -1,5 +1,4 @@
 ﻿using SquidTestingMod.Helpers;
-using SquidTestingMod.UI;
 using System.IO;
 using System.Threading.Tasks;
 using Terraria;
@@ -58,20 +57,26 @@ namespace SquidTestingMod.PacketHandlers
         public void ReceiveRefreshClients(BinaryReader reader, int fromWho)
         {
             Log.Info($"Receiving ReceiveRefreshClients to {Main.myPlayer} from {fromWho}");
+            Task.Run(ReceiveRefreshClientsAsync);
+        }
+
+        private async static void ReceiveRefreshClientsAsync()
+        {
+
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 ReloadUtilities.PrepareClient(ClientMode.MPMain);
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
                 {
-                    ReloadUtilities.ExitWorldOrServer();
+                    await ReloadUtilities.ExitWorldOrServer();
                 }
                 else if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
-                    ReloadUtilities.ExitAndKillServer();
+                    await ReloadUtilities.ExitAndKillServer();
                 }
 
-                Task.Run(() => ReloadUtilities.ReloadOrBuildAndReloadAsync(false));
+                await ReloadUtilities.BuildAndReloadMod();
             }
         }
     }
