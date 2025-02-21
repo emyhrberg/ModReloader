@@ -21,10 +21,9 @@ namespace SquidTestingMod.UI
     {
         public override void LeftClick(UIMouseEvent evt)
         {
-            Config c = ModContent.GetInstance<Config>();
 
             // 1 Clear logs if needed
-            if (c.ClearClientLogOnReload)
+            if (Conf.ClearClientLogOnReload)
                 ClearClientLog();
             /*
             if (c.SaveWorldOnReload)

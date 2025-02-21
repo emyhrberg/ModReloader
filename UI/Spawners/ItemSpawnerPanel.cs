@@ -171,7 +171,6 @@ namespace SquidTestingMod.UI.Spawners
         {
             int allItems = TextureAssets.Item.Length - 1;
             int count = 0;
-            Config c = ModContent.GetInstance<Config>();
 
             Stopwatch s = Stopwatch.StartNew();
 
@@ -183,7 +182,7 @@ namespace SquidTestingMod.UI.Spawners
                 allItemSlots.Add(itemSlot);
 
                 count++;
-                if (count >= c.MaxItemsToDisplay)
+                if (count >= Conf.MaxItemsToDisplay)
                     break;
             }
 

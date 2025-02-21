@@ -20,8 +20,7 @@ namespace SquidTestingMod.Common.Systems
             if (Main.dedServ)
                 return;
 
-            Config c = ModContent.GetInstance<Config>();
-            IsGodModeOn = c.StartInGodMode;
+            IsGodModeOn = Conf.StartInGodMode;
         }
 
         // *** HOOKS TO DISABLE TAKING DAMAGE ***

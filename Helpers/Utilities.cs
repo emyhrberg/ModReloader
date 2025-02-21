@@ -12,8 +12,6 @@ namespace SquidTestingMod.Helpers
     //Class basically for universal helping functions
     internal class Utilities
     {
-        public static Config.ReloadConfig ReloadConfig => ModContent.GetInstance<Config>().Reload;
-
         public static int FindPlayerId()
         {
             Main.LoadPlayers();

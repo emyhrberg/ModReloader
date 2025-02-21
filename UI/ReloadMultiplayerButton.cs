@@ -17,9 +17,6 @@ namespace SquidTestingMod.UI
 {
     public class ReloadMultiplayerButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        public ReloadMultiplayerButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
-        {
-        }
 
         public async override void LeftClick(UIMouseEvent evt)
         {

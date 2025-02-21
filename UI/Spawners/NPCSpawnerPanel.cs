@@ -120,7 +120,6 @@ namespace SquidTestingMod.UI.Spawners
         {
             int allNPCs = NPCID.Count;
             int count = 0;
-            Config c = ModContent.GetInstance<Config>();
 
             Stopwatch s = Stopwatch.StartNew();
 
@@ -133,7 +132,7 @@ namespace SquidTestingMod.UI.Spawners
                 ItemsGrid.Add(npcSlot);
 
                 count++;
-                if (count >= c.MaxItemsToDisplay)
+                if (count >= Conf.MaxItemsToDisplay)
                     break;
             }
 
@@ -148,7 +147,6 @@ namespace SquidTestingMod.UI.Spawners
         private void FilterItems()
         {
             string searchText = SearchTextBox.currentString.ToLower();
-            Config c = ModContent.GetInstance<Config>();
 
             ItemsGrid.Clear();
 
@@ -164,7 +162,7 @@ namespace SquidTestingMod.UI.Spawners
                 if (npc.FullName.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                 {
                     count++;
-                    if (count >= c.MaxItemsToDisplay)
+                    if (count >= Conf.MaxItemsToDisplay)
                         break;
 
                     CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);

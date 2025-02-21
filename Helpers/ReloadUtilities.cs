@@ -26,17 +26,13 @@ namespace SquidTestingMod.Helpers
 
             ExitAndKillServer();
 
-            if (Utilities.ReloadConfig.WaitingTimeBeforeNavigatingToModSources > 0)
-                await Task.Delay(Utilities.ReloadConfig.WaitingTimeBeforeNavigatingToModSources);
+            await Task.Delay(1200);
 
             object modSourcesInstance = NavigateToDevelopMods();
 
-            if (Utilities.ReloadConfig.InvokeBuildAndReload)
-            {
-                if (Utilities.ReloadConfig.WaitingTimeBeforeBuildAndReload > 0)
-                    await Task.Delay(Utilities.ReloadConfig.WaitingTimeBeforeBuildAndReload);
-                BuildAndReloadMod(modSourcesInstance);
-            }
+            await Task.Delay(600);
+            BuildAndReloadMod(modSourcesInstance);
+
         }
 
         public async static void PrepareMinorMPClient()
@@ -47,8 +43,7 @@ namespace SquidTestingMod.Helpers
 
             ExitWorldOrServer();
 
-            if (Utilities.ReloadConfig.WaitingTimeBeforeNavigatingToModSources > 0)
-                await Task.Delay(Utilities.ReloadConfig.WaitingTimeBeforeNavigatingToModSources);
+            await Task.Delay(1200);
 
             ReloadMod();
         }
@@ -74,28 +69,24 @@ namespace SquidTestingMod.Helpers
             object modSourcesInstance = null;
 
 
-            if (Utilities.ReloadConfig.WaitingTimeBeforeNavigatingToModSources > 0)
-                await Task.Delay(Utilities.ReloadConfig.WaitingTimeBeforeNavigatingToModSources);
+            await Task.Delay(1200);
 
             if (shoudBeBuilded)
             {
                 modSourcesInstance = NavigateToDevelopMods();
             }
 
-            if (Utilities.ReloadConfig.InvokeBuildAndReload)
+            if (shoudBeBuilded)
             {
-                if (Utilities.ReloadConfig.WaitingTimeBeforeBuildAndReload > 0 && shoudBeBuilded)
-                    await Task.Delay(Utilities.ReloadConfig.WaitingTimeBeforeBuildAndReload);
-                if (shoudBeBuilded)
-                {
-                    BuildAndReloadMod(modSourcesInstance);
-                }
-                else
-                {
-                    ReloadMod();
-                }
-
+                await Task.Delay(600);
+                BuildAndReloadMod(modSourcesInstance);
             }
+            else
+            {
+                ReloadMod();
+            }
+
+
         }
 
 
@@ -103,21 +94,21 @@ namespace SquidTestingMod.Helpers
         public static void ExitWorldOrServer()
         {
 
-            if (Utilities.ReloadConfig.SaveAndQuitWorldWithoutSaving)
-            {
-                Log.Warn("Just quitting...");
-                WorldGen.JustQuit();
-            }
-            else
+            if (Conf.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
                 WorldGen.SaveAndQuit();
+            }
+            else
+            {
+                Log.Warn("Just quitting...");
+                WorldGen.JustQuit();
             }
         }
 
         public static void ExitAndKillServer()
         {
-            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Utilities.ReloadConfig.SaveAndQuitWorldWithoutSaving);
+            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.SaveWorldOnReload);
             WorldGen.SaveAndQuit();
         }
 
@@ -164,8 +155,7 @@ namespace SquidTestingMod.Helpers
                         {
                             string modName = uiText.Text;
                             Log.Info($"Mod Name: {modName}");
-                            Config c = ModContent.GetInstance<Config>();
-                            if (modName == Utilities.ReloadConfig.ModToReload)
+                            if (modName == Conf.ModToReload)
                             {
                                 modSourceItem = item;
                                 modNameFound = modName;

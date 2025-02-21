@@ -115,13 +115,12 @@ namespace SquidTestingMod.UI.Spawners
                 {
                     return;
                 }
-                Config c = ModContent.GetInstance<Config>();
 
                 float playerX = Main.LocalPlayer.position.X;
                 float playerY = Main.LocalPlayer.position.Y;
 
-                int desiredX = (int)(playerX + c.NPCSpawnLocation.X);
-                int desiredY = (int)(playerY + c.NPCSpawnLocation.Y);
+                int desiredX = (int)(playerX + Conf.NPCSpawnLocation.X);
+                int desiredY = (int)(playerY + Conf.NPCSpawnLocation.Y);
                 NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
             }
         }
@@ -142,13 +141,11 @@ namespace SquidTestingMod.UI.Spawners
                 return;
             }
 
-            Config c = ModContent.GetInstance<Config>();
-
             float playerX = Main.LocalPlayer.position.X;
             float playerY = Main.LocalPlayer.position.Y;
 
-            int desiredX = (int)(playerX + c.NPCSpawnLocation.X);
-            int desiredY = (int)(playerY + c.NPCSpawnLocation.Y);
+            int desiredX = (int)(playerX + Conf.NPCSpawnLocation.X);
+            int desiredY = (int)(playerY + Conf.NPCSpawnLocation.Y);
             NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
             Log.Info("Spawned NPC " + displayNPC.FullName + " at " + desiredX + ", " + desiredY);
         }

@@ -10,8 +10,7 @@ namespace SquidTestingMod.UI
     {
         public override void LeftClick(UIMouseEvent evt)
         {
-            Config c = ModContent.GetInstance<Config>();
-            c.Open();
+            Conf.Instance.Open();
         }
     }
 }

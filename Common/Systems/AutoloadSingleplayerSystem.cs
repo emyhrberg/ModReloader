@@ -38,7 +38,6 @@ namespace SquidTestingMod.Common.Systems
             if (onSuccessfulLoadField != null)
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
-                Config c = ModContent.GetInstance<Config>();
 
                 if (ClientDataHandler.Mode == ClientMode.SinglePlayer)
                 {

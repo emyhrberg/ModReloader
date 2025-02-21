@@ -27,11 +27,11 @@ namespace SquidTestingMod.PacketHandlers
                     break;
             }
         }
-        public void SendKillingServer(int toWho, int fromWho, bool shoudSevrerBeSaved)
+        public void SendKillingServer(int toWho, int fromWho, bool shouldSevrerBeSaved)
         {
             Log.Info($"Sending SendKillingServer to {toWho} from {fromWho}");
             ModPacket packet = GetPacket(KillingServer, fromWho);
-            packet.Write(shoudSevrerBeSaved);
+            packet.Write(shouldSevrerBeSaved);
             packet.Send(toWho, fromWho);
         }
         public void SendRefreshClients(int toWho, int fromWho)
@@ -44,12 +44,12 @@ namespace SquidTestingMod.PacketHandlers
         {
             Log.Info($"Receiving ReceiveKillingServer to {Main.myPlayer} from {fromWho}");
 
-            bool shoudServerBeSaved = reader.ReadBoolean();
+            bool shouldServerBeSaved = reader.ReadBoolean();
 
             if (Main.netMode == NetmodeID.Server)
             {
                 SendRefreshClients(-1, fromWho);
-                Netplay.SaveOnServerExit = shoudServerBeSaved;
+                Netplay.SaveOnServerExit = shouldServerBeSaved;
                 //delay??
                 Log.Info("Attempting to close the server");
                 Netplay.Disconnect = true;
