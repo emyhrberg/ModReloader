@@ -13,7 +13,7 @@ namespace SquidTestingMod.UI.Panels
         {
             // World info
             string worldName = Main.ActiveWorldFileData != null ? Main.ActiveWorldFileData.Name : "Unknown";
-            string worldSize = Main.ActiveWorldFileData != null ? Main.ActiveWorldFileData.WorldSizeName : "Unknown";
+            string worldSize = Main.ActiveWorldFileData._worldSizeName != null ? Main.ActiveWorldFileData.WorldSizeName : "Unknown";
             string difficultyText = "Unknown";
             if (Main.ActiveWorldFileData != null)
             {

@@ -39,7 +39,7 @@ namespace SquidTestingMod.UI.Buttons
             }
 
             // 3 Reload
-            await ReloadUtilities.BuildAndReloadMod();
+            ReloadUtilities.BuildAndReloadMod();
         }
 
 
