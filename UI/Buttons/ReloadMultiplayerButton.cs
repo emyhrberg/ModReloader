@@ -21,7 +21,7 @@ namespace SquidTestingMod.UI.Buttons
             }
             else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                ReloadUtilities.ExitAndKillServer();
+                await ReloadUtilities.ExitAndKillServer();
             }
 
             await ReloadUtilities.ReloadOrBuildAndReloadAsync(true);
