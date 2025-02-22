@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.PacketHandlers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
-using static SquidTestingMod.Common.Configs.Config;
 
 namespace SquidTestingMod.Helpers
 {
@@ -24,31 +18,9 @@ namespace SquidTestingMod.Helpers
             ClientDataHandler.WorldId = Utilities.FindWorldId();
         }
 
-        public static async Task ReloadOrBuildAndReloadAsync(bool shoudBeBuilded)
-        {
-            object modSourcesInstance = null;
 
-            // Wait 600 ms before going from menu to mod sources menu
-            await Task.Delay(600);
 
-            if (shoudBeBuilded)
-            {
-                modSourcesInstance = NavigateToDevelopMods();
-            }
-
-            if (shoudBeBuilded)
-            {
-                // Wait 600 ms when at mod sources menu until actually building and reloading
-                await Task.Delay(600);
-                BuildAndReloadMod(modSourcesInstance);
-            }
-            else
-            {
-                ReloadMod();
-            }
-        }
-
-        public static void ExitWorldOrServer()
+        public static Task ExitWorldOrServer()
         {
 
             if (Conf.SaveWorldOnReload)
@@ -134,10 +106,8 @@ namespace SquidTestingMod.Helpers
                         if (modNameValue is UIText uiText)
                         {
                             string modName = uiText.Text;
-                            string lc = modName.ToLower();
-
                             Log.Info($"Mod Name: {modName}");
-                            if (modName.Equals(Conf.ModToReload, StringComparison.OrdinalIgnoreCase))
+                            if (modName == Conf.ModToReload)
                             {
                                 modSourceItem = item;
                                 modNameFound = modName;

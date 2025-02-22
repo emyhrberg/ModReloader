@@ -17,7 +17,7 @@ namespace SquidTestingMod.UI.Buttons
     public class TestButton(Asset<Texture2D> buttonImgText, string hoverText) : BaseButton(buttonImgText, hoverText)
     {
         private int aaa = 0;
-        public override async void LeftClick(UIMouseEvent evt)
+        public override void LeftClick(UIMouseEvent evt)
         {
             Main.NewText($"Terraria title before change:{Main.instance.Window.Title}");
             Main.instance.Window.Title = $"aaaa{aaa}";

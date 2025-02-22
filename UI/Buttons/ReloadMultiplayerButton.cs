@@ -2,11 +2,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.UI.Buttons;
 using Terraria;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace SquidTestingMod.UI
 {
     public class ReloadMultiplayerButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
@@ -17,14 +18,14 @@ namespace SquidTestingMod.UI.Buttons
 
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                ReloadUtilities.ExitWorldOrServer();
+                await ReloadUtilities.ExitWorldOrServer();
             }
             else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 await ReloadUtilities.ExitAndKillServer();
             }
 
-            await ReloadUtilities.ReloadOrBuildAndReloadAsync(true);
+            ReloadUtilities.ReloadMod();
         }
 
         // --------------------- Drawing ---------------------

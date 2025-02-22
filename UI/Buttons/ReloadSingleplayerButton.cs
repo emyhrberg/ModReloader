@@ -1,52 +1,39 @@
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using log4net;
-using log4net.Appender;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.UI.Buttons;
 using Terraria;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace SquidTestingMod.UI
 {
     public class ReloadSingleplayerButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
     {
-        // right click, navigate to my other mods list
-        public override async void RightClick(UIMouseEvent evt)
+        public async override void LeftClick(UIMouseEvent evt)
         {
-            WorldGen.JustQuit();
-            await Task.Delay(100); // prob not needed but 100 ms is barely noticeable
-            Main.menuMode = 10000;
-        }
 
-        public override void LeftClick(UIMouseEvent evt)
-        {
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();
 
-            // 2 Prepare client
+            // 2 Prepare client data
             ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
 
-            // 3 Exit in SP or kill server in MP
+            // 3 Exit server or world
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                ReloadUtilities.ExitWorldOrServer();
+                await ReloadUtilities.ExitWorldOrServer();
             }
             else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                ReloadUtilities.ExitAndKillServer();
+                await ReloadUtilities.ExitAndKillServer();
             }
 
-            // 4 Build and reload
-            Task.Run(() => ReloadUtilities.ReloadOrBuildAndReloadAsync(true));
+            // 3 Reload
+            await ReloadUtilities.BuildAndReloadMod();
         }
 
         // --------------------- Drawing ---------------------
@@ -140,5 +127,6 @@ namespace SquidTestingMod.UI.Buttons
             //     frameCounter = 0; 
             // }
         }
+
     }
 }

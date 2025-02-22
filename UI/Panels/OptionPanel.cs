@@ -22,7 +22,7 @@ namespace SquidTestingMod.UI.Panels
         public OptionPanel(string text, string hoverText, bool hasCheckbox, Color bgColor)
         {
             Width.Set(0, 1f);
-            Height.Set(30, 0f);
+            Height.Set(60, 0f);
             BackgroundColor = bgColor;
             this.hoverText = hoverText ?? "";
 

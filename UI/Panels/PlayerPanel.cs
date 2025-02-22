@@ -41,7 +41,7 @@ namespace SquidTestingMod.UI.Panels
 
             // Create all content in the panel
             TitlePanel = new CustomTitlePanel(padding: padding, bgColor: darkBlue, height: 35);
-            HeaderText = new UIText(text: "Player", textScale: 0.4f, large: true);
+            HeaderText = new UIText(text: "Player", textScale: 0.5f, large: true);
             CloseButtonPanel = new CloseButtonPanel();
 
             // Godmode
@@ -62,9 +62,9 @@ namespace SquidTestingMod.UI.Panels
 
             // Set checkbox positions
             godOption.Top.Set(35 + padding, 0f);
-            fastOption.Top.Set(70 + padding, 0f);
-            buildOption.Top.Set(105 + padding, 0f);
-            noClipOption.Top.Set(140 + padding, 0f);
+            fastOption.Top.Set(35 + 65 + padding, 0f);
+            buildOption.Top.Set(35 + 65 * 2 + padding, 0f);
+            noClipOption.Top.Set(35 + 65 * 3 + padding, 0f);
 
             // Add all content in the panel
             Append(TitlePanel);

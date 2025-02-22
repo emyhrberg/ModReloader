@@ -42,7 +42,7 @@ namespace SquidTestingMod.UI.Panels
 
             // Create all content in the panel
             TitlePanel = new CustomTitlePanel(padding: padding, bgColor: darkBlue, height: 35);
-            HeaderText = new UIText(text: "Debug", textScale: 0.4f, large: true);
+            HeaderText = new UIText(text: "Debug", textScale: 0.5f, large: true);
             CloseButtonPanel = new CloseButtonPanel();
 
             // Hitboxes
@@ -64,9 +64,9 @@ namespace SquidTestingMod.UI.Panels
             spawnOption.OnLeftClick += (a, b) => Append(new CustomDebugPanel(30, 30));
             // Set option positions
             hitboxOption.Top.Set(35 + padding, 0f);
-            elementsOption.Top.Set(70 + padding, 0f);
-            clientLogOption.Top.Set(105 + padding, 0f);
-            spawnOption.Top.Set(140 + padding, 0f);
+            elementsOption.Top.Set(35 + 65 + padding, 0f);
+            clientLogOption.Top.Set(35 + 65 * 2 + padding, 0f);
+            spawnOption.Top.Set(35 + 65 * 3 + padding, 0f);
 
             // Add all content in the panel
             Append(TitlePanel);

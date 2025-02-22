@@ -1,6 +1,6 @@
-﻿using SquidTestingMod.Helpers;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

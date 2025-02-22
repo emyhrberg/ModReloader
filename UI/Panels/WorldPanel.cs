@@ -43,10 +43,10 @@ namespace SquidTestingMod.UI.Panels
 
             // Create all content in the panel
             TitlePanel = new CustomTitlePanel(padding: padding, bgColor: darkBlue, height: 35);
-            HeaderText = new UIText(text: "World", textScale: 0.4f, large: true);
+            HeaderText = new UIText(text: "World", textScale: 0.5f, large: true);
             CloseButtonPanel = new CloseButtonPanel();
 
-            // Updated safe fallback for world data:
+            // World info
             string worldName = Main.ActiveWorldFileData != null ? Main.ActiveWorldFileData.Name : "Unknown";
             string worldSize = Main.ActiveWorldFileData != null ? Main.ActiveWorldFileData.WorldSizeName : "Unknown";
             string difficultyText = "Unknown";
@@ -64,26 +64,26 @@ namespace SquidTestingMod.UI.Panels
 
             OptionPanel worldNamePanel = new OptionPanel("World Name: " + worldName, "The name of the world", false, Color.BlueViolet);
             OptionPanel worldSizePanel = new OptionPanel("World Size: " + worldSize, "The size of the world", false, Color.Green);
-            OptionPanel worldDifficultyPanel = new OptionPanel("World Difficulty: " + difficultyText, "The difficulty of the world", false, Color.Orange);
+            OptionPanel worldDiffPanel = new OptionPanel("World Difficulty: " + difficultyText, "The difficulty of the world", false, Color.Orange);
 
             // Some checkbox
-            OptionPanel meteor = new OptionPanel("Spawn Meteor", "Spawn a meteor", true, Color.Red);
-            meteor.OnLeftClick += (a, b) => Main.NewText("Not implemented yet");
+            OptionPanel meteorPanel = new OptionPanel("Spawn Meteor", "Spawn a meteor", true, Color.Red);
+            meteorPanel.OnLeftClick += (a, b) => Main.NewText("Not implemented yet");
 
             // Set positions
             worldNamePanel.Top.Set(35 + padding, 0f);
-            worldSizePanel.Top.Set(70 + padding, 0f);
-            worldDifficultyPanel.Top.Set(105 + padding, 0f);
-            meteor.Top.Set(140 + padding, 0f);
+            worldSizePanel.Top.Set(35 + 65 + padding, 0f);
+            worldDiffPanel.Top.Set(35 + 65 * 2 + padding, 0f);
+            meteorPanel.Top.Set(35 + 65 * 3 + padding, 0f);
 
             // Add all content in the panel
             Append(TitlePanel);
             Append(HeaderText);
             Append(CloseButtonPanel);
-            Append(meteor);
+            Append(meteorPanel);
             Append(worldNamePanel);
             Append(worldSizePanel);
-            Append(worldDifficultyPanel);
+            Append(worldDiffPanel);
         }
 
         #endregion
