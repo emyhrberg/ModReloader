@@ -22,18 +22,13 @@ namespace SquidTestingMod.Helpers
 
         public static Task ExitWorldOrServer()
         {
-
             if (Conf.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
+
+                // Creating task that will delay reloading a mod until world finish saving
                 var tcs = new TaskCompletionSource();
-
-                void Callback()
-                {
-                    tcs.SetResult();
-                }
-
-                WorldGen.SaveAndQuit(Callback);
+                WorldGen.SaveAndQuit(tcs.SetResult);
                 return tcs.Task;
             }
             else
@@ -47,20 +42,18 @@ namespace SquidTestingMod.Helpers
 
         public static Task ExitAndKillServer()
         {
+            // Sending packet to server to inform about reloading mod in multiplayer
             ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.SaveWorldOnReload);
+
+            // idk if that needed for exiting server, but maybe we need to save player data idk
             var tcs = new TaskCompletionSource();
-
-            void Callback()
-            {
-                tcs.SetResult();
-            }
-
-            WorldGen.SaveAndQuit(Callback);
+            WorldGen.SaveAndQuit(tcs.SetResult);
             return tcs.Task;
         }
 
         public static void ReloadMod()
         {
+            // Going to reload mod menu(that automaticly invokes reload)
             Main.menuMode = 10002;
         }
 
