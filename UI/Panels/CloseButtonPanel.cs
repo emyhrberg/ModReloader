@@ -56,9 +56,9 @@ namespace SquidTestingMod.UI.Panels
             {
                 itemSpawnerPanel.SetActive(false);
             }
-            else if (Parent is NPCSpawnerPanel && npcSpawnerPanel.GetNPCPanelActive() == true)
+            else if (Parent is NPCSpawnerPanel && npcSpawnerPanel.GetActive() == true)
             {
-                npcSpawnerPanel.SetNPCPanelActive(false);
+                npcSpawnerPanel.SetActive(false);
             }
             else if (Parent is PlayerPanel && playerPanel.GetActive() == true)
             {

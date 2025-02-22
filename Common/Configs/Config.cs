@@ -10,7 +10,6 @@ namespace SquidTestingMod.Common.Configs
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
-        // ------------------- Reload -------------------
         [Header("Reload")]
         [DefaultValue("EnterYourModHere")]
         public string ModToReload = "EnterYourModHere";
@@ -21,41 +20,37 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(false)]
         public bool ClearClientLogOnReload = false;
 
-        // ------------------- NPC/Item Spawner -------------------
         [Header("ItemNPCSpawner")]
         [DefaultValue(1000)]
         [Range(100, 6000)]
         [Increment(1000)]
         public int MaxItemsToDisplay;
 
-        [Range(-1000f, 1000f)]
+        [Range(-500f, 500f)]
         [Increment(100f)]
         [DefaultValue(typeof(Vector2), "0, 0")]
         public Vector2 NPCSpawnLocation;
 
-        // ------------------- Misc -------------------
         [Header("Misc")]
 
         [DefaultValue(true)]
         public bool ShowCombatTextOnToggle = true;
 
-        // ------------------- Buttons ------------------- (the buttons in the UI)
         [DefaultValue(true)]
         public bool HoverEffectButtons = true;
 
         [DefaultValue(false)]
         public bool ReloadButtonsOnly = false;
 
-        // ------------------- Player ------------------- (the player panel)
         [DefaultValue(false)]
         public bool StartInGodMode = false;
 
         [DefaultValue(true)]
         public bool DrawGodGlow = true;
 
-        // ------------------- Debug ------------------- (the debug panel)
+        // Debug Panel Config Settings Goes Here For Temporary Storage
 
-        // ------------------- World ------------------- (the world panel)
+        // World Panel Config Settings Goes Here For Temporary Storage
 
         public override void OnChanged()
         {

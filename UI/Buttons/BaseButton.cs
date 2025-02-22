@@ -13,41 +13,91 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
+    /// <summary>
+    /// The base class for the main buttons that are displayed.
+    /// This class handles the general button logic, such as drawing the button, animations, and tooltip text.
+    /// </summary>
     public abstract class BaseButton : UIImageButton
     {
-        protected Asset<Texture2D> _Texture;
+        // General variables for a button
+        protected Asset<Texture2D> Image;
         public string TooltipText = "";
         public float RelativeLeftOffset = 0f;
         public bool Active = true;
         protected float opacity = 0.4f;
 
-        protected BaseButton(Asset<Texture2D> texture, string hoverText) : base(texture)
+        // Animation frames
+        private bool Animating = false; // whether the button is animating or not
+        private int currFrame = 1; // the current frame
+        private int frameCounter = 0; // the counter for the frame speed
+
+        // Animations variables to be set by child classes
+        protected virtual Asset<Texture2D> Spritesheet { get; set; }
+        protected virtual float SpriteScale => 1;
+        protected virtual int StartFrame => 1;
+        protected virtual int MaxFrames => 3;
+        protected virtual int FrameSpeed => 8;
+        protected virtual int FrameWidth => 38;
+        protected virtual int FrameHeight => 48;
+
+        protected BaseButton(Asset<Texture2D> image, string hoverText, bool animating) : base(image)
         {
-            _Texture = texture;
+            Image = image;
             TooltipText = hoverText;
-            SetImage(_Texture);
+            Animating = animating;
+            SetImage(Image);
+            currFrame = StartFrame;
         }
 
+        /// <summary>
+        /// Draws the button with the specified image/animation and tooltip text
+        /// </summary>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            if (!Active)
+            if (!Active || Image == null || Image.Value == null)
                 return;
 
-            if (_Texture != null && _Texture.Value != null)
+            // Get the button size from MainState
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            float buttonSize = sys?.mainState?.ButtonSize ?? 70f; // default to 70 if MainState is null
+
+            // Get the dimensions based on the button size.
+            CalculatedStyle dimensions = GetInnerDimensions();
+            Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
+            opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
+
+            // Draw the texture with the calculated opacity.
+            spriteBatch.Draw(Image.Value, drawRect, Color.White * opacity);
+
+            // Draw the animation texture if animating.
+            if (Animating && Spritesheet != null)
             {
-                // Get the forced button size from MainState (default to 70 if not set)
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                float buttonSize = sys?.mainState?.ButtonSize ?? 70f;
+                if (IsMouseHovering)
+                {
+                    frameCounter++;
+                    if (frameCounter >= FrameSpeed)
+                    {
+                        currFrame++;
+                        if (currFrame > MaxFrames)
+                            currFrame = StartFrame;
+                        frameCounter = 0;
+                    }
+                }
+                else
+                {
+                    currFrame = StartFrame;
+                    frameCounter = 0;
+                }
 
-                // Determine opacity based on mouse hover.
-                opacity = IsMouseHovering ? 1f : 0.4f;
+                // Use a custom scale and offset to draw the animated overlay.
+                Vector2 position = dimensions.Position();
+                Vector2 size = new(dimensions.Width, dimensions.Height);
+                Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * SpriteScale) / 2f;
+                Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
+                centeredPosition.Y -= 7; // magic offset to move it up a bit
 
-                // Get the dimensions based on the button size.
-                CalculatedStyle dimensions = GetInnerDimensions();
-                Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
-
-                // Draw the texture with the calculated opacity.
-                spriteBatch.Draw(_Texture.Value, drawRect, Color.White * opacity);
+                // Draw the spritesheet.
+                spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
             }
 
             // Draw tooltip text if hovering.
@@ -57,7 +107,7 @@ namespace SquidTestingMod.UI.Buttons
 
         public virtual void UpdateTexture()
         {
-            SetImage(_Texture);
+            SetImage(Image);
         }
 
         #region Disable button click if config window is open

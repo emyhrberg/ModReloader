@@ -103,7 +103,7 @@ namespace SquidTestingMod.UI.Panels
             if (IsMouseHovering && Main.mouseRight)
             {
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
-                if (sys.mainState.npcSpawnerPanel.IsDraggingNPCPanel || sys.mainState.npcSpawnerPanel.GetNPCPanelActive() == false)
+                if (sys.mainState.npcSpawnerPanel.IsDragging || sys.mainState.npcSpawnerPanel.GetActive() == false)
                 {
                     Log.Info("Dont spawn NPC, panel is hidden");
                     return;
@@ -135,7 +135,7 @@ namespace SquidTestingMod.UI.Panels
             }
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.npcSpawnerPanel.IsDraggingNPCPanel || sys.mainState.npcSpawnerPanel.GetNPCPanelActive() == false)
+            if (sys.mainState.npcSpawnerPanel.IsDragging || sys.mainState.npcSpawnerPanel.GetActive() == false)
             {
                 Log.Info("Dont spawn NPC, panel is hidden");
                 return;

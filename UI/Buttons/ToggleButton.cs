@@ -9,8 +9,12 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ToggleButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
+    public class ToggleButton : BaseButton
     {
+        // Constructor that takes two arguments
+        public ToggleButton(Asset<Texture2D> texture, string toggleText, bool animating) : base(texture, toggleText, animating)
+        {
+        }
         public override void UpdateTexture()
         {
             // First update the base (which sets ButtonScale and the default image asset).
@@ -25,11 +29,11 @@ namespace SquidTestingMod.UI.Buttons
 
             // Now update the current image asset based on the toggle state.
             if (sys.mainState.AreButtonsShowing)
-                _Texture = Assets.ButtonOn;
+                Image = Assets.ButtonOn;
             else
-                _Texture = Assets.ButtonOff;
+                Image = Assets.ButtonOff;
 
-            SetImage(_Texture);
+            SetImage(Image);
         }
 
         public override void LeftClick(UIMouseEvent evt)

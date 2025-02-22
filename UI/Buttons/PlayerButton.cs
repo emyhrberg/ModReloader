@@ -11,7 +11,15 @@ namespace SquidTestingMod.UI.Buttons
 {
     public class PlayerButton : BaseButton
     {
-        public PlayerButton(Asset<Texture2D> image, string hoverText) : base(image, hoverText)
+        // Set custom animation dimensions
+        protected override Asset<Texture2D> Spritesheet => Assets.ButtonPlayerSS;
+        protected override int StartFrame => 3;
+        protected override int MaxFrames => 17;
+        protected override int FrameSpeed => 5;
+        protected override int FrameWidth => 44;
+        protected override int FrameHeight => 54;
+
+        public PlayerButton(Asset<Texture2D> image, string hoverText, bool animating) : base(image, hoverText, animating)
         {
         }
 
@@ -45,98 +53,6 @@ namespace SquidTestingMod.UI.Buttons
                     playerPanel.SetActive(true);
                 }
             }
-        }
-
-        // --------------------- Drawing ---------------------
-        // Animation frames
-        private int currFrame = 3;
-        private int maxFrame = 17;
-        private int frameCounter = 0;
-        private int frameSpeed = 5; // lower is faster. 3 is fast, 8 is slow
-
-        // Animation texture
-        private Asset<Texture2D> player = Assets.ButtonPlayerSS;
-        private int frameWidth = 44;
-        private int frameHeight = 54;
-        private bool wasHovering = false;
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            // draw base button
-            base.Draw(spriteBatch);
-
-            // draw sprite sheet animation if hovering, otherwise draw first frame
-
-            // set source rectangle
-            Rectangle sourceRectangle = new Rectangle(
-                x: 0,
-                y: currFrame * frameHeight,
-                width: frameWidth,
-                height: frameHeight
-            );
-
-            // if not hovering, draw first frame
-            if (!IsMouseHovering)
-            {
-                sourceRectangle = new Rectangle(
-                    x: 0,
-                    y: 0,
-                    width: frameWidth,
-                    height: frameHeight
-                );
-            }
-            else
-            {
-                if (!wasHovering)
-                {
-                    currFrame = 0; // reset frame to 0 if hovering
-                }
-            }
-            wasHovering = IsMouseHovering;
-
-            // calculate position to center the sprite
-            float scale = 0.85f;
-            Vector2 position = GetDimensions().Position();
-            Vector2 size = new Vector2(GetDimensions().Width, GetDimensions().Height);
-            Vector2 centeredPosition = position + (size - new Vector2(frameWidth, frameHeight) * scale) / 2f;
-            centeredPosition.Y -= 7; // magic number to move up a bit
-
-            spriteBatch.Draw(
-                texture: player.Value,
-                position: centeredPosition,
-                sourceRectangle: sourceRectangle,
-                color: Color.White * opacity,
-                rotation: 0f,
-                origin: Vector2.Zero,
-                scale: scale,
-                effects: SpriteEffects.None,
-                layerDepth: 0f
-            );
-
-            // update currFrame
-            frameCounter++;
-            if (frameCounter >= frameSpeed)
-            {
-                frameCounter = 0;
-                if (currFrame < maxFrame - 1)
-                {
-                    currFrame++;
-                }
-            }
-
-            // uncomment this to loop the animation
-            // I only want to play it once though
-            // frameCounter++;
-            // if (frameCounter >= frameSpeed)
-            // {
-            //     currFrame++;
-            //     if (currFrame >= maxFrame)
-            //     {
-            //         currFrame = 0;
-            //     }
-
-            //     frameCounter = 0; 
-            // }
         }
     }
 }

@@ -44,11 +44,15 @@ namespace SquidTestingMod.UI.Panels
         public override void MouseOver(UIMouseEvent evt)
         {
             BorderColor = Color.Yellow;
+            // Show hover text
+            Main.hoverItemName = hoverText;
         }
 
         public override void MouseOut(UIMouseEvent evt)
         {
             BorderColor = Color.Black;
+            // Clear hover text
+            Main.hoverItemName = "";
         }
 
         public override void LeftClick(UIMouseEvent evt)

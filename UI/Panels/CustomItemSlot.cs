@@ -66,7 +66,7 @@ namespace SquidTestingMod.UI.Panels
         {
             // if dragging, do not perform any action
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.itemSpawnerPanel.IsDraggingItemPanel || sys.mainState.itemSpawnerPanel.GetActive() == false)
+            if (sys.mainState.itemSpawnerPanel.IsDragging || sys.mainState.itemSpawnerPanel.GetActive() == false)
             {
                 Log.Info("Dont spawn item, panel is hidden");
                 return;
@@ -84,7 +84,7 @@ namespace SquidTestingMod.UI.Panels
         {
             // if dragging, do not perform any action
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.itemSpawnerPanel.IsDraggingItemPanel || sys.mainState.itemSpawnerPanel.GetActive() == false)
+            if (sys.mainState.itemSpawnerPanel.IsDragging || sys.mainState.itemSpawnerPanel.GetActive() == false)
             {
                 Log.Info("Dont spawn item, panel is hidden");
                 return;

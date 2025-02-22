@@ -14,7 +14,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class TestButton(Asset<Texture2D> buttonImgText, string hoverText) : BaseButton(buttonImgText, hoverText)
+    public class TestButton(Asset<Texture2D> buttonImgText, string hoverText, bool animating) : BaseButton(buttonImgText, hoverText, animating)
     {
         private int aaa = 0;
         public override void LeftClick(UIMouseEvent evt)

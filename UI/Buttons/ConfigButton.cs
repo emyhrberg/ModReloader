@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ConfigButton(Asset<Texture2D> _image, string hoverText) : BaseButton(_image, hoverText)
+    public class ConfigButton(Asset<Texture2D> image, string hoverText, bool animating) : BaseButton(image, hoverText, animating)
     {
         public override void LeftClick(UIMouseEvent evt)
         {

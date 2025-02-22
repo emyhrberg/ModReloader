@@ -85,7 +85,7 @@ namespace SquidTestingMod.Common.Systems
         }
         #endregion
 
-        #region Fast player speed and acceleration
+        #region Fast player
         public override void PostUpdate()
         {
             if (IsGodModeOn)
@@ -94,18 +94,25 @@ namespace SquidTestingMod.Common.Systems
             if (IsFastModeOn)
             {
                 // Increase player speed and acceleration
-                Player.maxRunSpeed = 10f;
-                Player.runAcceleration = 0.5f;
+                // default is 
+                // maxRunSpeed = 3f, runAcceleration = 0.08f, runSlowdown = 0.2f, 
+                // moveSpeed = 1f where e.g += 0.25f is swiftness potion
+
+                Player.moveSpeed += 2.25f;
+                Player.maxRunSpeed *= 5f;
+                Player.runAcceleration *= 3.5f;
+                Player.runSlowdown *= 0.5f;
 
                 // Instant acceleration for running.
+                // Set this to around 5f for fast or 10f for instant (10f is too fast imo)
                 if (Player.controlLeft)
-                    Player.velocity.X = -Player.maxRunSpeed;
+                    Player.velocity.X = -Player.maxRunSpeed * 0.33f;
                 else if (Player.controlRight)
-                    Player.velocity.X = Player.maxRunSpeed;
+                    Player.velocity.X = Player.maxRunSpeed * 0.33f;
 
-                // Increase jump height
-                Player.jumpSpeed = 10f;
-                Player.frogLegJumpBoost = true;
+                // When holding jump, make the player fly
+                if (Player.controlJump)
+                    Player.velocity.Y -= 0.5f;
             }
 
             if (IsNoClipOn)
@@ -136,12 +143,12 @@ namespace SquidTestingMod.Common.Systems
             if (IsBuildModeOn)
             {
                 // Disable smart cursor
-                // if (Main.SmartCursorWanted)
-                // {
-                // Main.SmartCursorWanted_Mouse = false;
-                // Main.SmartCursorWanted_GamePad = false;
-                // Main.NewText("Smart cursor is disabled with fast building");
-                // }
+                if (Main.SmartCursorWanted)
+                {
+                    Main.SmartCursorWanted_Mouse = false;
+                    Main.SmartCursorWanted_GamePad = false;
+                    Main.NewText("Smart Cursor disabled in Build Mode");
+                }
 
                 // Set infinite range
                 Player.tileRangeX = int.MaxValue;

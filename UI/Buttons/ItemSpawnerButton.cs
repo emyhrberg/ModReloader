@@ -11,17 +11,10 @@ namespace SquidTestingMod.UI.Buttons
 {
     public class ItemSpawnerButton : BaseButton
     {
-        // 6 random items
-        private Item[] randomItems = new Item[6];
 
-        public ItemSpawnerButton(Asset<Texture2D> _image, string hoverText) : base(_image, hoverText)
+        public ItemSpawnerButton(Asset<Texture2D> image, string hoverText, bool animating)
+            : base(image, hoverText, animating)
         {
-            // set the 6 random items
-            for (int i = 0; i < randomItems.Length; i++)
-            {
-                randomItems[i] = new Item();
-                randomItems[i].SetDefaults(Main.rand.Next(1, 4000));
-            }
         }
 
         public override void LeftClick(UIMouseEvent evt)
@@ -32,9 +25,9 @@ namespace SquidTestingMod.UI.Buttons
             // Close the NPCSpawnerPanel.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             var npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
-            if (npcSpawnerPanel != null && npcSpawnerPanel.GetNPCPanelActive())
+            if (npcSpawnerPanel != null && npcSpawnerPanel.GetActive())
             {
-                npcSpawnerPanel.SetNPCPanelActive(false);
+                npcSpawnerPanel.SetActive(false);
             }
 
             // Toggle the ItemsPanel.
@@ -54,32 +47,5 @@ namespace SquidTestingMod.UI.Buttons
                 }
             }
         }
-
-        // public override void Draw(SpriteBatch spriteBatch)
-        // {
-        //     // draw base button
-        //     base.Draw(spriteBatch);
-
-        //     // draw 6 random items, 3 per row
-        //     for (int i = 0; i < randomItems.Length; i++)
-        //     {
-        //         var dims = GetDimensions().ToRectangle();
-        //         int x = dims.X + (i % 3) * 35 + 5;
-        //         int y = dims.Y + (i / 3) * 35 + 5;
-
-        //         Item item = randomItems[i];
-        //         item.position = new Vector2(x, y);
-
-        //         item.stack = 1;
-        //         item.scale = 0.5f;
-        //         item.width = 32;
-        //         item.height = 32;
-
-        //         Main.instance.LoadItem(item.type);
-
-        //         TextureAssets.Item[item.type] = TextureAssets.Item[item.type] ?? TextureAssets.Item[1];
-        //         ItemSlot.Draw(spriteBatch, ref item, 14, new Vector2(x, y));
-        //     }
-        // }
     }
 }

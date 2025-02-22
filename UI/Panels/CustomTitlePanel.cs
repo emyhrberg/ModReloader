@@ -11,14 +11,27 @@ namespace SquidTestingMod.UI.Panels
 {
     public class CustomTitlePanel : UIPanel
     {
-        public CustomTitlePanel(int padding, Color bgColor, int height)
+        public UIText HeaderText { get; private set; }
+        private Color lightBlue = new(63, 82, 151);
+        private int padding = 12;
+        private int height = 35;
+
+        public CustomTitlePanel(string header)
         {
+            // Set up the panel
             MaxWidth.Set(padding * 2, 1f);
             Width.Set(padding * 2, 1f);
             Height.Set(height, 0f);
             Top.Set(-padding, 0f);
             Left.Set(-padding, 0f);
-            BackgroundColor = bgColor;
+            BackgroundColor = lightBlue;
+
+            // Create the header text, center it vertically (and horizontally if desired)
+            HeaderText = new UIText(header, textScale: 0.6f, large: true);
+            HeaderText.VAlign = 0.5f;
+            HeaderText.HAlign = 0.5f;
+
+            Append(HeaderText);
         }
     }
 }

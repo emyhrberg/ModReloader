@@ -33,8 +33,8 @@ namespace SquidTestingMod.UI
         public PlayerButton playerButton;
         public DebugButton debugButton;
         public WorldButton worldButton;
-        public ReloadSingleplayerButton reloadSingleplayerButton;
-        public ReloadMultiplayerButton reloadMultiplayerButton;
+        public ReloadSPButton reloadSingleplayerButton;
+        public ReloadMPButton reloadMultiplayerButton;
 
         // List of all buttons
         public HashSet<BaseButton> AllButtons = [];
@@ -46,24 +46,24 @@ namespace SquidTestingMod.UI
             // Check if reloadbuttons only
             if (Conf.ReloadButtonsOnly)
             {
-                toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons");
-                configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Open config");
-                reloadSingleplayerButton = AddButton<ReloadSingleplayerButton>(Assets.ButtonReload, "Reload mod in singleplayer");
-                reloadMultiplayerButton = AddButton<ReloadMultiplayerButton>(Assets.ButtonReload, "Reload mod in multiplayer");
+                toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons", false);
+                configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Open config", false);
+                reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReload, "Reload mod in singleplayer", true);
+                reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReload, "Reload mod in multiplayer", true);
                 UpdateButtonsPositions(toggleButton.anchorPos);
                 return;
             }
 
             // Create all buttons with a single line per button:
-            toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons");
-            configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Open config");
-            itemButton = AddButton<ItemSpawnerButton>(Assets.ButtonItems, "Open Item Spawner\nContains all items in the game");
-            npcButton = AddButton<NPCSpawnerButton>(Assets.ButtonNPC, "Open NPC Spawner\nContains town NPCs, enemies, and bosses");
-            playerButton = AddButton<PlayerButton>(Assets.ButtonPlayer, "Toggle player panel");
-            debugButton = AddButton<DebugButton>(Assets.ButtonDebug, "Toggle debug panel");
-            worldButton = AddButton<WorldButton>(Assets.ButtonWorld, "Toggle world panel");
-            reloadSingleplayerButton = AddButton<ReloadSingleplayerButton>(Assets.ButtonReload, "Reload mod in singleplayer");
-            reloadMultiplayerButton = AddButton<ReloadMultiplayerButton>(Assets.ButtonReload, "Reload mod in multiplayer");
+            toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons", false);
+            configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Toggle config", false);
+            itemButton = AddButton<ItemSpawnerButton>(Assets.ButtonItems, "Toggle item browser", false);
+            npcButton = AddButton<NPCSpawnerButton>(Assets.ButtonNPC, "Toggle NPC browser", true);
+            playerButton = AddButton<PlayerButton>(Assets.ButtonPlayer, "Toggle player options", true);
+            debugButton = AddButton<DebugButton>(Assets.ButtonDebug, "Toggle debug options", true);
+            worldButton = AddButton<WorldButton>(Assets.ButtonWorld, "Toggle world options", true);
+            reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReload, "Reload mod in singleplayer", true);
+            reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReload, "Reload mod in multiplayer", true);
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
@@ -81,11 +81,11 @@ namespace SquidTestingMod.UI
             Append(worldPanel);
         }
 
-        private T AddButton<T>(Asset<Texture2D> buttonImgText, string hoverText)
+        private T AddButton<T>(Asset<Texture2D> image, string hoverText, bool animating)
         where T : BaseButton
         {
             // Create and configure the button
-            T button = (T)Activator.CreateInstance(typeof(T), buttonImgText, hoverText);
+            T button = (T)Activator.CreateInstance(typeof(T), image, hoverText, animating);
             button.Width.Set(ButtonSize, 0f);
             button.Height.Set(ButtonSize, 0f);
             button.VAlign = 0.02f;
