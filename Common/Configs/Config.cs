@@ -36,9 +36,6 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(true)]
         public bool ShowCombatTextOnToggle = true;
 
-        [DefaultValue(true)]
-        public bool HoverEffectButtons = true;
-
         [DefaultValue(false)]
         public bool ReloadButtonsOnly = false;
 
@@ -47,6 +44,9 @@ namespace SquidTestingMod.Common.Configs
 
         [DefaultValue(true)]
         public bool DrawGodGlow = true;
+
+        [DefaultValue(true)]
+        public bool AnimateButtons = true;
 
         // Debug Panel Config Settings Goes Here For Temporary Storage
 

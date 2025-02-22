@@ -4,6 +4,7 @@ using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,11 +19,15 @@ namespace SquidTestingMod.UI.Panels
         private int padding = 12;
         private string hoverText;
         private CustomCheckbox checkbox;
+        private int HEIGHT = 30;
+        private UIText textElement;
 
         public OptionPanel(string text, string hoverText, bool hasCheckbox, Color bgColor)
         {
-            Width.Set(0, 1f);
-            Height.Set(60, 0f);
+            MaxWidth.Set(padding * 2, 1f);
+            Width.Set(padding * 2, 1f);
+            Height.Set(HEIGHT, 0f);
+            Left.Set(-padding, 0f);
             BackgroundColor = bgColor;
             this.hoverText = hoverText ?? "";
 
@@ -33,7 +38,7 @@ namespace SquidTestingMod.UI.Panels
                 Append(checkbox);
             }
 
-            UIText textElement = new UIText(text, 0.4f, true);
+            textElement = new UIText(text, 0.4f, true);
             // If there's a checkbox, leave enough space on the left; otherwise, use a smaller left offset.
             textElement.Left.Set(hasCheckbox ? 30 : 10, 0f);
             // Center the text vertically.
@@ -41,18 +46,32 @@ namespace SquidTestingMod.UI.Panels
             Append(textElement);
         }
 
+        public void SetText(string text)
+        {
+            textElement.SetText(text);
+        }
+
         public override void MouseOver(UIMouseEvent evt)
         {
+            base.MouseOver(evt);
             BorderColor = Color.Yellow;
-            // Show hover text
-            Main.hoverItemName = hoverText;
         }
 
         public override void MouseOut(UIMouseEvent evt)
         {
+            base.MouseOut(evt);
             BorderColor = Color.Black;
-            // Clear hover text
-            Main.hoverItemName = "";
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            // Draw hover text
+            if (IsMouseHovering)
+            {
+                UICommon.TooltipMouseText(hoverText);
+            }
         }
 
         public override void LeftClick(UIMouseEvent evt)

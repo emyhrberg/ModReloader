@@ -22,6 +22,8 @@ namespace SquidTestingMod.Common.Systems
         public static bool IsFastModeOn = false;
         public static bool IsBuildModeOn = false;
         public static bool IsNoClipOn = false;
+        public static bool IsLightModeOn = false;
+        public static bool IsTeleportModeOn = false;
 
         #region Toggle values
         public static void ToggleGodMode()
@@ -38,6 +40,15 @@ namespace SquidTestingMod.Common.Systems
 
             if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsFastModeOn ? Color.Green : Color.Red, IsFastModeOn ? "Fast Mode Enabled" : "Fast Mode Disabled");
+
+            // Show CloudInABottleJump effect when toggling fast mode
+            if (IsFastModeOn)
+            {
+                CloudInABottleJump cloudJump = new CloudInABottleJump();
+                bool playSound = true;
+                cloudJump.OnStarted(Main.LocalPlayer, ref playSound);
+                cloudJump.ShowVisuals(Main.LocalPlayer);
+            }
         }
 
         public static void ToggleBuildMode()
@@ -55,6 +66,23 @@ namespace SquidTestingMod.Common.Systems
             if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsNoClipOn ? Color.Green : Color.Red, IsNoClipOn ? "NoClip Enabled" : "NoClip Disabled");
         }
+
+        public static void ToggleLightMode()
+        {
+            IsLightModeOn = !IsLightModeOn;
+
+            if (Conf.ShowCombatTextOnToggle)
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsLightModeOn ? Color.Green : Color.Red, IsLightModeOn ? "Light Mode Enabled" : "Light Mode Disabled");
+        }
+
+        public static void ToggleTeleportMode()
+        {
+            IsTeleportModeOn = !IsTeleportModeOn;
+
+            if (Conf.ShowCombatTextOnToggle)
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsTeleportModeOn ? Color.Green : Color.Red, IsTeleportModeOn ? "Teleport Mode Enabled" : "Teleport Mode Disabled");
+        }
+
         #endregion
 
         public override void OnEnterWorld()
@@ -85,21 +113,22 @@ namespace SquidTestingMod.Common.Systems
         }
         #endregion
 
-        #region Fast player
+        #region All cheats in postupdate
         public override void PostUpdate()
         {
             if (IsGodModeOn)
-                Player.statLife = Player.statLifeMax2;
+                Player.statLife = Player.statLifeMax2; // Keep player at max health
 
             if (IsFastModeOn)
             {
                 // Increase player speed and acceleration
-                // default is 
+                // default is:
                 // maxRunSpeed = 3f, runAcceleration = 0.08f, runSlowdown = 0.2f, 
                 // moveSpeed = 1f where e.g += 0.25f is swiftness potion
+                // Log.Info($"Fast: maxRunSpeed: {Player.maxRunSpeed}, runAcceleration: {Player.runAcceleration}, moveSpeed: {Player.moveSpeed}");
 
                 Player.moveSpeed += 2.25f;
-                Player.maxRunSpeed *= 5f;
+                Player.maxRunSpeed = 50f; // 50f is very fast, 15-20f is kinda fast
                 Player.runAcceleration *= 3.5f;
                 Player.runSlowdown *= 0.5f;
 
@@ -133,6 +162,11 @@ namespace SquidTestingMod.Common.Systems
                 Player.Center = desiredPos;
                 Player.velocity = Vector2.Zero;
                 Player.gfxOffY = 0;
+            }
+
+            if (IsTeleportModeOn && Main.mouseRight)
+            {
+                Main.LocalPlayer.Teleport(Main.MouseWorld);
             }
         }
         #endregion

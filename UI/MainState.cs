@@ -19,17 +19,17 @@ namespace SquidTestingMod.UI
         public float ButtonSize = 70f;
 
         // ItemSpawner and NPCSpawner panels
-        public ItemSpawnerPanel itemSpawnerPanel;
-        public NPCSpawnerPanel npcSpawnerPanel;
+        public ItemSpawner itemSpawnerPanel;
+        public NPCSpawner npcSpawnerPanel;
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
         public WorldPanel worldPanel;
 
         // Buttons
-        public ItemSpawnerButton itemButton;
+        public ItemButton itemButton;
         public ConfigButton configButton;
         public ToggleButton toggleButton;
-        public NPCSpawnerButton npcButton;
+        public NPCButton npcButton;
         public PlayerButton playerButton;
         public DebugButton debugButton;
         public WorldButton worldButton;
@@ -37,7 +37,7 @@ namespace SquidTestingMod.UI
         public ReloadMPButton reloadMultiplayerButton;
 
         // List of all buttons
-        public HashSet<BaseButton> AllButtons = [];
+        public List<BaseButton> AllButtons = [];
 
         // MainState Constructor
         // This is where we create all the buttons and set up their positions.
@@ -46,31 +46,30 @@ namespace SquidTestingMod.UI
             // Check if reloadbuttons only
             if (Conf.ReloadButtonsOnly)
             {
-                toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons", false);
-                configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Open config", false);
-                reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReload, "Reload mod in singleplayer", true);
-                reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReload, "Reload mod in multiplayer", true);
-                UpdateButtonsPositions(toggleButton.anchorPos);
+                toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle all buttons");
+                configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config");
+                reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+                reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
                 return;
             }
 
             // Create all buttons with a single line per button:
-            toggleButton = AddButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons", false);
-            configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Toggle config", false);
-            itemButton = AddButton<ItemSpawnerButton>(Assets.ButtonItems, "Toggle item browser", false);
-            npcButton = AddButton<NPCSpawnerButton>(Assets.ButtonNPC, "Toggle NPC browser", true);
-            playerButton = AddButton<PlayerButton>(Assets.ButtonPlayer, "Toggle player options", true);
-            debugButton = AddButton<DebugButton>(Assets.ButtonDebug, "Toggle debug options", true);
-            worldButton = AddButton<WorldButton>(Assets.ButtonWorld, "Toggle world options", true);
-            reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReload, "Reload mod in singleplayer", true);
-            reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReload, "Reload mod in multiplayer", true);
+            toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle all buttons");
+            configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config");
+            itemButton = AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            npcButton = AddButton<NPCButton>(Assets.ButtonNPC, "NPCs", "Open NPC browser");
+            playerButton = AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            debugButton = AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            worldButton = AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Add the panels (invisible by default)
-            itemSpawnerPanel = new ItemSpawnerPanel();
-            npcSpawnerPanel = new NPCSpawnerPanel();
+            itemSpawnerPanel = new ItemSpawner();
+            npcSpawnerPanel = new NPCSpawner();
             playerPanel = new PlayerPanel();
             debugPanel = new DebugPanel();
             worldPanel = new WorldPanel();
@@ -81,11 +80,11 @@ namespace SquidTestingMod.UI
             Append(worldPanel);
         }
 
-        private T AddButton<T>(Asset<Texture2D> image, string hoverText, bool animating)
+        private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)
         where T : BaseButton
         {
             // Create and configure the button
-            T button = (T)Activator.CreateInstance(typeof(T), image, hoverText, animating);
+            T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
             button.Width.Set(ButtonSize, 0f);
             button.Height.Set(ButtonSize, 0f);
             button.VAlign = 0.02f;
@@ -123,9 +122,9 @@ namespace SquidTestingMod.UI
         public void ToggleOnOff()
         {
             AreButtonsShowing = !AreButtonsShowing;
-            toggleButton.UpdateTexture(); // on/off texture
+            // toggleButton.UpdateTexture(); // on/off texture
 
-            HashSet<BaseButton> buttonsExceptToggle = AllButtons.Where(btn => btn != toggleButton).ToHashSet();
+            List<BaseButton> buttonsExceptToggle = AllButtons.Except([toggleButton]).ToList();
 
             foreach (BaseButton btn in buttonsExceptToggle)
             {

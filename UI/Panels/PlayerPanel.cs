@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Systems;
@@ -11,39 +12,55 @@ using Terraria.UI;
 namespace SquidTestingMod.UI.Panels
 {
     /// <summary>
-    /// A panel containing options to modify player behaviour like God,Fast,Build,etc.
+    /// A panel containing options to modify player behaviour like God, Fast, Build, etc.
     /// </summary>
-    public class PlayerPanel : DraggablePanel
+    public class PlayerPanel : RightParentPanel
     {
         public PlayerPanel() : base("Player")
         {
-            // Godmode
-            OptionPanel godOption = new("God Mode", "Makes you invincible to all damage", true, Color.BlueViolet);
-            godOption.OnLeftClick += (a, b) => PlayerCheats.ToggleGodMode();
-
-            // Fastmode
-            OptionPanel fastOption = new("Fast Mode", "Increases player speed", true, Color.Green);
-            fastOption.OnLeftClick += (a, b) => PlayerCheats.ToggleFastMode();
-
-            // Buildmode
-            OptionPanel buildOption = new("Build Mode", "Infinite range, instant mining and more", true, Color.Orange);
-            buildOption.OnLeftClick += (a, b) => PlayerCheats.ToggleBuildMode();
-
-            // No Clip
-            OptionPanel noClipOption = new("Noclip Mode", "Move through blocks. Hold shift to go faster, hold ctrl to go slower", true, Color.Red);
-            noClipOption.OnLeftClick += (a, b) => PlayerCheats.ToggleNoClip();
-
-            // Set checkbox positions
-            godOption.Top.Set(35 + padding, 0f);
-            fastOption.Top.Set(35 + 65 + padding, 0f);
-            buildOption.Top.Set(35 + 65 * 2 + padding, 0f);
-            noClipOption.Top.Set(35 + 65 * 3 + padding, 0f);
-
-            // Add all content in the panel
-            Append(godOption);
-            Append(fastOption);
-            Append(buildOption);
-            Append(noClipOption);
+            // Add option panels
+            AddOptionPanel(
+                title: "God Mode",
+                description: "Makes you immortal",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleGodMode
+            );
+            AddOptionPanel(
+                title: "Fast Mode",
+                description: "Increases speed and acceleration",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleFastMode
+            );
+            AddOptionPanel(
+                title: "Build Mode",
+                description: "Infinite range, instant mining and more",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleBuildMode
+            );
+            AddOptionPanel(
+                title: "Noclip Mode",
+                description: "Move through blocks.",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleNoClip
+            );
+            AddOptionPanel(
+                title: "Light Mode",
+                description: "Increases light around the player",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleLightMode
+            );
+            AddOptionPanel(
+                title: "Teleport Mode",
+                description: "Right click to teleport to the mouse position",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleTeleportMode
+            );
         }
     }
 }

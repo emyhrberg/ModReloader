@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -16,10 +15,12 @@ namespace SquidTestingMod.UI.Panels
     /// <summary>
     /// A panel containing a grid of all items in the game that can be spawned.
     /// </summary>
-    public class ItemSpawnerPanel : SpawnerPanel
+    public class ItemSpawner : SpawnerPanel
     {
 
         // Filter items
+        FilterButton all;
+
         private enum ItemFilter
         {
             All,
@@ -29,63 +30,50 @@ namespace SquidTestingMod.UI.Panels
             Magic,
             Summon
         }
+
         private ItemFilter currentFilter = ItemFilter.All;
 
-        #region Constructor
-        public ItemSpawnerPanel() : base("Item Spawner")
+        public ItemSpawner() : base("Item Spawner")
         {
-            // For "All"
-            BaseFilterButton all = new(Assets.FilterAll, "Filter All");
-            all.Left.Set(0, 0);
-            all.OnLeftClick += (evt, element) => FilterItemsByType(ItemFilter.All);
-            Append(all);
-
-            // For "All Weapons":
-            BaseFilterButton allWeps = new(Assets.FilterMelee, "Filter All Weapons");
-            allWeps.Left.Set(25, 0);
-            allWeps.OnLeftClick += (evt, element) => FilterItemsByType(ItemFilter.AllWeapons);
-            Append(allWeps);
-
-            // For "Melee Weapons":
-            BaseFilterButton melee = new(Assets.FilterMelee, "Filter Melee Weapons");
-            melee.Left.Set(50, 0);
-            melee.OnLeftClick += (evt, element) => FilterItemsByType(ItemFilter.Melee);
-            Append(melee);
-            // (and similarly for Ranged, Magic, and Summon)
-
-            // For "Ranged Weapons":
-            BaseFilterButton ranged = new(Assets.FilterRanged, "Filter Ranged Weapons");
-            ranged.Left.Set(75, 0);
-            ranged.OnLeftClick += (evt, element) => FilterItemsByType(ItemFilter.Ranged);
-            Append(ranged);
-
-            // For "Magic Weapons":
-            BaseFilterButton magic = new(Assets.FilterMagic, "Filter Magic Weapons");
-            magic.Left.Set(100, 0);
-            magic.OnLeftClick += (evt, element) => FilterItemsByType(ItemFilter.Magic);
-            Append(magic);
-
-            // For "Summon Weapons":
-            BaseFilterButton summon = new(Assets.FilterSummon, "Filter Summon Weapons");
-            summon.Left.Set(125, 0);
-            summon.OnLeftClick += (evt, element) => FilterItemsByType(ItemFilter.Summon);
-            Append(summon);
-
-            // Setup searchtextbox
-            SearchTextBox.OnTextChanged += FilterItems;
+            // Add filter buttons
+            all = AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
+            AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
+            AddFilterButton(Assets.FilterMelee, "Filter All Weapons", ItemFilter.AllWeapons, 25);
+            AddFilterButton(Assets.FilterMelee, "Filter Melee Weapons", ItemFilter.Melee, 50);
+            AddFilterButton(Assets.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
+            AddFilterButton(Assets.FilterMagic, "Filter Magic Weapons", ItemFilter.Magic, 100);
+            AddFilterButton(Assets.FilterSummon, "Filter Summon Weapons", ItemFilter.Summon, 125);
 
             // Add items to the grid
             AddItemSlotsToGrid();
-        }
-        #endregion
 
-        private void FilterItemsByType(ItemFilter filter)
+            // Set all to active
+            Log.Info("Done setting up ItemSpawnerPanel");
+        }
+
+        public override void OnInitialize()
         {
+            ItemFilterClicked(ItemFilter.All, all);
+            Log.Info("ItemFilter Clicked on All initialized");
+        }
+
+        private FilterButton AddFilterButton(Asset<Texture2D> texture, string hoverText, ItemFilter filter, float left)
+        {
+            FilterButton button = new FilterButton(texture, hoverText);
+            button.Left.Set(left, 0);
+            button.OnLeftClick += (evt, element) => ItemFilterClicked(filter, button);
+            Append(button);
+            return button;
+        }
+
+        private void ItemFilterClicked(ItemFilter filter, FilterButton button)
+        {
+            // Set current filter to active
+            FilterButton.ActiveButton = button;
+
             currentFilter = filter;
             FilterItems();
         }
-
-        #region Adding initial slots
 
         private void AddItemSlotsToGrid()
         {
@@ -116,10 +104,7 @@ namespace SquidTestingMod.UI.Panels
             ItemCountText.SetText(ItemsGrid.Count + " Items" + " in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
         }
 
-        #endregion
-
-        #region FilterItems
-        private void FilterItems()
+        protected override void FilterItems()
         {
 
             string searchText = SearchTextBox.currentString.ToLower();
@@ -167,6 +152,5 @@ namespace SquidTestingMod.UI.Panels
             s.Stop();
             ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.ElapsedMilliseconds / 1000.0, 3)} seconds");
         }
-        #endregion
     }
 }

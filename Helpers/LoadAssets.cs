@@ -28,29 +28,30 @@ namespace SquidTestingMod.Helpers
     public static class Assets
     {
         // Button textures
-        public static Asset<Texture2D> ButtonOn;
-        public static Asset<Texture2D> ButtonOff;
+        public static Asset<Texture2D> Button;
+        public static Asset<Texture2D> ButtonOnOff;
         public static Asset<Texture2D> ButtonConfig;
         public static Asset<Texture2D> ButtonItems;
         public static Asset<Texture2D> ButtonNPC;
-        public static Asset<Texture2D> ButtonNPCSS;
-        public static Asset<Texture2D> ButtonNPCSS_XMAS;
+        public static Asset<Texture2D> ButtonNPC_XMAS;
         public static Asset<Texture2D> ButtonPlayer;
-        public static Asset<Texture2D> ButtonPlayerSS;
         public static Asset<Texture2D> ButtonDebug;
-        public static Asset<Texture2D> ButtonDebugWrenchSS;
         public static Asset<Texture2D> ButtonWorld;
-        public static Asset<Texture2D> ButtonWorldSS;
-        public static Asset<Texture2D> ButtonReload;
-        public static Asset<Texture2D> ButtonReloadSPSS;
-        public static Asset<Texture2D> ButtonReloadMPSS;
+        public static Asset<Texture2D> ButtonReloadSP;
+        public static Asset<Texture2D> ButtonReloadMP;
 
         // Filter buttons
+        public static Asset<Texture2D> FilterBG;
+        public static Asset<Texture2D> FilterBGActive;
         public static Asset<Texture2D> FilterAll;
         public static Asset<Texture2D> FilterMelee;
         public static Asset<Texture2D> FilterRanged;
         public static Asset<Texture2D> FilterMagic;
         public static Asset<Texture2D> FilterSummon;
+
+        // Filter NPC buttons
+        public static Asset<Texture2D> FilterTown;
+        public static Asset<Texture2D> FilterMob;
 
         // Checkboxes
         public static Asset<Texture2D> CheckBox;
@@ -62,29 +63,31 @@ namespace SquidTestingMod.Helpers
             Stopwatch s = Stopwatch.StartNew();
 
             // ALL ASSETS
-            ButtonOn = PreloadAsset("ButtonOn");
-            ButtonOff = PreloadAsset("ButtonOff");
+            Button = PreloadAsset("Button");
+            ButtonOnOff = PreloadAsset("ButtonOnOff");
             ButtonConfig = PreloadAsset("ButtonConfig");
             ButtonItems = PreloadAsset("ButtonItems");
             ButtonNPC = PreloadAsset("ButtonNPC");
-            ButtonNPCSS = PreloadAsset("ButtonNPCSS");
-            ButtonNPCSS_XMAS = PreloadAsset("ButtonNPCSS_XMAS");
-            ButtonReload = PreloadAsset("ButtonReload");
-            ButtonReloadSPSS = PreloadAsset("ButtonReloadSPSS");
-            ButtonReloadMPSS = PreloadAsset("ButtonReloadMPSS");
+            ButtonNPC_XMAS = PreloadAsset("ButtonNPC_XMAS");
+            ButtonReloadSP = PreloadAsset("ButtonReloadSP");
+            ButtonReloadMP = PreloadAsset("ButtonReloadMP");
             ButtonPlayer = PreloadAsset("ButtonPlayer");
-            ButtonPlayerSS = PreloadAsset("ButtonPlayerSS");
             ButtonDebug = PreloadAsset("ButtonDebug");
-            ButtonDebugWrenchSS = PreloadAsset("ButtonDebugWrenchSS");
             ButtonWorld = PreloadAsset("ButtonWorld");
-            ButtonWorldSS = PreloadAsset("ButtonWorldSS");
+
+            FilterBG = PreloadAsset("FilterBG");
+            FilterBGActive = PreloadAsset("FilterBGActive");
             FilterAll = PreloadAsset("FilterAll");
             FilterMelee = PreloadAsset("FilterMelee");
             FilterRanged = PreloadAsset("FilterRanged");
             FilterMagic = PreloadAsset("FilterMagic");
             FilterSummon = PreloadAsset("FilterSummon");
+            FilterTown = PreloadAsset("FilterTown");
+            FilterMob = PreloadAsset("FilterMob");
+
             CheckBox = PreloadAsset("CheckBox");
             CheckMark = PreloadAsset("CheckMark");
+
 
             // Stop timer
             s.Stop();

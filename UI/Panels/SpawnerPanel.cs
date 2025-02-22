@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI.Panels
 {
@@ -45,6 +46,7 @@ namespace SquidTestingMod.UI.Panels
                 BackgroundColor = Color.White,
                 BorderColor = Color.Black
             };
+            SearchTextBox.OnTextChanged += FilterItems;
 
             Scrollbar = new UIScrollbar()
             {
@@ -72,6 +74,19 @@ namespace SquidTestingMod.UI.Panels
             Append(SearchTextBox);
             Append(Scrollbar);
             Append(ItemsGrid);
+        }
+
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
+            if (Scrollbar != null && Scrollbar.ContainsPoint(evt.MousePosition))
+                return;
+
+            base.LeftMouseDown(evt);
+        }
+
+        protected virtual void FilterItems()
+        {
+            // Implement this in child classes
         }
     }
 }

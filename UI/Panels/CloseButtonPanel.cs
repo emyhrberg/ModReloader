@@ -52,11 +52,11 @@ namespace SquidTestingMod.UI.Panels
             var playerPanel = sys?.mainState?.playerPanel;
             var worldPanel = sys?.mainState?.worldPanel;
 
-            if (Parent is ItemSpawnerPanel && itemSpawnerPanel.GetActive() == true)
+            if (Parent is ItemSpawner && itemSpawnerPanel.GetActive() == true)
             {
                 itemSpawnerPanel.SetActive(false);
             }
-            else if (Parent is NPCSpawnerPanel && npcSpawnerPanel.GetActive() == true)
+            else if (Parent is NPCSpawner && npcSpawnerPanel.GetActive() == true)
             {
                 npcSpawnerPanel.SetActive(false);
             }

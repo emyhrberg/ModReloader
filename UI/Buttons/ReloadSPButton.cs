@@ -9,12 +9,11 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ReloadSPButton(Asset<Texture2D> _image, string hoverText, bool animating) : BaseButton(_image, hoverText, animating)
+    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
-        protected override Asset<Texture2D> Spritesheet => Assets.ButtonReloadSPSS;
         protected override int MaxFrames => 5;
-        protected override int FrameSpeed => 8;
+        protected override int FrameSpeed => 12;
         protected override int FrameWidth => 65;
         protected override int FrameHeight => 65;
 

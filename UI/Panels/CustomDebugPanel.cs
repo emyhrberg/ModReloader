@@ -14,6 +14,8 @@ namespace SquidTestingMod.UI.Panels
         {
             Width.Set(width, 0f);
             Height.Set(height, 0f);
+            VAlign = 0.5f;
+            HAlign = 0.5f;
         }
 
         public override void LeftMouseDown(UIMouseEvent evt)
@@ -31,6 +33,12 @@ namespace SquidTestingMod.UI.Panels
 
         public override void Update(GameTime gameTime)
         {
+            // Disable item use if the mouse is over the panel
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
             base.Update(gameTime);
 
             if (dragging)

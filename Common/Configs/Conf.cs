@@ -28,9 +28,9 @@ namespace SquidTestingMod.Common.Configs
 
         // Misc
         public static bool StartInGodMode => Instance.StartInGodMode;
-        public static bool HoverEffectButtons => Instance.HoverEffectButtons;
         public static bool DrawGodGlow => Instance.DrawGodGlow;
         public static bool ShowCombatTextOnToggle => Instance.ShowCombatTextOnToggle;
         public static bool ReloadButtonsOnly => Instance.ReloadButtonsOnly;
+        public static bool AnimateButtons => Instance.AnimateButtons;
     }
 }
