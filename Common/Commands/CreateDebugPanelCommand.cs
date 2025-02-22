@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
+using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -20,7 +21,7 @@ namespace SquidTestingMod.Common.Commands
         public override void Action(CommandCaller caller, string input, string[] args)
         {
             // First verify that args are of the form /panel width height e.g /panel 100 100
-            if (args.Length != 2)
+            if (args.Length < 2)
             {
                 Main.NewText("Usage: /add width height", Color.Red);
                 return;
@@ -34,10 +35,18 @@ namespace SquidTestingMod.Common.Commands
             int y = int.Parse(args[1]);
             CustomDebugPanel panel = new CustomDebugPanel(x, y);
 
-            // Set position
-            panel.Left.Set(Main.mouseX, 0f);
-            panel.Top.Set(Main.mouseY, 0f);
-
+            // If no 3rd and 4th argument, just spawn it at the exact center using VAlign 0.5 and halign 0.5
+            if (args.Length < 4)
+            {
+                panel.HAlign = 0.5f;
+                panel.VAlign = 0.5f;
+            }
+            else
+            {
+                // If 3rd and 4th argument are present, use them as halign and valign
+                panel.HAlign = float.Parse(args[2]);
+                panel.VAlign = float.Parse(args[3]);
+            }
             mainState.Append(panel);
         }
     }

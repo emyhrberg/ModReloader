@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.GameContent;
@@ -15,24 +16,31 @@ namespace SquidTestingMod.Common.Systems
     /// </summary>
     public class HitboxSystem : ModSystem
     {
+        private bool drawHitboxFlag = false;
+
+        public void ToggleHitboxes()
+        {
+            drawHitboxFlag = !drawHitboxFlag;
+
+            if (Conf.ShowCombatTextOnToggle)
+                CombatText.NewText(Main.LocalPlayer.getRect(), drawHitboxFlag ? Color.Green : Color.Red, drawHitboxFlag ? "Hitboxes ON" : "Hitboxes OFF");
+        }
+
         public override void PostDrawInterface(SpriteBatch sb)
         {
             base.PostDrawInterface(sb);
 
-            // get hitbox flag
-            MainSystem mainSystem = ModContent.GetInstance<MainSystem>();
-            bool drawHitboxFlag = mainSystem.mainState.hitboxButton.IsDrawingHitboxes;
             if (!drawHitboxFlag)
                 return;
 
-            restartSB(sb);
+            RestartSB(sb);
             DrawPlayerHitbox(sb);
             DrawNPCHitboxes(sb);
             DrawProjectileHitboxes(sb);
             DrawPlayerMeleeHitboxes(sb);
         }
 
-        private void restartSB(SpriteBatch sb)
+        private void RestartSB(SpriteBatch sb)
         {
             sb.End();
             sb.Begin(default, default, default, default, default, default, Main.GameViewMatrix.ZoomMatrix); ;

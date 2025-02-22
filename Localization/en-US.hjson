@@ -3,42 +3,62 @@ Mods: {
 		Configs: {
 			Config: {
 				NPCSpawnLocation: {
-					Tooltip: ""
-					Label: N P C Spawn Location
+					Tooltip: Set the spawn position of NPCs when using NPC spawner
+					Label: NPC Spawn Location
 				}
 
 				MaxItemsToDisplay: {
-					Tooltip: ""
+					Tooltip: The maximum amount of items shown in the browser
 					Label: Max Items To Display
 				}
 
 				Headers: {
-					ItemNPCSpawner: Item N P C Spawner Header
-					Gameplay: Gameplay Header
-					Reload: Reload Header
-				}
-
-				StartInGodMode: {
-					Tooltip: ""
-					Label: Start In God Mode
+					ItemNPCSpawner: Item Browser and NPC Browser
+					Reload: Reload
+					Misc: Misc
 				}
 
 				ClearClientLogOnReload: {
-					Tooltip: ""
+					Tooltip: Whether to clear the client.log or not when you click reload
 					Label: Clear Client Log On Reload
 				}
 
 				SaveWorldOnReload: {
-					Tooltip: ""
+					Tooltip: Whether to save the world or not when you click reload
 					Label: Save World On Reload
 				}
 
 				ModToReload: {
-					Tooltip: ""
+					Tooltip: Enter the mod that you wish to reload
 					Label: Mod To Reload
 				}
 
 				DisplayName: Config
+
+				StartInGodMode: {
+					Tooltip: Whether to start with god mode enabled every time when entering a world
+					Label: Start In God Mode
+				}
+
+				HoverEffectButtons: {
+					Label: Hover Effect Buttons
+					Tooltip: ""
+				}
+
+				DrawGodGlow: {
+					Label: Draw God Glow
+					Tooltip: ""
+				}
+
+				ShowCombatTextOnToggle: {
+					Label: Show Combat Text On Toggle
+					Tooltip: ""
+				}
+
+				ReloadButtonsOnly: {
+					Label: Reload Buttons Only
+					Tooltip: ""
+				}
 			}
 		}
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
 using Terraria;
@@ -15,6 +16,23 @@ namespace SquidTestingMod.Common.Systems
         private DrawUIState drawUIState;
 
         private List<UIElement> elementsLogged = new();
+
+        // Flag to enable/disable UI debug drawing
+        private bool isUIDebugDrawing = false;
+
+        public bool GetDebugDrawing() => isUIDebugDrawing;
+        public void ToggleUIDebugDrawing()
+        {
+            isUIDebugDrawing = !isUIDebugDrawing;
+
+            if (isUIDebugDrawing)
+            {
+                Main.NewText("UIElements: (Type), Width x Height", Color.Green);
+            }
+
+            if (Conf.ShowCombatTextOnToggle)
+                CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugDrawing ? Color.Green : Color.Red, isUIDebugDrawing ? "UI Debug ON" : "UI Debug OFF");
+        }
 
         public override void Load()
         {
@@ -50,13 +68,7 @@ namespace SquidTestingMod.Common.Systems
         {
             orig(self, spriteBatch); // Keep normal UI behavior
 
-            // Get MainSystem safely
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys == null || sys.mainState?.uiDebugButton == null)
-                return;
-
             // ensure we are drawing the UI debug hitboxes
-            bool isUIDebugDrawing = sys.mainState.uiDebugButton.IsUIDebugDrawing;
             if (!isUIDebugDrawing)
                 return;
 
@@ -82,7 +94,19 @@ namespace SquidTestingMod.Common.Systems
 
             elementsLogged.Add(self);
 
-            Main.NewText($"Name: \"{self.GetType().Name}\", Inner: {self.GetInnerDimensions().Width}x{self.GetInnerDimensions().Height}, Outer: {self.GetOuterDimensions().Width}x{self.GetOuterDimensions().Height}");
+            // Log text
+            string elementText = $"{elementsLogged.Count}. ({self.GetType().Name})";
+            // Check if inner width equals outer width and inner height equals outer height, if so, only log one dimension
+            if (self.GetInnerDimensions().Width == self.GetOuterDimensions().Width && self.GetInnerDimensions().Height == self.GetOuterDimensions().Height)
+            {
+                elementText += $", {self.GetInnerDimensions().Width}x{self.GetInnerDimensions().Height}";
+            }
+            else
+            {
+                elementText += $", Inner: {self.GetInnerDimensions().Width}x{self.GetInnerDimensions().Height}, Outer: {self.GetOuterDimensions().Width}x{self.GetOuterDimensions().Height}";
+            }
+
+            Main.NewText(elementText, Color.White);
         }
     }
 }

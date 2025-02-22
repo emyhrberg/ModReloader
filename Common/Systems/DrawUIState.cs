@@ -21,8 +21,8 @@ namespace SquidTestingMod.Common.Systems
 
         public void DrawHitbox(UIElement element, SpriteBatch spriteBatch)
         {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.uiDebugButton.IsUIDebugDrawing) return; // Toggle check
+            DrawUISystem uiSys = ModContent.GetInstance<DrawUISystem>();
+            if (!uiSys.GetDebugDrawing()) return;
 
             if (element is DrawUIState || element is MainState) return; // Skip full-screen elements
 
@@ -30,7 +30,7 @@ namespace SquidTestingMod.Common.Systems
 
             // Get a color from the rainbow
             int colorIndex = element.UniqueId % rainbowColors.Count;
-            Color hitboxColor = rainbowColors[colorIndex] * 0.5f;
+            Color hitboxColor = rainbowColors[colorIndex] * 0.3f;
 
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, hitboxColor);
             DrawOutline(spriteBatch, hitbox);
@@ -56,7 +56,7 @@ namespace SquidTestingMod.Common.Systems
                 Color.White,
                 0f,
                 Vector2.Zero,
-                new Vector2(0.7f)); // Scale down text
+                new Vector2(0.6f)); // Scale down text
         }
 
         private void DrawOutline(SpriteBatch spriteBatch, Rectangle hitbox)
