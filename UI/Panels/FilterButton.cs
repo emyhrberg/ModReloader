@@ -41,7 +41,7 @@ namespace SquidTestingMod.UI.Panels
             {
                 // Get rectangle dimensions
                 Rectangle drawRect = GetDimensions().ToRectangle();
-                float opacity = IsMouseHovering ? 1f : 0.6f;
+                float opacity = IsMouseHovering ? 1f : 0.4f;
 
                 // If active, draw the active background
                 if (Active)

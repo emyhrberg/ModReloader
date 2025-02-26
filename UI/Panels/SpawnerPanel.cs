@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Helpers;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
@@ -29,6 +32,7 @@ namespace SquidTestingMod.UI.Panels
         public SpawnerPanel(string header) : base(header)
         {
             // Set the panel properties
+            Draggable = false;
             Width.Set(W, 0f);
             Height.Set(H, 0f);
             HAlign = 0.0f;
@@ -73,11 +77,48 @@ namespace SquidTestingMod.UI.Panels
             ItemsGrid.ManualSortMethod = (listUIElement) => { };
             ItemsGrid.SetScrollbar(Scrollbar);
 
+            // Resize
+            ResizeButton resizeButton = new(Assets.Resize);
+            resizeButton.OnDragY += offsetY =>
+            {
+                Log.Info($"[BEFORE] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
+
+                float oldHeight = Height.Pixels;
+                float newHeight = oldHeight + offsetY;
+
+                // Clamp max height
+                if (newHeight > H || newHeight < 200f)
+                {
+                    return;
+                }
+
+                // Clamp min height
+                // if (newHeight < 200f)
+                // newHeight = 200f;
+
+
+                // Set new heights
+                Height.Set(newHeight, 0f);
+                ItemsGrid.Height.Set(newHeight - 140, 0f);
+                Scrollbar.Height.Set(newHeight - 140 - 10, 0f);
+
+                // Set new top offsets
+                float topOffset = (newHeight - oldHeight);
+                Top.Pixels += topOffset;
+                // ItemsGrid.Top.Pixels -= topOffset;
+                // Scrollbar.Top.Pixels -= topOffset;
+
+                Recalculate();
+
+                Log.Info($"[AFTER] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
+            };
+
             // Add all content in the panel
             Append(ItemCountText);
             Append(SearchTextBox);
             Append(Scrollbar);
             Append(ItemsGrid);
+            Append(resizeButton);
         }
 
         public override void LeftMouseDown(UIMouseEvent evt)

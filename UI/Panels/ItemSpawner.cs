@@ -55,7 +55,6 @@ namespace SquidTestingMod.UI.Panels
         {
             // Add filter buttons
             FilterButton all = AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
-            all.Active = true; // Set "all" to active filter by default
             AddFilterButton(Assets.FilterMelee, "Filter All Weapons", ItemFilter.AllWeapons, 25);
             AddFilterButton(Assets.FilterMelee, "Filter Melee Weapons", ItemFilter.Melee, 50);
             AddFilterButton(Assets.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
@@ -72,6 +71,15 @@ namespace SquidTestingMod.UI.Panels
             AddSortButton(Assets.SortValue, "Sort by Value", ItemSort.Value, 25);
             AddSortButton(Assets.SortName, "Sort by Name", ItemSort.Name, 50);
             AddSortButton(Assets.SortRarity, "Sort by Rarity", ItemSort.Rarity, 75);
+
+            // Make sure only "All" is active in the filter buttons
+            // For filters
+            foreach (var (btn, flt) in filterButtons)
+                btn.Active = flt == currentFilter;
+
+            // For sorts
+            foreach (var (btn, srt) in sortButtons)
+                btn.Active = srt == currentSort;
 
             // Add items to the grid
             AddItemSlotsToGrid();
@@ -124,7 +132,7 @@ namespace SquidTestingMod.UI.Panels
                 item.SetDefaults(i);
 
                 // If it's air or otherwise invalid, skip adding and log it.
-                if (item.IsAir || item.type == 0)
+                if (item.IsAir || item.type == ItemID.None)
                 {
                     Log.Warn($"Skipping invalid item ID {i}: '{item.Name}'");
                     continue;

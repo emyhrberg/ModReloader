@@ -67,6 +67,9 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> CheckBox;
         public static Asset<Texture2D> CheckMark;
 
+        // Resize
+        public static Asset<Texture2D> Resize;
+
         public static void PreloadAllAssets()
         {
             // Start timer
@@ -108,6 +111,7 @@ namespace SquidTestingMod.Helpers
             CheckBox = PreloadAsset("CheckBox");
             CheckMark = PreloadAsset("CheckMark");
 
+            Resize = PreloadAsset("Resize");
 
             // Stop timer
             s.Stop();

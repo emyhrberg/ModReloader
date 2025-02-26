@@ -22,6 +22,7 @@ namespace SquidTestingMod.UI.Panels
         private Color darkBlue = new(73, 85, 186);
 
         // Dragging
+        protected bool Draggable;
         public bool IsDragging;
         private bool dragging;
         private Vector2 dragOffset;
@@ -64,7 +65,7 @@ namespace SquidTestingMod.UI.Panels
 
             base.Update(gameTime);
 
-            if (dragging)
+            if (Draggable & dragging)
             {
                 float dragDistance = Vector2.Distance(new Vector2(Main.mouseX, Main.mouseY), mouseDownPos);
                 if (dragDistance > DragThreshold)
