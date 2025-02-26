@@ -48,10 +48,20 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterRanged;
         public static Asset<Texture2D> FilterMagic;
         public static Asset<Texture2D> FilterSummon;
+        public static Asset<Texture2D> FilterArmor;
+        public static Asset<Texture2D> FilterAccessories;
+        public static Asset<Texture2D> FilterPotions;
+        public static Asset<Texture2D> FilterPlaceables;
 
         // Filter NPC buttons
         public static Asset<Texture2D> FilterTown;
         public static Asset<Texture2D> FilterMob;
+
+        // Sort buttons
+        public static Asset<Texture2D> SortID;
+        public static Asset<Texture2D> SortValue;
+        public static Asset<Texture2D> SortRarity;
+        public static Asset<Texture2D> SortName;
 
         // Checkboxes
         public static Asset<Texture2D> CheckBox;
@@ -82,8 +92,18 @@ namespace SquidTestingMod.Helpers
             FilterRanged = PreloadAsset("FilterRanged");
             FilterMagic = PreloadAsset("FilterMagic");
             FilterSummon = PreloadAsset("FilterSummon");
+            FilterArmor = PreloadAsset("FilterArmor");
+            FilterAccessories = PreloadAsset("FilterAccessories");
+            FilterPotions = PreloadAsset("FilterPotion");
+            FilterPlaceables = PreloadAsset("FilterPlaceables");
+
             FilterTown = PreloadAsset("FilterTown");
             FilterMob = PreloadAsset("FilterMob");
+
+            SortID = PreloadAsset("SortID");
+            SortValue = PreloadAsset("SortValue");
+            SortRarity = PreloadAsset("SortRarity");
+            SortName = PreloadAsset("SortName");
 
             CheckBox = PreloadAsset("CheckBox");
             CheckMark = PreloadAsset("CheckMark");

@@ -9,16 +9,16 @@ using Terraria.UI;
 namespace SquidTestingMod.UI.Panels
 {
     /// <summary>
-    /// A button that can be clicked to filter items in the ItemSpawner and NPCSpawner panels.
+    /// A button that can be clicked to sort items in the ItemSpawner and NPCSpawner panels.
     /// </summary>
-    public class FilterButton : UIImageButton
+    public class SortButton : UIImageButton
     {
         // Variables
         private readonly Asset<Texture2D> icon;
         private readonly string HoverText = "";
         public bool Active = true; // whether this filter is currently active
 
-        public FilterButton(Asset<Texture2D> texture, string hoverText) : base(texture)
+        public SortButton(Asset<Texture2D> texture, string hoverText) : base(texture)
         {
             // size and position
             Width.Set(21f, 0f);
@@ -27,7 +27,7 @@ namespace SquidTestingMod.UI.Panels
             MaxHeight.Set(21f, 0f);
             MinWidth.Set(21f, 0f);
             MinHeight.Set(21f, 0f);
-            Top.Set(50, 0f);
+            Top.Set(25, 0f);
 
             // init stuff
             icon = texture;

@@ -35,7 +35,11 @@ namespace SquidTestingMod.UI.Panels
             VAlign = 1.0f;
 
             // Create all content in the panel
-            ItemCountText = new CustomItemCountText("0 Items", textScale: 0.4f);
+            ItemCountText = new UIText("0 Items", textScale: 0.4f, true)
+            {
+                HAlign = 0.5f,
+                VAlign = 1f,
+            };
 
             SearchTextBox = new("Search")
             {

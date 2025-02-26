@@ -17,7 +17,7 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            Conf.Instance.Open();
+            C.ConfigInstance.Open();
         }
     }
 }

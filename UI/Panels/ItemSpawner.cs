@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -17,10 +19,7 @@ namespace SquidTestingMod.UI.Panels
     /// </summary>
     public class ItemSpawner : SpawnerPanel
     {
-
         // Filter items
-        FilterButton all;
-
         private enum ItemFilter
         {
             All,
@@ -28,51 +27,88 @@ namespace SquidTestingMod.UI.Panels
             Melee,
             Ranged,
             Magic,
-            Summon
+            Summon,
+            Armor,
+            Accessories,
+            Potions,
+            Placeables,
         }
 
+        private enum ItemSort
+        {
+            ID,
+            Value,
+            Rarity,
+            Name
+        }
+
+        // Filtering fields
         private ItemFilter currentFilter = ItemFilter.All;
+        private List<(FilterButton button, ItemFilter filter)> filterButtons = new();
+
+        // Sorting fields
+        private bool ascending = true;  // default ascending
+        private ItemSort currentSort = ItemSort.ID;
+        private List<(SortButton button, ItemSort sort)> sortButtons = new();
 
         public ItemSpawner() : base("Item Spawner")
         {
             // Add filter buttons
-            all = AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
-            AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
+            FilterButton all = AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
+            all.Active = true; // Set "all" to active filter by default
             AddFilterButton(Assets.FilterMelee, "Filter All Weapons", ItemFilter.AllWeapons, 25);
             AddFilterButton(Assets.FilterMelee, "Filter Melee Weapons", ItemFilter.Melee, 50);
             AddFilterButton(Assets.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
             AddFilterButton(Assets.FilterMagic, "Filter Magic Weapons", ItemFilter.Magic, 100);
             AddFilterButton(Assets.FilterSummon, "Filter Summon Weapons", ItemFilter.Summon, 125);
+            AddFilterButton(Assets.FilterArmor, "Filter Armor/Vanity", ItemFilter.Armor, 150);
+            AddFilterButton(Assets.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 175);
+            AddFilterButton(Assets.FilterPotions, "Filter Potions", ItemFilter.Potions, 200);
+            AddFilterButton(Assets.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 225);
+
+            // Add sort buttons
+            SortButton id = AddSortButton(Assets.SortID, "Sort by ID", ItemSort.ID, 0);
+            id.Active = true; // Set "ID" to active sort by default
+            AddSortButton(Assets.SortValue, "Sort by Value", ItemSort.Value, 25);
+            AddSortButton(Assets.SortName, "Sort by Name", ItemSort.Name, 50);
+            AddSortButton(Assets.SortRarity, "Sort by Rarity", ItemSort.Rarity, 75);
 
             // Add items to the grid
             AddItemSlotsToGrid();
-
-            // Set all to active
-            Log.Info("Done setting up ItemSpawnerPanel");
         }
 
-        public override void OnInitialize()
+        private SortButton AddSortButton(Asset<Texture2D> texture, string hoverText, ItemSort sort, float left)
         {
-            ItemFilterClicked(ItemFilter.All, all);
-            Log.Info("ItemFilter Clicked on All initialized");
+            SortButton button = new SortButton(texture, hoverText);
+            button.Left.Set(left, 0);
+            button.Width.Set(21f, 0f);
+            sortButtons.Add((button, sort));
+            button.OnLeftClick += (evt, element) =>
+            {
+                ascending = !ascending; // flip sort order
+                currentSort = sort; // set current sort
+                foreach (var (btn, srt) in sortButtons)
+                    btn.Active = srt == sort; // set only this sort button to active
+                FilterItems(); // clear and re-add items to grid
+            };
+            Append(button);
+            return button;
         }
 
         private FilterButton AddFilterButton(Asset<Texture2D> texture, string hoverText, ItemFilter filter, float left)
         {
             FilterButton button = new FilterButton(texture, hoverText);
             button.Left.Set(left, 0);
-            button.OnLeftClick += (evt, element) => ItemFilterClicked(filter, button);
+            filterButtons.Add((button, filter));
+            button.OnLeftClick += (evt, element) =>
+            {
+                currentFilter = filter;
+                foreach (var (btn, flt) in filterButtons)
+                    btn.Active = flt == filter;
+                FilterItems();
+            };
             Append(button);
             return button;
-        }
-
-        private void ItemFilterClicked(ItemFilter filter, FilterButton button)
-        {
-            // Set current filter to active
-            FilterButton.ActiveButton = button;
-
-            currentFilter = filter;
-            FilterItems();
         }
 
         private void AddItemSlotsToGrid()
@@ -86,68 +122,77 @@ namespace SquidTestingMod.UI.Panels
             {
                 Item item = new();
                 item.SetDefaults(i);
+
+                // If it's air or otherwise invalid, skip adding and log it.
+                if (item.IsAir || item.type == 0)
+                {
+                    Log.Warn($"Skipping invalid item ID {i}: '{item.Name}'");
+                    continue;
+                }
+
+                // Otherwise, make the slot
                 CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                 allItemSlots.Add(itemSlot);
 
                 count++;
-                if (count >= Conf.MaxItemsToDisplay)
+                if (count >= C.MaxItemsToDisplay)
                     break;
             }
 
+            // Add them all to the grid
             foreach (var itemSlot in allItemSlots)
-            {
                 ItemsGrid.Add(itemSlot);
-            }
 
-            // update item count text
             s.Stop();
-            ItemCountText.SetText(ItemsGrid.Count + " Items" + " in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
+            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.ElapsedMilliseconds / 1000.0, 3)} seconds");
         }
 
         protected override void FilterItems()
         {
-
             string searchText = SearchTextBox.currentString.ToLower();
             ItemsGrid.Clear();
             Stopwatch s = Stopwatch.StartNew();
 
-            foreach (var itemSlot in allItemSlots)
+            // 1) Filter the items
+            var filteredSlots = allItemSlots.Where(slot =>
             {
-                Item item = itemSlot.GetDisplayItem();
+                Item item = slot.GetDisplayItem();
 
-                // Check the search text filter.
+                // match search text
                 if (!item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
-                    continue;
+                    return false;
 
-                // Determine if the item passes the current filter.
-                bool passesFilter = false;
-                switch (currentFilter)
+                // match filter category
+                bool passesFilter = currentFilter switch
                 {
-                    case ItemFilter.All:
-                        passesFilter = true;
-                        break;
-                    case ItemFilter.AllWeapons:
-                        passesFilter = item.damage > 0;
-                        break;
-                    case ItemFilter.Melee:
-                        passesFilter = item.damage > 0 && item.DamageType == DamageClass.Melee;
-                        break;
-                    case ItemFilter.Ranged:
-                        passesFilter = item.damage > 0 && item.DamageType == DamageClass.Ranged;
-                        break;
-                    case ItemFilter.Magic:
-                        passesFilter = item.damage > 0 && item.DamageType == DamageClass.Magic;
-                        break;
-                    case ItemFilter.Summon:
-                        passesFilter = item.damage > 0 && item.DamageType == DamageClass.Summon;
-                        break;
-                }
+                    ItemFilter.All => true,
+                    ItemFilter.AllWeapons => item.damage > 0,
+                    ItemFilter.Melee => item.damage > 0 && item.DamageType == DamageClass.Melee,
+                    ItemFilter.Ranged => item.damage > 0 && item.DamageType == DamageClass.Ranged,
+                    ItemFilter.Magic => item.damage > 0 && item.DamageType == DamageClass.Magic,
+                    ItemFilter.Summon => item.damage > 0 && item.DamageType == DamageClass.Summon,
+                    ItemFilter.Armor => item.headSlot != -1 || item.bodySlot != -1 || item.legSlot != -1 || item.vanity,
+                    ItemFilter.Accessories => item.accessory,
+                    ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
+                    ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
+                    _ => false
+                };
 
-                if (passesFilter)
-                {
-                    ItemsGrid.Add(itemSlot);
-                }
-            }
+                return passesFilter;
+            });
+
+            // 2) Sort the items
+            filteredSlots = currentSort switch
+            {
+                ItemSort.Value => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().value) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().value),
+                ItemSort.Rarity => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().rare) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().rare),
+                ItemSort.Name => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().Name) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().Name),
+                _ => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().type) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().type), // default (ID)
+            };
+
+            // 3) Add the sorted/filtered slots to the grid
+            foreach (var slot in filteredSlots)
+                ItemsGrid.Add(slot);
 
             s.Stop();
             ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.ElapsedMilliseconds / 1000.0, 3)} seconds");

@@ -8,16 +8,17 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Systems
 {
-    public class MeteorILPatcher
+    public class MeteorSystem : ModSystem
     {
         // Call this from your mod’s Load method.
-        public static void Apply()
+        public override void Load()
         {
             IL_WorldGen.dropMeteor += DropMeteor_IL;
         }
 
         private static void DropMeteor_IL(ILContext il)
         {
+            Main.NewText("IL patch for WorldGen.dropMeteor started.");
             Log.Info("IL patch for WorldGen.dropMeteor started.");
 
             ILCursor c = new ILCursor(il);

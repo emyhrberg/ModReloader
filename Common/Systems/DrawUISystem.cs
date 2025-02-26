@@ -30,7 +30,7 @@ namespace SquidTestingMod.Common.Systems
                 Main.NewText("UIElements: (Type), Width x Height", Color.Green);
             }
 
-            if (Conf.ShowCombatTextOnToggle)
+            if (C.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugDrawing ? Color.Green : Color.Red, isUIDebugDrawing ? "UI Debug ON" : "UI Debug OFF");
         }
 

@@ -23,7 +23,7 @@ namespace SquidTestingMod.Helpers
         public static Task ExitWorldOrServer()
         {
 
-            if (Conf.SaveWorldOnReload)
+            if (C.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
                 var tcs = new TaskCompletionSource();
@@ -47,7 +47,7 @@ namespace SquidTestingMod.Helpers
 
         public static Task ExitAndKillServer()
         {
-            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.SaveWorldOnReload);
+            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, C.SaveWorldOnReload);
             var tcs = new TaskCompletionSource();
 
             void Callback()
@@ -107,7 +107,7 @@ namespace SquidTestingMod.Helpers
                         {
                             string modName = uiText.Text;
                             Log.Info($"Mod Name: {modName}");
-                            if (modName == Conf.ModToReload)
+                            if (modName == C.ModToReload)
                             {
                                 modSourceItem = item;
                                 modNameFound = modName;

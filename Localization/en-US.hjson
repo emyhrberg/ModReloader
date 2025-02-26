@@ -2,6 +2,15 @@ Mods: {
 	SquidTestingMod: {
 		Configs: {
 			Config: {
+				DisplayName: Config
+
+				Headers: {
+					ItemNPCSpawner: Item/NPC Browser
+					Reload: Reload
+					Misc: Misc
+					ButtonsToShow: Buttons
+				}
+
 				NPCSpawnLocation: {
 					Tooltip: Set the spawn position of NPCs when using NPC spawner
 					Label: NPC Spawn Location
@@ -10,12 +19,6 @@ Mods: {
 				MaxItemsToDisplay: {
 					Tooltip: The maximum amount of items shown in the browser
 					Label: Max Items To Display
-				}
-
-				Headers: {
-					ItemNPCSpawner: Item Browser and NPC Browser
-					Reload: Reload
-					Misc: Misc
 				}
 
 				ClearClientLogOnReload: {
@@ -33,35 +36,68 @@ Mods: {
 					Label: Mod To Reload
 				}
 
-				DisplayName: Config
-
-				StartInGodMode: {
-					Tooltip: Whether to start with god mode enabled every time when entering a world
-					Label: Start In God Mode
-				}
-
-				HoverEffectButtons: {
-					Label: Hover Effect Buttons
-					Tooltip: ""
-				}
-
 				DrawGodGlow: {
 					Label: Draw God Glow
-					Tooltip: ""
+					Tooltip: Toggle the visual effect showing when god mode is enabled
 				}
 
 				ShowCombatTextOnToggle: {
 					Label: Show Combat Text On Toggle
-					Tooltip: ""
-				}
-
-				ReloadButtonsOnly: {
-					Label: Reload Buttons Only
-					Tooltip: ""
+					Tooltip: Toggle visual text effect when you toggle player options like god, fast, etc
 				}
 
 				AnimateButtons: {
 					Label: Animate Buttons
+					Tooltip: Show animations and toggle effects on the buttons
+				}
+
+				ShowConfigButton: {
+					Label: Show Config Button
+					Tooltip: ""
+				}
+
+				ShowItemButton: {
+					Label: Show Item Button
+					Tooltip: ""
+				}
+
+				ShowNPCButton: {
+					Label: Show NPC Button
+					Tooltip: ""
+				}
+
+				ShowDebugButton: {
+					Label: Show Debug Button
+					Tooltip: ""
+				}
+
+				ShowPlayerButton: {
+					Label: Show Player Button
+					Tooltip: ""
+				}
+
+				ShowWorldButton: {
+					Label: Show World Button
+					Tooltip: ""
+				}
+
+				ShowReloadSPButton: {
+					Label: Show Reload SP Button
+					Tooltip: ""
+				}
+
+				ShowReloadMPButton: {
+					Label: Show Reload MP Button
+					Tooltip: ""
+				}
+
+				KeepRunningWhenFocusLost: {
+					Label: Keep Running When Focus Lost
+					Tooltip: When you alt+tab or leave the game unfocused, the game will keep running
+				}
+
+				ShowToggleButton: {
+					Label: Show Toggle Button
 					Tooltip: ""
 				}
 			}

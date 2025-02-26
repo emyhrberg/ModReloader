@@ -21,7 +21,7 @@ namespace SquidTestingMod.UI.Buttons
         {
 
             // 1 Clear logs if needed
-            if (Conf.ClearClientLogOnReload)
+            if (C.ClearClientLogOnReload)
                 Log.ClearClientLog();
 
             // 2 Prepare client data
@@ -41,6 +41,11 @@ namespace SquidTestingMod.UI.Buttons
             await ReloadUtilities.BuildAndReloadMod();
         }
 
-
+        public override void RightClick(UIMouseEvent evt)
+        {
+            // Go to enabled mods
+            WorldGen.JustQuit();
+            Main.menuMode = 10000;
+        }
     }
 }

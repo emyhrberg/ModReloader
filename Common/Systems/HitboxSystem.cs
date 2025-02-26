@@ -22,7 +22,7 @@ namespace SquidTestingMod.Common.Systems
         {
             drawHitboxFlag = !drawHitboxFlag;
 
-            if (Conf.ShowCombatTextOnToggle)
+            if (C.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), drawHitboxFlag ? Color.Green : Color.Red, drawHitboxFlag ? "Hitboxes ON" : "Hitboxes OFF");
         }
 

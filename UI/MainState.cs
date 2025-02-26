@@ -26,15 +26,7 @@ namespace SquidTestingMod.UI
         public WorldPanel worldPanel;
 
         // Buttons
-        public ItemButton itemButton;
-        public ConfigButton configButton;
         public ToggleButton toggleButton;
-        public NPCButton npcButton;
-        public PlayerButton playerButton;
-        public DebugButton debugButton;
-        public WorldButton worldButton;
-        public ReloadSPButton reloadSingleplayerButton;
-        public ReloadMPButton reloadMultiplayerButton;
 
         // List of all buttons
         public List<BaseButton> AllButtons = [];
@@ -43,41 +35,26 @@ namespace SquidTestingMod.UI
         // This is where we create all the buttons and set up their positions.
         public MainState()
         {
-            // Check if reloadbuttons only
-            if (Conf.ReloadButtonsOnly)
-            {
-                toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle all buttons");
-                configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config");
-                reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
-                reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
-                return;
-            }
-
-            // Create all buttons with a single line per button:
-            toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle all buttons");
-            configButton = AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config");
-            itemButton = AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
-            npcButton = AddButton<NPCButton>(Assets.ButtonNPC, "NPCs", "Open NPC browser");
-            playerButton = AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
-            debugButton = AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
-            worldButton = AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            reloadSingleplayerButton = AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
-            reloadMultiplayerButton = AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
+            // Create all buttons
+            if (C.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            if (C.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
+            if (C.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            if (C.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
+            if (C.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            if (C.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            if (C.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (C.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            if (C.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Add the panels (invisible by default)
-            itemSpawnerPanel = new ItemSpawner();
-            npcSpawnerPanel = new NPCSpawner();
-            playerPanel = new PlayerPanel();
-            debugPanel = new DebugPanel();
-            worldPanel = new WorldPanel();
-            Append(itemSpawnerPanel);
-            Append(npcSpawnerPanel);
-            Append(playerPanel);
-            Append(debugPanel);
-            Append(worldPanel);
+            if (C.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
+            if (C.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
+            if (C.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
+            if (C.ShowDebugButton) Append(debugPanel = new DebugPanel());
+            if (C.ShowWorldButton) Append(worldPanel = new WorldPanel());
         }
 
         private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)
@@ -108,6 +85,7 @@ namespace SquidTestingMod.UI
             int index = 0;
             foreach (BaseButton btn in AllButtons)
             {
+                // set relative left offset to toggle button
                 if (btn == toggleButton)
                     btn.RelativeLeftOffset = 0;
                 else

@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI.Panels
         {
             // Draw inventory background
             CalculatedStyle dimensions = GetInnerDimensions();
-            float bgOpacity = IsMouseHovering ? 0.9f : 0.6f; // 0.9 when hovering, 0.6 when not
+            float bgOpacity = IsMouseHovering ? 1.0f : 0.4f; // 0.9 when hovering, 0.4 when not
             Texture2D inventoryBack = TextureAssets.InventoryBack9.Value;
             spriteBatch.Draw(inventoryBack, dimensions.ToRectangle(), Color.White * bgOpacity);
 

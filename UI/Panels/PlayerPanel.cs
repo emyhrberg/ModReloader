@@ -27,20 +27,6 @@ namespace SquidTestingMod.UI.Panels
                 onClick: PlayerCheats.ToggleGodMode
             );
             AddOptionPanel(
-                title: "Fast Mode",
-                description: "Increases speed and acceleration",
-                checkBox: true,
-                color: Color.BlueViolet,
-                onClick: PlayerCheats.ToggleFastMode
-            );
-            AddOptionPanel(
-                title: "Build Mode",
-                description: "Infinite range, instant mining and more",
-                checkBox: true,
-                color: Color.BlueViolet,
-                onClick: PlayerCheats.ToggleBuildMode
-            );
-            AddOptionPanel(
                 title: "Noclip Mode",
                 description: "Move through blocks.",
                 checkBox: true,
@@ -60,6 +46,20 @@ namespace SquidTestingMod.UI.Panels
                 checkBox: true,
                 color: Color.BlueViolet,
                 onClick: PlayerCheats.ToggleTeleportMode
+            );
+            AddOptionPanel(
+                title: "Fast Mode",
+                description: "Increases speed and acceleration",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleFastMode
+            );
+            AddOptionPanel(
+                title: "Build Mode",
+                description: "Infinite range, instant mining and more",
+                checkBox: true,
+                color: Color.BlueViolet,
+                onClick: PlayerCheats.ToggleBuildMode
             );
         }
     }
