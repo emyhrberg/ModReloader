@@ -100,27 +100,23 @@ namespace SquidTestingMod.UI.Panels
 
         public override void Update(GameTime gameTime)
         {
-            // base.Update(gameTime);
-
-            // Check if the mouse is over this UI element and the right mouse button is down.
-            if (IsMouseHovering && Main.mouseRight)
+            // Only do this if the mouse is over this slot, right button is down,
+            // the mouseItem is the same type, and the stack isn't at max.
+            if (IsMouseHovering && Main.mouseRight &&
+                Main.mouseItem.type == displayItem.type &&
+                Main.mouseItem.stack < Main.mouseItem.maxStack)
             {
-                // Execute your "holding" logic here.
-                // You might want to add a timer so it doesn't execute every frame.
-                // Log.Info("Right mouse is being held down on " + displayItem.Name);
-                // For example, increment the item stack gradually:
-                if (Main.mouseItem.IsAir)
+                // Check if we're allowed to increment yet
+                if (Main.stackSplit <= 0)
                 {
-                    Main.mouseItem = displayItem.Clone();
-                    Main.mouseItem.stack = 1;
-                }
-                else if (Main.mouseItem.type == displayItem.type && Main.mouseItem.stack < displayItem.maxStack)
-                {
-                    Main.superFastStack = 1;
+                    // Actually increment the stack
                     Main.mouseItem.stack++;
+
+                    // Reset stackSplit to force a delay until next increment
+                    // (Vanilla typically starts at 30, then speeds up if you keep holding.)
+                    Main.stackSplit = 30;
                 }
             }
         }
-
     }
 }

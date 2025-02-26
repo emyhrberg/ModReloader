@@ -31,34 +31,43 @@ namespace SquidTestingMod.UI.Panels
             Texture = texture;
         }
 
+        // Called when the user presses the left mouse button on this element
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
+            base.LeftMouseDown(evt);  // needed for correct event handling
+
+            // We only start dragging if the user explicitly clicked this button
+            dragging = true;
+            clickOffsetY = evt.MousePosition.Y - GetDimensions().Y;
+            Main.LocalPlayer.mouseInterface = true;
+        }
+
+        // Called when the user releases the left mouse button
+        public override void LeftMouseUp(UIMouseEvent evt)
+        {
+            base.LeftMouseUp(evt);
+            dragging = false;
+            Main.LocalPlayer.mouseInterface = false;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            // 1) Detect start of dragging
-            if (ContainsPoint(Main.MouseScreen))
-            {
-                // If left mouse pressed while hovering, start dragging
-                if (Main.mouseLeft && !dragging)
-                {
-                    dragging = true;
-                    // Remember how far down from the top of the button the user clicked
-                    clickOffsetY = Main.MouseScreen.Y - GetDimensions().Y;
-                }
-            }
-
-            // 2) If mouse released, stop dragging
-            if (!Main.mouseLeft)
-                dragging = false;
-
-            // 3) If still dragging, calculate vertical offset
+            // If we are dragging, keep sending offset events
             if (dragging)
             {
-                // Where the button’s top is now
-                float newTop = Main.MouseScreen.Y - clickOffsetY;
-                float offsetY = newTop - GetDimensions().Y;
-                // Fire event so the parent panel can respond
-                OnDragY?.Invoke(offsetY);
+                // If the mouse was released outside this UI, stop
+                if (!Main.mouseLeft)
+                {
+                    dragging = false;
+                }
+                else
+                {
+                    float newTop = Main.MouseScreen.Y - clickOffsetY;
+                    float offsetY = newTop - GetDimensions().Y;
+                    OnDragY?.Invoke(offsetY);
+                }
             }
         }
 
@@ -76,7 +85,7 @@ namespace SquidTestingMod.UI.Panels
                 float scale = 1f;
 
                 // Set opacity: 0.8 when not hovering, 1 when hovering
-                float opacity = IsMouseHovering ? 1f : 0.6f;
+                float opacity = IsMouseHovering ? 1f : 0.8f;
 
                 // Draw the texture at 'center', anchored by 'origin', scaled by 'scale'
                 spriteBatch.Draw(Texture.Value, center, null, Color.White * opacity, 0f, origin, scale, SpriteEffects.None, 0f);

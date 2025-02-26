@@ -22,7 +22,7 @@ namespace SquidTestingMod.UI.Panels
         private Color darkBlue = new(73, 85, 186);
 
         // Dragging
-        protected bool Draggable;
+        protected bool Draggable = false;
         public bool IsDragging;
         private bool dragging;
         private Vector2 dragOffset;
@@ -35,7 +35,7 @@ namespace SquidTestingMod.UI.Panels
             // Set some default panel properties 
             // Children will override this hopefully :)
             Width.Set(350, 0f);
-            Height.Set(500, 0f);
+            Height.Set(530, 0f);
             HAlign = 1.0f; // right aligned
             VAlign = 1.0f; // bottom aligned
             BackgroundColor = darkBlue;

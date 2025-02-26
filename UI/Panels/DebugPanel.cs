@@ -21,38 +21,22 @@ namespace SquidTestingMod.UI.Panels
             HitboxSystem hitboxSystem = ModContent.GetInstance<HitboxSystem>();
             DrawUISystem drawUISystem = ModContent.GetInstance<DrawUISystem>();
 
-            // Add option panels
-            AddOptionPanel(
-                title: "Hitboxes",
-                description: "Show hitboxes of all entities",
-                checkBox: true,
-                color: Color.BlueViolet,
-                onClick: hitboxSystem.ToggleHitboxes);
+            // Add debug options
+            AddHeader("Hitboxes");
+            AddOnOffOption(hitboxSystem.ToggleHitboxes, "Hitboxes Off", "Show hitboxes of all entities");
+            AddPadding();
+            AddHeader("UI");
+            AddOnOffOption(drawUISystem.ToggleUIDebugDrawing, "UIElements Off", "Show all UI elements from mods");
+            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel 30x30", "Create a debug panel at 30,30");
+            AddPadding();
+            AddHeader("Logs");
+            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Open the client.log file");
+        }
 
-            AddOptionPanel(
-                title: "UIElements",
-                description: "Show all UI elements from mods",
-                checkBox: true,
-                color: Color.BlueViolet,
-                onClick: drawUISystem.ToggleUIDebugDrawing);
-
-            AddOptionPanel(
-                title: "Open client.log",
-                description: "Open the client.log file",
-                checkBox: false,
-                color: Color.Red,
-                onClick: Log.OpenClientLog);
-
-            AddOptionPanel(
-                title: "Create DebugPanel 30x30",
-                description: "Spawn a custom debug panel",
-                checkBox: false,
-                color: Color.Red,
-                onClick: () =>
-                {
-                    MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    sys.mainState.Append(new CustomDebugPanel(30, 30));
-                });
+        private void SpawnDebugPanel()
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            sys.mainState.Append(new CustomDebugPanel(30, 30));
         }
     }
 }

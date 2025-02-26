@@ -19,8 +19,8 @@ namespace SquidTestingMod.UI.Panels
     public class WorldPanel : RightParentPanel
     {
         // Variables
-        OptionPanel time;
-        OptionPanel moon;
+        OnOffOption time;
+        OnOffOption moon;
 
         public WorldPanel() : base("World")
         {
@@ -43,124 +43,107 @@ namespace SquidTestingMod.UI.Panels
                 _ => "Unknown Difficulty"
             };
 
-            // Add all content in the panel
-            AddOptionPanel(
-                title: "World Name: " + worldName,
-                description: "The name of the world",
-                checkBox: false,
-                color: Color.Orange,
-                onClick: null
-            );
-            AddOptionPanel(
-                title: "World Size: " + worldSize,
-                description: "The size of the world",
-                checkBox: false,
-                color: Color.Orange,
-                onClick: null
-            );
-            AddOptionPanel(
-                title: "World Difficulty: " + difficultyText,
-                description: "The difficulty of the world",
-                checkBox: false,
-                color: Color.Orange,
-                onClick: null
-            );
-            // Spawn a meteor at the player's position
-            AddOptionPanel(
-                title: "Spawn Meteor",
-                description: "Spawn a meteor",
-                checkBox: false,
-                color: Color.Red,
-                onClick: () =>
-                {
-                    Log.Info("Trying to drop meteor");
-                    WorldGen.dropMeteor();
-                }
-            );
+            AddHeader("World Info");
+            AddOnOffOption(null, "Name: " + worldName);
+            AddOnOffOption(null, "Size: " + worldSize);
+            AddOnOffOption(null, "Difficulty: " + difficultyText);
+            AddPadding();
 
-            AddOptionPanel(
-                title: "Spawn Goblin Army",
-                description: "Spawn a goblin army",
-                checkBox: false,
-                color: Color.Red,
-                onClick: () =>
-                {
-                    // Only trigger the invasion if one isn't already active
-                    if (Main.invasionType == 0)
-                    {
-                        Main.invasionType = InvasionID.GoblinArmy;
-                        Main.invasionSize = 50; // Adjust size as needed
-                        Main.invasionProgress = 0;
-                        Main.invasionProgressWave = 0;
-                        // Set the invasion origin to the player's X position
-                        Main.invasionX = (int)Main.player[Main.myPlayer].position.X;
-                        Main.invasionDelay = 0;
-                        // Sync in multiplayer
-                        // if (Main.netMode == NetmodeID.Server)
-                        // {
-                        //     NetMessage.SendData(MessageID.InvasionProgressUpdate);
-                        // }
-                    }
-                    else
-                    {
-                        Main.NewText("An invasion is already in progress!");
-                    }
-                }
+            AddHeader("Time");
+            time = AddOnOffOption(IncreaseIngameTime, "Time: ");
+            moon = AddOnOffOption(IncreaseMoonphase, "Moon Phase: ");
+            AddPadding();
 
-            );
+            AddHeader("Invasions");
+            AddOnOffOption(SpawnGoblinInvasion, "Start Goblin Invasion");
+            AddPadding();
 
-            time = AddOptionPanel(
-                title: "Time: ",
-                description: "Increase the in-game time by 1 hour",
-                checkBox: false,
-                color: Color.Red,
-                onClick: () =>
-                {
-                    const double cycleLength = Main.dayLength + Main.nightLength;
-                    double fullTime = Main.time;
-                    if (!Main.dayTime)
-                    {
-                        fullTime += Main.dayLength;
-                    }
-                    // Add one hour in ticks (1 hour = 3600 ticks)
-                    fullTime += 3600;
+            AddHeader("Events");
+            AddOnOffOption(SpawnMeteor, "Spawn Meteor");
+            AddPadding();
 
-                    // Ensure fullTime is within the valid cycle range.
-                    fullTime %= cycleLength;
-                    if (fullTime < 0)
-                    {
-                        fullTime += cycleLength;
-                    }
+            AddHeader("Misc");
+            AddPadding();
+            AddHeader("Misc2");
+            AddPadding();
+            AddHeader("Misc3");
+            AddPadding();
+            AddHeader("Misc4");
+            AddPadding();
+            AddHeader("Misc5");
+            AddPadding();
+            AddHeader("Misc6");
+            AddPadding();
+        }
 
-                    Main.dayTime = fullTime < Main.dayLength;
-                    if (!Main.dayTime)
-                    {
-                        fullTime -= Main.dayLength;
-                    }
-                    Main.time = fullTime;
-                    // In multiplayer, sync the world data.
-                    // if (Main.netMode == NetmodeID.Server)
-                    // {
-                    //     NetMessage.SendData(MessageID.WorldData);
-                    // }
-                });
+        private void SpawnMeteor()
+        {
+            WorldGen.dropMeteor();
+            Log.Info("Meteor spawned");
+        }
 
-            moon = AddOptionPanel(
-                title: "Moon Phase: ",
-                description: "Increase the moon phase by 1",
-                checkBox: false,
-                color: Color.Red,
-                onClick: () =>
-                {
-                    Main.moonPhase++;
-                    if (Main.moonPhase >= 8)
-                    {
-                        Main.moonPhase = 0;
-                    }
-                }
-        );
+        private void IncreaseMoonphase()
+        {
+            Main.moonPhase++;
+            if (Main.moonPhase >= 8)
+            {
+                Main.moonPhase = 0;
+            }
+        }
 
+        private void SpawnGoblinInvasion()
+        {
+            // Only trigger the invasion if one isn't already active
+            if (Main.invasionType == 0)
+            {
+                Main.invasionType = InvasionID.GoblinArmy;
+                Main.invasionSize = 50; // Adjust size as needed
+                Main.invasionProgress = 0;
+                Main.invasionProgressWave = 0;
+                // Set the invasion origin to the player's X position
+                Main.invasionX = (int)Main.player[Main.myPlayer].position.X;
+                Main.invasionDelay = 0;
+                // Sync in multiplayer
+                // if (Main.netMode == NetmodeID.Server)
+                // {
+                //     NetMessage.SendData(MessageID.InvasionProgressUpdate);
+                // }
+            }
+            else
+            {
+                Main.NewText("An invasion is already in progress!");
+            }
+        }
 
+        private void IncreaseIngameTime()
+        {
+            const double cycleLength = Main.dayLength + Main.nightLength;
+            double fullTime = Main.time;
+            if (!Main.dayTime)
+            {
+                fullTime += Main.dayLength;
+            }
+            // Add one hour in ticks (1 hour = 3600 ticks)
+            fullTime += 3600;
+
+            // Ensure fullTime is within the valid cycle range.
+            fullTime %= cycleLength;
+            if (fullTime < 0)
+            {
+                fullTime += cycleLength;
+            }
+
+            Main.dayTime = fullTime < Main.dayLength;
+            if (!Main.dayTime)
+            {
+                fullTime -= Main.dayLength;
+            }
+            Main.time = fullTime;
+            // In multiplayer, sync the world data.
+            // if (Main.netMode == NetmodeID.Server)
+            // {
+            //     NetMessage.SendData(MessageID.WorldData);
+            // }
         }
 
         private string CalcIngameTime()
@@ -227,8 +210,8 @@ namespace SquidTestingMod.UI.Panels
 
         public override void Update(GameTime gameTime)
         {
-            moon.SetText("Moon Phase: " + Main.moonPhase);
-            time.SetText("Time: " + CalcIngameTime());
+            moon.UpdateText("Moon Phase: " + Main.moonPhase);
+            time.UpdateText("Time: " + CalcIngameTime());
 
             base.Update(gameTime);
         }

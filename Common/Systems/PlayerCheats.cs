@@ -31,7 +31,7 @@ namespace SquidTestingMod.Common.Systems
             IsGodModeOn = !IsGodModeOn;
 
             if (C.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), IsGodModeOn ? Color.Green : Color.Red, IsGodModeOn ? "God Mode Enabled" : "God Mode Disabled");
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsGodModeOn ? Color.Green : Color.Red, IsGodModeOn ? "God Mode On" : "God Mode Off");
         }
 
         public static void ToggleFastMode()
@@ -39,7 +39,7 @@ namespace SquidTestingMod.Common.Systems
             IsFastModeOn = !IsFastModeOn;
 
             if (C.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), IsFastModeOn ? Color.Green : Color.Red, IsFastModeOn ? "Fast Mode Enabled" : "Fast Mode Disabled");
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsFastModeOn ? Color.Green : Color.Red, IsFastModeOn ? "Fast Mode On" : "Fast Mode Off");
 
             // Show CloudInABottleJump effect when toggling fast mode
             if (IsFastModeOn)
@@ -56,7 +56,7 @@ namespace SquidTestingMod.Common.Systems
             IsBuildModeOn = !IsBuildModeOn;
 
             if (C.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), IsBuildModeOn ? Color.Green : Color.Red, IsBuildModeOn ? "Build Mode Enabled" : "Build Mode Disabled");
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsBuildModeOn ? Color.Green : Color.Red, IsBuildModeOn ? "Build Mode On" : "Build Mode Off");
         }
 
         public static void ToggleNoClip()
@@ -64,7 +64,7 @@ namespace SquidTestingMod.Common.Systems
             IsNoClipOn = !IsNoClipOn;
 
             if (C.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), IsNoClipOn ? Color.Green : Color.Red, IsNoClipOn ? "NoClip Enabled" : "NoClip Disabled");
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsNoClipOn ? Color.Green : Color.Red, IsNoClipOn ? "NoClip On" : "NoClip Off");
         }
 
         public static void ToggleLightMode()
@@ -72,7 +72,7 @@ namespace SquidTestingMod.Common.Systems
             IsLightModeOn = !IsLightModeOn;
 
             if (C.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), IsLightModeOn ? Color.Green : Color.Red, IsLightModeOn ? "Light Mode Enabled" : "Light Mode Disabled");
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsLightModeOn ? Color.Green : Color.Red, IsLightModeOn ? "Light Mode On" : "Light Mode Off");
         }
 
         public static void ToggleTeleportMode()
@@ -80,7 +80,7 @@ namespace SquidTestingMod.Common.Systems
             IsTeleportModeOn = !IsTeleportModeOn;
 
             if (C.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), IsTeleportModeOn ? Color.Green : Color.Red, IsTeleportModeOn ? "Teleport Mode Enabled" : "Teleport Mode Disabled");
+                CombatText.NewText(Main.LocalPlayer.getRect(), IsTeleportModeOn ? Color.Green : Color.Red, IsTeleportModeOn ? "Teleport Mode On" : "Teleport Mode Off");
         }
 
         #endregion
@@ -181,7 +181,7 @@ namespace SquidTestingMod.Common.Systems
                 {
                     Main.SmartCursorWanted_Mouse = false;
                     Main.SmartCursorWanted_GamePad = false;
-                    Main.NewText("Smart Cursor disabled in Build Mode");
+                    Main.NewText("Smart Cursor Disabled in Build Mode");
                 }
 
                 // Set infinite range

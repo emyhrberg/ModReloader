@@ -100,6 +100,16 @@ Mods: {
 					Label: Show Toggle Button
 					Tooltip: ""
 				}
+
+				ShowTooltips: {
+					Label: Show Tooltips
+					Tooltip: ""
+				}
+
+				ShowTooltipsDebugPanels: {
+					Label: Show Tooltips Debug Panels
+					Tooltip: ""
+				}
 			}
 		}
 

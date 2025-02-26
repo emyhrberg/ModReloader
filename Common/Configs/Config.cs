@@ -73,6 +73,9 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(true)]
         public bool KeepRunningWhenFocusLost = true;
 
+        [DefaultValue(true)]
+        public bool ShowTooltipsDebugPanels = true;
+
         // Debug Panel Config Settings Goes Here For Temporary Storage
 
         // World Panel Config Settings Goes Here For Temporary Storage
@@ -113,5 +116,6 @@ namespace SquidTestingMod.Common.Configs
         public static bool ShowCombatTextOnToggle => ConfigInstance.ShowCombatTextOnToggle;
         public static bool AnimateButtons => ConfigInstance.AnimateButtons;
         public static bool KeepRunningWhenFocusLost => ConfigInstance.KeepRunningWhenFocusLost;
+        public static bool ShowTooltipsDebugPanels => ConfigInstance.ShowTooltipsDebugPanels;
     }
 }
