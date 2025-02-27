@@ -15,6 +15,7 @@ namespace SquidTestingMod.Common.Systems
             // maxSpawns = (int)(maxSpawns * SpawnRateMultiplier.Multiplier);
 
             // Log.Info("[After] SpawnRate: " + spawnRate + " MaxSpawns: " + maxSpawns);
+
         }
     }
 
