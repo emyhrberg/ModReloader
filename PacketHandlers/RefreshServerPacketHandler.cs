@@ -76,7 +76,7 @@ namespace SquidTestingMod.PacketHandlers
                     await ReloadUtilities.ExitAndKillServer();
                 }
 
-                await ReloadUtilities.BuildAndReloadMod();
+                ReloadUtilities.ReloadMod();
             }
         }
     }

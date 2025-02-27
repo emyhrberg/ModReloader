@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using SquidTestingMod.Common.Configs;
@@ -18,154 +20,75 @@ namespace SquidTestingMod.Helpers
             ClientDataHandler.WorldId = Utilities.FindWorldId();
         }
 
-
-
         public static Task ExitWorldOrServer()
         {
 
             if (C.SaveWorldOnReload)
-            {
-                Log.Warn("Saving and quitting...");
-                var tcs = new TaskCompletionSource();
-
-                void Callback()
+                if (Conf.SaveWorldOnReload)
                 {
-                    tcs.SetResult();
-                }
+                    Log.Warn("Saving and quitting...");
 
-                WorldGen.SaveAndQuit(Callback);
-                return tcs.Task;
-            }
-            else
-            {
-                Log.Warn("Just quitting...");
-                WorldGen.JustQuit();
-                return Task.CompletedTask;
-            }
+                    // Creating task that will delay reloading a mod until world finish saving
+                    var tcs = new TaskCompletionSource();
+                    WorldGen.SaveAndQuit(tcs.SetResult);
+                    return tcs.Task;
+                }
+                else
+                {
+                    Log.Warn("Just quitting...");
+                    WorldGen.JustQuit();
+                    return Task.CompletedTask;
+                }
 
         }
 
         public static Task ExitAndKillServer()
         {
-            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, C.SaveWorldOnReload);
+            // Sending packet to server to inform about reloading mod in multiplayer
+            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.SaveWorldOnReload);
+
+            // idk if that needed for exiting server, but maybe we need to save player data idk
             var tcs = new TaskCompletionSource();
-
-            void Callback()
-            {
-                tcs.SetResult();
-            }
-
-            WorldGen.SaveAndQuit(Callback);
+            WorldGen.SaveAndQuit(tcs.SetResult);
             return tcs.Task;
         }
 
         public static void ReloadMod()
         {
+            // Going to reload mod menu(that automaticly invokes reload)
             Main.menuMode = 10002;
         }
 
-        public async static Task BuildAndReloadMod()
+        public static void BuildAndReloadMod()
         {
-            object modSourcesInstance = null;
-            modSourcesInstance = NavigateToDevelopMods();
-            await Task.Delay(600);
+            // 1. Getting Assembly
+            Assembly tModLoaderAssembly = typeof(Main).Assembly;
 
+            // 2. Gettig method for finding modSources paths
+            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
+            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
 
-            if (modSourcesInstance == null)
+            // 3. Finding path by ModToReload name
+            string modPath = modSources.FirstOrDefault(p => Path.GetFileName(p) == Conf.ModToReload);
+            if (modPath != null)
             {
-                Log.Warn("modSourcesInstance is null.");
-                return;
+                Log.Info($"Path to {Conf.ModToReload}: {modPath}");
+            }
+            else
+            {
+                Console.WriteLine("No path found");
             }
 
-            var itemsField = modSourcesInstance.GetType().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (itemsField == null)
-            {
-                Log.Warn("_items field not found.");
-                return;
-            }
+            // 4. Getting method for reloading a mod
+            Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
+            FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.NonPublic | BindingFlags.Static);
+            object buildModInstance = buildModField?.GetValue(null);
+            Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
+            MethodInfo buildMethod = uiBuildModType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string), typeof(bool)]);
 
-            var items = (System.Collections.IEnumerable)itemsField.GetValue(modSourcesInstance);
-            if (items == null)
-            {
-                Log.Warn("_items is null.");
-                return;
-            }
-
-            object modSourceItem = null;
-            string modNameFound = "";
-
-            foreach (var item in items)
-            {
-                if (item.GetType().Name == "UIModSourceItem")
-                {
-                    // Extract and log the mod name
-                    var modNameField = item.GetType().GetField("_modName", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (modNameField != null)
-                    {
-                        var modNameValue = modNameField.GetValue(item);
-                        if (modNameValue is UIText uiText)
-                        {
-                            string modName = uiText.Text;
-                            Log.Info($"Mod Name: {modName}");
-                            if (modName == C.ModToReload)
-                            {
-                                modSourceItem = item;
-                                modNameFound = modName;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            Log.Warn("Mod name is not a UIText.");
-                        }
-                    }
-                }
-            }
-
-            if (modSourceItem == null)
-            {
-                Log.Warn("Second UIModSourceItem not found.");
-                return;
-            }
-
-            var method = modSourceItem.GetType().GetMethod("BuildAndReload", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (method == null)
-            {
-                Log.Warn("BuildAndReload method not found.");
-                return;
-            }
-
-            Log.Info($"Invoking BuildAndReload method with {modNameFound} UIModSourceItem...");
-            method.Invoke(modSourceItem, [null, null]);
-        }
-
-        private static object NavigateToDevelopMods()
-        {
-            try
-            {
-                Log.Info("Attempting to navigate to Develop Mods...");
-
-                Assembly tModLoaderAssembly = typeof(Main).Assembly;
-                Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
-
-                FieldInfo modSourcesField = interfaceType.GetField("modSources", BindingFlags.NonPublic | BindingFlags.Static);
-                object modSourcesInstance = modSourcesField?.GetValue(null);
-
-                FieldInfo modSourcesIDField = interfaceType.GetField("modSourcesID", BindingFlags.NonPublic | BindingFlags.Static);
-                int modSourcesID = (int)(modSourcesIDField?.GetValue(null) ?? -1);
-                Log.Info("modSourcesID: " + modSourcesID);
-
-                Main.menuMode = modSourcesID;
-
-                Log.Info($"Successfully navigated to Develop Mods (MenuMode: {modSourcesID}).");
-
-                return modSourcesInstance;
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error navigating to Develop Mods: {ex.Message}\n{ex.StackTrace}");
-                return null;
-            }
+            // 5.Invoking a Build method
+            buildMethod.Invoke(buildModInstance, [modPath, true]);
         }
     }
 }

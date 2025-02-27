@@ -31,7 +31,7 @@ namespace SquidTestingMod.UI
                 await ReloadUtilities.ExitAndKillServer();
             }
 
-            ReloadUtilities.ReloadMod();
+            ReloadUtilities.BuildAndReloadMod();
         }
     }
 }

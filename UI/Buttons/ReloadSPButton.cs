@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI.Buttons
             }
 
             // 3 Reload
-            await ReloadUtilities.BuildAndReloadMod();
+            ReloadUtilities.BuildAndReloadMod();
         }
 
         public override void RightClick(UIMouseEvent evt)

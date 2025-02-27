@@ -6,6 +6,8 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 
 namespace SquidTestingMod
 {
