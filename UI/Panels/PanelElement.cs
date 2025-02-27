@@ -89,7 +89,7 @@ namespace SquidTestingMod.UI.Panels
 
             // If mod config says show tooltips, and we have text for it,
             // and the mouse is actually over the custom hover zone:
-            if (C.ShowTooltipsDebugPanels && !string.IsNullOrEmpty(HoverText) && IsMouseHovering)
+            if (Conf.ShowTooltipsDebugPanels && !string.IsNullOrEmpty(HoverText) && IsMouseHovering)
             {
                 UICommon.TooltipMouseText(HoverText);
             }

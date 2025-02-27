@@ -23,22 +23,21 @@ namespace SquidTestingMod.Helpers
         public static Task ExitWorldOrServer()
         {
 
-            if (C.SaveWorldOnReload)
-                if (Conf.SaveWorldOnReload)
-                {
-                    Log.Warn("Saving and quitting...");
+            if (Conf.SaveWorldOnReload)
+            {
+                Log.Warn("Saving and quitting...");
 
-                    // Creating task that will delay reloading a mod until world finish saving
-                    var tcs = new TaskCompletionSource();
-                    WorldGen.SaveAndQuit(tcs.SetResult);
-                    return tcs.Task;
-                }
-                else
-                {
-                    Log.Warn("Just quitting...");
-                    WorldGen.JustQuit();
-                    return Task.CompletedTask;
-                }
+                // Creating task that will delay reloading a mod until world finish saving
+                var tcs = new TaskCompletionSource();
+                WorldGen.SaveAndQuit(tcs.SetResult);
+                return tcs.Task;
+            }
+            else
+            {
+                Log.Warn("Just quitting...");
+                WorldGen.JustQuit();
+                return Task.CompletedTask;
+            }
 
         }
 

@@ -89,7 +89,7 @@ namespace SquidTestingMod.Common.Configs
         }
     }
 
-    internal static class C
+    internal static class Conf
     {
         // Instance
         public static Config ConfigInstance => ModContent.GetInstance<Config>();

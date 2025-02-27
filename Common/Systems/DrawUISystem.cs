@@ -27,7 +27,7 @@ namespace SquidTestingMod.Common.Systems
         {
             isUIDebugSizeElementDrawing = !isUIDebugSizeElementDrawing;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugSizeElementDrawing ? Color.Green : Color.Red, isUIDebugSizeElementDrawing ? "UI Size Text ON" : "UI Size Text OFF");
         }
 
@@ -35,7 +35,7 @@ namespace SquidTestingMod.Common.Systems
         {
             isUIDebugDrawing = !isUIDebugDrawing;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugDrawing ? Color.Green : Color.Red, isUIDebugDrawing ? "UI Debug ON" : "UI Debug OFF");
         }
 

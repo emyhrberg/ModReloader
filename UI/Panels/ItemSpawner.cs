@@ -151,7 +151,7 @@ namespace SquidTestingMod.UI.Panels
                 allItemSlots.Add(itemSlot);
 
                 count++;
-                if (count >= C.MaxItemsToDisplay)
+                if (count >= Conf.MaxItemsToDisplay)
                     break;
             }
 

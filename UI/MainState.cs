@@ -36,25 +36,25 @@ namespace SquidTestingMod.UI
         public MainState()
         {
             // Create all buttons
-            if (C.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
-            if (C.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
-            if (C.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
-            if (C.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
-            if (C.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
-            if (C.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
-            if (C.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            if (C.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
-            if (C.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
+            if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
+            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
+            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Add the panels (invisible by default)
-            if (C.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
-            if (C.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
-            if (C.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
-            if (C.ShowDebugButton) Append(debugPanel = new DebugPanel());
-            if (C.ShowWorldButton) Append(worldPanel = new WorldPanel());
+            if (Conf.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
+            if (Conf.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
+            if (Conf.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
+            if (Conf.ShowDebugButton) Append(debugPanel = new DebugPanel());
+            if (Conf.ShowWorldButton) Append(worldPanel = new WorldPanel());
         }
 
         private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)
@@ -86,25 +86,25 @@ namespace SquidTestingMod.UI
             RemoveAllChildren();
 
             // Create all buttons
-            if (C.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
-            if (C.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
-            if (C.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
-            if (C.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
-            if (C.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
-            if (C.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
-            if (C.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            if (C.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
-            if (C.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
+            if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
+            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
+            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
             UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Add the panels (invisible by default)
-            if (C.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
-            if (C.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
-            if (C.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
-            if (C.ShowDebugButton) Append(debugPanel = new DebugPanel());
-            if (C.ShowWorldButton) Append(worldPanel = new WorldPanel());
+            if (Conf.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
+            if (Conf.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
+            if (Conf.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
+            if (Conf.ShowDebugButton) Append(debugPanel = new DebugPanel());
+            if (Conf.ShowWorldButton) Append(worldPanel = new WorldPanel());
         }
 
         // updates position only

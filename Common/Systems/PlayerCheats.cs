@@ -30,7 +30,7 @@ namespace SquidTestingMod.Common.Systems
         {
             IsGodModeOn = !IsGodModeOn;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsGodModeOn ? Color.Green : Color.Red, IsGodModeOn ? "God Mode On" : "God Mode Off");
         }
 
@@ -38,7 +38,7 @@ namespace SquidTestingMod.Common.Systems
         {
             IsFastModeOn = !IsFastModeOn;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsFastModeOn ? Color.Green : Color.Red, IsFastModeOn ? "Fast Mode On" : "Fast Mode Off");
 
             // Show CloudInABottleJump effect when toggling fast mode
@@ -55,7 +55,7 @@ namespace SquidTestingMod.Common.Systems
         {
             IsBuildModeOn = !IsBuildModeOn;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsBuildModeOn ? Color.Green : Color.Red, IsBuildModeOn ? "Build Mode On" : "Build Mode Off");
         }
 
@@ -63,7 +63,7 @@ namespace SquidTestingMod.Common.Systems
         {
             IsNoClipOn = !IsNoClipOn;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsNoClipOn ? Color.Green : Color.Red, IsNoClipOn ? "NoClip On" : "NoClip Off");
         }
 
@@ -71,7 +71,7 @@ namespace SquidTestingMod.Common.Systems
         {
             IsLightModeOn = !IsLightModeOn;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsLightModeOn ? Color.Green : Color.Red, IsLightModeOn ? "Light Mode On" : "Light Mode Off");
         }
 
@@ -79,7 +79,7 @@ namespace SquidTestingMod.Common.Systems
         {
             IsTeleportModeOn = !IsTeleportModeOn;
 
-            if (C.ShowCombatTextOnToggle)
+            if (Conf.ShowCombatTextOnToggle)
                 CombatText.NewText(Main.LocalPlayer.getRect(), IsTeleportModeOn ? Color.Green : Color.Red, IsTeleportModeOn ? "Teleport Mode On" : "Teleport Mode Off");
         }
 

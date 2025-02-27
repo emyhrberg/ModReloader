@@ -35,7 +35,7 @@ namespace SquidTestingMod.UI.Buttons
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
             opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
 
-            if (!C.AnimateButtons)
+            if (!Conf.AnimateButtons)
             {
                 opacity = 1f;
             }
@@ -49,7 +49,7 @@ namespace SquidTestingMod.UI.Buttons
             // Draw the animation texture
             if (Spritesheet != null)
             {
-                if (IsMouseHovering && C.AnimateButtons)
+                if (IsMouseHovering && Conf.AnimateButtons)
                 {
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)

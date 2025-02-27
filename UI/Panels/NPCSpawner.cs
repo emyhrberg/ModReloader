@@ -77,7 +77,7 @@ namespace SquidTestingMod.UI.Panels
                     ItemsGrid.Add(npcSlot);
 
                     count++;
-                    if (count >= C.MaxItemsToDisplay)
+                    if (count >= Conf.MaxItemsToDisplay)
                         break;
                 }
                 catch (Exception)
@@ -128,7 +128,7 @@ namespace SquidTestingMod.UI.Panels
                     continue;
 
                 count++;
-                if (count >= C.MaxItemsToDisplay)
+                if (count >= Conf.MaxItemsToDisplay)
                     break;
 
                 CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);

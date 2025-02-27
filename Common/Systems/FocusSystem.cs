@@ -12,7 +12,7 @@ namespace SquidTestingMod.Common.Systems
     {
         public override void Load()
         {
-            if (!C.KeepRunningWhenFocusLost)
+            if (!Conf.KeepRunningWhenFocusLost)
             {
                 return;
             }

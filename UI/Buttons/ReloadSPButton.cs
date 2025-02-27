@@ -21,7 +21,7 @@ namespace SquidTestingMod.UI.Buttons
         {
 
             // 1 Clear logs if needed
-            if (C.ClearClientLogOnReload)
+            if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();
 
             // 2 Prepare client data
