@@ -87,7 +87,7 @@ namespace SquidTestingMod.UI.Buttons
         public override void LeftClick(UIMouseEvent evt)
         {
             // force open inventory
-            Main.playerInventory = true;
+            // Main.playerInventory = true;
 
             // Close the NPCSpawnerPanel.
             MainSystem sys = ModContent.GetInstance<MainSystem>();

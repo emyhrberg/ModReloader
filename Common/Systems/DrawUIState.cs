@@ -22,7 +22,7 @@ namespace SquidTestingMod.Common.Systems
         public void DrawHitbox(UIElement element, SpriteBatch spriteBatch)
         {
             DrawUISystem uiSys = ModContent.GetInstance<DrawUISystem>();
-            if (!uiSys.GetDebugDrawing()) return;
+            if (!uiSys.isUIDebugDrawing) return;
 
             if (element is DrawUIState || element is MainState) return; // Skip full-screen elements
 
@@ -30,14 +30,13 @@ namespace SquidTestingMod.Common.Systems
 
             // Get a color from the rainbow
             int colorIndex = element.UniqueId % rainbowColors.Count;
-            Color hitboxColor = rainbowColors[colorIndex] * 0.3f;
+            Color hitboxColor = rainbowColors[colorIndex] * 0.1f;
 
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, hitboxColor);
             DrawOutline(spriteBatch, hitbox);
-            DrawElementLabel(spriteBatch, element, hitbox.Location);
         }
 
-        private void DrawElementLabel(SpriteBatch spriteBatch, UIElement element, Point position)
+        public void DrawElementLabel(SpriteBatch spriteBatch, UIElement element, Point position)
         {
             // round width and height to whole numbers
             int width = (int)element.GetOuterDimensions().Width;

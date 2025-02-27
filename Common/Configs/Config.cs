@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -22,7 +23,7 @@ namespace SquidTestingMod.Common.Configs
 
         [Header("ItemNPCSpawner")]
         [DefaultValue(1000)]
-        [Range(100, 6000)]
+        [Range(100, 10000)]
         [Increment(1000)]
         public int MaxItemsToDisplay;
 
@@ -83,6 +84,8 @@ namespace SquidTestingMod.Common.Configs
         public override void OnChanged()
         {
             // Here we can update the game based on the new config values
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            sys?.mainState?.UpdateButtonsAfterConfigChanged();
         }
     }
 

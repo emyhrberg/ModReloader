@@ -4,7 +4,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.Old
 {
     /// <summary>
     /// Superclass for options inside player, debug, world panel

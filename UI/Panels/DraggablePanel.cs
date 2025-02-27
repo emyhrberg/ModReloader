@@ -19,10 +19,10 @@ namespace SquidTestingMod.UI.Panels
         // Panel values
         protected bool Active = false; // draw and update when true
         protected const int padding = 12;
-        private Color darkBlue = new(73, 85, 186);
+        protected Color darkBlue = new(73, 85, 186);
 
         // Dragging
-        protected bool Draggable = false;
+        public bool Draggable = false;
         public bool IsDragging;
         private bool dragging;
         private Vector2 dragOffset;
@@ -55,13 +55,6 @@ namespace SquidTestingMod.UI.Panels
         {
             if (!Active)
                 return;
-
-            if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
-            {
-                Active = false;
-                Main.playerInventory = false; // does not always work
-                return;
-            }
 
             base.Update(gameTime);
 

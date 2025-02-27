@@ -20,10 +20,14 @@ namespace SquidTestingMod.UI.Panels
 
         private UIList uiList;
         private UIScrollbar scrollbar;
+        protected bool scrollbarEnabled = true;
 
-        public RightParentPanel(string header) : base(header)
+        public RightParentPanel(string title, bool scrollbarEnabled = true) : base(title)
         {
-            Draggable = true;
+            // panel settings
+            BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
+            Height.Set(570f, 0f);
+            Draggable = false; // TODO change this later when u fix sliders
 
             // Create a new list
             uiList = new()
@@ -33,24 +37,28 @@ namespace SquidTestingMod.UI.Panels
                 HAlign = 0.5f,
                 VAlign = 0f,
                 Top = { Pixels = 35 + 12 },
-                ListPadding = 0f,
+                ListPadding = 0f, // 0 or 5f
                 ManualSortMethod = (e) => { }
             };
 
             // Create a new scrollbar
-            scrollbar = new()
+            if (scrollbarEnabled)
             {
-                Height = { Percent = 1f, Pixels = -35 - 12 },
-                HAlign = 1f,
-                VAlign = 0f,
-                Left = { Pixels = 5 }, // scrollbar has 20 width
-                Top = { Pixels = 35 + 12 }
-            };
+                scrollbar = new()
+                {
+                    Height = { Percent = 1f, Pixels = -35 - 12 },
+                    HAlign = 1f,
+                    VAlign = 0f,
+                    Left = { Pixels = 5 }, // scrollbar has 20 width
+                    Top = { Pixels = 35 + 12 }
+                };
+            }
+
 
             // Set the scrollbar to the list
-            uiList.SetScrollbar(scrollbar);
             Append(uiList);
-            Append(scrollbar);
+            if (scrollbarEnabled) uiList.SetScrollbar(scrollbar);
+            if (scrollbarEnabled) Append(scrollbar);
         }
 
         protected HeaderElement AddHeader(string title)
@@ -63,7 +71,7 @@ namespace SquidTestingMod.UI.Panels
         /// <summary>
         /// Add padding to the panel with a blank header with the given panel element height
         /// </summary>
-        protected HeaderElement AddPadding(float padding = 15f)
+        protected HeaderElement AddPadding(float padding = 20f)
         {
             // Create a blank UIElement to act as a spacer.
             HeaderElement paddingElement = new("");
@@ -74,11 +82,12 @@ namespace SquidTestingMod.UI.Panels
             return paddingElement;
         }
 
-        protected OnOffOption AddOnOffOption(Action onClick, string title, string hoverText = "")
+        protected OnOffOption AddOnOffOption(Action leftClick, string title, string hoverText = "", Action rightClick = null)
         {
             // Create a new option panel
             OnOffOption onOffPanel = new(title, hoverText);
-            onOffPanel.OnLeftClick += (mouseEvent, element) => onClick?.Invoke();
+            onOffPanel.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
+            onOffPanel.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
 
             // Add the option to the ui list
             uiList.Add(onOffPanel);
@@ -87,15 +96,30 @@ namespace SquidTestingMod.UI.Panels
             return onOffPanel;
         }
 
+        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null)
+        {
+            // Create a new option panel
+            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged);
+
+            // Add the option to the ui list
+            uiList.Add(sliderPanel);
+
+            // Add the panel to the player panel
+            return sliderPanel;
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
             // If the mouse is over your panel, capture mouse input.
-            if (this.ContainsPoint(Main.MouseScreen))
-            {
-                Main.LocalPlayer.mouseInterface = true;
-            }
+            // NOTE: not working
+            // if (ContainsPoint(Main.MouseScreen))
+            // {
+            //     Log.Info("disable hover");
+            //     Main.LocalPlayer.mouseInterface = true;
+            //     Main.hoverItemName = "";
+            // }
         }
     }
 }

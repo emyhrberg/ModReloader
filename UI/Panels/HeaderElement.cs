@@ -13,6 +13,8 @@ namespace SquidTestingMod.UI.Panels
     {
         public HeaderElement(string title) : base(title)
         {
+            IsHoverEnabled = false;
+            textElement.TextColor = Color.White;
         }
     }
 }

@@ -79,6 +79,34 @@ namespace SquidTestingMod.UI
             return button;
         }
 
+        public void UpdateButtonsAfterConfigChanged()
+        {
+            // Re-add in the correct order
+            AllButtons.Clear();
+            RemoveAllChildren();
+
+            // Create all buttons
+            if (C.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            if (C.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
+            if (C.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            if (C.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
+            if (C.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            if (C.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            if (C.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (C.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            if (C.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
+
+            // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
+            UpdateButtonsPositions(toggleButton.anchorPos);
+
+            // Add the panels (invisible by default)
+            if (C.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
+            if (C.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
+            if (C.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
+            if (C.ShowDebugButton) Append(debugPanel = new DebugPanel());
+            if (C.ShowWorldButton) Append(worldPanel = new WorldPanel());
+        }
+
         // updates position only
         public void UpdateButtonsPositions(Vector2 anchorPosition)
         {

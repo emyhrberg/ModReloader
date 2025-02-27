@@ -81,7 +81,7 @@ namespace SquidTestingMod.UI.Panels
             ResizeButton resizeButton = new(Assets.Resize);
             resizeButton.OnDragY += offsetY =>
             {
-                Log.Info($"[BEFORE] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
+                // Log.Info($"[BEFORE] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
 
                 float oldHeight = Height.Pixels;
                 float newHeight = oldHeight + offsetY;
@@ -103,14 +103,14 @@ namespace SquidTestingMod.UI.Panels
                 Scrollbar.Height.Set(newHeight - 140 - 10, 0f);
 
                 // Set new top offsets
-                float topOffset = (newHeight - oldHeight);
+                float topOffset = newHeight - oldHeight;
                 Top.Pixels += topOffset;
                 // ItemsGrid.Top.Pixels -= topOffset;
                 // Scrollbar.Top.Pixels -= topOffset;
 
                 Recalculate();
 
-                Log.Info($"[AFTER] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
+                // Log.Info($"[AFTER] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
             };
 
             // Add all content in the panel
@@ -132,6 +132,18 @@ namespace SquidTestingMod.UI.Panels
         protected virtual void FilterItems()
         {
             // Implement this in child classes
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            // if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            // {
+            //     Active = false;
+            //     Main.playerInventory = false; // does not always work
+            //     return;
+            // }
         }
     }
 }

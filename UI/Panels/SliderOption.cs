@@ -1,79 +1,83 @@
-using System.Collections.Generic;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader.UI;
+using Terraria.GameContent.UI.Elements; // For UIColoredSlider if it's in scope
+using Terraria.Localization;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Panels
 {
     public class SliderOption : PanelElement
     {
-        // Variables
-        private string HoverText;
+        // The actual slider
+        public CustomSlider Slider;
 
-        public SliderOption(string text, string hoverText) : base(text)
+        // Store the slider limits
+        private float Min;
+        private float Max;
+
+        // Store the slider’s current value in [0..1]
+        public float normalizedValue;
+
+        public Action<float> _onValueChanged;
+
+        public SliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null)
+            : base(title)
         {
-            HoverText = hoverText;
+            Min = min;
+            Max = max;
+            _onValueChanged = onValueChanged;
 
-            // Text element
-            textElement.TextColor = Color.DimGray;
-            textElement.OnMouseOver += (evt, element) =>
-            {
-                textElement.TextColor = Color.White;
-            };
-            textElement.OnMouseOut += (evt, element) => textElement.TextColor = Color.DimGray;
-            Append(textElement);
+            // Convert default integer value to normalized 0..1
+            normalizedValue = MathHelper.Clamp(
+                (defaultValue - Min) / (max - min),
+                0f, 1f
+            );
+
+            // Position the text slightly to the left
+            textElement.HAlign = 0.1f;
+
+            // Create the colored slider
+            // NOTE: Adjust or remove parameters as needed to match your actual UIColoredSlider constructor!
+            Slider = new CustomSlider(
+                textKey: Language.GetText("UI.SliderLabel"), // or a custom LocalizedText
+                getStatus: () => normalizedValue,
+                setStatusKeyboard: val =>
+                {
+                    // val is the new normalized slider value (0..1)
+                    normalizedValue = val;
+                    // You could do something else here, like apply it to config
+
+                    // onvalue changed
+                    _onValueChanged?.Invoke(MathHelper.Lerp(Min, Max, normalizedValue));
+                },
+                setStatusGamepad: () => { }, // optional gamepad stuff
+                blipColorFunction: s => Color.Lerp(Color.Black, Color.White, s),
+                color: Color.White
+            );
+
+            // Append the slider so it will draw and respond to input
+            Append(Slider);
         }
 
-        public override void MouseOver(UIMouseEvent evt)
+        public void SetValue(float value)
         {
-            textElement.TextColor = Color.White;
-        }
-
-        public override void MouseOut(UIMouseEvent evt)
-        {
-            textElement.TextColor = Color.DimGray;
+            normalizedValue = MathHelper.Clamp(value, 0f, 1f);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-            // Draw hover text
-            if (IsMouseHovering && HoverText != "")
-            {
-                UICommon.TooltipMouseText(HoverText);
-            }
-        }
-
-        public override bool ContainsPoint(Vector2 point)
-        {
-            // Get the text element's outer dimensions (which gives us the full width of the text)
-            Rectangle textRect = textElement.GetOuterDimensions().ToRectangle();
-
-            // Use the text element's X position and width, but use the OnOffOption's Y position with a fixed height of 30.
-            Rectangle clickableArea = new Rectangle(
-                textRect.X,                     // X position from the text element
-                (int)GetDimensions().Y,         // Y position from the parent (OnOffOption)
-                textRect.Width,                 // full width of the text element
-                30                              // fixed height (OnOffOption height)
+            // Convert the normalized slider value back to an integer
+            int currentIntValue = (int)Math.Round(
+                MathHelper.Lerp(Min, Max, normalizedValue)
             );
 
-            return clickableArea.Contains(point.ToPoint());
-        }
-
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            // handle regular click event like acting on its event
-            // e.g PlayerCheats.ToggleGodMode() for GodMode option
-            base.LeftClick(evt);
-
-            // handle toggle event
-            // set text to replace to either on or off
-            UpdateText(textElement.Text.Contains("On") ? textElement.Text.Replace("On", "Off") : textElement.Text.Replace("Off", "On"));
+            // Update text
+            textElement.SetText($"{Title}: {currentIntValue}");
         }
     }
 }

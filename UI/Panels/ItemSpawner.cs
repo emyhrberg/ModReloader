@@ -29,6 +29,7 @@ namespace SquidTestingMod.UI.Panels
             Magic,
             Summon,
             Armor,
+            Vanity,
             Accessories,
             Potions,
             Placeables,
@@ -39,7 +40,9 @@ namespace SquidTestingMod.UI.Panels
             ID,
             Value,
             Rarity,
-            Name
+            Name,
+            Damage,
+            Defense
         }
 
         // Filtering fields
@@ -60,10 +63,11 @@ namespace SquidTestingMod.UI.Panels
             AddFilterButton(Assets.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
             AddFilterButton(Assets.FilterMagic, "Filter Magic Weapons", ItemFilter.Magic, 100);
             AddFilterButton(Assets.FilterSummon, "Filter Summon Weapons", ItemFilter.Summon, 125);
-            AddFilterButton(Assets.FilterArmor, "Filter Armor/Vanity", ItemFilter.Armor, 150);
-            AddFilterButton(Assets.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 175);
-            AddFilterButton(Assets.FilterPotions, "Filter Potions", ItemFilter.Potions, 200);
-            AddFilterButton(Assets.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 225);
+            AddFilterButton(Assets.FilterArmor, "Filter Armor", ItemFilter.Armor, 150);
+            AddFilterButton(Assets.FilterVanity, "Filter Vanity", ItemFilter.Vanity, 175);
+            AddFilterButton(Assets.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 200);
+            AddFilterButton(Assets.FilterPotions, "Filter Potions", ItemFilter.Potions, 225);
+            AddFilterButton(Assets.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 250);
 
             // Add sort buttons
             SortButton id = AddSortButton(Assets.SortID, "Sort by ID", ItemSort.ID, 0);
@@ -71,6 +75,8 @@ namespace SquidTestingMod.UI.Panels
             AddSortButton(Assets.SortValue, "Sort by Value", ItemSort.Value, 25);
             AddSortButton(Assets.SortName, "Sort by Name", ItemSort.Name, 50);
             AddSortButton(Assets.SortRarity, "Sort by Rarity", ItemSort.Rarity, 75);
+            // AddSortButton(Assets.SortDamage, "Sort by Damage", ItemSort.ID, 100);
+            // AddSortButton(Assets.SortDefense, "Sort by Defense", ItemSort.ID, 125);
 
             // Make sure only "All" is active in the filter buttons
             // For filters
@@ -122,6 +128,8 @@ namespace SquidTestingMod.UI.Panels
         private void AddItemSlotsToGrid()
         {
             int allItems = TextureAssets.Item.Length - 1;
+            // int allItems = ItemLoader.ItemCount;
+            Log.Info("Total items: " + allItems);
             int count = 0;
 
             Stopwatch s = Stopwatch.StartNew();
@@ -129,7 +137,7 @@ namespace SquidTestingMod.UI.Panels
             for (int i = 1; i <= allItems; i++)
             {
                 Item item = new();
-                item.SetDefaults(i);
+                item.SetDefaults(i, true); // true needed to load modded items?
 
                 // If it's air or otherwise invalid, skip adding and log it.
                 if (item.IsAir || item.type == ItemID.None)
@@ -179,7 +187,8 @@ namespace SquidTestingMod.UI.Panels
                     ItemFilter.Ranged => item.damage > 0 && item.DamageType == DamageClass.Ranged,
                     ItemFilter.Magic => item.damage > 0 && item.DamageType == DamageClass.Magic,
                     ItemFilter.Summon => item.damage > 0 && item.DamageType == DamageClass.Summon,
-                    ItemFilter.Armor => item.headSlot != -1 || item.bodySlot != -1 || item.legSlot != -1 || item.vanity,
+                    ItemFilter.Armor => item.defense > 0 && item.legSlot > 0 || item.defense > 0 && item.bodySlot > 0 || item.defense > 0 && item.headSlot > 0,
+                    ItemFilter.Vanity => item.vanity,
                     ItemFilter.Accessories => item.accessory,
                     ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
                     ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
@@ -195,6 +204,8 @@ namespace SquidTestingMod.UI.Panels
                 ItemSort.Value => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().value) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().value),
                 ItemSort.Rarity => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().rare) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().rare),
                 ItemSort.Name => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().Name) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().Name),
+                ItemSort.Damage => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().damage) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().damage),
+                ItemSort.Defense => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().defense) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().defense),
                 _ => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().type) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().type), // default (ID)
             };
 

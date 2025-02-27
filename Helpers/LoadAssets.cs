@@ -49,6 +49,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterMagic;
         public static Asset<Texture2D> FilterSummon;
         public static Asset<Texture2D> FilterArmor;
+        public static Asset<Texture2D> FilterVanity;
         public static Asset<Texture2D> FilterAccessories;
         public static Asset<Texture2D> FilterPotions;
         public static Asset<Texture2D> FilterPlaceables;
@@ -62,10 +63,8 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> SortValue;
         public static Asset<Texture2D> SortRarity;
         public static Asset<Texture2D> SortName;
-
-        // Checkboxes
-        public static Asset<Texture2D> CheckBox;
-        public static Asset<Texture2D> CheckMark;
+        public static Asset<Texture2D> SortDamage;
+        public static Asset<Texture2D> SortDefense;
 
         // Resize
         public static Asset<Texture2D> Resize;
@@ -96,6 +95,7 @@ namespace SquidTestingMod.Helpers
             FilterMagic = PreloadAsset("FilterMagic");
             FilterSummon = PreloadAsset("FilterSummon");
             FilterArmor = PreloadAsset("FilterArmor");
+            FilterVanity = PreloadAsset("FilterVanity");
             FilterAccessories = PreloadAsset("FilterAccessories");
             FilterPotions = PreloadAsset("FilterPotion");
             FilterPlaceables = PreloadAsset("FilterPlaceables");
@@ -107,9 +107,8 @@ namespace SquidTestingMod.Helpers
             SortValue = PreloadAsset("SortValue");
             SortRarity = PreloadAsset("SortRarity");
             SortName = PreloadAsset("SortName");
-
-            CheckBox = PreloadAsset("CheckBox");
-            CheckMark = PreloadAsset("CheckMark");
+            SortDamage = PreloadAsset("SortDamage");
+            SortDefense = PreloadAsset("SortDefense");
 
             Resize = PreloadAsset("Resize");
 

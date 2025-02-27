@@ -80,23 +80,25 @@ namespace SquidTestingMod.UI.Panels
             Main.mouseItem.stack = displayItem.maxStack;
         }
 
-        public override void RightMouseDown(UIMouseEvent evt)
-        {
-            // if dragging, do not perform any action
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.itemSpawnerPanel.IsDragging || sys.mainState.itemSpawnerPanel.GetActive() == false)
-            {
-                Log.Info("Dont spawn item, panel is hidden");
-                return;
-            }
+        // public override void RightMouseDown(UIMouseEvent evt)
+        // {
+        //     // if dragging, do not perform any action
+        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
+        //     if (sys.mainState.itemSpawnerPanel.IsDragging || sys.mainState.itemSpawnerPanel.GetActive() == false)
+        //     {
+        //         Log.Info("Dont spawn item, panel is hidden");
+        //         return;
+        //     }
 
-            // force player inventory to open
-            Main.playerInventory = true;
+        //     // force player inventory to open
+        //     Main.playerInventory = true;
 
-            // Clone our display item and give the clone a stack of 1.
-            Main.mouseItem = displayItem.Clone();
-            Main.mouseItem.stack = 1;
-        }
+        //     // Clone our display item and give the clone a stack of 1.
+        //     Main.mouseItem = displayItem.Clone();
+        //     Main.mouseItem.stack = 1;
+        // }
+
+        private int stackDelay = 30;
 
         public override void Update(GameTime gameTime)
         {
@@ -106,16 +108,10 @@ namespace SquidTestingMod.UI.Panels
                 Main.mouseItem.type == displayItem.type &&
                 Main.mouseItem.stack < Main.mouseItem.maxStack)
             {
-                // Check if we're allowed to increment yet
-                if (Main.stackSplit <= 0)
-                {
-                    // Actually increment the stack
+                if (stackDelay > 0)
+                    stackDelay--;
+                else if (Main.mouseItem.stack < Main.mouseItem.maxStack)
                     Main.mouseItem.stack++;
-
-                    // Reset stackSplit to force a delay until next increment
-                    // (Vanilla typically starts at 30, then speeds up if you keep holding.)
-                    Main.stackSplit = 30;
-                }
             }
         }
     }
