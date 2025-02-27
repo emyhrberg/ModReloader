@@ -1,13 +1,7 @@
 using SquidTestingMod.Helpers;
 using SquidTestingMod.PacketHandlers;
-using System;
 using System.IO;
-using SquidTestingMod.Helpers;
-using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 
 namespace SquidTestingMod
 {
@@ -22,11 +16,13 @@ namespace SquidTestingMod
         public override void Load()
         {
             ClientDataHandler.ReadData();
+            //On_ModLoader.Unload -= On_ModLoader_Unload;
         }
 
         public override void Unload()
         {
             ClientDataHandler.WriteData();
+            //On_ModLoader.Unload += On_ModLoader_Unload;
         }
 
     }
