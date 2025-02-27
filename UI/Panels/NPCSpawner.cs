@@ -1,16 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
+using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Panels
@@ -18,56 +15,48 @@ namespace SquidTestingMod.UI.Panels
     /// <summary>
     /// NPC Spawner Panel – now structured to match the Item Spawner Panel in size, proportions, and behavior.
     /// </summary>
-    public class NPCSpawnerPanel : SpawnerPanel
+    public class NPCSpawner : SpawnerPanel
     {
         // Filtering fields
         private enum NPCFilter
         {
             All,
             Town,
-            Mobs
+            Bosses
         }
         private NPCFilter currentFilter = NPCFilter.All;
+        private List<(FilterButton button, NPCFilter filter)> filterButtons = new();
 
-        #region Constructor
-        public NPCSpawnerPanel() : base("NPC Spawner")
+        public NPCSpawner() : base("NPC Spawner")
         {
-            SearchTextBox.OnTextChanged += FilterItems;
-
-            // Filter: All NPCs
-            BaseFilterButton allNPCsButton = new(Assets.FilterAll, "All NPCs");
-            allNPCsButton.Left.Set(0, 0);
-            allNPCsButton.OnLeftClick += (evt, element) =>
-            {
-                currentFilter = NPCFilter.All;
-                FilterItems();
-            };
-            Append(allNPCsButton);
-
-            // Filter: Town NPCs
-            BaseFilterButton townNPCButton = new(Assets.FilterMelee, "Town NPCs");
-            townNPCButton.Left.Set(25, 0);
-            townNPCButton.OnLeftClick += (evt, element) =>
-            {
-                currentFilter = NPCFilter.Town;
-                FilterItems();
-            };
-            Append(townNPCButton);
-
-            // Filter: Mobs (Enemies/Bosses)
-            BaseFilterButton mobsButton = new(Assets.FilterRanged, "Mobs");
-            mobsButton.Left.Set(50, 0);
-            mobsButton.OnLeftClick += (evt, element) =>
-            {
-                currentFilter = NPCFilter.Mobs;
-                FilterItems();
-            };
-            Append(mobsButton);
+            // Add filter buttons
+            AddFilterButton(Assets.FilterAll, "All NPCs", NPCFilter.All, 0);
+            AddFilterButton(Assets.FilterTown, "Town NPCs", NPCFilter.Town, 25);
+            AddFilterButton(Assets.FilterMob, "Bosses", NPCFilter.Bosses, 50);
 
             // Populate the grid with NPC slots
             AddItemSlotsToGrid();
+
+            // Set default filter to All
+            foreach (var (btn, flt) in filterButtons)
+                btn.Active = flt == currentFilter;
         }
-        #endregion
+
+        private FilterButton AddFilterButton(Asset<Texture2D> texture, string hoverText, NPCFilter filter, float left)
+        {
+            FilterButton button = new FilterButton(texture, hoverText);
+            button.Left.Set(left, 0);
+            filterButtons.Add((button, filter));
+            button.OnLeftClick += (evt, element) =>
+            {
+                currentFilter = filter;
+                foreach (var (btn, flt) in filterButtons)
+                    btn.Active = flt == filter;
+                FilterItems();
+            };
+            Append(button);
+            return button;
+        }
 
         #region Adding NPC Slots
 
@@ -91,7 +80,7 @@ namespace SquidTestingMod.UI.Panels
                     if (count >= Conf.MaxItemsToDisplay)
                         break;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // This happens for like 10 NPCs (ID 82, 105, 200, etc), when i add other mods?
                     // Fargos mutant mod made me add this code as a hotfix
@@ -109,7 +98,7 @@ namespace SquidTestingMod.UI.Panels
 
         #region Filtering NPCs
 
-        private void FilterItems()
+        protected override void FilterItems()
         {
             string searchText = SearchTextBox.currentString.ToLower();
             ItemsGrid.Clear();
@@ -128,19 +117,13 @@ namespace SquidTestingMod.UI.Panels
                     continue;
 
                 // Then, check against the selected filter.
-                bool passesFilter = false;
-                switch (currentFilter)
+                bool passesFilter = currentFilter switch
                 {
-                    case NPCFilter.All:
-                        passesFilter = true;
-                        break;
-                    case NPCFilter.Town:
-                        passesFilter = npc.townNPC; // Only include town NPCs.
-                        break;
-                    case NPCFilter.Mobs:
-                        passesFilter = !npc.friendly; // Only include non-friendly (mob/boss) NPCs.
-                        break;
-                }
+                    NPCFilter.All => true,
+                    NPCFilter.Town => npc.townNPC,
+                    NPCFilter.Bosses => npc.boss,
+                    _ => false
+                };
                 if (!passesFilter)
                     continue;
 

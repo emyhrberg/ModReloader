@@ -22,6 +22,7 @@ namespace SquidTestingMod.Helpers
 
         public static Task ExitWorldOrServer()
         {
+
             if (Conf.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");

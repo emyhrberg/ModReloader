@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Systems;
@@ -13,38 +15,67 @@ namespace SquidTestingMod.UI.Panels
     /// <summary>
     /// A panel containing options to modify player behaviour like God,Fast,Build,etc.
     /// </summary>
-    public class DebugPanel : DraggablePanel
+    public class DebugPanel : RightParentPanel
     {
-        public DebugPanel() : base("Debug")
+        // Variables 
+        SliderOption widthOption;
+        SliderOption heightOption;
+
+        public DebugPanel() : base(title: "Debug", scrollbarEnabled: false)
         {
-            // Hitboxes
+            // Get instances
             HitboxSystem hitboxSystem = ModContent.GetInstance<HitboxSystem>();
-            OptionPanel hitboxOption = new("Hitboxes", "Show hitboxes of all entities", true, Color.BlueViolet);
-            hitboxOption.OnLeftClick += (a, b) => hitboxSystem.ToggleHitboxes();
-
-            // elementsCheckbox
             DrawUISystem drawUISystem = ModContent.GetInstance<DrawUISystem>();
-            OptionPanel elementsOption = new("UIElements", "Show all UI elements from mods", true, Color.Green);
-            elementsOption.OnLeftClick += (a, b) => drawUISystem.ToggleUIDebugDrawing();
 
-            // Open client.log panel button
-            OptionPanel clientLogOption = new("Open client.log", "Open the client.log file", false, Color.Orange);
-            clientLogOption.OnLeftClick += (a, b) => Log.OpenClientLog();
+            // Add debug options
+            AddHeader("Hitboxes");
+            AddOnOffOption(hitboxSystem.ToggleHitboxes, "Hitboxes Off", "Show hitboxes of all entities");
+            AddPadding();
 
-            // TODO more buttons here for debugging
-            OptionPanel spawnOption = new("Create DebugPanel 30x30", "Spawn a custom debug panel", false, Color.Red);
-            spawnOption.OnLeftClick += (a, b) => Append(new CustomDebugPanel(30, 30));
-            // Set option positions
-            hitboxOption.Top.Set(35 + padding, 0f);
-            elementsOption.Top.Set(35 + 65 + padding, 0f);
-            clientLogOption.Top.Set(35 + 65 * 2 + padding, 0f);
-            spawnOption.Top.Set(35 + 65 * 3 + padding, 0f);
+            AddHeader("UI");
+            AddOnOffOption(drawUISystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");
+            AddOnOffOption(drawUISystem.ToggleUIDebugSizeElementDrawing, "UIElements Size Text Off", "Show sizes of UI elements");
+            AddOnOffOption(drawUISystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
+            AddPadding();
 
-            // Add all content in the panel
-            Append(hitboxOption);
-            Append(elementsOption);
-            Append(clientLogOption);
-            Append(spawnOption);
+            AddHeader("Debug Panel");
+            widthOption = AddSliderOption("Width", 0, 800, 100);
+            heightOption = AddSliderOption("Height", 0, 800, 100);
+            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a debug panel with the specified dimensions");
+            AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel");
+            AddPadding();
+
+            AddHeader("Logs");
+            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Right click to open folder location", Log.OpenLogFolder);
+            AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "This file shows currently enabled mods\nRight click to open folder location", Log.OpenEnabledJsonFolder);
+        }
+
+        private void SpawnDebugPanel()
+        {
+            // get width and height from slider options
+            int w = (int)Math.Round(widthOption.normalizedValue * 800);
+            int h = (int)Math.Round(heightOption.normalizedValue * 800);
+            Log.Info("Creating DebugPanel with dimensions: " + w + ", " + h);
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            sys.mainState.Append(new CustomDebugPanel(w, h));
+        }
+
+        private void RemoveAllDebugPanels()
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+
+            if (mainState.Children == null) return;
+
+            // Remove all panels of type CustomDebugPanel
+            foreach (var child in mainState.Children.ToList())
+            {
+                if (child is CustomDebugPanel)
+                {
+                    mainState?.RemoveChild(child);
+                }
+            }
         }
     }
 }

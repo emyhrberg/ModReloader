@@ -9,19 +9,13 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class NPCSpawnerButton : BaseButton
+    public class NPCButton(Asset<Texture2D> image, string buttonText, string hoverText) : BaseButton(image, buttonText, hoverText)
     {
         // Set custom animation dimensions
-        protected override Asset<Texture2D> Spritesheet => Assets.ButtonNPCSS;
         protected override int MaxFrames => 3;
         protected override int FrameSpeed => 8;
         protected override int FrameWidth => 38;
         protected override int FrameHeight => 48;
-
-        public NPCSpawnerButton(Asset<Texture2D> image, string hoverText, bool animating)
-            : base(image, hoverText, animating)
-        {
-        }
 
         public override void LeftClick(UIMouseEvent evt)
         {
@@ -34,7 +28,7 @@ namespace SquidTestingMod.UI.Buttons
             }
 
             // Toggle the NPCSpawnerPanel.
-            NPCSpawnerPanel npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
+            NPCSpawner npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
 
             if (npcSpawnerPanel != null)
             {

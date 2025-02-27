@@ -20,19 +20,19 @@ namespace SquidTestingMod.UI.Buttons
     public abstract class BaseButton : UIImageButton
     {
         // General variables for a button
-        protected Asset<Texture2D> Image;
-        public string TooltipText = "";
+        protected Asset<Texture2D> Button;
+        protected Asset<Texture2D> Spritesheet { get; set; }
+        protected string HoverText = "";
+        protected float opacity = 0.4f;
+        public ButtonText buttonUIText;
         public float RelativeLeftOffset = 0f;
         public bool Active = true;
-        protected float opacity = 0.4f;
 
         // Animation frames
-        private bool Animating = false; // whether the button is animating or not
-        private int currFrame = 1; // the current frame
-        private int frameCounter = 0; // the counter for the frame speed
+        protected int currFrame = 1; // the current frame
+        protected int frameCounter = 0; // the counter for the frame speed
 
         // Animations variables to be set by child classes
-        protected virtual Asset<Texture2D> Spritesheet { get; set; }
         protected virtual float SpriteScale => 1;
         protected virtual int StartFrame => 1;
         protected virtual int MaxFrames => 3;
@@ -40,13 +40,17 @@ namespace SquidTestingMod.UI.Buttons
         protected virtual int FrameWidth => 38;
         protected virtual int FrameHeight => 48;
 
-        protected BaseButton(Asset<Texture2D> image, string hoverText, bool animating) : base(image)
+        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
         {
-            Image = image;
-            TooltipText = hoverText;
-            Animating = animating;
-            SetImage(Image);
+            Button = Assets.Button;
+            Spritesheet = spritesheet;
+            HoverText = hoverText;
+            SetImage(Button);
             currFrame = StartFrame;
+
+            // Add a UIText centered horizontally at the bottom of the button.
+            buttonUIText = new ButtonText(buttonText);
+            Append(buttonUIText);
         }
 
         /// <summary>
@@ -54,7 +58,7 @@ namespace SquidTestingMod.UI.Buttons
         /// </summary>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            if (!Active || Image == null || Image.Value == null)
+            if (!Active || Button == null || Button.Value == null)
                 return;
 
             // Get the button size from MainState
@@ -66,13 +70,21 @@ namespace SquidTestingMod.UI.Buttons
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
             opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
 
-            // Draw the texture with the calculated opacity.
-            spriteBatch.Draw(Image.Value, drawRect, Color.White * opacity);
-
-            // Draw the animation texture if animating.
-            if (Animating && Spritesheet != null)
+            if (!Conf.AnimateButtons)
             {
-                if (IsMouseHovering)
+                opacity = 1f;
+            }
+
+            // Set UIText opacity
+            buttonUIText.TextColor = Color.White * opacity;
+
+            // Draw the texture with the calculated opacity.
+            spriteBatch.Draw(Button.Value, drawRect, Color.White * opacity);
+
+            // Draw the animation texture
+            if (Spritesheet != null)
+            {
+                if (IsMouseHovering && Conf.AnimateButtons)
                 {
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
@@ -102,15 +114,10 @@ namespace SquidTestingMod.UI.Buttons
 
             // Draw tooltip text if hovering.
             if (IsMouseHovering)
-                UICommon.TooltipMouseText(TooltipText);
+                UICommon.TooltipMouseText(HoverText);
         }
 
-        public virtual void UpdateTexture()
-        {
-            SetImage(Image);
-        }
-
-        #region Disable button click if config window is open
+        //Disable button click if config window is open
         public override bool ContainsPoint(Vector2 point)
         {
             if (!Active) // Dont allow clicking if button is disabled.
@@ -140,40 +147,28 @@ namespace SquidTestingMod.UI.Buttons
 
             return base.ContainsPoint(point);
         }
-        #endregion
 
-        #region Disable item use on button click
-        public override void LeftMouseDown(UIMouseEvent evt)
+        public override void MouseOver(UIMouseEvent evt)
         {
-            Main.LocalPlayer.mouseInterface = true;
-            base.LeftMouseDown(evt);
+            if (Conf.AnimateButtons)
+            {
+                base.MouseOver(evt);
+            }
+            // Otherwise, do nothing. The UIElement's IsMouseHovering property will still be set,
+            // so your DrawSelf code will properly adjust the opacity.
         }
 
-        public override void LeftMouseUp(UIMouseEvent evt)
-        {
-            base.LeftMouseUp(evt);
-            Main.LocalPlayer.mouseInterface = true;
-        }
-
+        // Disable item use on click
         public override void Update(GameTime gameTime)
         {
+            // base update
             base.Update(gameTime);
 
+            // disable item use if the button is hovered
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
         }
-        #endregion
-
-        #region Disable hover effects (sound, opacity change when hovering)
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            if (!Conf.HoverEffectButtons)
-                return;
-
-            base.MouseOver(evt);
-        }
-        #endregion
     }
 }

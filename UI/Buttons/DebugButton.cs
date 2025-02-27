@@ -6,19 +6,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class DebugButton : BaseButton
+    public class DebugButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
-        protected override Asset<Texture2D> Spritesheet => Assets.ButtonDebugWrenchSS;
-        protected override float SpriteScale => 0.8f;
+        protected override float SpriteScale => 0.6f;
         protected override int MaxFrames => 16;
         protected override int FrameSpeed => 4;
         protected override int FrameWidth => 74;
         protected override int FrameHeight => 78;
-
-        public DebugButton(Asset<Texture2D> image, string hoverText, bool animating) : base(image, hoverText, animating)
-        {
-        }
 
         public override void LeftClick(UIMouseEvent evt)
         {

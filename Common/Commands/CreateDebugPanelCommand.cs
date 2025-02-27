@@ -53,7 +53,7 @@ namespace SquidTestingMod.Common.Commands
 
     public class RemoveDebugPanelCommand : ModCommand
     {
-        // removes all debug panels by type CustomDebugPanel
+        // removes all debug panels with the type "CustomDebugPanel"
 
         public override CommandType Type => CommandType.Chat;
 

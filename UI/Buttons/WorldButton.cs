@@ -1,27 +1,26 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Systems;
-using SquidTestingMod.Helpers;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class WorldButton : BaseButton
+    public class WorldButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
-        protected override Asset<Texture2D> Spritesheet => Assets.ButtonWorldSS;
-        protected override float SpriteScale => 0.65f;
-        protected override int MaxFrames => 8;
+        // Spinning globe pixel art
+        protected override float SpriteScale => 0.08f;
+        protected override int MaxFrames => 11;
         protected override int FrameSpeed => 7;
-        protected override int FrameWidth => 48;
-        protected override int FrameHeight => 68;
+        protected override int FrameWidth => 1080;
+        protected override int FrameHeight => 576;
 
-        public WorldButton(Asset<Texture2D> image, string hoverText, bool animating) : base(image, hoverText, animating)
-        {
-        }
+        // Old pylon texture, do not delete
+        // protected override float SpriteScale => 0.65f;
+        // protected override int MaxFrames => 8;
+        // protected override int FrameSpeed => 7;
+        // protected override int FrameWidth => 48;
+        // protected override int FrameHeight => 68;
 
         public override void LeftClick(UIMouseEvent evt)
         {

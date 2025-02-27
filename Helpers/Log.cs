@@ -48,6 +48,24 @@ namespace SquidTestingMod.Helpers
             }
         }
 
+        public static void OpenLogFolder()
+        {
+            // C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs
+
+            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
+            Main.NewText("Opening log folder...");
+
+            try
+            {
+                string folder = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Error("Error opening log folder: " + ex.Message);
+            }
+        }
+
         public static void OpenClientLog()
         {
             // C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs
@@ -64,6 +82,49 @@ namespace SquidTestingMod.Helpers
             catch (Exception ex)
             {
                 Error("Error opening client.log: " + ex.Message);
+            }
+        }
+
+        public static void OpenEnabledJson()
+        {
+            // C:\Users\erikm\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
+            // or
+            // $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
+            // the latter is better, use that
+
+
+            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
+            Main.NewText("Opening enabled.json...");
+
+            try
+            {
+                string file = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods\\enabled.json";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{file}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Error("Error opening enabled.json: " + ex.Message);
+            }
+        }
+
+        public static void OpenEnabledJsonFolder()
+        {
+            // C:\Users\erikm\Documents\My Games\Terraria\tModLoader\Mods
+            // or
+            // $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
+            // the latter is better, use that
+
+            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
+            Main.NewText("Opening enabled.json folder...");
+
+            try
+            {
+                string folder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods";
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Error("Error opening enabled.json folder: " + ex.Message);
             }
         }
     }

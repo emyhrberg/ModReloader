@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI.Panels
         {
             // Draw inventory background
             CalculatedStyle dimensions = GetInnerDimensions();
-            float bgOpacity = IsMouseHovering ? 0.9f : 0.6f; // 0.9 when hovering, 0.6 when not
+            float bgOpacity = IsMouseHovering ? 1.0f : 0.4f; // 0.9 when hovering, 0.4 when not
             Texture2D inventoryBack = TextureAssets.InventoryBack9.Value;
             spriteBatch.Draw(inventoryBack, dimensions.ToRectangle(), Color.White * bgOpacity);
 
@@ -80,47 +80,39 @@ namespace SquidTestingMod.UI.Panels
             Main.mouseItem.stack = displayItem.maxStack;
         }
 
-        public override void RightMouseDown(UIMouseEvent evt)
-        {
-            // if dragging, do not perform any action
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys.mainState.itemSpawnerPanel.IsDragging || sys.mainState.itemSpawnerPanel.GetActive() == false)
-            {
-                Log.Info("Dont spawn item, panel is hidden");
-                return;
-            }
+        // public override void RightMouseDown(UIMouseEvent evt)
+        // {
+        //     // if dragging, do not perform any action
+        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
+        //     if (sys.mainState.itemSpawnerPanel.IsDragging || sys.mainState.itemSpawnerPanel.GetActive() == false)
+        //     {
+        //         Log.Info("Dont spawn item, panel is hidden");
+        //         return;
+        //     }
 
-            // force player inventory to open
-            Main.playerInventory = true;
+        //     // force player inventory to open
+        //     Main.playerInventory = true;
 
-            // Clone our display item and give the clone a stack of 1.
-            Main.mouseItem = displayItem.Clone();
-            Main.mouseItem.stack = 1;
-        }
+        //     // Clone our display item and give the clone a stack of 1.
+        //     Main.mouseItem = displayItem.Clone();
+        //     Main.mouseItem.stack = 1;
+        // }
+
+        private int stackDelay = 30;
 
         public override void Update(GameTime gameTime)
         {
-            // base.Update(gameTime);
-
-            // Check if the mouse is over this UI element and the right mouse button is down.
-            if (IsMouseHovering && Main.mouseRight)
+            // Only do this if the mouse is over this slot, right button is down,
+            // the mouseItem is the same type, and the stack isn't at max.
+            if (IsMouseHovering && Main.mouseRight &&
+                Main.mouseItem.type == displayItem.type &&
+                Main.mouseItem.stack < Main.mouseItem.maxStack)
             {
-                // Execute your "holding" logic here.
-                // You might want to add a timer so it doesn't execute every frame.
-                // Log.Info("Right mouse is being held down on " + displayItem.Name);
-                // For example, increment the item stack gradually:
-                if (Main.mouseItem.IsAir)
-                {
-                    Main.mouseItem = displayItem.Clone();
-                    Main.mouseItem.stack = 1;
-                }
-                else if (Main.mouseItem.type == displayItem.type && Main.mouseItem.stack < displayItem.maxStack)
-                {
-                    Main.superFastStack = 1;
+                if (stackDelay > 0)
+                    stackDelay--;
+                else if (Main.mouseItem.stack < Main.mouseItem.maxStack)
                     Main.mouseItem.stack++;
-                }
             }
         }
-
     }
 }
