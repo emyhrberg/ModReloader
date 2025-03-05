@@ -8,7 +8,7 @@ Mods: {
 					ItemNPCSpawner: Item/NPC Browser
 					Reload: Reload
 					Misc: Misc
-					ButtonsToShow: Buttons
+					Buttons: Buttons
 				}
 
 				NPCSpawnLocation: {
@@ -108,6 +108,11 @@ Mods: {
 
 				ShowTooltipsDebugPanels: {
 					Label: Show Tooltips Debug Panels
+					Tooltip: ""
+				}
+
+				ButtonSize: {
+					Label: Button Size
 					Tooltip: ""
 				}
 			}

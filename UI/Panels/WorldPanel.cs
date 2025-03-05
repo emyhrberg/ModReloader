@@ -24,7 +24,6 @@ namespace SquidTestingMod.UI.Panels
         OnOffOption difficulty;
         SliderOption timeOption;
         bool timeSliderActive = false;
-        bool enableSpawning = true;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -50,7 +49,7 @@ namespace SquidTestingMod.UI.Panels
             AddHeader("World Info");
             AddOnOffOption(null, "Name: " + worldName);
             AddOnOffOption(null, "Size: " + worldSize);
-            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText);
+            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
             AddPadding();
 
             AddHeader("Time");
@@ -71,7 +70,6 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Enemies");
-            AddOnOffOption(() => ToggleEnemySpawnRate(), "Enemies Can Spawn: On");
             AddPadding();
 
             AddHeader("Peaceful Events");
@@ -80,21 +78,22 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Pre-HM Events");
-            AddOnOffOption(StartBloodMoon, "Start Blood Moon");
+            AddOnOffOption(StartBloodMoon, "Start Blood Moon", "Start a Blood Moon event and set the time to 7:30 PM");
             AddOnOffOption(() => TryStartInvasion(InvasionID.GoblinArmy), "Start Goblin Invasion");
             AddOnOffOption(SpawnSlimeRain, "Start Slime Rain");
-            AddOnOffOption(null, "Start Old One's Army");
-            AddOnOffOption(null, "Start Torch God");
+            AddOnOffOption(null, "Start Old One's Army (pending)");
+            AddOnOffOption(null, "Start Torch God (pending)");
             AddPadding();
 
             AddHeader("HM Events");
-            AddOnOffOption(null, "Start Frost Legion");
+            AddOnOffOption(null, "Start Frost Legion (pending)");
             AddOnOffOption(ToggleSolarEclipse, "Start Solar Eclipse");
             AddOnOffOption(() => TryStartInvasion(InvasionID.PirateInvasion), "Start Pirate Invasion");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Start Pumpkin Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedFrostMoon), "Start Frost Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.MartianMadness), "Start Martian Madness");
-            AddOnOffOption(null, "Start Lunar Events");
+            AddOnOffOption(null, "Start Lunar Events (pending)");
+            AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
             AddHeader("World");
@@ -104,6 +103,13 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
         }
 
+        private void TryStopInvasion()
+        {
+            Main.NewText("Stopping invasion...");
+            Main.invasionType = 0;
+            Main.invasionProgress = 0;
+        }
+
         private string GetInvasionName(int invasionType)
         {
             return invasionType switch
@@ -111,7 +117,6 @@ namespace SquidTestingMod.UI.Panels
                 InvasionID.GoblinArmy => "Goblin Army Invasion",
                 InvasionID.PirateInvasion => "Pirate Invasion",
                 InvasionID.CachedPumpkinMoon => "Pumpkin Moon",
-                // InvasionID.CachedFrostMoon => "Frost Moon",
                 InvasionID.MartianMadness => "Martian Madness",
                 _ => "Unknown Invasion"
             };
@@ -137,12 +142,12 @@ namespace SquidTestingMod.UI.Panels
             }
             else
             {
-                // TODO set time to 7:30 PM
-                // Main.dayTime = false;
-                // Main.time = 48600.0;
+                // set time to 7:29 PM
+                Main.dayTime = true;
+                Main.time = 53999.0;
 
                 Main.bloodMoon = true;
-                Main.NewText("Starting Blood Moon...");
+                Main.NewText("Starting Blood Moon... (and night)");
             }
         }
 
@@ -210,36 +215,6 @@ namespace SquidTestingMod.UI.Panels
             }
             // Set the text element
             moon.UpdateText("Moon Phase: " + Main.moonPhase + " (" + GetMoonPhaseName() + ")");
-        }
-
-        private void ToggleEnemySpawnRate()
-        {
-            enableSpawning = !enableSpawning;
-
-            if (!enableSpawning)
-            {
-                // Butcher all hostile NPCs
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    if (Main.npc[i].active && Main.npc[i].CanBeChasedBy()) // Checks if it's a hostile NPC
-                    {
-                        Main.npc[i].life = 0;
-                        Main.npc[i].HitEffect();
-                        Main.npc[i].active = false;
-                        // NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, i); // Sync NPC despawn
-                    }
-                }
-
-                // Set spawn rate to 0x (disable spawning)
-                SpawnRateMultiplier.Multiplier = 0f;
-                Main.NewText("Enemy spawn rate disabled. All hostiles removed.", 255, 0, 0);
-            }
-            else
-            {
-                // Restore normal spawn rate (1x)
-                SpawnRateMultiplier.Multiplier = 1f;
-                Main.NewText("Enemy spawn rate set to normal (1x).", 0, 255, 0);
-            }
         }
 
         private void ToggleSandstorm()

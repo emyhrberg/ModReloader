@@ -11,10 +11,10 @@ using Terraria.UI;
 
 namespace SquidTestingMod.Common.Systems
 {
-    public class DrawUISystem : ModSystem
+    public class DebugSystem : ModSystem
     {
         private UserInterface ui;
-        private DrawUIState drawUIState;
+        private DebugState drawUIState;
 
         private List<UIElement> elements = new();
 
@@ -42,7 +42,7 @@ namespace SquidTestingMod.Common.Systems
         public override void Load()
         {
             ui = new UserInterface();
-            drawUIState = new DrawUIState();
+            drawUIState = new DebugState();
             ui.SetState(drawUIState);
 
             On_UIElement.Draw += UIElement_Draw;
@@ -83,7 +83,7 @@ namespace SquidTestingMod.Common.Systems
                 return;
 
             // ensure we are not drawing the hitbox of a full-screen UI element
-            if (self is MainState || self is DrawUIState)
+            if (self is MainState || self is DebugState)
                 return;
 
             // ensure the UIelement is not bigger than 600, either by width or height

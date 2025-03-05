@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Common.Players;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
@@ -10,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Systems
 {
-    public class PlayerGlowEffect : ModPlayer
+    public class GodGlow : ModPlayer
     {
         // The thing to draw to. Since it extends Texture2D, you
         // would need one of these for each player drawn on
@@ -46,7 +47,7 @@ namespace SquidTestingMod.Common.Systems
             // You get an exception if you try to do this in
             // Load() for some reason
             if (!Main.dedServ && playerDrawingTarget == null)
-                playerDrawingTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, (int)PlayerGlowEffect.renderSize.X, (int)PlayerGlowEffect.renderSize.Y);
+                playerDrawingTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, (int)GodGlow.renderSize.X, (int)GodGlow.renderSize.Y);
 
             // since just testing, its only drawn for the local player
             if (Player.whoAmI != Main.myPlayer || playerDrawingTarget == null)
@@ -225,19 +226,19 @@ namespace SquidTestingMod.Common.Systems
 
         protected override void Draw(ref PlayerDrawSet _set)
         {
-            if (!PlayerCheats.IsGodModeOn || !Conf.DrawGodGlow)
+            if (!PlayerCheatManager.God || !Conf.DrawGodGlow)
             {
                 return;
             }
 
-            if (PlayerGlowEffect.ready)
+            if (GodGlow.ready)
             {
                 // draw the draw data 4 times, but shifted in different
                 // directions for each. This gives it a softer
                 // gradiant and fills in more holes
-                PlayerGlowEffect.sData.position = _set.Position - Main.screenPosition + (_set.drawPlayer.Size / 2).Floor();
+                GodGlow.sData.position = _set.Position - Main.screenPosition + (_set.drawPlayer.Size / 2).Floor();
                 DrawData d0, d1, d2, d3;
-                d0 = d1 = d2 = d3 = PlayerGlowEffect.sData;
+                d0 = d1 = d2 = d3 = GodGlow.sData;
                 d0.position += Vector2.UnitY * 3;
                 d1.position += Vector2.UnitY * -3;
                 d2.position += Vector2.UnitX * 3;

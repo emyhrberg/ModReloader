@@ -1,45 +1,56 @@
 using System;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace SquidTestingMod.Common.Systems
 {
     public class TeleportMapSystem : ModSystem
     {
-        private bool mouseRightLastUpdate;
+        // variables
 
+        public override void Load()
+        {
+            Main.OnPostFullscreenMapDraw += TP_Map;
+        }
+
+        public override void Unload()
+        {
+            Main.OnPostFullscreenMapDraw -= TP_Map;
+        }
+
+        /// <summary>
+        /// Draws a little text in bottom left corner of the screen to inform the player about the teleportation feature when map is open.
+        /// </summary>
         public override void PostDrawFullscreenMap(ref string mouseText)
         {
-            base.PostDrawFullscreenMap(ref mouseText);
-
-            // draw text
             string teleportText = "Right click to teleport";
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(teleportText);
             Vector2 position = new(10f, Main.screenHeight - textSize.Y - 10f);
             Utils.DrawBorderString(Main.spriteBatch, teleportText, position, Color.White);
+        }
 
-            if (!Main.mouseRight && this.mouseRightLastUpdate)
+        // NOTE: not working in multiplayer
+        private void TP_Map(Vector2 arg1, float arg2)
+        {
+            if (Main.mouseRight)
             {
-                Player player = Main.LocalPlayer;
-                Vector2 mapCentrePos = Main.mapFullscreenPos;
-                Vector2 targetTile = (new Vector2(Main.mouseX, Main.mouseY) - new Vector2(Main.screenWidth / 2f, Main.screenHeight / 2f)) / Main.mapFullscreenScale + mapCentrePos;
-                Vector2 targetPos = targetTile * 16f;
-                targetPos.Y -= player.height;
-                int worldWidth = Main.maxTilesX * 16;
-                int worldHeight = Main.maxTilesY * 16;
-                targetPos.X = Math.Clamp(targetPos.X, 0f, worldWidth - player.width);
-                targetPos.Y = Math.Clamp(targetPos.Y, 0f, worldHeight - player.height);
-                if (Main.netMode == NetmodeID.SinglePlayer)
+                Vector2 screenSize = new Vector2(Main.screenWidth, Main.screenHeight) * Main.UIScale;
+                Vector2 target = ((Main.MouseScreen - screenSize / 2) / 16 * (16 / Main.mapFullscreenScale) + Main.mapFullscreenPos) * 16;
+
+                if (WorldGen.InWorld((int)target.X / 16, (int)target.Y / 16))
                 {
-                    player.Teleport(targetPos, 0, 0);
-                    // close map
-                    // Main.mapFullscreen = false;
+                    Main.LocalPlayer.Center = target;
+                    Main.LocalPlayer.fallStart = (int)Main.LocalPlayer.position.Y;
+                }
+                else
+                {
+                    Log.Info("Error: outside world bounds when trying to teleport");
                 }
             }
-            mouseRightLastUpdate = Main.mouseRight;
         }
     }
 }

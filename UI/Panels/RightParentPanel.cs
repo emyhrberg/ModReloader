@@ -107,19 +107,5 @@ namespace SquidTestingMod.UI.Panels
             // Add the panel to the player panel
             return sliderPanel;
         }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-            // If the mouse is over your panel, capture mouse input.
-            // NOTE: not working
-            // if (ContainsPoint(Main.MouseScreen))
-            // {
-            //     Log.Info("disable hover");
-            //     Main.LocalPlayer.mouseInterface = true;
-            //     Main.hoverItemName = "";
-            // }
-        }
     }
 }

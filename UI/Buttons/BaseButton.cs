@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -40,6 +41,27 @@ namespace SquidTestingMod.UI.Buttons
         protected virtual int FrameWidth => 38;
         protected virtual int FrameHeight => 48;
 
+        // Scale mappings (lol)
+        private Dictionary<float, float> textScaleMapping = new Dictionary<float, float>
+        {
+            { 50f, 0.7f },
+            { 60f, 0.8f },
+            { 70f, 0.9f },
+            { 80f, 1f },
+            { 90f, 1.1f },
+            { 100f, 1.2f }
+        };
+
+        private Dictionary<float, float> spriteScaleMapping = new Dictionary<float, float>
+        {
+            { 50f, 0.7f },
+            { 60f, 0.8f },
+            { 70f, 0.9f },
+            { 80f, 1f },
+            { 90f, 1.1f },
+            { 100f, 1.2f }
+        };
+
         protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
         {
             Button = Assets.Button;
@@ -49,7 +71,9 @@ namespace SquidTestingMod.UI.Buttons
             currFrame = StartFrame;
 
             // Add a UIText centered horizontally at the bottom of the button.
-            buttonUIText = new ButtonText(buttonText);
+            // Set the scale; 70f seems to fit to 0.9f scale.
+
+            buttonUIText = new ButtonText(text: buttonText, textScale: textScaleMapping[Conf.ButtonSize != 0 ? Conf.ButtonSize : 70f]);
             Append(buttonUIText);
         }
 
@@ -61,13 +85,16 @@ namespace SquidTestingMod.UI.Buttons
             if (!Active || Button == null || Button.Value == null)
                 return;
 
-            // Get the button size from MainState
+            // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = sys?.mainState?.ButtonSize ?? 70f; // default to 70 if MainState is null
+            float buttonSize = sys?.mainState?.ButtonSize ?? 70f;
+            float spriteScaleFactor = spriteScaleMapping[buttonSize];
 
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
+
+            // Set the opacity based on mouse hover.
             opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
 
             if (!Conf.AnimateButtons)

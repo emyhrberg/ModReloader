@@ -39,7 +39,7 @@ namespace SquidTestingMod.UI.Panels
             // We only start dragging if the user explicitly clicked this button
             dragging = true;
             clickOffsetY = evt.MousePosition.Y - GetDimensions().Y;
-            Main.LocalPlayer.mouseInterface = true;
+            // Main.LocalPlayer.mouseInterface = true;
         }
 
         // Called when the user releases the left mouse button
@@ -47,7 +47,6 @@ namespace SquidTestingMod.UI.Panels
         {
             base.LeftMouseUp(evt);
             dragging = false;
-            Main.LocalPlayer.mouseInterface = false;
         }
 
         public override void Update(GameTime gameTime)

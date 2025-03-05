@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -32,7 +33,14 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(typeof(Vector2), "0, 0")]
         public Vector2 NPCSpawnLocation;
 
-        [Header("ButtonsToShow")]
+        [Header("Buttons")]
+        [DefaultValue(60)]
+        [Range(60, 80)]
+        [Increment(10)]
+        public int ButtonSize;
+
+        [DefaultValue(true)]
+        public bool AnimateButtons = true;
 
         [DefaultValue(true)]
         public bool ShowToggleButton = true;
@@ -68,8 +76,7 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(true)]
         public bool DrawGodGlow = true;
 
-        [DefaultValue(true)]
-        public bool AnimateButtons = true;
+
 
         [DefaultValue(true)]
         public bool KeepRunningWhenFocusLost = true;
@@ -85,8 +92,35 @@ namespace SquidTestingMod.Common.Configs
         {
             // Here we can update the game based on the new config values
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys?.mainState?.UpdateButtonsAfterConfigChanged();
+
+            if (sys == null || sys.mainState == null) return;
+
+            // Check if any of the button options have changed
+            int currentHash = 0;
+            currentHash |= Conf.ShowToggleButton ? 1 : 0;
+            currentHash |= (Conf.ShowConfigButton ? 1 : 0) << 1;
+            currentHash |= (Conf.ShowItemButton ? 1 : 0) << 2;
+            currentHash |= (Conf.ShowNPCButton ? 1 : 0) << 3;
+            currentHash |= (Conf.ShowDebugButton ? 1 : 0) << 4;
+            currentHash |= (Conf.ShowPlayerButton ? 1 : 0) << 5;
+            currentHash |= (Conf.ShowWorldButton ? 1 : 0) << 6;
+            currentHash |= (Conf.ShowReloadSPButton ? 1 : 0) << 7;
+            currentHash |= (Conf.ShowReloadMPButton ? 1 : 0) << 8;
+            currentHash |= Conf.ButtonSize << 9;
+
+            if (currentHash != _prevButtonVisibilityHash)
+            {
+                _prevButtonVisibilityHash = currentHash; // update stored state
+                sys.mainState.UpdateButtonsAfterConfigChanged();
+                Log.Info("Updated button visibility");
+            }
+            else
+            {
+                Log.Info("No changes in button visibility");
+            }
         }
+
+        private int _prevButtonVisibilityHash;
     }
 
     internal static class Conf
@@ -104,6 +138,7 @@ namespace SquidTestingMod.Common.Configs
         public static Vector2 NPCSpawnLocation => ConfigInstance.NPCSpawnLocation;
 
         // Buttons to show
+        public static int ButtonSize => ConfigInstance.ButtonSize;
         public static bool ShowToggleButton => ConfigInstance.ShowToggleButton;
         public static bool ShowConfigButton => ConfigInstance.ShowConfigButton;
         public static bool ShowItemButton => ConfigInstance.ShowItemButton;

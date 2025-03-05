@@ -20,22 +20,38 @@ namespace SquidTestingMod.UI.Panels
         // Variables 
         SliderOption widthOption;
         SliderOption heightOption;
+        bool enableSpawning = true;
+        bool showPlayerInfo = false;
+        bool showConsolePanel = false;
+        PlayerInfoPanel playerInfoPanel;
+        ConsolePanel consolePanel;
 
-        public DebugPanel() : base(title: "Debug", scrollbarEnabled: false)
+        public DebugPanel() : base(title: "Debug", scrollbarEnabled: true)
         {
             // Get instances
             HitboxSystem hitboxSystem = ModContent.GetInstance<HitboxSystem>();
-            DrawUISystem drawUISystem = ModContent.GetInstance<DrawUISystem>();
+            DebugSystem debugSystem = ModContent.GetInstance<DebugSystem>();
+            // DebugEnemyTrackingSystem enemyTracking = ModContent.GetInstance<DebugEnemyTrackingSystem>();
+
 
             // Add debug options
             AddHeader("Hitboxes");
-            AddOnOffOption(hitboxSystem.ToggleHitboxes, "Hitboxes Off", "Show hitboxes of all entities");
+            AddOnOffOption(hitboxSystem.TogglePlayerHitboxes, "Player Hitboxes Off", "Show player hitboxes");
+            AddOnOffOption(hitboxSystem.ToggleNPCHitboxes, "NPC Hitboxes Off", "Show NPC hitboxes (town NPCs, enemies and bosses)");
+            AddOnOffOption(hitboxSystem.ToggleProjAndMeleeHitboxes, "Projectile Hitboxes Off", "Show projectile and melee hitboxes");
+            AddPadding();
+
+            AddHeader("Info");
+            AddOnOffOption(ToggleConsole, "Console Off (pending)", "Show console");
+            AddOnOffOption(TogglePlayerInfo, "Player Info Off (pending)", "Show player info panel\nRight click to lock to top right corner");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off (pending)", "Show all enemies position");
+            AddOnOffOption(ToggleEnemySpawnRate, "Enemies Can Spawn: On (pending)");
             AddPadding();
 
             AddHeader("UI");
-            AddOnOffOption(drawUISystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");
-            AddOnOffOption(drawUISystem.ToggleUIDebugSizeElementDrawing, "UIElements Size Text Off", "Show sizes of UI elements");
-            AddOnOffOption(drawUISystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
+            AddOnOffOption(debugSystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");
+            AddOnOffOption(debugSystem.ToggleUIDebugSizeElementDrawing, "UIElements Size Text Off", "Show sizes of UI elements");
+            AddOnOffOption(debugSystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
             AddPadding();
 
             AddHeader("Debug Panel");
@@ -46,8 +62,74 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Logs");
-            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Right click to open folder location", Log.OpenLogFolder);
+            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Open log file \n Right click to open folder location", Log.OpenLogFolder);
             AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "This file shows currently enabled mods\nRight click to open folder location", Log.OpenEnabledJsonFolder);
+        }
+
+        private void ToggleConsole()
+        {
+            showConsolePanel = !showConsolePanel;
+
+            if (showPlayerInfo)
+            {
+                // Disable player info panel if console is enabled
+                TogglePlayerInfo();
+            }
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            if (showConsolePanel)
+                sys.mainState.Append(consolePanel = new ConsolePanel("Console"));
+            else
+                sys.mainState.RemoveChild(playerInfoPanel);
+        }
+
+        private void TogglePlayerInfo()
+        {
+            showPlayerInfo = !showPlayerInfo;
+
+            if (showConsolePanel)
+            {
+                // Disable console panel if player info is enabled
+                ToggleConsole();
+            }
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            if (showPlayerInfo)
+                sys.mainState.Append(playerInfoPanel = new PlayerInfoPanel("Player Info"));
+            else
+                sys.mainState.RemoveChild(playerInfoPanel);
+        }
+
+        private void ToggleEnemySpawnRate()
+        {
+            enableSpawning = !enableSpawning;
+
+            if (!enableSpawning)
+            {
+                // Butcher all hostile NPCs
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    if (Main.npc[i].active && Main.npc[i].CanBeChasedBy()) // Checks if it's a hostile NPC
+                    {
+                        Main.npc[i].life = 0;
+                        Main.npc[i].HitEffect();
+                        Main.npc[i].active = false;
+                        // NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, i); // Sync NPC despawn
+                    }
+                }
+
+                // Set spawn rate to 0x (disable spawning)
+                SpawnRateMultiplier.Multiplier = 0f;
+                Main.NewText("Enemy spawn rate disabled. All hostiles removed.", 255, 0, 0);
+            }
+            else
+            {
+                // Restore normal spawn rate (1x)
+                SpawnRateMultiplier.Multiplier = 1f;
+                Main.NewText("Enemy spawn rate set to normal (1x).", 0, 255, 0);
+            }
         }
 
         private void SpawnDebugPanel()

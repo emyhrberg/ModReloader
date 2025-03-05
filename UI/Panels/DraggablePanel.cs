@@ -53,8 +53,18 @@ namespace SquidTestingMod.UI.Panels
         #region Update
         public override void Update(GameTime gameTime)
         {
+            // if (IsMouseHovering)
+            // {
+            //     Main.LocalPlayer.mouseInterface = true;
+            // }
+
             if (!Active)
                 return;
+
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
 
             base.Update(gameTime);
 
@@ -67,17 +77,11 @@ namespace SquidTestingMod.UI.Panels
                     Left.Set(Main.mouseX - dragOffset.X, 0f);
                     Top.Set(Main.mouseY - dragOffset.Y, 0f);
                     Recalculate();
-                    Main.LocalPlayer.mouseInterface = true;
                 }
             }
             else
             {
                 IsDragging = false;
-            }
-
-            if (dragging || ContainsPoint(Main.MouseScreen))
-            {
-                Main.LocalPlayer.mouseInterface = true;
             }
         }
         #endregion
@@ -101,7 +105,6 @@ namespace SquidTestingMod.UI.Panels
             dragging = true;
             IsDragging = false;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
-            Main.LocalPlayer.mouseInterface = true;
         }
 
         public override void LeftMouseUp(UIMouseEvent evt)
@@ -109,7 +112,6 @@ namespace SquidTestingMod.UI.Panels
             base.LeftMouseUp(evt);
             dragging = false;
             IsDragging = false;
-            Main.LocalPlayer.mouseInterface = false;
             Recalculate();
         }
 
@@ -118,7 +120,6 @@ namespace SquidTestingMod.UI.Panels
             if (IsDragging)
                 return;
             base.LeftClick(evt);
-            Main.LocalPlayer.mouseInterface = true;
         }
         #endregion
 

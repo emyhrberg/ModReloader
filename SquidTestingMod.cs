@@ -1,13 +1,7 @@
-using SquidTestingMod.Helpers;
-using SquidTestingMod.PacketHandlers;
-using System;
 using System.IO;
 using SquidTestingMod.Helpers;
-using Terraria;
-using Terraria.ID;
+using SquidTestingMod.PacketHandlers;
 using Terraria.ModLoader;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
 
 namespace SquidTestingMod
 {

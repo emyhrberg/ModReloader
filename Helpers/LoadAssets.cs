@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.UI;
@@ -69,6 +70,9 @@ namespace SquidTestingMod.Helpers
         // Resize
         public static Asset<Texture2D> Resize;
 
+        // Arrow
+        public static Asset<Texture2D> Arrow;
+
         public static void PreloadAllAssets()
         {
             // Start timer
@@ -111,6 +115,8 @@ namespace SquidTestingMod.Helpers
             SortDefense = PreloadAsset("SortDefense");
 
             Resize = PreloadAsset("Resize");
+
+            Arrow = PreloadAsset("Arrow");
 
             // Stop timer
             s.Stop();

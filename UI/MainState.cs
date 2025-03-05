@@ -16,7 +16,8 @@ namespace SquidTestingMod.UI
     {
         // State
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
-        public float ButtonSize = 70f;
+        public float ButtonSize = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
+        public float ButtonScale = 1f;
 
         // ItemSpawner and NPCSpawner panels
         public ItemSpawner itemSpawnerPanel;
@@ -43,7 +44,7 @@ namespace SquidTestingMod.UI
             if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
             if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
             if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to go to mods list");
             if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
@@ -58,21 +59,21 @@ namespace SquidTestingMod.UI
         }
 
         private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)
-        where T : BaseButton
+where T : BaseButton
         {
-            // Create and configure the button
+            // Directly use the current config value.
+            float size = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
-            button.Width.Set(ButtonSize, 0f);
-            button.Height.Set(ButtonSize, 0f);
+            button.Width.Set(size, 0f);
+            button.Height.Set(size, 0f);
             button.VAlign = 0.02f;
             button.HAlign = 0.35f;
-            button.MaxWidth = new StyleDimension(ButtonSize, 0);
-            button.MaxHeight = new StyleDimension(ButtonSize, 0);
-            button.MinHeight = new StyleDimension(ButtonSize, 0);
-            button.MinWidth = new StyleDimension(ButtonSize, 0);
+            button.MaxWidth = new StyleDimension(size, 0);
+            button.MaxHeight = new StyleDimension(size, 0);
+            button.MinWidth = new StyleDimension(size, 0);
+            button.MinHeight = new StyleDimension(size, 0);
             button.Recalculate();
 
-            // Add the button to the list and UI
             AllButtons.Add(button);
             Append(button);
 
@@ -81,6 +82,9 @@ namespace SquidTestingMod.UI
 
         public void UpdateButtonsAfterConfigChanged()
         {
+            // Set button size
+            ButtonSize = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
+
             // Re-add in the correct order
             AllButtons.Clear();
             RemoveAllChildren();
