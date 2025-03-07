@@ -68,8 +68,8 @@ namespace SquidTestingMod.Common.Systems
                 }
 
                 // Log debugging info
-                Log.Slow($"[DebugEnemyTrackingSystem] NPC: {npc.FullName}, Dist: {distance:F2}, withinScreen: {withinScreen}, " +
-                 $"screenPos: {screenPos}, arrowPos: {arrowPos}, leftBound: {left}, rightBound: {right}, rotation: {MathHelper.ToDegrees(rotation):F2}");
+                // Log.InfoSlow($"[DebugEnemyTrackingSystem] NPC: {npc.FullName}, Dist: {distance:F2}, withinScreen: {withinScreen}, " +
+                // $"screenPos: {screenPos}, arrowPos: {arrowPos}, leftBound: {left}, rightBound: {right}, rotation: {MathHelper.ToDegrees(rotation):F2}");
 
                 // Draw the arrow
                 sb.Draw(

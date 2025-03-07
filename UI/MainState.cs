@@ -25,6 +25,7 @@ namespace SquidTestingMod.UI
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
         public WorldPanel worldPanel;
+        public LogPanel logPanel;
 
         // Buttons
         public ToggleButton toggleButton;
@@ -44,6 +45,7 @@ namespace SquidTestingMod.UI
             if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
             if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
             if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (Conf.ShowLogButton) AddButton<LogButton>(Assets.ButtonNPC_XMAS, "Log", "Open log");
             if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to go to mods list");
             if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
@@ -90,7 +92,7 @@ where T : BaseButton
             RemoveAllChildren();
 
             // Create all buttons
-            if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off\nDrag to move");
             if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
             if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
             if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");

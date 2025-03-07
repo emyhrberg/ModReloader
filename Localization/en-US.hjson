@@ -115,6 +115,11 @@ Mods: {
 					Label: Button Size
 					Tooltip: ""
 				}
+
+				ShowLogButton: {
+					Tooltip: ""
+					Label: Show Log Button
+				}
 			}
 		}
 

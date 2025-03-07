@@ -15,9 +15,9 @@ namespace SquidTestingMod.UI.Panels
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: false)
         {
             // Player options
-            AddHeader("Player");
+            AddHeader("Abilities");
             options["god"] = AddOnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
-            options["noclip"] = AddOnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Disable gravity and fly through blocks\nHold shift to go faster");
+            options["noclip"] = AddOnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");
             options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Click To Teleport Off", "Right click to teleport to the mouse position");
             AddPadding();
 
@@ -32,7 +32,7 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Toggle All");
-            options["all"] = AddOnOffOption(ToggleAll, "Off", "Toggle all player cheats on/off \nExcept noclip");
+            options["all"] = AddOnOffOption(ToggleAll, "Off", "Toggle all player cheats on/off");
             AddPadding();
         }
 
@@ -46,13 +46,13 @@ namespace SquidTestingMod.UI.Panels
 
             // Update UI text
             options["god"].UpdateText(turnOn ? "God On" : "God Off");
-            // options["noclip"].UpdateText(turnOn ? "Noclip On" : "Noclip Off");
+            options["noclip"].UpdateText(turnOn ? "Noclip On" : "Noclip Off");
             options["teleport"].UpdateText(turnOn ? "Click To Teleport On" : "Click To Teleport Off");
             options["useFaster"].UpdateText(turnOn ? "Use Faster On" : "Use Faster Off");
             options["placeAnywhere"].UpdateText(turnOn ? "Place Anywhere On" : "Place Anywhere Off");
             options["invisible"].UpdateText(turnOn ? "Invisible To Enemies On" : "Invisible To Enemies Off");
             options["light"].UpdateText(turnOn ? "Light Mode On" : "Light Mode Off");
-            options["all"].UpdateText(turnOn ? "On" : "Off");
+            options["all"].UpdateText(turnOn ? "Off" : "On");
         }
     }
 }

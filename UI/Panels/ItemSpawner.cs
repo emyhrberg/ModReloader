@@ -19,6 +19,12 @@ namespace SquidTestingMod.UI.Panels
     /// </summary>
     public class ItemSpawner : SpawnerPanel
     {
+        // Timing variables
+        private Stopwatch _updateTimer = new Stopwatch();
+        private bool _pendingUpdate = false;
+
+        private int _hideTimer = 0;
+
         // Filter items
         private enum ItemFilter
         {
@@ -66,7 +72,7 @@ namespace SquidTestingMod.UI.Panels
             AddFilterButton(Assets.FilterArmor, "Filter Armor", ItemFilter.Armor, 150);
             AddFilterButton(Assets.FilterVanity, "Filter Vanity", ItemFilter.Vanity, 175);
             AddFilterButton(Assets.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 200);
-            AddFilterButton(Assets.FilterPotions, "Filter Potions", ItemFilter.Potions, 225);
+            AddFilterButton(Assets.FilterPotion, "Filter Potions", ItemFilter.Potions, 225);
             AddFilterButton(Assets.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 250);
 
             // Add sort buttons
@@ -75,15 +81,12 @@ namespace SquidTestingMod.UI.Panels
             AddSortButton(Assets.SortValue, "Sort by Value", ItemSort.Value, 25);
             AddSortButton(Assets.SortName, "Sort by Name", ItemSort.Name, 50);
             AddSortButton(Assets.SortRarity, "Sort by Rarity", ItemSort.Rarity, 75);
-            // AddSortButton(Assets.SortDamage, "Sort by Damage", ItemSort.ID, 100);
-            // AddSortButton(Assets.SortDefense, "Sort by Defense", ItemSort.ID, 125);
+            // Additional sort buttons can be added here.
 
-            // Make sure only "All" is active in the filter buttons
-            // For filters
+            // Activate the correct buttons for filters and sorts
             foreach (var (btn, flt) in filterButtons)
                 btn.Active = flt == currentFilter;
 
-            // For sorts
             foreach (var (btn, srt) in sortButtons)
                 btn.Active = srt == currentSort;
 
@@ -128,7 +131,6 @@ namespace SquidTestingMod.UI.Panels
         private void AddItemSlotsToGrid()
         {
             int allItems = TextureAssets.Item.Length - 1;
-            // int allItems = ItemLoader.ItemCount;
             Log.Info("Total items: " + allItems);
             int count = 0;
 
@@ -139,15 +141,13 @@ namespace SquidTestingMod.UI.Panels
                 Item item = new();
                 item.SetDefaults(i, true); // true needed to load modded items?
 
-                // If it's air or otherwise invalid, skip adding and log it.
                 if (item.IsAir || item.type == ItemID.None)
                 {
                     Log.Warn($"Skipping invalid item ID {i}: '{item.Name}'");
                     continue;
                 }
 
-                // Otherwise, make the slot
-                CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
+                CustomItemSlot itemSlot = new(new Item[] { item }, 0, ItemSlot.Context.ChestItem);
                 allItemSlots.Add(itemSlot);
 
                 count++;
@@ -155,30 +155,32 @@ namespace SquidTestingMod.UI.Panels
                     break;
             }
 
-            // Add them all to the grid
-            foreach (var itemSlot in allItemSlots)
-                ItemsGrid.Add(itemSlot);
+            // Add all item slots at once
+            ItemsGrid.AddRange(allItemSlots);
 
             s.Stop();
-            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.ElapsedMilliseconds / 1000.0, 3)} seconds");
+            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.Elapsed.TotalSeconds, 3)} seconds");
         }
 
         protected override void FilterItems()
         {
             string searchText = SearchTextBox.currentString.ToLower();
             ItemsGrid.Clear();
-            Stopwatch s = Stopwatch.StartNew();
+
+            // Start the timer and mark update as pending
+            _updateTimer.Restart();
+            _pendingUpdate = true;
+
+            Stopwatch s = Stopwatch.StartNew(); // For debugging if needed
 
             // 1) Filter the items
             var filteredSlots = allItemSlots.Where(slot =>
             {
                 Item item = slot.GetDisplayItem();
 
-                // match search text
                 if (!item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                     return false;
 
-                // match filter category
                 bool passesFilter = currentFilter switch
                 {
                     ItemFilter.All => true,
@@ -187,7 +189,7 @@ namespace SquidTestingMod.UI.Panels
                     ItemFilter.Ranged => item.damage > 0 && item.DamageType == DamageClass.Ranged,
                     ItemFilter.Magic => item.damage > 0 && item.DamageType == DamageClass.Magic,
                     ItemFilter.Summon => item.damage > 0 && item.DamageType == DamageClass.Summon,
-                    ItemFilter.Armor => item.defense > 0 && item.legSlot > 0 || item.defense > 0 && item.bodySlot > 0 || item.defense > 0 && item.headSlot > 0,
+                    ItemFilter.Armor => item.defense > 0 && (item.legSlot > 0 || item.bodySlot > 0 || item.headSlot > 0),
                     ItemFilter.Vanity => item.vanity,
                     ItemFilter.Accessories => item.accessory,
                     ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
@@ -201,20 +203,62 @@ namespace SquidTestingMod.UI.Panels
             // 2) Sort the items
             filteredSlots = currentSort switch
             {
-                ItemSort.Value => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().value) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().value),
-                ItemSort.Rarity => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().rare) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().rare),
-                ItemSort.Name => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().Name) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().Name),
-                ItemSort.Damage => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().damage) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().damage),
-                ItemSort.Defense => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().defense) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().defense),
-                _ => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().type) : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().type), // default (ID)
+                ItemSort.Value => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().value)
+                                             : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().value),
+                ItemSort.Rarity => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().rare)
+                                              : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().rare),
+                ItemSort.Name => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().Name)
+                                            : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().Name),
+                ItemSort.Damage => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().damage)
+                                              : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().damage),
+                ItemSort.Defense => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().defense)
+                                               : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().defense),
+                _ => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().type)
+                               : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().type)
             };
 
-            // 3) Add the sorted/filtered slots to the grid
-            foreach (var slot in filteredSlots)
-                ItemsGrid.Add(slot);
+            List<UIElement> filteredList = filteredSlots.Cast<UIElement>().ToList();
 
-            s.Stop();
-            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.ElapsedMilliseconds / 1000.0, 3)} seconds");
+            // 3) Add the sorted/filtered slots in one go
+            ItemsGrid.AddRange(filteredList);
+
+            // Force recalculation of the grid layout
+            ItemsGrid.Recalculate();
+
+            // Set hide timer to delay drawing the grid for a few frames after repopulation
+            _hideTimer = 3;
+
+            s.Stop(); // Debug timing (if needed)
+        }
+
+        // Override with the same access modifier (protected)
+        protected override void DrawChildren(SpriteBatch spriteBatch)
+        {
+            if (_hideTimer > 0)
+            {
+                _hideTimer--;
+
+                // Manually draw every child except ItemsGrid
+                foreach (UIElement element in Elements)
+                {
+                    if (element == ItemsGrid)
+                        continue;
+                    element.Draw(spriteBatch);
+                }
+                return;
+            }
+
+            // Draw normally
+            base.DrawChildren(spriteBatch);
+
+            // Now that drawing is complete, stop the update timer if pending
+            if (_pendingUpdate)
+            {
+                _updateTimer.Stop();
+                double elapsedSeconds = _updateTimer.Elapsed.TotalSeconds;
+                ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(elapsedSeconds, 3)} seconds");
+                _pendingUpdate = false;
+            }
         }
     }
 }

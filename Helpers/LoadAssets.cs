@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -11,21 +12,14 @@ using Terraria.ModLoader.UI.Elements;
 
 namespace SquidTestingMod.Helpers
 {
-    /// <summary>
-    /// A ModSystem that preloads assets early in the mod loading process.
-    /// </summary>
     public class LoadAssets : ModSystem
     {
         public override void Load()
         {
-            // Preload all assets
-            Assets.PreloadAllAssets();
+            var ignored = Assets.Initialized;
         }
     }
 
-    /// <summary>
-    /// A static helper class for loading and preloading mod assets.
-    /// </summary>
     public static class Assets
     {
         // Button textures
@@ -52,7 +46,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterArmor;
         public static Asset<Texture2D> FilterVanity;
         public static Asset<Texture2D> FilterAccessories;
-        public static Asset<Texture2D> FilterPotions;
+        public static Asset<Texture2D> FilterPotion;
         public static Asset<Texture2D> FilterPlaceables;
 
         // Filter NPC buttons
@@ -73,63 +67,26 @@ namespace SquidTestingMod.Helpers
         // Arrow
         public static Asset<Texture2D> Arrow;
 
-        public static void PreloadAllAssets()
+        // Bool for checking if assets are loaded
+        public static bool Initialized { get; set; }
+
+        // Constructor
+        static Assets()
         {
-            // Start timer
-            Stopwatch s = Stopwatch.StartNew();
-
-            // ALL ASSETS
-            Button = PreloadAsset("Button");
-            ButtonOnOff = PreloadAsset("ButtonOnOff");
-            ButtonConfig = PreloadAsset("ButtonConfig");
-            ButtonItems = PreloadAsset("ButtonItems");
-            ButtonNPC = PreloadAsset("ButtonNPC");
-            ButtonNPC_XMAS = PreloadAsset("ButtonNPC_XMAS");
-            ButtonReloadSP = PreloadAsset("ButtonReloadSP");
-            ButtonReloadMP = PreloadAsset("ButtonReloadMP");
-            ButtonPlayer = PreloadAsset("ButtonPlayer");
-            ButtonDebug = PreloadAsset("ButtonDebug");
-            ButtonWorld = PreloadAsset("ButtonWorld");
-
-            FilterBG = PreloadAsset("FilterBG");
-            FilterBGActive = PreloadAsset("FilterBGActive");
-            FilterAll = PreloadAsset("FilterAll");
-            FilterMelee = PreloadAsset("FilterMelee");
-            FilterRanged = PreloadAsset("FilterRanged");
-            FilterMagic = PreloadAsset("FilterMagic");
-            FilterSummon = PreloadAsset("FilterSummon");
-            FilterArmor = PreloadAsset("FilterArmor");
-            FilterVanity = PreloadAsset("FilterVanity");
-            FilterAccessories = PreloadAsset("FilterAccessories");
-            FilterPotions = PreloadAsset("FilterPotion");
-            FilterPlaceables = PreloadAsset("FilterPlaceables");
-
-            FilterTown = PreloadAsset("FilterTown");
-            FilterMob = PreloadAsset("FilterMob");
-
-            SortID = PreloadAsset("SortID");
-            SortValue = PreloadAsset("SortValue");
-            SortRarity = PreloadAsset("SortRarity");
-            SortName = PreloadAsset("SortName");
-            SortDamage = PreloadAsset("SortDamage");
-            SortDefense = PreloadAsset("SortDefense");
-
-            Resize = PreloadAsset("Resize");
-
-            Arrow = PreloadAsset("Arrow");
-
-            // Stop timer
-            s.Stop();
-            Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
+            foreach (FieldInfo field in typeof(Assets).GetFields())
+            {
+                if (field.FieldType == typeof(Asset<Texture2D>))
+                {
+                    field.SetValue(null, RequestAsset(field.Name));
+                }
+            }
         }
 
-
-        /// <summary>
-        /// Preloads an asset with ImmediateLoad mode in the "SquidTestingMod/Assets" directory.
-        /// </summary>
-        private static Asset<Texture2D> PreloadAsset(string path)
+        private static Asset<Texture2D> RequestAsset(string path)
         {
-            return ModContent.Request<Texture2D>("SquidTestingMod/Assets/" + path, AssetRequestMode.AsyncLoad);
+            // string modName = typeof(Assets).Namespace;
+            string modName = "SquidTestingMod"; // Use this, in case above line doesnt work
+            return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }
 }

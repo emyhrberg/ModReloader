@@ -20,11 +20,8 @@ namespace SquidTestingMod.UI.Panels
         // Variables 
         SliderOption widthOption;
         SliderOption heightOption;
-        bool enableSpawning = true;
         bool showPlayerInfo = false;
-        bool showConsolePanel = false;
         PlayerInfoPanel playerInfoPanel;
-        ConsolePanel consolePanel;
 
         public DebugPanel() : base(title: "Debug", scrollbarEnabled: true)
         {
@@ -42,10 +39,8 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Info");
-            AddOnOffOption(ToggleConsole, "Console Off (pending)", "Show console");
             AddOnOffOption(TogglePlayerInfo, "Player Info Off (pending)", "Show player info panel\nRight click to lock to top right corner");
-            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off (pending)", "Show all enemies position");
-            AddOnOffOption(ToggleEnemySpawnRate, "Enemies Can Spawn: On (pending)");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position");
             AddPadding();
 
             AddHeader("UI");
@@ -62,74 +57,20 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Logs");
-            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Open log file \n Right click to open folder location", Log.OpenLogFolder);
+            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Open log file \nRight click to open folder location", Log.OpenLogFolder);
             AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "This file shows currently enabled mods\nRight click to open folder location", Log.OpenEnabledJsonFolder);
-        }
-
-        private void ToggleConsole()
-        {
-            showConsolePanel = !showConsolePanel;
-
-            if (showPlayerInfo)
-            {
-                // Disable player info panel if console is enabled
-                TogglePlayerInfo();
-            }
-
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-
-            if (showConsolePanel)
-                sys.mainState.Append(consolePanel = new ConsolePanel("Console"));
-            else
-                sys.mainState.RemoveChild(playerInfoPanel);
         }
 
         private void TogglePlayerInfo()
         {
             showPlayerInfo = !showPlayerInfo;
 
-            if (showConsolePanel)
-            {
-                // Disable console panel if player info is enabled
-                ToggleConsole();
-            }
-
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             if (showPlayerInfo)
-                sys.mainState.Append(playerInfoPanel = new PlayerInfoPanel("Player Info"));
+                sys.mainState.Append(playerInfoPanel = new PlayerInfoPanel());
             else
                 sys.mainState.RemoveChild(playerInfoPanel);
-        }
-
-        private void ToggleEnemySpawnRate()
-        {
-            enableSpawning = !enableSpawning;
-
-            if (!enableSpawning)
-            {
-                // Butcher all hostile NPCs
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    if (Main.npc[i].active && Main.npc[i].CanBeChasedBy()) // Checks if it's a hostile NPC
-                    {
-                        Main.npc[i].life = 0;
-                        Main.npc[i].HitEffect();
-                        Main.npc[i].active = false;
-                        // NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, i); // Sync NPC despawn
-                    }
-                }
-
-                // Set spawn rate to 0x (disable spawning)
-                SpawnRateMultiplier.Multiplier = 0f;
-                Main.NewText("Enemy spawn rate disabled. All hostiles removed.", 255, 0, 0);
-            }
-            else
-            {
-                // Restore normal spawn rate (1x)
-                SpawnRateMultiplier.Multiplier = 1f;
-                Main.NewText("Enemy spawn rate set to normal (1x).", 0, 255, 0);
-            }
         }
 
         private void SpawnDebugPanel()

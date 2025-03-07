@@ -33,7 +33,7 @@ namespace SquidTestingMod.Common.Players
         public static void SetAllCheats(bool value)
         {
             God = value;
-            // Noclip = value;
+            Noclip = value;
             TeleportMode = value;
             UseFaster = value;
             PlaceAnywhere = value;

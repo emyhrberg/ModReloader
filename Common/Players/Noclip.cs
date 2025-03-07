@@ -11,72 +11,48 @@ namespace SquidTestingMod.Common.Players
     /// <summary>
     /// Allows the player to move through blocks and fly around the world.
     /// Hold shift to move faster by modifying the speed by 2x.
-    /// Holding shift for 5 seconds will increase the speed by 2x again.
     /// </summary>
     public class Noclip : ModPlayer
     {
-        private int startTime = 0;
-        private bool speedIncreased = false;
-
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
             base.ProcessTriggers(triggersSet);
 
             if (PlayerCheatManager.Noclip)
             {
-                if (startTime == 0)
-                {
-                    startTime = (int)Main.GameUpdateCount;
-                }
-
                 Player.gravity = 0f;
                 Player.controlJump = false;
                 Player.noFallDmg = true;
                 Player.moveSpeed = 0f;
                 Player.noKnockback = true;
-                Player.velocity.Y = -1E-11f;
+                Player.velocity.Y = -1E-11f; // prevent falling?
                 float modifier = 1f;
 
-                if (Main.keyState.IsKeyDown((Keys)160) || Main.keyState.IsKeyDown((Keys)161))
-                {
-                    modifier = 2f;
-                }
-                if (Main.keyState.IsKeyDown((Keys)162) || Main.keyState.IsKeyDown((Keys)163))
-                {
-                    modifier = 0.5f;
-                }
                 if (Main.keyState.IsKeyDown(Keys.LeftShift) || Main.keyState.IsKeyDown(Keys.RightShift))
                 {
-                    modifier *= 2f;
+                    modifier = 4f;
                 }
-
-                if ((Main.GameUpdateCount - startTime) >= 300 && !speedIncreased) // 300 frames = 5 seconds
+                if (Main.keyState.IsKeyDown(Keys.LeftControl) || Main.keyState.IsKeyDown(Keys.RightControl))
                 {
-                    modifier *= 2f;
-                    speedIncreased = true;
+                    modifier += 8f;
                 }
 
-                if (Main.keyState.IsKeyDown((Keys)87))
+                if (Main.keyState.IsKeyDown(Keys.W))
                 {
                     Player.position.Y -= 8f * modifier;
                 }
-                if (Main.keyState.IsKeyDown((Keys)83))
+                if (Main.keyState.IsKeyDown(Keys.S))
                 {
                     Player.position.Y += 8f * modifier;
                 }
-                if (Main.keyState.IsKeyDown((Keys)65))
+                if (Main.keyState.IsKeyDown(Keys.A))
                 {
                     Player.position.X -= 8f * modifier;
                 }
-                if (Main.keyState.IsKeyDown((Keys)68))
+                if (Main.keyState.IsKeyDown(Keys.D))
                 {
                     Player.position.X += 8f * modifier;
                 }
-            }
-            else
-            {
-                startTime = 0;
-                speedIncreased = false;
             }
         }
     }
