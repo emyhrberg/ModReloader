@@ -33,6 +33,10 @@ namespace SquidTestingMod.UI
         // List of all buttons
         public List<BaseButton> AllButtons = [];
 
+
+        // List of all panels
+        public List<DraggablePanel> AllPanels = [];
+
         // MainState Constructor
         // This is where we create all the buttons and set up their positions.
         public MainState()
@@ -53,11 +57,21 @@ namespace SquidTestingMod.UI
             UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Add the panels (invisible by default)
-            if (Conf.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
-            if (Conf.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
-            if (Conf.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
-            if (Conf.ShowDebugButton) Append(debugPanel = new DebugPanel());
-            if (Conf.ShowWorldButton) Append(worldPanel = new WorldPanel());
+            if (Conf.ShowItemButton) itemSpawnerPanel = AddPanel<ItemSpawner>("Item Spawner");
+            if (Conf.ShowNPCButton) npcSpawnerPanel = AddPanel<NPCSpawner>("NPC Spawner");
+            if (Conf.ShowPlayerButton) playerPanel = AddPanel<PlayerPanel>("Player Panel");
+            if (Conf.ShowDebugButton) debugPanel = AddPanel<DebugPanel>("Debug Panel");
+            if (Conf.ShowWorldButton) worldPanel = AddPanel<WorldPanel>("World Panel");
+            if (Conf.ShowLogButton) logPanel = AddPanel<LogPanel>("Log Panel");
+        }
+
+        private T AddPanel<T>(string title) where T : DraggablePanel, new()
+        {
+            T panel = new T(); // Instantiate using the parameterless constructor.
+            panel.Header = title; // Assumes your DraggablePanel (or derived classes) has a SetTitle method.
+            AllPanels.Add(panel);
+            Append(panel);
+            return panel;
         }
 
         private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)

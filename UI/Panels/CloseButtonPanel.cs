@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -43,34 +44,15 @@ namespace SquidTestingMod.UI.Panels
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Check which our parent panel is and toggle its active.
-            // Its gonna be either the itemSpawnerPanel or the npcSpawnerPanel.
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            var mainState = ModContent.GetInstance<MainSystem>()?.mainState;
+            if (mainState == null)
+                return;
 
-            var itemSpawnerPanel = sys?.mainState?.itemSpawnerPanel;
-            var npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
-            var playerPanel = sys?.mainState?.playerPanel;
-            var worldPanel = sys?.mainState?.worldPanel;
-
-            if (Parent is ItemSpawner && itemSpawnerPanel.GetActive() == true)
+            // Use AllPanels to find the panel that is our parent.
+            var panel = mainState.AllPanels.FirstOrDefault(p => p == Parent);
+            if (panel != null && panel.GetActive())
             {
-                itemSpawnerPanel.SetActive(false);
-            }
-            else if (Parent is NPCSpawner && npcSpawnerPanel.GetActive() == true)
-            {
-                npcSpawnerPanel.SetActive(false);
-            }
-            else if (Parent is PlayerPanel && playerPanel.GetActive() == true)
-            {
-                playerPanel.SetActive(false);
-            }
-            else if (Parent is DebugPanel && sys.mainState.debugPanel.GetActive() == true)
-            {
-                sys.mainState.debugPanel.SetActive(false);
-            }
-            else if (Parent is WorldPanel && worldPanel.GetActive() == true)
-            {
-                worldPanel.SetActive(false);
+                panel.SetActive(false);
             }
         }
     }

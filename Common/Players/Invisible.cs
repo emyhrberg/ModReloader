@@ -16,7 +16,7 @@ namespace SquidTestingMod.Common.Players
             {
                 // Make the player "invisible"-ish but not really to flying enemies 
                 // try to avoid making enemies target the player
-                // todo make it better
+                // tosdo make it better
                 // agro
                 Player.aggro = -9999;
             }

@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
+using XPT.Core.Audio.MP3Sharp.Decoding;
 
 namespace SquidTestingMod.UI.Panels
 {
@@ -20,6 +21,7 @@ namespace SquidTestingMod.UI.Panels
         protected bool Active = false; // draw and update when true
         protected const int padding = 12;
         protected Color darkBlue = new(73, 85, 186);
+        public string Header = "";
 
         // Dragging
         public bool Draggable = false;
@@ -39,6 +41,7 @@ namespace SquidTestingMod.UI.Panels
             HAlign = 1.0f; // right aligned
             VAlign = 1.0f; // bottom aligned
             BackgroundColor = darkBlue;
+            Header = header;
 
             // Create all content in the panel
             CustomTitlePanel TitlePanel = new(header);

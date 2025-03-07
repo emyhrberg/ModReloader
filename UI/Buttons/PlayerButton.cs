@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -23,32 +24,23 @@ namespace SquidTestingMod.UI.Buttons
         {
             // Toggle player panel
             var sys = ModContent.GetInstance<MainSystem>();
+            var allPanels = sys?.mainState?.AllPanels;
             var playerPanel = sys?.mainState?.playerPanel;
-            var debugPanel = sys?.mainState?.debugPanel;
-            var worldPanel = sys?.mainState?.worldPanel;
 
             // Close other panels
-            if (debugPanel != null && debugPanel.GetActive())
+            foreach (var panel in allPanels.Except([playerPanel]))
             {
-                debugPanel.SetActive(false);
-            }
-            if (worldPanel != null && worldPanel.GetActive())
-            {
-                worldPanel.SetActive(false);
+                if (panel.GetActive())
+                {
+                    panel.SetActive(false);
+                }
             }
 
             // Toggle player panel
-            if (playerPanel != null)
-            {
-                if (playerPanel.GetActive())
-                {
-                    playerPanel.SetActive(false);
-                }
-                else
-                {
-                    playerPanel.SetActive(true);
-                }
-            }
+            if (playerPanel.GetActive())
+                playerPanel.SetActive(false);
+            else
+                playerPanel.SetActive(true);
         }
     }
 }

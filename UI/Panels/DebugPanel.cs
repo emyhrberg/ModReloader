@@ -28,7 +28,6 @@ namespace SquidTestingMod.UI.Panels
             // Get instances
             HitboxSystem hitboxSystem = ModContent.GetInstance<HitboxSystem>();
             DebugSystem debugSystem = ModContent.GetInstance<DebugSystem>();
-            // DebugEnemyTrackingSystem enemyTracking = ModContent.GetInstance<DebugEnemyTrackingSystem>();
 
 
             // Add debug options
@@ -39,8 +38,7 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Info");
-            AddOnOffOption(TogglePlayerInfo, "Player Info Off (pending)", "Show player info panel\nRight click to lock to top right corner");
-            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position");
+            AddOnOffOption(TogglePlayerInfo, "Player Info Off (todo)", "Show player info panel\nRight click to lock to top right corner");
             AddPadding();
 
             AddHeader("UI");
@@ -50,8 +48,8 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Debug Panel");
-            widthOption = AddSliderOption("Width", 0, 800, 100);
-            heightOption = AddSliderOption("Height", 0, 800, 100);
+            widthOption = AddSliderOption("Width", 0, 800, 100, null, 5);
+            heightOption = AddSliderOption("Height", 0, 800, 100, null, 5);
             AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a debug panel with the specified dimensions");
             AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel");
             AddPadding();

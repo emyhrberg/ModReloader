@@ -18,21 +18,30 @@ namespace SquidTestingMod.UI.Panels
         // 12 is minus the padding of a panel
         protected float currentTop = 35 - 12;
 
-        private UIList uiList;
-        private UIScrollbar scrollbar;
+        protected UIList uiList;
+        protected UIScrollbar scrollbar;
         protected bool scrollbarEnabled = true;
+
+        private int panelPadding = 12;
 
         public RightParentPanel(string title, bool scrollbarEnabled = true) : base(title)
         {
             // panel settings
             BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
             Height.Set(570f, 0f);
-            Draggable = false; // TODO change this later when u fix sliders
+            Top.Set(-20, 0f);
+            Left.Set(-20, 0f);
+
+            Draggable = false; // maybe change this later when u fix sliders
 
             // Create a new list
-            uiList = new()
+            uiList = new UIList
             {
-                Width = { Percent = 1f },
+                MaxWidth = { Percent = 1f, Pixels = panelPadding * 2 },
+                Width = { Percent = 1f, Pixels = panelPadding * 2 },
+                Left = { Pixels = 0 },
+
+                MaxHeight = { Percent = 1f, Pixels = -35 - 12 },
                 Height = { Percent = 1f, Pixels = -35 - 12 },
                 HAlign = 0.5f,
                 VAlign = 0f,
@@ -96,16 +105,36 @@ namespace SquidTestingMod.UI.Panels
             return onOffPanel;
         }
 
-        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null)
+        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize=1.0f)
         {
             // Create a new option panel
-            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged);
+            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize);
 
             // Add the option to the ui list
             uiList.Add(sliderPanel);
 
             // Add the panel to the player panel
             return sliderPanel;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            // test
+            //uiList.Width.Set(0, 1);
+
+            // If the inventory is open, move the panel to the left by 350 pixels
+            bool inventoryOpen = Main.playerInventory;
+
+            if (inventoryOpen)
+            {
+                Left.Set(-225, 0f);
+            }
+            else
+            {
+                Left.Set(-20, 0f);
+            }
+
+            base.Update(gameTime);
         }
     }
 }

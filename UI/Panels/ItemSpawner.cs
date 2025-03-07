@@ -132,7 +132,6 @@ namespace SquidTestingMod.UI.Panels
         {
             int allItems = TextureAssets.Item.Length - 1;
             Log.Info("Total items: " + allItems);
-            int count = 0;
 
             Stopwatch s = Stopwatch.StartNew();
 
@@ -147,12 +146,8 @@ namespace SquidTestingMod.UI.Panels
                     continue;
                 }
 
-                CustomItemSlot itemSlot = new(new Item[] { item }, 0, ItemSlot.Context.ChestItem);
+                CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                 allItemSlots.Add(itemSlot);
-
-                count++;
-                if (count >= Conf.MaxItemsToDisplay)
-                    break;
             }
 
             // Add all item slots at once
@@ -223,7 +218,7 @@ namespace SquidTestingMod.UI.Panels
             ItemsGrid.AddRange(filteredList);
 
             // Force recalculation of the grid layout
-            ItemsGrid.Recalculate();
+            // ItemsGrid.Recalculate();
 
             // Set hide timer to delay drawing the grid for a few frames after repopulation
             _hideTimer = 3;

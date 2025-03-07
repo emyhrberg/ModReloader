@@ -20,10 +20,10 @@ namespace SquidTestingMod.UI.Panels
     public class WorldPanel : RightParentPanel
     {
         // Variables
-        OnOffOption moon;
-        OnOffOption difficulty;
-        SliderOption timeOption;
-        bool timeSliderActive = false;
+        private OnOffOption moon;
+        private OnOffOption difficulty;
+        private SliderOption timeOption;
+        private bool timeSliderActive = false;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -53,23 +53,13 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Time");
-            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime);
-            timeOption.textElement.HAlign = 0.05f;
+            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime, 1800f / 86400f);
             moon = AddOnOffOption(IncreaseMoonphase, $"Moon Phase: {Main.moonPhase} ({GetMoonPhaseName()})", "Click to cycle moon phases", DecreaseMoonphase);
             AddPadding();
 
-            AddHeader("Weather");
-            AddOnOffOption(ToggleRain, "Rain Off");
-            AddOnOffOption(ToggleSandstorm, "Sandstorm Off");
-            AddPadding();
-
-            AddHeader("Evil");
-            AddOnOffOption(null, "Infection Spread Off");
-            AddOnOffOption(null, "Crimson/Corruption: 0%");
-            AddOnOffOption(null, "Hallow: 0%");
-            AddPadding();
-
             AddHeader("Enemies");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position");
+            AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1);
             AddPadding();
 
             AddHeader("Peaceful Events");
@@ -81,18 +71,18 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(StartBloodMoon, "Start Blood Moon", "Start a Blood Moon event and set the time to 7:30 PM");
             AddOnOffOption(() => TryStartInvasion(InvasionID.GoblinArmy), "Start Goblin Invasion");
             AddOnOffOption(SpawnSlimeRain, "Start Slime Rain");
-            AddOnOffOption(null, "Start Old One's Army (pending)");
-            AddOnOffOption(null, "Start Torch God (pending)");
+            AddOnOffOption(null, "Start Old One's Army (todo)");
+            AddOnOffOption(null, "Start Torch God (todo)");
             AddPadding();
 
             AddHeader("HM Events");
-            AddOnOffOption(null, "Start Frost Legion (pending)");
+            AddOnOffOption(null, "Start Frost Legion (todo)");
             AddOnOffOption(ToggleSolarEclipse, "Start Solar Eclipse");
             AddOnOffOption(() => TryStartInvasion(InvasionID.PirateInvasion), "Start Pirate Invasion");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Start Pumpkin Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedFrostMoon), "Start Frost Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.MartianMadness), "Start Martian Madness");
-            AddOnOffOption(null, "Start Lunar Events (pending)");
+            AddOnOffOption(null, "Start Lunar Events (todo)");
             AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
@@ -215,19 +205,6 @@ namespace SquidTestingMod.UI.Panels
             }
             // Set the text element
             moon.UpdateText("Moon Phase: " + Main.moonPhase + " (" + GetMoonPhaseName() + ")");
-        }
-
-        private void ToggleSandstorm()
-        {
-            Sandstorm.Happening = !Sandstorm.Happening;
-            Main.NewText(Sandstorm.Happening ? "Starting Sandstorm..." : "Ending Sandstorm...");
-        }
-
-        private void ToggleRain()
-        {
-            Main.raining = !Main.raining;
-            Main.maxRaining = Main.raining ? 1f : 0f;
-            Main.NewText(Main.raining ? "Starting Rain..." : "Ending Rain...");
         }
 
         private void TryStartInvasion(int invasionType)

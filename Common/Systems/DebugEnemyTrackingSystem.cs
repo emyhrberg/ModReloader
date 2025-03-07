@@ -63,7 +63,7 @@ namespace SquidTestingMod.Common.Systems
                     if (screenPos.X < left)
                     {
                         arrowPos.X = left + 100f;
-                        Log.Info("forced arrowpos.X to " + arrowPos.X);
+                        //Log.Info("forced arrowpos.X to " + arrowPos.X);
                     }
                 }
 

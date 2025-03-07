@@ -14,7 +14,10 @@ namespace SquidTestingMod.UI.Panels
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: false)
         {
-            // Player options
+            AddHeader("Stats");
+            // AddSliderOption("Health", 0, 500, 100);
+            // AddSliderOption("Defense", 0, 100, 10);
+
             AddHeader("Abilities");
             options["god"] = AddOnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
             options["noclip"] = AddOnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");

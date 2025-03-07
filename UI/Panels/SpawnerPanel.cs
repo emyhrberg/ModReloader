@@ -37,6 +37,8 @@ namespace SquidTestingMod.UI.Panels
             Height.Set(H, 0f);
             HAlign = 0.0f;
             VAlign = 1.0f;
+            Top.Set(-20, 0f);
+            Left.Set(20, 0f);
 
             // Create all content in the panel
             ItemCountText = new UIText("0 Items", textScale: 0.4f, true)

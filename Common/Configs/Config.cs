@@ -22,16 +22,10 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(true)]
         public bool ClearClientLogOnReload = true;
 
-        [Header("ItemNPCSpawner")]
-        [DefaultValue(1000)]
-        [Range(100, 10000)]
-        [Increment(1000)]
-        public int MaxItemsToDisplay;
-
         [Range(-500f, 500f)]
         [Increment(100f)]
         [DefaultValue(typeof(Vector2), "0, 0")]
-        public Vector2 NPCSpawnLocation;
+        public Vector2 NPCSpawnLocation = new Vector2(0, 0);
 
         [Header("Buttons")]
         [DefaultValue(60)]
@@ -138,7 +132,6 @@ namespace SquidTestingMod.Common.Configs
         public static bool ClearClientLogOnReload => ConfigInstance.ClearClientLogOnReload;
 
         // NPC/Item Spawner
-        public static int MaxItemsToDisplay => ConfigInstance.MaxItemsToDisplay;
         public static Vector2 NPCSpawnLocation => ConfigInstance.NPCSpawnLocation;
 
         // Buttons to show
