@@ -1,9 +1,6 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Panels;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 

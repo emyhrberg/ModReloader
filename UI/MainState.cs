@@ -25,7 +25,7 @@ namespace SquidTestingMod.UI
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
         public WorldPanel worldPanel;
-        public LogPanel logPanel;
+        public ModsPanel logPanel;
 
         // Buttons
         public ToggleButton toggleButton;
@@ -49,7 +49,7 @@ namespace SquidTestingMod.UI
             if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
             if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
             if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            if (Conf.ShowLogButton) AddButton<LogButton>(Assets.ButtonNPC_XMAS, "Log", "Open log");
+            if (Conf.ShowModsButton) AddButton<ModsButton>(Assets.ButtonNPC_XMAS, "Mods", "Open mods list");
             if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to go to mods list");
             if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
@@ -62,7 +62,7 @@ namespace SquidTestingMod.UI
             if (Conf.ShowPlayerButton) playerPanel = AddPanel<PlayerPanel>("Player Panel");
             if (Conf.ShowDebugButton) debugPanel = AddPanel<DebugPanel>("Debug Panel");
             if (Conf.ShowWorldButton) worldPanel = AddPanel<WorldPanel>("World Panel");
-            if (Conf.ShowLogButton) logPanel = AddPanel<LogPanel>("Log Panel");
+            if (Conf.ShowModsButton) logPanel = AddPanel<ModsPanel>("Log Panel");
         }
 
         private T AddPanel<T>(string title) where T : DraggablePanel, new()

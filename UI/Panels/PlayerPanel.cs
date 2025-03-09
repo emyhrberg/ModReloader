@@ -1,39 +1,65 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Players;
-using SquidTestingMod.Common.Systems;
+using SquidTestingMod.Helpers;
+using Terraria;
 
 namespace SquidTestingMod.UI.Panels
 {
     /// <summary>
-    /// A panel containing options to modify player behaviour like God, Fast, Build, etc.
+    /// A panel containing options to modify player behavior like God, Noclip, etc.
     /// </summary>
     public class PlayerPanel : RightParentPanel
     {
         // Keep references to the options for updating them later
         private Dictionary<string, OnOffOption> options = new Dictionary<string, OnOffOption>();
 
+        // Slider for Max Life
+        private SliderOption maxLifeSlider;
+
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: false)
         {
-            AddHeader("Stats");
-            // AddSliderOption("Health", 0, 500, 100);
-            // AddSliderOption("Defense", 0, 100, 10);
+            // === STATS ===
+            float currentHP = Main.LocalPlayer.statLifeMax2; // e.g., 500
+            maxLifeSlider = AddSliderOption(
+                title: "Extra Life",
+                min: 0,
+                max: 2000,
+                defaultValue: 0,    // pass 500
+                onValueChanged: OnLifeMaxChanged,
+                increment: 5,
+                textSize: 1
+            );
+            AddPadding();
 
+            // === ABILITIES ===
             AddHeader("Abilities");
             options["god"] = AddOnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
             options["noclip"] = AddOnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");
-            options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Click To Teleport Off", "Right click to teleport to the mouse position");
+            options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Teleport Mode Off", "Right click to teleport to the mouse position");
+            options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Aura Off", "Light up the world around you");
+            options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Kill enemies around you");
+            options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you");
+            AddSliderOption(
+                title: "Mine Radius",
+                min: 1,
+                max: 50,
+                defaultValue: 1,
+                onValueChanged: value => MineAura.mineRange = (int)value,
+                increment: 1,
+                textSize: 0.8f
+            );
+
             AddPadding();
 
+            // === BUILD ===
             AddHeader("Build");
-            options["useFaster"] = AddOnOffOption(PlayerCheatManager.ToggleUseFaster, "Use Faster Off", "Place blocks, walls, and mine faster");
             options["placeAnywhere"] = AddOnOffOption(PlayerCheatManager.TogglePlaceAnywhere, "Place Anywhere Off", "Place blocks and walls anywhere in the air");
+            options["placeFaster"] = AddOnOffOption(PlayerCheatManager.TogglePlaceFaster, "Place Faster Off", "Place tiles and walls faster");
+            options["mineFaster"] = AddOnOffOption(PlayerCheatManager.ToggleMineFaster, "Mine Faster Off", "Mine tiles and walls faster");
             AddPadding();
 
-            AddHeader("Misc");
-            options["invisible"] = AddOnOffOption(PlayerCheatManager.ToggleInvisibleToEnemies, "Invisible To Enemies Off", "Enemies will not attack you");
-            options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Mode Off", "Light up the world around you");
-            AddPadding();
-
+            // === TOGGLE ALL ===
             AddHeader("Toggle All");
             options["all"] = AddOnOffOption(ToggleAll, "Off", "Toggle all player cheats on/off");
             AddPadding();
@@ -41,21 +67,49 @@ namespace SquidTestingMod.UI.Panels
 
         private void ToggleAll()
         {
-            // Determine if we should enable or disable all
+            // Decide if we want to turn everything on or off
             bool turnOn = !PlayerCheatManager.IsAnyCheatEnabled;
 
-            // Set all to the same state
+            // Set all cheats to the same state
             PlayerCheatManager.SetAllCheats(turnOn);
 
-            // Update UI text
+            // Update the text of each OnOffOption
+            // (These keys match exactly what we used when inserting into the dictionary.)
             options["god"].UpdateText(turnOn ? "God On" : "God Off");
             options["noclip"].UpdateText(turnOn ? "Noclip On" : "Noclip Off");
-            options["teleport"].UpdateText(turnOn ? "Click To Teleport On" : "Click To Teleport Off");
-            options["useFaster"].UpdateText(turnOn ? "Use Faster On" : "Use Faster Off");
+            options["teleport"].UpdateText(turnOn ? "Teleport Mode On" : "Teleport Mode Off");
+            options["light"].UpdateText(turnOn ? "Light Aura On" : "Light Aura Off");
+            options["killAura"].UpdateText(turnOn ? "Kill Aura On" : "Kill Aura Off");
+            options["mineAura"].UpdateText(turnOn ? "Mine Aura On" : "Mine Aura Off");
             options["placeAnywhere"].UpdateText(turnOn ? "Place Anywhere On" : "Place Anywhere Off");
-            options["invisible"].UpdateText(turnOn ? "Invisible To Enemies On" : "Invisible To Enemies Off");
-            options["light"].UpdateText(turnOn ? "Light Mode On" : "Light Mode Off");
+            options["placeFaster"].UpdateText(turnOn ? "Place Faster On" : "Place Faster Off");
+            options["mineFaster"].UpdateText(turnOn ? "Mine Faster On" : "Mine Faster Off");
+
+            // Finally, update the toggle-all button itself
             options["all"].UpdateText(turnOn ? "Off" : "On");
+        }
+
+        // Callback for the Max Life slider
+        // This callback interprets the normalized slider value back into an absolute number (0–2000).
+        private void OnLifeMaxChanged(float value)
+        {
+            // Update the static max life variable
+            MaxLife.maxLife = (int)value;
+
+            // Force recalculation of max HP immediately
+            Main.LocalPlayer.statLifeMax2 = MaxLife.maxLife;
+        }
+
+        // During Update, keep the slider in sync if the player's life is changed elsewhere.
+        public override void Update(GameTime gameTime)
+        {
+            // Convert the actual HP (0..2000) to a fraction (0..1)
+            float fraction = MaxLife.maxLife / 2000f;
+
+            // Now pass the fraction to the slider
+            maxLifeSlider.SetValue(fraction);
+
+            base.Update(gameTime);
         }
     }
 }

@@ -1,16 +1,10 @@
-using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.GameContent.Events;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace SquidTestingMod.UI.Panels
 {
@@ -20,10 +14,12 @@ namespace SquidTestingMod.UI.Panels
     public class WorldPanel : RightParentPanel
     {
         // Variables
+        // private string worldName = "";
         private OnOffOption moon;
         private OnOffOption difficulty;
         private SliderOption timeOption;
         private bool timeSliderActive = false;
+        public static bool isLowAggro = false;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -46,10 +42,13 @@ namespace SquidTestingMod.UI.Panels
                 _ => "Unknown Difficulty"
             };
 
-            AddHeader("World Info");
-            AddOnOffOption(null, "Name: " + worldName);
-            AddOnOffOption(null, "Size: " + worldSize);
-            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
+            // AddHeader("World Info");
+            // AddOnOffOption(null, "Name: " + worldName);
+            // AddOnOffOption(null, "Size: " + worldSize);
+            // difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
+            // AddPadding();
+
+            AddHeader("World Name: " + worldName);
             AddPadding();
 
             AddHeader("Time");
@@ -58,21 +57,19 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Enemies");
-            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position");
             AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1);
-            AddPadding();
-
-            AddHeader("Peaceful Events");
-            AddOnOffOption(BirthdayParty.ToggleManualParty, "Party Off");
-            AddOnOffOption(LanternNight.ToggleManualLanterns, "Lantern Night Off");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position with an arrow");
+            AddOnOffOption(ToggleLowAggro, "Enemies Don't Attack Off", "Set player aggro to -9999");
             AddPadding();
 
             AddHeader("Pre-HM Events");
+            AddOnOffOption(BirthdayParty.ToggleManualParty, "Party Off");
             AddOnOffOption(StartBloodMoon, "Start Blood Moon", "Start a Blood Moon event and set the time to 7:30 PM");
             AddOnOffOption(() => TryStartInvasion(InvasionID.GoblinArmy), "Start Goblin Invasion");
             AddOnOffOption(SpawnSlimeRain, "Start Slime Rain");
             AddOnOffOption(null, "Start Old One's Army (todo)");
             AddOnOffOption(null, "Start Torch God (todo)");
+            AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
             AddHeader("HM Events");
@@ -91,6 +88,18 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(() => Main.forceXMasForToday = !Main.forceXMasForToday, "Force XMas");
             AddOnOffOption(() => Main.forceHalloweenForToday = !Main.forceHalloweenForToday, "Force Halloween");
             AddPadding();
+        }
+
+        /// <summary> Check player class and update aggro continously
+        /// If we dont set it every frame, it will reset.
+        /// Aggro must be forced to update every frame.
+        /// <see cref="Common.Players.LowAggro"/> 
+        /// </summary>
+        private void ToggleLowAggro()
+        {
+            // Set low negative aggro to make enemies ignore the player most of the time
+            // Doesnt work for all enemies (e.g flying enemies and most bosses)
+            isLowAggro = !isLowAggro;
         }
 
         private void TryStopInvasion()
@@ -341,6 +350,17 @@ namespace SquidTestingMod.UI.Panels
 
         public override void Update(GameTime gameTime)
         {
+            // Check if unknown name still. Then we have to update it
+            // if (TitlePanel.HeaderText.Text.Length == 5)
+            // {
+            //     if (Main.ActiveWorldFileData.GetWorldName() != null)
+            //     {
+            //         TitlePanel.HeaderText.SetText("World: " + Main.ActiveWorldFileData.GetWorldName());
+            //         Main.NewText("World name updated to: " + Main.ActiveWorldFileData.GetWorldName());
+            //         Log.Info("World name updated to: " + Main.ActiveWorldFileData.GetWorldName());
+            //     }
+            // }
+
             if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
             {
                 // Normal game time progression logic

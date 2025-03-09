@@ -28,7 +28,7 @@ namespace SquidTestingMod.Common.Systems
             // Ensure max spawns don't drop below 1 (prevents potential infinite loops)
             if (maxSpawns < 1) maxSpawns = 1;
 
-            Log.Info("Set spawn rate to: " + spawnRate);
+            // Log.Info("Set spawn rate to: " + spawnRate);
         }
     }
 

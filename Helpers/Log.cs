@@ -16,7 +16,7 @@ namespace SquidTestingMod.Helpers
         /// <summary>
         /// Log a message once every second
         /// </summary>
-        public static void InfoSlow(string message)
+        public static void SlowInfo(string message)
         {
             if (Main.GameUpdateCount % 60 == 0)
             {

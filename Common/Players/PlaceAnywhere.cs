@@ -38,7 +38,6 @@ namespace SquidTestingMod.Common.Players
 
         private void PlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player player)
         {
-            // Only apply when build mode is on
             if (PlayerCheatManager.PlaceAnywhere && player == Main.LocalPlayer)
             {
                 Tile tile = Framing.GetTileSafely(Player.tileTargetX, Player.tileTargetY);

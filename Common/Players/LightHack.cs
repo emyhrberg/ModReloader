@@ -1,6 +1,4 @@
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Players;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players

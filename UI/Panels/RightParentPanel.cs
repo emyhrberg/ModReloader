@@ -105,7 +105,7 @@ namespace SquidTestingMod.UI.Panels
             return onOffPanel;
         }
 
-        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize=1.0f)
+        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f)
         {
             // Create a new option panel
             SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize);

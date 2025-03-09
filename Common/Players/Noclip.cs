@@ -30,7 +30,7 @@ namespace SquidTestingMod.Common.Players
 
                 if (Main.keyState.IsKeyDown(Keys.LeftShift) || Main.keyState.IsKeyDown(Keys.RightShift))
                 {
-                    modifier = 4f;
+                    modifier += 3f;
                 }
                 if (Main.keyState.IsKeyDown(Keys.LeftControl) || Main.keyState.IsKeyDown(Keys.RightControl))
                 {

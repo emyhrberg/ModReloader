@@ -19,12 +19,6 @@ namespace SquidTestingMod.UI.Panels
     /// </summary>
     public class ItemSpawner : SpawnerPanel
     {
-        // Timing variables
-        private Stopwatch _updateTimer = new Stopwatch();
-        private bool _pendingUpdate = false;
-
-        private int _hideTimer = 0;
-
         // Filter items
         private enum ItemFilter
         {
@@ -63,7 +57,7 @@ namespace SquidTestingMod.UI.Panels
         public ItemSpawner() : base("Item Spawner")
         {
             // Add filter buttons
-            FilterButton all = AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
+            AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
             AddFilterButton(Assets.FilterMelee, "Filter All Weapons", ItemFilter.AllWeapons, 25);
             AddFilterButton(Assets.FilterMelee, "Filter Melee Weapons", ItemFilter.Melee, 50);
             AddFilterButton(Assets.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
@@ -151,6 +145,7 @@ namespace SquidTestingMod.UI.Panels
             }
 
             // Add all item slots at once
+            ItemsGrid.Clear();
             ItemsGrid.AddRange(allItemSlots);
 
             s.Stop();
@@ -159,20 +154,19 @@ namespace SquidTestingMod.UI.Panels
 
         protected override void FilterItems()
         {
+            Stopwatch s = Stopwatch.StartNew();
+
             string searchText = SearchTextBox.currentString.ToLower();
+
             ItemsGrid.Clear();
 
-            // Start the timer and mark update as pending
-            _updateTimer.Restart();
-            _pendingUpdate = true;
-
-            Stopwatch s = Stopwatch.StartNew(); // For debugging if needed
+            // Add a single item slot to test the performance maybe?
+            // Or add a load icon indicator?
 
             // 1) Filter the items
             var filteredSlots = allItemSlots.Where(slot =>
             {
                 Item item = slot.GetDisplayItem();
-
                 if (!item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                     return false;
 
@@ -188,7 +182,7 @@ namespace SquidTestingMod.UI.Panels
                     ItemFilter.Vanity => item.vanity,
                     ItemFilter.Accessories => item.accessory,
                     ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
-                    ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
+                    ItemFilter.Placeables => item.createTile >= 0 || item.createWall >= 0,
                     _ => false
                 };
 
@@ -198,62 +192,26 @@ namespace SquidTestingMod.UI.Panels
             // 2) Sort the items
             filteredSlots = currentSort switch
             {
-                ItemSort.Value => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().value)
-                                             : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().value),
-                ItemSort.Rarity => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().rare)
-                                              : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().rare),
-                ItemSort.Name => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().Name)
-                                            : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().Name),
-                ItemSort.Damage => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().damage)
-                                              : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().damage),
-                ItemSort.Defense => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().defense)
-                                               : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().defense),
-                _ => ascending ? filteredSlots.OrderBy(slot => slot.GetDisplayItem().type)
-                               : filteredSlots.OrderByDescending(slot => slot.GetDisplayItem().type)
+                ItemSort.Value => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().value)
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().value),
+                ItemSort.Rarity => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().rare)
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().rare),
+                ItemSort.Name => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().Name)
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().Name),
+                ItemSort.Damage => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().damage)
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().damage),
+                ItemSort.Defense => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().defense)
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().defense),
+                _ => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().type)
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().type)
             };
 
-            List<UIElement> filteredList = filteredSlots.Cast<UIElement>().ToList();
+            // Add the items to the grid
+            ItemsGrid.AddRange(filteredSlots);
 
-            // 3) Add the sorted/filtered slots in one go
-            ItemsGrid.AddRange(filteredList);
-
-            // Force recalculation of the grid layout
-            // ItemsGrid.Recalculate();
-
-            // Set hide timer to delay drawing the grid for a few frames after repopulation
-            _hideTimer = 3;
-
-            s.Stop(); // Debug timing (if needed)
-        }
-
-        // Override with the same access modifier (protected)
-        protected override void DrawChildren(SpriteBatch spriteBatch)
-        {
-            if (_hideTimer > 0)
-            {
-                _hideTimer--;
-
-                // Manually draw every child except ItemsGrid
-                foreach (UIElement element in Elements)
-                {
-                    if (element == ItemsGrid)
-                        continue;
-                    element.Draw(spriteBatch);
-                }
-                return;
-            }
-
-            // Draw normally
-            base.DrawChildren(spriteBatch);
-
-            // Now that drawing is complete, stop the update timer if pending
-            if (_pendingUpdate)
-            {
-                _updateTimer.Stop();
-                double elapsedSeconds = _updateTimer.Elapsed.TotalSeconds;
-                ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(elapsedSeconds, 3)} seconds");
-                _pendingUpdate = false;
-            }
+            // Update the item count text
+            s.Stop();
+            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.Elapsed.TotalSeconds, 3)} seconds");
         }
     }
 }

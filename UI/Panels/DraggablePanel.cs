@@ -22,6 +22,7 @@ namespace SquidTestingMod.UI.Panels
         protected const int padding = 12;
         protected Color darkBlue = new(73, 85, 186);
         public string Header = "";
+        public CustomTitlePanel TitlePanel;
 
         // Dragging
         public bool Draggable = false;
@@ -44,7 +45,7 @@ namespace SquidTestingMod.UI.Panels
             Header = header;
 
             // Create all content in the panel
-            CustomTitlePanel TitlePanel = new(header);
+            TitlePanel = new(header);
             CloseButtonPanel closeButtonPanel = new();
 
             // Add all content in the panel

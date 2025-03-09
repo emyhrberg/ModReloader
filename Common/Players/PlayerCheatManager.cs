@@ -5,73 +5,65 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players
 {
-    /// <summary>
-    /// Gives player abilities for:
-    /// GodMode - Makes the player invincible
-    /// FastMode - Increases player speed
-    /// BuildMode - Infinite range, instant mining and more
-    /// NoClip - Move through blocks
-    /// </summary>
     [Autoload(Side = ModSide.Client)]
     public class PlayerCheatManager : ModPlayer
     {
-        // Player movement
+        // Abilities
         public static bool God = false;
         public static bool Noclip = false;
         public static bool TeleportMode = false;
-        public static bool UseFaster = false;
-        public static bool PlaceAnywhere = false;
-
-        // Misc
-        public static bool InvisibleToEnemies = false;
         public static bool LightMode = false;
+        public static bool KillAura = false;
+        public static bool MineAura = false;
 
-        // Helper to toggle all cheats
-        public static bool IsAnyCheatEnabled => God || Noclip || TeleportMode || UseFaster || PlaceAnywhere || InvisibleToEnemies || LightMode;
+        // Build
+        public static bool PlaceAnywhere = false;
+        public static bool PlaceFaster = false;
+        public static bool MineFaster = false;
 
-        // Helper to set all cheats toggle
+        // Check if any cheat is active
+        public static bool IsAnyCheatEnabled =>
+            God || Noclip || TeleportMode || LightMode || KillAura || MineAura ||
+            PlaceAnywhere || PlaceFaster || MineFaster;
+
+        // Helper to set all cheats on/off
         public static void SetAllCheats(bool value)
         {
             God = value;
             Noclip = value;
             TeleportMode = value;
-            UseFaster = value;
-            PlaceAnywhere = value;
-            InvisibleToEnemies = value;
             LightMode = value;
+            KillAura = value;
+            MineAura = value;
+            PlaceAnywhere = value;
+            PlaceFaster = value;
+            MineFaster = value;
         }
 
-        // Helper to toggle cheats using a T struct
-        private static void ToggleCheat<T>(ref T value, string name) where T : struct
-        {
-            value = value is bool b ? (T)(object)!b : value;
-            if (Conf.ShowCombatTextOnToggle)
-            {
-                bool isOn = value is bool bVal && bVal;
-                CombatText.NewText(Main.LocalPlayer.getRect(),
-                isOn ? Color.Green : Color.Red,
-                $"{name} {(isOn ? "On" : "Off")}");
-            }
-        }
-
-        public static void ToggleNoclip()
-        {
-            ToggleCheat(ref Noclip, "Noclip");
-            // show puffy cloud effect when enabling noclip
-            if (Noclip)
-            {
-                var cloudJump = new CloudInABottleJump();
-                bool playSound = true;
-                cloudJump.OnStarted(Main.LocalPlayer, ref playSound);
-                cloudJump.ShowVisuals(Main.LocalPlayer);
-            }
-        }
-
+        public static void ToggleNoclip() => ToggleCheat(ref Noclip, "Noclip");
         public static void ToggleGod() => ToggleCheat(ref God, "God Mode");
         public static void ToggleLightMode() => ToggleCheat(ref LightMode, "Light Mode");
         public static void ToggleTeleportMode() => ToggleCheat(ref TeleportMode, "Teleport Mode");
-        public static void ToggleUseFaster() => ToggleCheat(ref UseFaster, "Use Faster");
+        public static void ToggleMineFaster() => ToggleCheat(ref MineFaster, "Mine Faster");
+        public static void TogglePlaceFaster() => ToggleCheat(ref PlaceFaster, "Place Faster");
         public static void TogglePlaceAnywhere() => ToggleCheat(ref PlaceAnywhere, "Place Anywhere");
-        public static void ToggleInvisibleToEnemies() => ToggleCheat(ref InvisibleToEnemies, "Invisible To Enemies");
+        public static void ToggleKillAura() => ToggleCheat(ref KillAura, "Kill Aura");
+        public static void ToggleMineAura() => ToggleCheat(ref MineAura, "Mine Aura");
+
+        // Helper to toggle cheats
+        // This does not need to be modified when adding new cheats
+        private static void ToggleCheat<T>(ref T value, string name) where T : struct
+        {
+            if (value is bool booleanValue)
+            {
+                value = (T)(object)!booleanValue;
+            }
+
+            if (Conf.ShowCombatTextOnToggle)
+            {
+                bool isOn = value is bool bVal && bVal;
+                CombatText.NewText(Main.LocalPlayer.getRect(), Color.White, $"{name} {(isOn ? "On" : "Off")}");
+            }
+        }
     }
 }
