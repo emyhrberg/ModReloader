@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Info");
-            AddOnOffOption(TogglePlayerInfo, "Player Info Off (todo)", "Show player info panel\nRight click to lock to top right corner");
+            // AddOnOffOption(TogglePlayerInfo, "Player Info Off (todo)", "Show player info panel\nRight click to lock to top right corner");
             AddPadding();
 
             AddHeader("UI");
@@ -50,7 +50,7 @@ namespace SquidTestingMod.UI.Panels
             AddHeader("Debug Panel");
             widthOption = AddSliderOption("Width", 0, 800, 100, null, 5);
             heightOption = AddSliderOption("Height", 0, 800, 100, null, 5);
-            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a debug panel with the specified dimensions");
+            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a draggable panel with the specified dimensions");
             AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel");
             AddPadding();
 

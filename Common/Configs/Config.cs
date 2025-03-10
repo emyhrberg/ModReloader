@@ -58,7 +58,7 @@ namespace SquidTestingMod.Common.Configs
         public bool ShowWorldButton = true;
 
         [DefaultValue(true)]
-        public bool ShowLogButton = true;
+        public bool ShowModsButton = true;
 
         [DefaultValue(true)]
         public bool ShowReloadSPButton = true;
@@ -72,8 +72,6 @@ namespace SquidTestingMod.Common.Configs
 
         [DefaultValue(true)]
         public bool DrawGodGlow = true;
-
-
 
         [DefaultValue(true)]
         public bool KeepRunningWhenFocusLost = true;
@@ -143,7 +141,7 @@ namespace SquidTestingMod.Common.Configs
         public static bool ShowDebugButton => ConfigInstance.ShowDebugButton;
         public static bool ShowPlayerButton => ConfigInstance.ShowPlayerButton;
         public static bool ShowWorldButton => ConfigInstance.ShowWorldButton;
-        public static bool ShowModsButton => ConfigInstance.ShowLogButton;
+        public static bool ShowModsButton => ConfigInstance.ShowModsButton;
         public static bool ShowReloadSPButton => ConfigInstance.ShowReloadSPButton;
         public static bool ShowReloadMPButton => ConfigInstance.ShowReloadMPButton;
 

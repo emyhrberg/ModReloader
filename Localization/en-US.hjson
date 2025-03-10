@@ -116,9 +116,9 @@ Mods: {
 					Tooltip: ""
 				}
 
-				ShowLogButton: {
+				ShowModsButton: {
+					Label: Show Mods Button
 					Tooltip: ""
-					Label: Show Log Button
 				}
 			}
 		}

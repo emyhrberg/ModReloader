@@ -68,15 +68,39 @@ namespace SquidTestingMod.Helpers
             MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
             string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
 
-            // 3. Finding path by ModToReload name
-            string modPath = modSources.FirstOrDefault(p => Path.GetFileName(p) == Conf.ModToReload);
+            // Check if modSources is null or empty.
+            if (modSources == null || modSources.Length == 0)
+            {
+                Log.Warn("No mod sources were found via reflection.");
+                return;
+            }
+
+            // Optionally, log what modSources contains:
+            foreach (var src in modSources)
+            {
+                if (src == null)
+                {
+                    Log.Warn("A mod source entry is null.");
+                    continue;
+                }
+                Log.Info($"Found mod source: {src}");
+            }
+
+            // 3. Find the mod folder that matches the desired mod name.
+
+            string modPath = modSources.FirstOrDefault(p =>
+    !string.IsNullOrEmpty(p) &&
+    Directory.Exists(p) &&
+    Path.GetFileName(p)?.Equals(Conf.ModToReload, StringComparison.InvariantCultureIgnoreCase) == true);
+
             if (modPath != null)
             {
                 Log.Info($"Path to {Conf.ModToReload}: {modPath}");
             }
             else
             {
-                Console.WriteLine("No path found");
+                Log.Warn($"No mod path found matching {Conf.ModToReload}.");
+                return;
             }
 
             // 4. Getting method for reloading a mod

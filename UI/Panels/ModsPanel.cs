@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.Chat;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.UI.Panels
@@ -22,70 +22,70 @@ namespace SquidTestingMod.UI.Panels
         {
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
 
+            AddHeader("Enabled Mods");
             foreach (var mod in mods)
             {
                 AddOnOffOption(null, title: mod.DisplayNameClean, hoverText: mod.Name + " (v" + mod.Version + ")");
             }
             AddPadding();
+
+            // add header
+            AddHeader("Your Mods");
+
+            foreach (var modPath in GetModFiles())
+            {
+                string modFolderName = Path.GetFileName(modPath);
+                AddOnOffOption(() => ExitWorldAndBuildReloadMod(modFolderName), title: modFolderName, hoverText: modPath + "\nCLICK AT YOUR OWN RISK");
+            }
+        }
+
+        private async void ExitWorldAndBuildReloadMod(string modFolderName)
+        {
+            // set mod to reload
+            Config c = ModContent.GetInstance<Config>();
+            c.ModToReload = modFolderName;
+
+            await ReloadUtilities.ExitWorldOrServer();
+
+            // wait 1 sec
+            await Task.Delay(1000);
+
+            ReloadUtilities.ReloadMod();
+
+            // wait 3 sec
+            await Task.Delay(3000);
+
+            ReloadUtilities.BuildAndReloadMod();
+        }
+
+        private List<string> GetModFiles()
+        {
+            List<string> strings = new List<string>();
+
+            // 1. Getting Assembly 
+            Assembly tModLoaderAssembly = typeof(Main).Assembly;
+
+            // 2. Gettig method for finding modSources paths
+            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
+            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
+
+            for (int i = 0; i < modSources.Length; i++)
+            {
+                strings.Add(modSources[i]);
+            }
+
+            // 3. Finding path by ModToReload name
+            string modPath = modSources.FirstOrDefault(p => Path.GetFileName(p) == Conf.ModToReload);
+            if (modPath != null)
+            {
+                Log.Info($"Path to {Conf.ModToReload}: {modPath}");
+            }
+            else
+            {
+                Console.WriteLine("No path found");
+            }
+            return strings;
         }
     }
-
-
-
-    // public override void Update(GameTime gameTime)
-    // {
-    //     base.Update(gameTime);
-
-    //     double currentTime = gameTime.TotalGameTime.TotalSeconds;
-    //     if (currentTime % 1 == 0) // Update every second
-    //     {
-    //         Log.Info("Updating log panel");
-
-    //         string content = "";
-    //         string logPath = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs\client.log";
-
-    //         try
-    //         {
-    //             if (File.Exists(logPath))
-    //             {
-    //                 // Read all lines with shared access.
-    //                 List<string> allLines = new List<string>();
-    //                 using (FileStream stream = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-    //                 using (StreamReader reader = new StreamReader(stream))
-    //                 {
-    //                     string line;
-    //                     while ((line = reader.ReadLine()) != null)
-    //                     {
-    //                         allLines.Add(line);
-    //                     }
-    //                 }
-    //                 // Prepend line numbers.
-    //                 for (int i = 0; i < allLines.Count; i++)
-    //                 {
-    //                     allLines[i] = $"{i + 1}: {allLines[i]}";
-    //                 }
-    //                 content = string.Join("\n", allLines);
-    //             }
-    //             else
-    //             {
-    //                 content = "Log file not found.";
-    //             }
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             content = "Error reading log: " + ex.Message;
-    //         }
-
-    //         // Update the text panel with the processed content.
-    //         logTextPanel.SetText(content);
-
-    //         // Force scroll to bottom:
-    //         if (scrollbar != null && uiList != null)
-    //         {
-    //             uiList.Recalculate(); // Ensure layout is up-to-date.
-    //             float maxScroll = Math.Max(0, uiList.GetInnerDimensions().Height - uiList.GetDimensions().Height);
-    //             scrollbar.ViewPosition = maxScroll;
-    //         }
-    //     }
-    // }
 }

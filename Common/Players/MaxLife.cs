@@ -5,7 +5,7 @@ namespace SquidTestingMod.Common.Players
 {
     public class MaxLife : ModPlayer
     {
-        public static int maxLife = 500; // Default max HP
+        public static int maxLife = 0; // Default max HP
 
         public override void ModifyMaxStats(out StatModifier health, out StatModifier mana)
         {

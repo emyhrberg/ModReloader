@@ -67,8 +67,8 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(StartBloodMoon, "Start Blood Moon", "Start a Blood Moon event and set the time to 7:30 PM");
             AddOnOffOption(() => TryStartInvasion(InvasionID.GoblinArmy), "Start Goblin Invasion");
             AddOnOffOption(SpawnSlimeRain, "Start Slime Rain");
-            AddOnOffOption(null, "Start Old One's Army (todo)");
-            AddOnOffOption(null, "Start Torch God (todo)");
+            // AddOnOffOption(null, "Start Old One's Army (todo)");
+            // AddOnOffOption(null, "Start Torch God (todo)");
             AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
@@ -79,7 +79,7 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Start Pumpkin Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedFrostMoon), "Start Frost Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.MartianMadness), "Start Martian Madness");
-            AddOnOffOption(null, "Start Lunar Events (todo)");
+            // AddOnOffOption(null, "Start Lunar Events (todo)");
             AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
