@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -5,11 +6,12 @@ using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
+    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : ReloadButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
         protected override int MaxFrames => 5;
@@ -19,7 +21,6 @@ namespace SquidTestingMod.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();
@@ -43,9 +44,34 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // Go to enabled mods
-            WorldGen.JustQuit();
-            Main.menuMode = 10000;
+            // Retrieve the MainSystem instance and ensure it and its mainState are not null.
+            var sys = ModContent.GetInstance<MainSystem>();
+            if (sys?.mainState == null)
+                return;
+
+            // Retrieve the panels and check for null.
+            var allPanels = sys.mainState.AllPanels;
+            var modsPanel = sys.mainState.modsPanel;
+            if (allPanels == null || modsPanel == null)
+            {
+                Log.Error("ReloadSPButton.RightClick: allPanels or modsPanel is null.");
+                return;
+            }
+
+            // Close all panels except the modsPanel.
+            foreach (var panel in allPanels.Except([modsPanel]))
+            {
+                if (panel != null && panel.GetActive())
+                {
+                    panel.SetActive(false);
+                }
+            }
+
+            // Toggle the modsPanel's active state.
+            if (modsPanel.GetActive())
+                modsPanel.SetActive(false);
+            else
+                modsPanel.SetActive(true);
         }
     }
 }

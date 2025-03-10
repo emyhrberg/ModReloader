@@ -86,7 +86,7 @@ namespace SquidTestingMod.UI.Buttons
         public override void LeftClick(UIMouseEvent evt)
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys?.mainState.ToggleOnOff();
+            sys?.mainState.ToggleCollapse();
         }
 
         #region Dragging
@@ -139,7 +139,7 @@ namespace SquidTestingMod.UI.Buttons
 
                 // update the position of all the buttons
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
-                sys?.mainState.UpdateButtonsPositions(anchorPos);
+                // sys?.mainState.UpdateButtonsPositions(anchorPos);
 
                 Recalculate();
             }

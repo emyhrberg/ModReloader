@@ -12,7 +12,7 @@ namespace SquidTestingMod.UI.Panels
     public class PlayerPanel : RightParentPanel
     {
         // Keep references to the options for updating them later
-        private Dictionary<string, OnOffOption> options = new Dictionary<string, OnOffOption>();
+        private Dictionary<string, OnOffOption> options = [];
 
         // Slider for Max Life
         private SliderOption maxLifeSlider;
@@ -20,14 +20,15 @@ namespace SquidTestingMod.UI.Panels
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: false)
         {
             // === STATS ===
-            float currentHP = Main.LocalPlayer.statLifeMax2; // e.g., 500
+            float currentHP = MaxLife.maxLife != 0 ? MaxLife.maxLife : Main.LocalPlayer.statLifeMax2;
+            currentHP = MathHelper.Clamp(currentHP, 1, 1000);
             maxLifeSlider = AddSliderOption(
                 title: "Extra Life",
-                min: 0,
-                max: 2000,
-                defaultValue: 0,    // pass 500
+                min: 1,
+                max: 1000,
+                defaultValue: currentHP,    // pass 500
                 onValueChanged: OnLifeMaxChanged,
-                increment: 5,
+                increment: 20,
                 textSize: 1
             );
             AddPadding();
@@ -95,20 +96,15 @@ namespace SquidTestingMod.UI.Panels
         {
             // Update the static max life variable
             MaxLife.maxLife = (int)value;
-
-            // Force recalculation of max HP immediately
-            Main.LocalPlayer.statLifeMax2 = MaxLife.maxLife;
+            // Main.LocalPlayer.statLifeMax2 = MaxLife.maxLife;
         }
 
         // During Update, keep the slider in sync if the player's life is changed elsewhere.
         public override void Update(GameTime gameTime)
         {
-            // Convert the actual HP (0..2000) to a fraction (0..1)
-            float fraction = MaxLife.maxLife / 2000f;
-
-            // Now pass the fraction to the slider
+            // Normalize the maxLife value from the range [1, 1000] to a fraction (0 to 1)
+            float fraction = (MaxLife.maxLife - 1) / 999f;
             maxLifeSlider.SetValue(fraction);
-
             base.Update(gameTime);
         }
     }

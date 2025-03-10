@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -49,10 +51,14 @@ namespace SquidTestingMod.UI.Panels
                 return;
 
             // Use AllPanels to find the panel that is our parent.
-            var panel = mainState.AllPanels.FirstOrDefault(p => p == Parent);
-            if (panel != null && panel.GetActive())
+            foreach (var p in mainState.AllPanels)
             {
-                panel.SetActive(false);
+                if (p != null && p.GetActive())
+                {
+                    p.SetActive(false);
+                    Log.Info("CloseButtonPanel: Deactivated panel with name: " + p.GetType().Name);
+                    break;
+                }
             }
         }
     }

@@ -58,9 +58,6 @@ namespace SquidTestingMod.Common.Configs
         public bool ShowWorldButton = true;
 
         [DefaultValue(true)]
-        public bool ShowModsButton = true;
-
-        [DefaultValue(true)]
         public bool ShowReloadSPButton = true;
 
         [DefaultValue(true)]
@@ -99,7 +96,6 @@ namespace SquidTestingMod.Common.Configs
             currentHash |= (Conf.ShowDebugButton ? 1 : 0) << 4;
             currentHash |= (Conf.ShowPlayerButton ? 1 : 0) << 5;
             currentHash |= (Conf.ShowWorldButton ? 1 : 0) << 6;
-            currentHash |= (Conf.ShowModsButton ? 1 : 0) << 7;
             currentHash |= (Conf.ShowReloadSPButton ? 1 : 0) << 7;
             currentHash |= (Conf.ShowReloadMPButton ? 1 : 0) << 8;
             currentHash |= Conf.ButtonSize << 9;
@@ -141,7 +137,6 @@ namespace SquidTestingMod.Common.Configs
         public static bool ShowDebugButton => ConfigInstance.ShowDebugButton;
         public static bool ShowPlayerButton => ConfigInstance.ShowPlayerButton;
         public static bool ShowWorldButton => ConfigInstance.ShowWorldButton;
-        public static bool ShowModsButton => ConfigInstance.ShowModsButton;
         public static bool ShowReloadSPButton => ConfigInstance.ShowReloadSPButton;
         public static bool ShowReloadMPButton => ConfigInstance.ShowReloadMPButton;
 

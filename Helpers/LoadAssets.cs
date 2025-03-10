@@ -22,7 +22,9 @@ namespace SquidTestingMod.Helpers
 
     public static class Assets
     {
-        // Button textures
+        // Buttons
+        public static Asset<Texture2D> CollapseDown;
+        public static Asset<Texture2D> CollapseUp;
         public static Asset<Texture2D> Button;
         public static Asset<Texture2D> ButtonOnOff;
         public static Asset<Texture2D> ButtonConfig;
@@ -48,23 +50,17 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterAccessories;
         public static Asset<Texture2D> FilterPotion;
         public static Asset<Texture2D> FilterPlaceables;
-
-        // Filter NPC buttons
         public static Asset<Texture2D> FilterTown;
         public static Asset<Texture2D> FilterMob;
 
-        // Sort buttons
+        // Misc
         public static Asset<Texture2D> SortID;
         public static Asset<Texture2D> SortValue;
         public static Asset<Texture2D> SortRarity;
         public static Asset<Texture2D> SortName;
         public static Asset<Texture2D> SortDamage;
         public static Asset<Texture2D> SortDefense;
-
-        // Resize
         public static Asset<Texture2D> Resize;
-
-        // Arrow
         public static Asset<Texture2D> Arrow;
 
         // Bool for checking if assets are loaded

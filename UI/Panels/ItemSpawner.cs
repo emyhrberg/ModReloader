@@ -125,7 +125,7 @@ namespace SquidTestingMod.UI.Panels
         private void AddItemSlotsToGrid()
         {
             int allItems = TextureAssets.Item.Length - 1;
-            Log.Info("Total items: " + allItems);
+            Log.Info("Total items (TextureAssets.Item.Length): " + allItems);
 
             Stopwatch s = Stopwatch.StartNew();
 
@@ -136,7 +136,7 @@ namespace SquidTestingMod.UI.Panels
 
                 if (item.IsAir || item.type == ItemID.None)
                 {
-                    Log.Warn($"Skipping invalid item ID {i}: '{item.Name}'");
+                    // Log.Warn($"Skipping invalid item ID {i}: '{item.Name}'");
                     continue;
                 }
 

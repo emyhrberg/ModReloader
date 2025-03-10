@@ -25,14 +25,14 @@ namespace SquidTestingMod.UI
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
         public WorldPanel worldPanel;
-        public ModsPanel logPanel;
+        public ModsPanel modsPanel;
 
         // Buttons
-        public ToggleButton toggleButton;
+        // public ToggleButton toggleButton;
+        public Collapse collapse;
 
         // List of all buttons
         public List<BaseButton> AllButtons = [];
-
 
         // List of all panels
         public List<DraggablePanel> AllPanels = [];
@@ -42,19 +42,20 @@ namespace SquidTestingMod.UI
         public MainState()
         {
             // Create all buttons
-            if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            // if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            collapse = new(Assets.CollapseDown, Assets.CollapseUp);
+            Append(collapse);
             if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
             if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
             if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
             if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
             if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
             if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            if (Conf.ShowModsButton) AddButton<ModsButton>(Assets.ButtonNPC_XMAS, "Mods", "Open mods list");
-            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to go to mods list");
-            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
+            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to open mods list");
+            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayerZ");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
-            UpdateButtonsPositions(toggleButton.anchorPos);
+            UpdateButtonsPositions(new Vector2(0, 0));
 
             // Add the panels (invisible by default)
             if (Conf.ShowItemButton) itemSpawnerPanel = AddPanel<ItemSpawner>("Item Spawner");
@@ -62,7 +63,7 @@ namespace SquidTestingMod.UI
             if (Conf.ShowPlayerButton) playerPanel = AddPanel<PlayerPanel>("Player Panel");
             if (Conf.ShowDebugButton) debugPanel = AddPanel<DebugPanel>("Debug Panel");
             if (Conf.ShowWorldButton) worldPanel = AddPanel<WorldPanel>("World Panel");
-            if (Conf.ShowModsButton) logPanel = AddPanel<ModsPanel>("Log Panel");
+            modsPanel = AddPanel<ModsPanel>("Mods Panel");
         }
 
         private T AddPanel<T>(string title) where T : DraggablePanel, new()
@@ -106,7 +107,7 @@ where T : BaseButton
             RemoveAllChildren();
 
             // Create all buttons
-            if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off\nDrag to move");
+            // if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off\nDrag to move");
             if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
             if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
             if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
@@ -117,7 +118,7 @@ where T : BaseButton
             if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
-            UpdateButtonsPositions(toggleButton.anchorPos);
+            // UpdateButtonsPositions(toggleButton.anchorPos);
 
             // Add the panels (invisible by default)
             if (Conf.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
@@ -134,10 +135,10 @@ where T : BaseButton
             foreach (BaseButton btn in AllButtons)
             {
                 // set relative left offset to toggle button
-                if (btn == toggleButton)
-                    btn.RelativeLeftOffset = 0;
-                else
-                    btn.RelativeLeftOffset = ButtonSize * (++index);
+                // if (btn == toggleButton)
+                // btn.RelativeLeftOffset = 0;
+                // else
+                btn.RelativeLeftOffset = ButtonSize * (++index);
 
                 btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
                 btn.Top.Set(anchorPosition.Y, 0f);
@@ -145,14 +146,14 @@ where T : BaseButton
             Recalculate(); // Refresh layout after moving buttons.
         }
 
-        public void ToggleOnOff()
+        public void ToggleCollapse()
         {
             AreButtonsShowing = !AreButtonsShowing;
             // toggleButton.UpdateTexture(); // on/off texture
 
-            List<BaseButton> buttonsExceptToggle = AllButtons.Except([toggleButton]).ToList();
+            // List<BaseButton> buttonsExceptToggle = AllButtons.Except([toggleButton]).ToList();
 
-            foreach (BaseButton btn in buttonsExceptToggle)
+            foreach (BaseButton btn in AllButtons)
             {
                 btn.Active = AreButtonsShowing;
             }

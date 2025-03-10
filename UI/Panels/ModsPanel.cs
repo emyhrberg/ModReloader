@@ -37,6 +37,13 @@ namespace SquidTestingMod.UI.Panels
                 string modFolderName = Path.GetFileName(modPath);
                 AddOnOffOption(() => ExitWorldAndBuildReloadMod(modFolderName), title: modFolderName, hoverText: modPath + "\nCLICK AT YOUR OWN RISK");
             }
+
+            AddPadding();
+
+            // test mod items
+            AddHeader("Test Mod Items");
+            CustomModItem item1 = new();
+            Append(item1);
         }
 
         private async void ExitWorldAndBuildReloadMod(string modFolderName)

@@ -7,9 +7,9 @@ using Terraria;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace SquidTestingMod.UI.Buttons
 {
-    public class ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
+    public class ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : ReloadButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
         protected override float SpriteScale => 1.25f;
@@ -22,16 +22,12 @@ namespace SquidTestingMod.UI
         {
             ReloadUtilities.PrepareClient(ClientMode.MPMain);
 
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                await ReloadUtilities.ExitWorldOrServer();
-            }
-            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            // we must be in multiplayer for this to have an effect
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 await ReloadUtilities.ExitAndKillServer();
+                ReloadUtilities.BuildAndReloadMod();
             }
-
-            ReloadUtilities.BuildAndReloadMod();
         }
     }
 }
