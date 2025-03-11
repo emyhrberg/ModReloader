@@ -28,7 +28,7 @@ namespace SquidTestingMod.UI.Panels
             options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Teleport Mode Off", "Right click to teleport to the mouse position");
             options["enemiesIgnore"] = AddOnOffOption(PlayerCheatManager.ToggleEnemiesIgnore, "Enemies Ignore Off", "Enemies ignore you due to low player aggro");
             options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Aura Off", "Light up the world around you");
-            options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Kill enemies around you");
+            options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that youch you");
             options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you");
             AddSliderOption(
                 title: "Mine Radius",

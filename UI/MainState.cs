@@ -43,8 +43,8 @@ namespace SquidTestingMod.UI
             AddButton<PlayerButton>(0, Assets.ButtonPlayer, "Player");
             AddButton<DebugButton>(70, Assets.ButtonDebug, "Debug");
             AddButton<WorldButton>(140, Assets.ButtonWorld, "World");
-            AddButton<ReloadSPButton>(210, Assets.ButtonReloadSP, "Reload", "Click to reload\nRight click to open list of mods\nAlt+click to show MP");
-            AddButton<ReloadMPButton>(210, Assets.ButtonReloadMP, "Reload", "Click to reload\nRight click to open list of mods\nAlt+click to show SP");
+            AddButton<ReloadSPButton>(210, Assets.ButtonReloadSP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show multiplayer reload");
+            AddButton<ReloadMPButton>(210, Assets.ButtonReloadMP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show singleplayer reload");
 
             // Add collapse button on top
             collapse = new(Assets.CollapseDown, Assets.CollapseUp);

@@ -13,15 +13,32 @@ namespace SquidTestingMod.Common.Configs
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Reload")]
+        [DefaultValue("EnterYourModHere")]
         public string ModToReload = "EnterYourModHere";
-        public bool SaveWorldOnReload = true;
-        public bool ClearClientLogOnReload = true;
+
+        [DefaultValue(false)]
+        public bool SaveWorldOnReload = false;
+
+        [DefaultValue(false)]
+        public bool ClearClientLogOnReload = false;
 
         [Header("Misc")]
+
+        [DrawTicks]
+        [OptionStrings(["Bottom", "Left"])]
+        [DefaultValue("Bottom")]
+        public string ButtonsPosition;
+
+        [DefaultValue(null)]
         public NPCSpawnerConfig NPCSpawner = new();
-        public bool EnterWorldSuperMode = false;
-        public bool DrawGodGlow = true;
+
+        [DefaultValue(true)]
         public bool KeepRunningWhenFocusLost = true;
+
+        [DefaultValue(false)]
+        public bool EnterWorldSuperMode = false;
+
+        [DefaultValue(false)]
         public bool HideCollapseButton = false;
     }
 
@@ -29,6 +46,7 @@ namespace SquidTestingMod.Common.Configs
     {
         [Range(-500f, 500f)]
         [Increment(100f)]
+        [DefaultValue(typeof(Vector2), "0, 0")]
         public Vector2 SpawnOffset = new Vector2(0, 0);
     }
 
@@ -45,7 +63,6 @@ namespace SquidTestingMod.Common.Configs
         // Misc
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
-        public static bool DrawGodGlow => C.DrawGodGlow;
         public static bool KeepRunningWhenFocusLost => C.KeepRunningWhenFocusLost;
         public static bool HideCollapseButton => C.HideCollapseButton;
     }

@@ -32,8 +32,8 @@ namespace SquidTestingMod.UI.Panels
                     name: modFolderName,
                     icon: defaultIconTemp.Value,
                     leftClick: () => ExitWorldAndBuildReloadMod(modFolderName),
-                    hover: "Exit world and reload mod",
-                    rightClick: null
+                    hover: "Left click to reload this mod\nRight click to make this the default mod to reload",
+                    rightClick: () => SetModAsDefaultReloadMod(modFolderName)
                 );
             }
             AddPadding();
@@ -46,7 +46,7 @@ namespace SquidTestingMod.UI.Panels
                 AddModItem(
                     name: mod.DisplayNameClean,
                     icon: defaultIconTemp.Value,
-                    leftClick: null,
+                    leftClick: null, // this should disable mod in the future (if possible), so that we can select which mods to reload
                     hover: $"{mod.Name} (v{mod.Version})"
                 );
 
@@ -91,6 +91,18 @@ namespace SquidTestingMod.UI.Panels
                 //     }
                 // }
             }
+
+            AddPadding();
+
+            AddHeader("Disabled Mods");
+            AddOnOffOption(() => { }, "Mod Name", "Left click to enable");
+        }
+
+        private void SetModAsDefaultReloadMod(string modFolderName)
+        {
+            // set mod to reload (just a config change)
+            Config c = ModContent.GetInstance<Config>();
+            c.ModToReload = modFolderName;
         }
 
         private async void ExitWorldAndBuildReloadMod(string modFolderName = "")

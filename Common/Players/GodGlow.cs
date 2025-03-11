@@ -226,7 +226,10 @@ namespace SquidTestingMod.Common.Systems
 
         protected override void Draw(ref PlayerDrawSet _set)
         {
-            if (!PlayerCheatManager.God || !Conf.DrawGodGlow)
+            // if (!Conf.drawgodglow)
+            // return;
+
+            if (!PlayerCheatManager.God)
             {
                 return;
             }

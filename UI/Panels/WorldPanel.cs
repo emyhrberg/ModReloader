@@ -19,6 +19,7 @@ namespace SquidTestingMod.UI.Panels
         private OnOffOption difficulty;
         private SliderOption timeOption;
         private bool timeSliderActive = false;
+        private SliderOption townNpcSlider; // New slider for town NPCs
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -44,10 +45,11 @@ namespace SquidTestingMod.UI.Panels
             // AddHeader("World Info");
             // AddOnOffOption(null, "Name: " + worldName);
             // AddOnOffOption(null, "Size: " + worldSize);
-            // difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
-            // AddPadding();
+
 
             AddHeader("World Name: " + worldName);
+            AddHeader("Size: " + worldSize);
+            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
             AddPadding();
 
             AddHeader("Time");
@@ -57,7 +59,15 @@ namespace SquidTestingMod.UI.Panels
 
             AddHeader("Enemies");
             AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1);
-            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position with an arrow");
+            // In your DebugPanel or wherever you add the tracking options
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track Enemies Off", "Show all enemies position with an arrow");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleCritterTracking, "Track Critters Off", "Show all critters position with an arrow");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track Town NPCs Off", "Show all town NPCs position with an arrow");
+
+            // Town NPCs
+            int numberOfTownNPCs = Main.npc.Count(npc => npc.active && npc.townNPC);
+            AddSliderOption("Town NPCs", min: 0, max: numberOfTownNPCs, numberOfTownNPCs, UpdateTownNpcSlider, increment: 1);
+
             AddPadding();
 
             AddHeader("Pre-HM Events");
@@ -86,6 +96,42 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(() => Main.forceXMasForToday = !Main.forceXMasForToday, "Force XMas");
             AddOnOffOption(() => Main.forceHalloweenForToday = !Main.forceHalloweenForToday, "Force Halloween");
             AddPadding();
+        }
+
+        private void UpdateTownNpcSlider(float newValue)
+        {
+            int targetCount = (int)newValue;
+            int currentCount = GetTownNpcCount();
+
+            // If the slider is moved down (targetCount < currentCount), kill the difference.
+            if (targetCount < currentCount)
+            {
+                int countToKill = currentCount - targetCount;
+                KillTownNPCs(countToKill);
+            }
+            // After updating the NPCs, update the slider’s value (and label) to reflect the new count.
+            townNpcSlider.SetValue(GetTownNpcCount());
+            townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+        }
+
+        private int GetTownNpcCount() => Main.npc.Count(npc => npc.active && npc.townNPC);
+
+
+        // Helper method to “kill” a given number of town NPCs.
+        private void KillTownNPCs(int count)
+        {
+            foreach (NPC npc in Main.npc)
+            {
+                if (count <= 0)
+                    break;
+
+                if (npc.active && npc.townNPC)
+                {
+                    // Use StrikeNPC with damage equal to npc.lifeMax to ensure death.
+                    npc.StrikeInstantKill();
+                    count--;
+                }
+            }
         }
 
         private void TryStopInvasion()

@@ -47,7 +47,7 @@ Mods: {
 
 				EnterWorldSuperMode: {
 					Label: Enter World Super Mode
-					Tooltip: When entering a new world, enables most player cheats, excluding noclip and auras
+					Tooltip: When entering a new world, enables most player abilities, excluding noclip and auras
 				}
 
 				NPCSpawner: {
