@@ -55,7 +55,7 @@ namespace SquidTestingMod.UI
             if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayerZ");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
-            UpdateButtonsPositions(new Vector2(0, 0));
+            UpdateButtonsPositions(new Vector2(600, 20));
 
             // Add the panels (invisible by default)
             if (Conf.ShowItemButton) itemSpawnerPanel = AddPanel<ItemSpawner>("Item Spawner");
@@ -83,8 +83,8 @@ where T : BaseButton
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
             button.Width.Set(size, 0f);
             button.Height.Set(size, 0f);
-            button.VAlign = 0.02f;
-            button.HAlign = 0.35f;
+            // button.VAlign = 0.02f;
+            // button.HAlign = 0.35f;
             button.MaxWidth = new StyleDimension(size, 0);
             button.MaxHeight = new StyleDimension(size, 0);
             button.MinWidth = new StyleDimension(size, 0);
@@ -138,10 +138,12 @@ where T : BaseButton
                 // if (btn == toggleButton)
                 // btn.RelativeLeftOffset = 0;
                 // else
-                btn.RelativeLeftOffset = ButtonSize * (++index);
+                btn.RelativeLeftOffset = ButtonSize * index;
 
                 btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
                 btn.Top.Set(anchorPosition.Y, 0f);
+                btn.Recalculate();
+                index++;
             }
             Recalculate(); // Refresh layout after moving buttons.
         }
