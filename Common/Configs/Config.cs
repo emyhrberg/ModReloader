@@ -1,12 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using SquidTestingMod.Common.Systems;
+using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
-using Terraria;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -14,113 +10,141 @@ namespace SquidTestingMod.Common.Configs
 {
     public class Config : ModConfig
     {
-        // CLIENT SIDE
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
-        // ACTUAL CONFIG
         [Header("Reload")]
-        public ReloadConfig Reload = new();
+        [DefaultValue("EnterYourModHere")]
+        public string ModToReload = "EnterYourModHere";
 
-        [Header("Gameplay")]
-        public GameplayConfig Gameplay = new();
+        [DefaultValue(true)]
+        public bool SaveWorldOnReload = true;
 
-        [Header("ItemBrowser")]
-        public ItemBrowserConfig ItemBrowser = new();
+        [DefaultValue(true)]
+        public bool ClearClientLogOnReload = true;
 
-        [Header("DisableButtons")]
-        public DisableButtonConfig DisableButton = new();
+        [Range(-500f, 500f)]
+        [Increment(100f)]
+        [DefaultValue(typeof(Vector2), "0, 0")]
+        public Vector2 NPCSpawnLocation = new Vector2(0, 0);
 
-        public class ReloadConfig
-        {
-            [OptionStrings(["Disabled", "Singleplayer", "Multiplayer"])]
-            [DefaultValue("Disabled")]
-            [DrawTicks]
-            public string AutoloadWorld = "Disabled";
+        [Header("Buttons")]
+        [DefaultValue(60)]
+        [Range(60, 80)]
+        [Increment(10)]
+        public int ButtonSize;
 
-            [DefaultValue(true)]
-            public bool SaveAndQuitWorldWithoutSaving;
+        [DefaultValue(true)]
+        public bool AnimateButtons = true;
 
-            [DefaultValue(true)]
-            public bool InvokeBuildAndReload;
+        [DefaultValue(true)]
+        public bool ShowToggleButton = true;
 
-            [DefaultValue("SquidTestingMod")]
-            public string ModToReload;
+        [DefaultValue(true)]
+        public bool ShowConfigButton = true;
 
-            [DefaultValue(100)]
-            [Range(100, 5000)]
-            public int WaitingTimeBeforeNavigatingToModSources;
+        [DefaultValue(true)]
+        public bool ShowItemButton = true;
 
-            [DefaultValue(100)]
-            [Range(100, 5000)]
-            public int WaitingTimeBeforeBuildAndReload;
+        [DefaultValue(true)]
+        public bool ShowNPCButton = true;
 
-            [DefaultValue(false)]
-            public bool AttemptToKillServer;
+        [DefaultValue(true)]
+        public bool ShowDebugButton = true;
 
-            [DefaultValue("MyWorld")]
-            public string WorldToLoad;
-        }
+        [DefaultValue(true)]
+        public bool ShowPlayerButton = true;
 
-        public class GameplayConfig
-        {
-            [DefaultValue(false)]
-            public bool AlwaysSpawnBossOnTopOfPlayer;
+        [DefaultValue(true)]
+        public bool ShowWorldButton = true;
 
-            [DefaultValue(false)]
-            public bool StartInGodMode;
-        }
+        [DefaultValue(true)]
+        public bool ShowReloadSPButton = true;
 
-        public class ItemBrowserConfig
-        {
-            [DefaultValue(100)]
-            [Range(0, 10000)]
-            public int MaxItemsToDisplay = 1000;
-        }
+        [DefaultValue(true)]
+        public bool ShowReloadMPButton = true;
 
-        public class DisableButtonConfig
-        {
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableConfig;
+        [Header("Misc")]
+        [DefaultValue(true)]
+        public bool ShowCombatTextOnToggle = true;
 
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableReload;
+        [DefaultValue(true)]
+        public bool DrawGodGlow = true;
 
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableItemBrowser;
+        [DefaultValue(true)]
+        public bool KeepRunningWhenFocusLost = true;
 
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableNPCBrowser;
+        [DefaultValue(true)]
+        public bool ShowTooltipsDebugPanels = true;
 
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableGod;
+        // Debug Panel Config Settings Goes Here For Temporary Storage
 
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableFast;
-
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableHitboxes;
-
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableUIElements;
-
-            [DefaultValue(false)]
-            [ReloadRequired]
-            public bool DisableLog;
-        }
+        // World Panel Config Settings Goes Here For Temporary Storage
 
         public override void OnChanged()
         {
             // Here we can update the game based on the new config values
-            // MainSystem sys = ModContent.GetInstance<MainSystem>();
-            // sys.mainState.UpdateButtons();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            if (sys == null || sys.mainState == null) return;
+
+            // Check if any of the button options have changed
+            int currentHash = 0;
+            currentHash |= Conf.ShowToggleButton ? 1 : 0;
+            currentHash |= (Conf.ShowConfigButton ? 1 : 0) << 1;
+            currentHash |= (Conf.ShowItemButton ? 1 : 0) << 2;
+            currentHash |= (Conf.ShowNPCButton ? 1 : 0) << 3;
+            currentHash |= (Conf.ShowDebugButton ? 1 : 0) << 4;
+            currentHash |= (Conf.ShowPlayerButton ? 1 : 0) << 5;
+            currentHash |= (Conf.ShowWorldButton ? 1 : 0) << 6;
+            currentHash |= (Conf.ShowReloadSPButton ? 1 : 0) << 7;
+            currentHash |= (Conf.ShowReloadMPButton ? 1 : 0) << 8;
+            currentHash |= Conf.ButtonSize << 9;
+
+            if (currentHash != _prevButtonVisibilityHash)
+            {
+                _prevButtonVisibilityHash = currentHash; // update stored state
+                sys.mainState.UpdateButtonsAfterConfigChanged();
+                Log.Info("Updated button visibility");
+            }
+            else
+            {
+                Log.Info("No changes in button visibility");
+            }
         }
+
+        private int _prevButtonVisibilityHash;
+    }
+
+    internal static class Conf
+    {
+        // Instance
+        public static Config ConfigInstance => ModContent.GetInstance<Config>();
+
+        // Reload header
+        public static string ModToReload => ConfigInstance.ModToReload;
+        public static bool SaveWorldOnReload => ConfigInstance.SaveWorldOnReload;
+        public static bool ClearClientLogOnReload => ConfigInstance.ClearClientLogOnReload;
+
+        // NPC/Item Spawner
+        public static Vector2 NPCSpawnLocation => ConfigInstance.NPCSpawnLocation;
+
+        // Buttons to show
+        public static int ButtonSize => ConfigInstance.ButtonSize;
+        public static bool ShowToggleButton => ConfigInstance.ShowToggleButton;
+        public static bool ShowConfigButton => ConfigInstance.ShowConfigButton;
+        public static bool ShowItemButton => ConfigInstance.ShowItemButton;
+        public static bool ShowNPCButton => ConfigInstance.ShowNPCButton;
+        public static bool ShowDebugButton => ConfigInstance.ShowDebugButton;
+        public static bool ShowPlayerButton => ConfigInstance.ShowPlayerButton;
+        public static bool ShowWorldButton => ConfigInstance.ShowWorldButton;
+        public static bool ShowReloadSPButton => ConfigInstance.ShowReloadSPButton;
+        public static bool ShowReloadMPButton => ConfigInstance.ShowReloadMPButton;
+
+        // Misc
+        public static bool DrawGodGlow => ConfigInstance.DrawGodGlow;
+        public static bool ShowCombatTextOnToggle => ConfigInstance.ShowCombatTextOnToggle;
+        public static bool AnimateButtons => ConfigInstance.AnimateButtons;
+        public static bool KeepRunningWhenFocusLost => ConfigInstance.KeepRunningWhenFocusLost;
+        public static bool ShowTooltipsDebugPanels => ConfigInstance.ShowTooltipsDebugPanels;
     }
 }

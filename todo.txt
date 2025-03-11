@@ -18,3 +18,7 @@
 
     Note:
     - We should only reload when we press reload button, not when we e.g launch the game. Perhaps set a flag to keep track of if the refreshbutton was clicked, and then reset it when we enter the world again.
+
+
+Description:
+This mod adds 50+ cheats to the game - all configurable in an in-game menu - allowing you to modify the game difficulty to your liking and skipping grindy parts of the game.

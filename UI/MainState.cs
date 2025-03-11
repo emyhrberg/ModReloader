@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
-using Terraria;
-using Terraria.ModLoader;
+using SquidTestingMod.UI.Buttons;
+using SquidTestingMod.UI.Panels;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -16,150 +15,147 @@ namespace SquidTestingMod.UI
     public class MainState : UIState
     {
         // State
-        public bool AreButtonsShowing = true;
-        public float ButtonSize = 70f;
+        public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
+        public float ButtonSize = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
+        public float ButtonScale = 1f;
+
+        // ItemSpawner and NPCSpawner panels
+        public ItemSpawner itemSpawnerPanel;
+        public NPCSpawner npcSpawnerPanel;
+        public PlayerPanel playerPanel;
+        public DebugPanel debugPanel;
+        public WorldPanel worldPanel;
+        public ModsPanel modsPanel;
 
         // Buttons
-        public ItemsButton itemButton;
-        public RefreshButton refreshButton;
-        public ConfigButton configButton;
-        public ToggleButton toggleButton;
-        public NPCsButton npcButton;
-        public GodButton godButton;
-        public FastButton fastButton;
-        public LogButton logButton;
-        public HitboxButton hitboxButton;
-        public UIDebugButton uiDebugButton;
-        public ReloadSingleplayerButton reloadSingleplayerButton;
-        public ReloadMultiplayerButton reloadMultiplayerButton;
+        // public ToggleButton toggleButton;
+        public Collapse collapse;
 
         // List of all buttons
-        public HashSet<BaseButton> AllButtons;
+        public List<BaseButton> AllButtons = [];
+
+        // List of all panels
+        public List<DraggablePanel> AllPanels = [];
 
         // MainState Constructor
         // This is where we create all the buttons and set up their positions.
         public MainState()
         {
-            // Initialize config reference
-            Config c = ModContent.GetInstance<Config>();
+            // Create all buttons
+            // if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            collapse = new(Assets.CollapseDown, Assets.CollapseUp);
+            Append(collapse);
+            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
+            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
+            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to open mods list");
+            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayerZ");
 
-            // Create all the buttons first.
-            toggleButton = CreateButton<ToggleButton>(Assets.ButtonOn, "Toggle all buttons");
-            configButton = CreateButton<ConfigButton>(Assets.ButtonConfig, "Open config");
-            refreshButton = CreateButton<RefreshButton>(Assets.ButtonReload, "Reload the selected mod");
-            itemButton = CreateButton<ItemsButton>(Assets.ButtonItems, "Open item browser");
-            npcButton = CreateButton<NPCsButton>(Assets.ButtonNPC, "Open NPC browser");
-            godButton = CreateButton<GodButton>(Assets.ButtonGodOn, "Toggle player god mode");
-            fastButton = CreateButton<FastButton>(Assets.ButtonFastOn, "Toggle player fast mode");
-            hitboxButton = CreateButton<HitboxButton>(Assets.ButtonHitboxOn, "Show player, enemy, and projectile hitboxes");
-            uiDebugButton = CreateButton<UIDebugButton>(Assets.ButtonUIDebug, "Show all UIElements from mods");
-            logButton = CreateButton<LogButton>(Assets.ButtonLog, "Open client.log");
-            reloadSingleplayerButton = CreateButton<ReloadSingleplayerButton>(Assets.ButtonReloadSingleplayer, "Reload singleplayer");
-            reloadMultiplayerButton = CreateButton<ReloadMultiplayerButton>(Assets.ButtonReloadMultiplayer, "Reload multiplayer");
+            // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
+            UpdateButtonsPositions(new Vector2(0, 0));
 
-            // Append buttons conditionally based on disable flags.
-            // Build list of buttons to append.
-            var buttons = new List<BaseButton> { toggleButton }; // always include toggleButton
-
-            if (!c.DisableButton.DisableConfig) buttons.Add(configButton);
-            if (!c.DisableButton.DisableReload) buttons.Add(refreshButton);
-            if (!c.DisableButton.DisableItemBrowser) buttons.Add(itemButton);
-            if (!c.DisableButton.DisableNPCBrowser) buttons.Add(npcButton);
-            if (!c.DisableButton.DisableGod) buttons.Add(godButton);
-            if (!c.DisableButton.DisableFast) buttons.Add(fastButton);
-            if (!c.DisableButton.DisableHitboxes) buttons.Add(hitboxButton);
-            if (!c.DisableButton.DisableUIElements) buttons.Add(uiDebugButton);
-            if (!c.DisableButton.DisableLog) buttons.Add(logButton);
-
-            // Append reload button to on multiplayer/singleplayer
-            buttons.Add(reloadSingleplayerButton);
-            buttons.Add(reloadMultiplayerButton); //TODO maybe only in multiplayer client
-
-            // Append all buttons and set AllButtons.
-            buttons.ForEach(Append);
-            AllButtons = new HashSet<BaseButton>(buttons);
-
-            // Append all enabled buttons to the UI
-            foreach (var button in AllButtons)
-            {
-                Append(button);
-            }
-
-            // Adjust left offsets for the appended buttons (skip the toggle button).
-            int index = 0;
-            foreach (BaseButton btn in AllButtons)
-            {
-                if (btn == toggleButton)
-                    btn.RelativeLeftOffset = 0;
-                else
-                    btn.RelativeLeftOffset = ButtonSize * (++index);
-            }
-
-            // Initialize textures and positions.
-            UpdateButtonsPositions(toggleButton.anchorPos);
+            // Add the panels (invisible by default)
+            if (Conf.ShowItemButton) itemSpawnerPanel = AddPanel<ItemSpawner>("Item Spawner");
+            if (Conf.ShowNPCButton) npcSpawnerPanel = AddPanel<NPCSpawner>("NPC Spawner");
+            if (Conf.ShowPlayerButton) playerPanel = AddPanel<PlayerPanel>("Player Panel");
+            if (Conf.ShowDebugButton) debugPanel = AddPanel<DebugPanel>("Debug Panel");
+            if (Conf.ShowWorldButton) worldPanel = AddPanel<WorldPanel>("World Panel");
+            modsPanel = AddPanel<ModsPanel>("Mods Panel");
         }
 
-        // Utility to create & position any T : BaseButton
-        private T CreateButton<T>(Asset<Texture2D> buttonImgText, string hoverText)
-            where T : BaseButton
+        private T AddPanel<T>(string title) where T : DraggablePanel, new()
         {
-            // We create the button via reflection
-            T button = (T)Activator.CreateInstance(typeof(T), buttonImgText, hoverText);
+            T panel = new T(); // Instantiate using the parameterless constructor.
+            panel.Header = title; // Assumes your DraggablePanel (or derived classes) has a SetTitle method.
+            AllPanels.Add(panel);
+            Append(panel);
+            return panel;
+        }
 
-            // setup center position
-            Log.Info($"Screen width: {Main.screenWidth}, Button count: 10, Button size: {ButtonSize}");
-            // 1600 - 70 * 10 = 900 (center)
-            // 900 / 2 = 450
-            // convert to percent 450 / 1600 = 0.28125
-
-            // Set up positions, alignment, etc.
-            button.Width.Set(ButtonSize, 0f);
-            button.Height.Set(ButtonSize, 0f);
-            button.VAlign = 0.9f; // 90% from top
-            button.HAlign = 0.28f;
-
-
-            // set min and max, width and height
-            button.MinWidth = new StyleDimension(ButtonSize, 0f);
-            button.MaxWidth = new StyleDimension(ButtonSize, 0f);
-            button.MinHeight = new StyleDimension(ButtonSize, 0f);
-            button.MaxHeight = new StyleDimension(ButtonSize, 0f);
-
+        private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)
+where T : BaseButton
+        {
+            // Directly use the current config value.
+            float size = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
+            T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
+            button.Width.Set(size, 0f);
+            button.Height.Set(size, 0f);
+            button.VAlign = 0.02f;
+            button.HAlign = 0.35f;
+            button.MaxWidth = new StyleDimension(size, 0);
+            button.MaxHeight = new StyleDimension(size, 0);
+            button.MinWidth = new StyleDimension(size, 0);
+            button.MinHeight = new StyleDimension(size, 0);
             button.Recalculate();
+
+            AllButtons.Add(button);
+            Append(button);
+
             return button;
+        }
+
+        public void UpdateButtonsAfterConfigChanged()
+        {
+            // Set button size
+            ButtonSize = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
+
+            // Re-add in the correct order
+            AllButtons.Clear();
+            RemoveAllChildren();
+
+            // Create all buttons
+            // if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off\nDrag to move");
+            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
+            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
+            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
+            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
+            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
+            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
+            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
+
+            // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
+            // UpdateButtonsPositions(toggleButton.anchorPos);
+
+            // Add the panels (invisible by default)
+            if (Conf.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
+            if (Conf.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
+            if (Conf.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
+            if (Conf.ShowDebugButton) Append(debugPanel = new DebugPanel());
+            if (Conf.ShowWorldButton) Append(worldPanel = new WorldPanel());
         }
 
         // updates position only
         public void UpdateButtonsPositions(Vector2 anchorPosition)
         {
+            int index = 0;
             foreach (BaseButton btn in AllButtons)
             {
+                // set relative left offset to toggle button
+                // if (btn == toggleButton)
+                // btn.RelativeLeftOffset = 0;
+                // else
+                btn.RelativeLeftOffset = ButtonSize * (++index);
+
                 btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
                 btn.Top.Set(anchorPosition.Y, 0f);
             }
             Recalculate(); // Refresh layout after moving buttons.
         }
 
-        public void ToggleOnOff()
+        public void ToggleCollapse()
         {
             AreButtonsShowing = !AreButtonsShowing;
-            toggleButton.UpdateTexture(); // on/off texture
+            // toggleButton.UpdateTexture(); // on/off texture
 
-            if (!AreButtonsShowing)
+            // List<BaseButton> buttonsExceptToggle = AllButtons.Except([toggleButton]).ToList();
+
+            foreach (BaseButton btn in AllButtons)
             {
-                // Deactivate and hide all buttons
-                foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
-                {
-                    btn.Active = false;
-                }
-            }
-            else
-            {
-                // Activate and show all buttons
-                foreach (BaseButton btn in AllButtons.Where(b => b != toggleButton))
-                {
-                    btn.Active = true;
-                }
+                btn.Active = AreButtonsShowing;
             }
         }
     }

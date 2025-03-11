@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.UI;
@@ -10,87 +12,77 @@ using Terraria.ModLoader.UI.Elements;
 
 namespace SquidTestingMod.Helpers
 {
-    /// <summary>
-    /// A ModSystem that preloads assets early in the mod loading process.
-    /// </summary>
     public class LoadAssets : ModSystem
     {
         public override void Load()
         {
-            // Preload assets early (before PostSetupContent, etc.)
-            Assets.PreloadAllAssets();
-        }
-
-        public override void PostSetupContent()
-        {
-            base.PostSetupContent();
-            // Assets.PreloadAllAssets();
+            var ignored = Assets.Initialized;
         }
     }
 
-    /// <summary>
-    /// A static helper class for loading and preloading mod assets.
-    /// </summary>
     public static class Assets
     {
-        // TEXT BUTTONS
-        public static Asset<Texture2D> ButtonOn;
-        public static Asset<Texture2D> ButtonOff;
+        // Buttons
+        public static Asset<Texture2D> CollapseDown;
+        public static Asset<Texture2D> CollapseUp;
+        public static Asset<Texture2D> Button;
+        public static Asset<Texture2D> ButtonOnOff;
         public static Asset<Texture2D> ButtonConfig;
         public static Asset<Texture2D> ButtonItems;
-        public static Asset<Texture2D> ButtonReload;
         public static Asset<Texture2D> ButtonNPC;
-        public static Asset<Texture2D> ButtonGodOn;
-        public static Asset<Texture2D> ButtonGodOff;
-        public static Asset<Texture2D> ButtonFastOn;
-        public static Asset<Texture2D> ButtonFastOff;
-        public static Asset<Texture2D> ButtonLog;
-        public static Asset<Texture2D> ButtonSecondClient;
-        public static Asset<Texture2D> ButtonHitboxOn;
-        public static Asset<Texture2D> ButtonHitboxOff;
-        public static Asset<Texture2D> ButtonUIDebug;
-        public static Asset<Texture2D> ButtonReloadSingleplayer;
-        public static Asset<Texture2D> ButtonReloadMultiplayer;
+        public static Asset<Texture2D> ButtonNPC_XMAS;
+        public static Asset<Texture2D> ButtonPlayer;
+        public static Asset<Texture2D> ButtonDebug;
+        public static Asset<Texture2D> ButtonWorld;
+        public static Asset<Texture2D> ButtonReloadSP;
+        public static Asset<Texture2D> ButtonReloadMP;
 
-        // MORE ASSETS
-        public static Asset<Texture2D> X;
+        // Filter buttons
+        public static Asset<Texture2D> FilterBG;
+        public static Asset<Texture2D> FilterBGActive;
+        public static Asset<Texture2D> FilterAll;
+        public static Asset<Texture2D> FilterMelee;
+        public static Asset<Texture2D> FilterRanged;
+        public static Asset<Texture2D> FilterMagic;
+        public static Asset<Texture2D> FilterSummon;
+        public static Asset<Texture2D> FilterArmor;
+        public static Asset<Texture2D> FilterVanity;
+        public static Asset<Texture2D> FilterAccessories;
+        public static Asset<Texture2D> FilterPotion;
+        public static Asset<Texture2D> FilterPlaceables;
+        public static Asset<Texture2D> FilterTown;
+        public static Asset<Texture2D> FilterMob;
 
-        public static void PreloadAllAssets()
+        // Misc
+        public static Asset<Texture2D> SortID;
+        public static Asset<Texture2D> SortValue;
+        public static Asset<Texture2D> SortRarity;
+        public static Asset<Texture2D> SortName;
+        public static Asset<Texture2D> SortDamage;
+        public static Asset<Texture2D> SortDefense;
+        public static Asset<Texture2D> Resize;
+        public static Asset<Texture2D> Arrow;
+
+        // Bool for checking if assets are loaded
+        public static bool Initialized { get; set; }
+
+        // Constructor
+        static Assets()
         {
-            Stopwatch s = Stopwatch.StartNew();
-
-            // TEXT BUTTONS
-            ButtonOn = PreloadAsset("ButtonOn");
-            ButtonOff = PreloadAsset("ButtonOff");
-            ButtonConfig = PreloadAsset("ButtonConfig");
-            ButtonItems = PreloadAsset("ButtonItems");
-            ButtonReload = PreloadAsset("ButtonReload");
-            ButtonNPC = PreloadAsset("ButtonNPC");
-            ButtonGodOn = PreloadAsset("ButtonGodOn");
-            ButtonGodOff = PreloadAsset("ButtonGodOff");
-            ButtonFastOn = PreloadAsset("ButtonFastOn");
-            ButtonFastOff = PreloadAsset("ButtonFastOff");
-            ButtonLog = PreloadAsset("ButtonLog");
-            ButtonSecondClient = PreloadAsset("ButtonSecond");
-            ButtonHitboxOn = PreloadAsset("ButtonHitboxOn");
-            ButtonHitboxOff = PreloadAsset("ButtonHitboxOff");
-            ButtonUIDebug = PreloadAsset("ButtonUI");
-            ButtonReloadSingleplayer = PreloadAsset("ButtonReloadSingleplayer");
-            ButtonReloadMultiplayer = PreloadAsset("ButtonReloadMultiplayer");
-
-            // MORE ASSETS
-            X = PreloadAsset("X_32x32");
-
-            s.Stop();
-            Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
+            foreach (FieldInfo field in typeof(Assets).GetFields())
+            {
+                if (field.FieldType == typeof(Asset<Texture2D>))
+                {
+                    field.SetValue(null, RequestAsset(field.Name));
+                }
+            }
         }
 
-        /// <summary>
-        /// Preloads an asset with ImmediateLoad mode in the "SquidTestingMod/Assets" directory.
-        /// </summary>
-        private static Asset<Texture2D> PreloadAsset(string path)
+        private static Asset<Texture2D> RequestAsset(string path)
         {
-            return ModContent.Request<Texture2D>("SquidTestingMod/Assets/" + path, AssetRequestMode.ImmediateLoad);
+            // string modName = typeof(Assets).Namespace;
+            string modName = "SquidTestingMod"; // Use this, in case above line doesnt work
+            return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }
 }
