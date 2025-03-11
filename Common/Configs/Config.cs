@@ -13,7 +13,7 @@ namespace SquidTestingMod.Common.Configs
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Reload")]
-        [DefaultValue("EnterYourModHere")]
+        [DefaultValue("SquidTestingMod")]
         public string ModToReload = "EnterYourModHere";
 
         [DefaultValue(false)]
@@ -25,8 +25,8 @@ namespace SquidTestingMod.Common.Configs
         [Header("Misc")]
 
         [DrawTicks]
-        [OptionStrings(["Bottom", "Left"])]
-        [DefaultValue("Bottom")]
+        [OptionStrings(["left", "bottom"])]
+        [DefaultValue("bottom")]
         public string ButtonsPosition;
 
         [DefaultValue(null)]
@@ -61,6 +61,7 @@ namespace SquidTestingMod.Common.Configs
         public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
 
         // Misc
+        public static string ButtonsPosition => C.ButtonsPosition;
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
         public static bool KeepRunningWhenFocusLost => C.KeepRunningWhenFocusLost;

@@ -15,13 +15,17 @@ namespace SquidTestingMod.UI.Buttons
     {
         private readonly Asset<Texture2D> CollapseDown;
         private readonly Asset<Texture2D> CollapseUp;
+        private readonly Asset<Texture2D> CollapseLeft;
+        private readonly Asset<Texture2D> CollapseRight;
 
         // Constructor
-        public Collapse(Asset<Texture2D> collapseDown, Asset<Texture2D> collapseUp) : base(collapseDown) // Start with Down texture
+        public Collapse(Asset<Texture2D> down, Asset<Texture2D> up, Asset<Texture2D> left, Asset<Texture2D> right) : base(down) // Start with Down texture
         {
             // Set textures
-            CollapseDown = collapseDown;
-            CollapseUp = collapseUp;
+            CollapseDown = down;
+            CollapseUp = up;
+            CollapseLeft = left;
+            CollapseRight = right;
 
             // Size and position
             Width.Set(37, 0);
@@ -32,11 +36,25 @@ namespace SquidTestingMod.UI.Buttons
             // Alignment bottom center
             VAlign = 1f;
             HAlign = 0.5f;
+
+            if (Conf.ButtonsPosition == "left")
+            {
+                HAlign = 0f;
+                VAlign = 0.8f;
+                Top.Set(-70 - 15 / 2, 0);
+                Left.Set(70, 0);
+                // SetImage(CollapseLeft.Value);
+            }
         }
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Update button visibility
+            UpdateButtonVisibility();
+            UpdateCollapseImage();
+        }
+
+        private void UpdateButtonVisibility()
+        {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             sys.mainState.AreButtonsShowing = !sys.mainState.AreButtonsShowing;
 
@@ -57,8 +75,6 @@ namespace SquidTestingMod.UI.Buttons
                 }
 
             }
-
-            UpdateCollapseImage();
         }
 
         // Update visuals based on state
@@ -68,15 +84,31 @@ namespace SquidTestingMod.UI.Buttons
 
             if (sys?.mainState != null)
             {
-                if (sys.mainState.AreButtonsShowing)
+                if (Conf.ButtonsPosition == "bottom")
                 {
-                    SetImage(CollapseDown.Value);
-                    Top.Set(-70, 0); // Expanded
+                    if (sys.mainState.AreButtonsShowing)
+                    {
+                        SetImage(CollapseDown.Value);
+                        Top.Set(-70, 0); // Expanded
+                    }
+                    else
+                    {
+                        SetImage(CollapseUp.Value);
+                        Top.Set(0, 0); // Collapsed
+                    }
                 }
-                else
+                else if (Conf.ButtonsPosition == "left")
                 {
-                    SetImage(CollapseUp.Value);
-                    Top.Set(0, 0); // Collapsed
+                    if (sys.mainState.AreButtonsShowing)
+                    {
+                        SetImage(CollapseLeft.Value);
+                        Left.Set(70, 0); // Expanded
+                    }
+                    else
+                    {
+                        SetImage(CollapseRight.Value);
+                        Left.Set(0, 0); // Collapsed
+                    }
                 }
             }
         }

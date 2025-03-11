@@ -47,7 +47,7 @@ namespace SquidTestingMod.UI
             AddButton<ReloadMPButton>(210, Assets.ButtonReloadMP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show singleplayer reload");
 
             // Add collapse button on top
-            collapse = new(Assets.CollapseDown, Assets.CollapseUp);
+            collapse = new(Assets.CollapseDown, Assets.CollapseUp, Assets.CollapseLeft, Assets.CollapseRight);
             Append(collapse);
 
             // Make the MP button overlap the SP button
@@ -84,7 +84,7 @@ namespace SquidTestingMod.UI
             return panel;
         }
 
-        private void AddButton<T>(float pos, Asset<Texture2D> spritesheet, string buttonText, string hoverText = null) where T : BaseButton
+        private void AddButton<T>(float offset, Asset<Texture2D> spritesheet, string buttonText, string hoverText = null) where T : BaseButton
         {
             // Create a new button using reflection
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
@@ -100,7 +100,18 @@ namespace SquidTestingMod.UI
             button.Recalculate();
             button.VAlign = 1.0f;
             button.HAlign = 0.5f;
-            button.Left.Set(pixels: pos, precent: 0f);
+
+            // set x pos with offset
+            button.Left.Set(pixels: offset, precent: 0f);
+
+            // custom left pos
+            if (Conf.ButtonsPosition == "left")
+            {
+                button.VAlign = 0.73f;
+                button.HAlign = 0f;
+                button.Left.Set(pixels: 0, precent: 0f);
+                button.Top.Set(pixels: offset, precent: 0f);
+            }
 
             // Add the button to the list of all buttons and append it to the MainState
             AllButtons.Add(button);

@@ -59,6 +59,11 @@ Mods: {
 					Label: Hide Collapse Button
 					Tooltip: Only show collapse button when inventory is open
 				}
+
+				ButtonsPosition: {
+					Label: Buttons Position
+					Tooltip: ""
+				}
 			}
 
 			NPCSpawnerConfig: {
