@@ -28,7 +28,6 @@ namespace SquidTestingMod.UI
         public ModsPanel modsPanel;
 
         // Buttons
-        // public ToggleButton toggleButton;
         public Collapse collapse;
 
         // List of all buttons
@@ -41,21 +40,29 @@ namespace SquidTestingMod.UI
         // This is where we create all the buttons and set up their positions.
         public MainState()
         {
-            // Create all buttons
-            // if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off");
+            // Create collapse button
             collapse = new(Assets.CollapseDown, Assets.CollapseUp);
             Append(collapse);
-            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
-            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
-            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
-            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
-            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
-            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
+            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "AAA");
+            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items");
+            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC");
+            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player");
+            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug");
+            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World");
             if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to open mods list");
-            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayerZ");
+            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload");
 
             // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
-            UpdateButtonsPositions(new Vector2(600, 20));
+            Vector2 anchorPosition = new Vector2(20, 300);
+            for (int i = 0; i < AllButtons.Count; i++)
+            {
+                BaseButton btn = AllButtons[i];
+                btn.RelativeLeftOffset = ButtonSize * i;
+
+                btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
+                btn.Top.Set(anchorPosition.Y, 0f);
+                btn.Recalculate();
+            }
 
             // Add the panels (invisible by default)
             if (Conf.ShowItemButton) itemSpawnerPanel = AddPanel<ItemSpawner>("Item Spawner");
@@ -75,16 +82,13 @@ namespace SquidTestingMod.UI
             return panel;
         }
 
-        private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText)
-where T : BaseButton
+        private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText = null) where T : BaseButton
         {
             // Directly use the current config value.
             float size = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
             button.Width.Set(size, 0f);
             button.Height.Set(size, 0f);
-            // button.VAlign = 0.02f;
-            // button.HAlign = 0.35f;
             button.MaxWidth = new StyleDimension(size, 0);
             button.MaxHeight = new StyleDimension(size, 0);
             button.MinWidth = new StyleDimension(size, 0);
@@ -97,63 +101,9 @@ where T : BaseButton
             return button;
         }
 
-        public void UpdateButtonsAfterConfigChanged()
-        {
-            // Set button size
-            ButtonSize = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
-
-            // Re-add in the correct order
-            AllButtons.Clear();
-            RemoveAllChildren();
-
-            // Create all buttons
-            // if (Conf.ShowToggleButton) toggleButton = AddButton<ToggleButton>(Assets.ButtonOnOff, "Toggle", "Toggle buttons on/off\nDrag to move");
-            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "Config", "Open config menu");
-            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items", "Open item browser");
-            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC", "Open NPC browser");
-            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player", "Open player options");
-            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug", "Open debug options");
-            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World", "Open world options");
-            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer");
-            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload", "Reload mod in multiplayer");
-
-            // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
-            // UpdateButtonsPositions(toggleButton.anchorPos);
-
-            // Add the panels (invisible by default)
-            if (Conf.ShowItemButton) Append(itemSpawnerPanel = new ItemSpawner());
-            if (Conf.ShowNPCButton) Append(npcSpawnerPanel = new NPCSpawner());
-            if (Conf.ShowPlayerButton) Append(playerPanel = new PlayerPanel());
-            if (Conf.ShowDebugButton) Append(debugPanel = new DebugPanel());
-            if (Conf.ShowWorldButton) Append(worldPanel = new WorldPanel());
-        }
-
-        // updates position only
-        public void UpdateButtonsPositions(Vector2 anchorPosition)
-        {
-            int index = 0;
-            foreach (BaseButton btn in AllButtons)
-            {
-                // set relative left offset to toggle button
-                // if (btn == toggleButton)
-                // btn.RelativeLeftOffset = 0;
-                // else
-                btn.RelativeLeftOffset = ButtonSize * index;
-
-                btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
-                btn.Top.Set(anchorPosition.Y, 0f);
-                btn.Recalculate();
-                index++;
-            }
-            Recalculate(); // Refresh layout after moving buttons.
-        }
-
         public void ToggleCollapse()
         {
             AreButtonsShowing = !AreButtonsShowing;
-            // toggleButton.UpdateTexture(); // on/off texture
-
-            // List<BaseButton> buttonsExceptToggle = AllButtons.Except([toggleButton]).ToList();
 
             foreach (BaseButton btn in AllButtons)
             {

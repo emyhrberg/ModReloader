@@ -103,7 +103,7 @@ namespace SquidTestingMod.Common.Configs
             if (currentHash != _prevButtonVisibilityHash)
             {
                 _prevButtonVisibilityHash = currentHash; // update stored state
-                sys.mainState.UpdateButtonsAfterConfigChanged();
+                // sys.mainState.UpdateButtonsAfterConfigChanged();
                 Log.Info("Updated button visibility");
             }
             else

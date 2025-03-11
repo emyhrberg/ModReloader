@@ -37,12 +37,12 @@ namespace SquidTestingMod.UI.Buttons
         protected virtual float SpriteScale => 1;
         protected virtual int StartFrame => 1;
         protected virtual int MaxFrames => 3;
-        protected virtual int FrameSpeed => 8;
-        protected virtual int FrameWidth => 38;
-        protected virtual int FrameHeight => 48;
+        protected virtual int FrameSpeed => 8; // the speed of the animation, lower is faster
+        protected virtual int FrameWidth => 0;
+        protected virtual int FrameHeight => 0;
 
         // Scale mappings (lol)
-        private Dictionary<float, float> textScaleMapping = new Dictionary<float, float>
+        private Dictionary<float, float> textScaleMapping = new()
         {
             { 50f, 0.7f },
             { 60f, 0.8f },
@@ -52,16 +52,7 @@ namespace SquidTestingMod.UI.Buttons
             { 100f, 1.2f }
         };
 
-        private Dictionary<float, float> spriteScaleMapping = new Dictionary<float, float>
-        {
-            { 50f, 0.7f },
-            { 60f, 0.8f },
-            { 70f, 0.9f },
-            { 80f, 1f },
-            { 90f, 1.1f },
-            { 100f, 1.2f }
-        };
-
+        // Constructor
         protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
         {
             Button = Assets.Button;
@@ -88,7 +79,6 @@ namespace SquidTestingMod.UI.Buttons
             // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             float buttonSize = sys?.mainState?.ButtonSize ?? 70f;
-            float spriteScaleFactor = spriteScaleMapping[buttonSize];
 
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
@@ -139,9 +129,11 @@ namespace SquidTestingMod.UI.Buttons
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
             }
 
-            // Draw tooltip text if hovering.
-            if (IsMouseHovering)
+            // Draw tooltip text if hovering and HoverText is given (see MainState).
+            if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
+            {
                 UICommon.TooltipMouseText(HoverText);
+            }
         }
 
         //Disable button click if config window is open
