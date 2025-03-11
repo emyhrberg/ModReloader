@@ -45,6 +45,7 @@ namespace SquidTestingMod.UI
             AddButton<WorldButton>(140, Assets.ButtonWorld, "World");
             AddButton<ReloadSPButton>(210, Assets.ButtonReloadSP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show multiplayer reload");
             AddButton<ReloadMPButton>(210, Assets.ButtonReloadMP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show singleplayer reload");
+            AddButton<TestButton>(280, Assets.CollapseUp, "Test");
 
             // Add collapse button on top
             collapse = new(Assets.CollapseDown, Assets.CollapseUp, Assets.CollapseLeft, Assets.CollapseRight);
@@ -84,7 +85,7 @@ namespace SquidTestingMod.UI
             return panel;
         }
 
-        private void AddButton<T>(float offset, Asset<Texture2D> spritesheet, string buttonText, string hoverText = null) where T : BaseButton
+        private void AddButton<T>(float offset, Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null) where T : BaseButton
         {
             // Create a new button using reflection
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
