@@ -25,6 +25,8 @@ namespace SquidTestingMod.Helpers
         // Buttons
         public static Asset<Texture2D> CollapseDown;
         public static Asset<Texture2D> CollapseUp;
+        public static Asset<Texture2D> CollapseLeft;
+        public static Asset<Texture2D> CollapseRight;
         public static Asset<Texture2D> Button;
         public static Asset<Texture2D> ButtonOnOff;
         public static Asset<Texture2D> ButtonConfig;

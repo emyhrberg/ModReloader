@@ -2,10 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Panels;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
@@ -21,24 +19,26 @@ namespace SquidTestingMod.UI.Buttons
         protected override int FrameWidth => 40;
         protected override int FrameHeight => 40;
 
+        /// <summary>
+        /// This is needed because ItemButton is set to end animation at its last frame 5.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            if (Conf.HideCollapseButton && !Main.playerInventory)
+                return;
+
             if (!Active || Button == null || Button.Value == null)
                 return;
 
             // Get the button size from MainState
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = sys?.mainState?.ButtonSize ?? 70f; // default to 70 if MainState is null
+            float buttonSize = 70f;
 
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
-            opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
-
-            if (!Conf.AnimateButtons)
-            {
-                opacity = 1f;
-            }
+            opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
 
             // Set UIText opacity
             buttonUIText.TextColor = Color.White * opacity;
@@ -49,7 +49,7 @@ namespace SquidTestingMod.UI.Buttons
             // Draw the animation texture
             if (Spritesheet != null)
             {
-                if (IsMouseHovering && Conf.AnimateButtons)
+                if (IsMouseHovering)
                 {
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
@@ -79,9 +79,11 @@ namespace SquidTestingMod.UI.Buttons
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
             }
 
-            // Draw tooltip text if hovering.
-            if (IsMouseHovering)
+            // Draw tooltip text if hovering and HoverText is given (see MainState).
+            if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
+            {
                 UICommon.TooltipMouseText(HoverText);
+            }
         }
 
         public override void LeftClick(UIMouseEvent evt)

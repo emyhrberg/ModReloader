@@ -27,7 +27,7 @@ namespace SquidTestingMod.UI.Buttons
         {
             // Get panels
             var sys = ModContent.GetInstance<MainSystem>();
-            var allPanels = sys?.mainState?.AllPanels;
+            var allPanels = sys?.mainState?.RightSidePanels;
             var worldPanel = sys?.mainState?.worldPanel;
 
             // Close other panels

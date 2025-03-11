@@ -12,9 +12,9 @@ namespace SquidTestingMod.Common.Players
     {
         public override void PostUpdate()
         {
-            if (PlayerCheatManager.TeleportMode && Main.mouseRight)
+            // Only teleport if TeleportMode is on, right mouse is held, AND mouse not consumed by UI.
+            if (PlayerCheatManager.TeleportMode && Main.mouseRight && !Main.LocalPlayer.mouseInterface)
             {
-                // holding down right mouse button down
                 Main.LocalPlayer.Teleport(Main.MouseWorld);
             }
         }

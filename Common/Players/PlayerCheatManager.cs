@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Configs;
+using SquidTestingMod.UI;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -8,15 +9,14 @@ namespace SquidTestingMod.Common.Players
     [Autoload(Side = ModSide.Client)]
     public class PlayerCheatManager : ModPlayer
     {
-        // Abilities
+        // Cheats
         public static bool God = false;
         public static bool Noclip = false;
         public static bool TeleportMode = false;
         public static bool LightMode = false;
         public static bool KillAura = false;
         public static bool MineAura = false;
-
-        // Build
+        public static bool LowAggro = false;
         public static bool PlaceAnywhere = false;
         public static bool PlaceFaster = false;
         public static bool MineFaster = false;
@@ -24,7 +24,7 @@ namespace SquidTestingMod.Common.Players
         // Check if any cheat is active
         public static bool IsAnyCheatEnabled =>
             God || Noclip || TeleportMode || LightMode || KillAura || MineAura ||
-            PlaceAnywhere || PlaceFaster || MineFaster;
+            PlaceAnywhere || PlaceFaster || MineFaster || LowAggro;
 
         // Helper to set all cheats on/off
         public static void SetAllCheats(bool value)
@@ -38,10 +38,12 @@ namespace SquidTestingMod.Common.Players
             PlaceAnywhere = value;
             PlaceFaster = value;
             MineFaster = value;
+            LowAggro = value;
         }
 
         public static void ToggleNoclip() => ToggleCheat(ref Noclip, "Noclip");
         public static void ToggleGod() => ToggleCheat(ref God, "God Mode");
+        public static void ToggleEnemiesIgnore() => ToggleCheat(ref LowAggro, "Enemies Ignore");
         public static void ToggleLightMode() => ToggleCheat(ref LightMode, "Light Mode");
         public static void ToggleTeleportMode() => ToggleCheat(ref TeleportMode, "Teleport Mode");
         public static void ToggleMineFaster() => ToggleCheat(ref MineFaster, "Mine Faster");
@@ -59,10 +61,25 @@ namespace SquidTestingMod.Common.Players
                 value = (T)(object)!booleanValue;
             }
 
-            if (Conf.ShowCombatTextOnToggle)
+            bool isOn = value is bool bVal && bVal;
+            CombatText.NewText(Main.LocalPlayer.getRect(), Color.White, $"{name} {(isOn ? "On" : "Off")}");
+        }
+
+        public override void OnEnterWorld()
+        {
+            base.OnEnterWorld();
+
+            // Toggle super mode
+            if (Conf.EnterWorldSuperMode)
             {
-                bool isOn = value is bool bVal && bVal;
-                CombatText.NewText(Main.LocalPlayer.getRect(), Color.White, $"{name} {(isOn ? "On" : "Off")}");
+                SetAllCheats(true);
+                ToggleNoclip();
+                ToggleMineAura();
+                ToggleKillAura();
+
+                // Update text
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                sys.mainState.playerPanel.RefreshCheatTexts();
             }
         }
     }

@@ -54,7 +54,7 @@ namespace SquidTestingMod.UI.Panels
         private ItemSort currentSort = ItemSort.ID;
         private List<(SortButton button, ItemSort sort)> sortButtons = new();
 
-        public ItemSpawner() : base("Item Spawner")
+        public ItemSpawner() : base(header: "Item Spawner")
         {
             // Add filter buttons
             AddFilterButton(Assets.FilterAll, "Filter All", ItemFilter.All, 0);
