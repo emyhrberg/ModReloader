@@ -38,9 +38,16 @@ namespace SquidTestingMod.Helpers
             {
                 string[] list = Main.instance.Window.Title.Split(", ");
 
-                _mode = int.Parse(list[0]);
-                _playerId = int.Parse(list[1]);
-                _worldId = int.Parse(list[2]);
+                bool succesfulParsing = true;
+                succesfulParsing &= int.TryParse(list[0], out _mode);
+                succesfulParsing &= int.TryParse(list[1], out _playerId);
+                succesfulParsing &= int.TryParse(list[2], out _worldId);
+
+                if (!succesfulParsing)
+                {
+                    Log.Error("Unable to parce client data from title");
+                }
+
             }
             Main.instance.Window.Title = "SquidTestingMod: this is hard";
 
