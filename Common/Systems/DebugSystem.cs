@@ -27,16 +27,14 @@ namespace SquidTestingMod.Common.Systems
         {
             isUIDebugSizeElementDrawing = !isUIDebugSizeElementDrawing;
 
-            if (Conf.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugSizeElementDrawing ? Color.Green : Color.Red, isUIDebugSizeElementDrawing ? "UI Size Text ON" : "UI Size Text OFF");
+            CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugSizeElementDrawing ? Color.Green : Color.Red, isUIDebugSizeElementDrawing ? "UI Size Text ON" : "UI Size Text OFF");
         }
 
         public void ToggleUIDebugDrawing()
         {
             isUIDebugDrawing = !isUIDebugDrawing;
 
-            if (Conf.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugDrawing ? Color.Green : Color.Red, isUIDebugDrawing ? "UI Debug ON" : "UI Debug OFF");
+            CombatText.NewText(Main.LocalPlayer.getRect(), isUIDebugDrawing ? Color.Green : Color.Red, isUIDebugDrawing ? "UI Debug ON" : "UI Debug OFF");
         }
 
         public override void Load()

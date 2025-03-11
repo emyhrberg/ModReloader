@@ -8,6 +8,7 @@ using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Buttons;
 using SquidTestingMod.UI.Panels;
+using Terraria;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -16,77 +17,80 @@ namespace SquidTestingMod.UI
     {
         // State
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
-        public float ButtonSize = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
-        public float ButtonScale = 1f;
+        public float ButtonSize = 70f;
 
-        // ItemSpawner and NPCSpawner panels
+        // Panels
         public ItemSpawner itemSpawnerPanel;
         public NPCSpawner npcSpawnerPanel;
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
         public WorldPanel worldPanel;
         public ModsPanel modsPanel;
+        public List<DraggablePanel> LeftSidePanels = [];
+        public List<DraggablePanel> RightSidePanels = [];
 
         // Buttons
         public Collapse collapse;
-
-        // List of all buttons
         public List<BaseButton> AllButtons = [];
 
-        // List of all panels
-        public List<DraggablePanel> AllPanels = [];
-
-        // MainState Constructor
-        // This is where we create all the buttons and set up their positions.
+        // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState()
         {
-            // Create collapse button
+            // Add buttons
+            AddButton<ConfigButton>(-210, Assets.ButtonConfig, "Config");
+            AddButton<ItemButton>(-140, Assets.ButtonItems, "Items");
+            AddButton<NPCButton>(-70, Assets.ButtonNPC, "NPC");
+            AddButton<PlayerButton>(0, Assets.ButtonPlayer, "Player");
+            AddButton<DebugButton>(70, Assets.ButtonDebug, "Debug");
+            AddButton<WorldButton>(140, Assets.ButtonWorld, "World");
+            AddButton<ReloadSPButton>(210, Assets.ButtonReloadSP, "Reload", "Click to reload\nRight click to open list of mods\nAlt+click to show MP");
+            AddButton<ReloadMPButton>(210, Assets.ButtonReloadMP, "Reload", "Click to reload\nRight click to open list of mods\nAlt+click to show SP");
+
+            // Add collapse button on top
             collapse = new(Assets.CollapseDown, Assets.CollapseUp);
             Append(collapse);
-            if (Conf.ShowConfigButton) AddButton<ConfigButton>(Assets.ButtonConfig, "AAA");
-            if (Conf.ShowItemButton) AddButton<ItemButton>(Assets.ButtonItems, "Items");
-            if (Conf.ShowNPCButton) AddButton<NPCButton>(Assets.ButtonNPC, "NPC");
-            if (Conf.ShowPlayerButton) AddButton<PlayerButton>(Assets.ButtonPlayer, "Player");
-            if (Conf.ShowDebugButton) AddButton<DebugButton>(Assets.ButtonDebug, "Debug");
-            if (Conf.ShowWorldButton) AddButton<WorldButton>(Assets.ButtonWorld, "World");
-            if (Conf.ShowReloadSPButton) AddButton<ReloadSPButton>(Assets.ButtonReloadSP, "Reload", "Reload mod in singleplayer\nRight click to open mods list");
-            if (Conf.ShowReloadMPButton) AddButton<ReloadMPButton>(Assets.ButtonReloadMP, "Reload");
 
-            // Adjust button positions (assumes toggleButton.anchorPos is set appropriately)
-            Vector2 anchorPosition = new Vector2(20, 300);
-            for (int i = 0; i < AllButtons.Count; i++)
-            {
-                BaseButton btn = AllButtons[i];
-                btn.RelativeLeftOffset = ButtonSize * i;
-
-                btn.Left.Set(anchorPosition.X + btn.RelativeLeftOffset, 0f);
-                btn.Top.Set(anchorPosition.Y, 0f);
-                btn.Recalculate();
-            }
+            // Make the MP button overlap the SP button
+            BaseButton reloadSPButton = AllButtons[6];
+            BaseButton reloadMPButton = AllButtons[7];
+            reloadMPButton.Left.Set(reloadSPButton.Left.Pixels, 0);
+            reloadMPButton.Top.Set(reloadSPButton.Top.Pixels, 0);
+            RemoveChild(reloadMPButton);
+            Append(reloadMPButton);
+            reloadMPButton.Recalculate();
 
             // Add the panels (invisible by default)
-            if (Conf.ShowItemButton) itemSpawnerPanel = AddPanel<ItemSpawner>("Item Spawner");
-            if (Conf.ShowNPCButton) npcSpawnerPanel = AddPanel<NPCSpawner>("NPC Spawner");
-            if (Conf.ShowPlayerButton) playerPanel = AddPanel<PlayerPanel>("Player Panel");
-            if (Conf.ShowDebugButton) debugPanel = AddPanel<DebugPanel>("Debug Panel");
-            if (Conf.ShowWorldButton) worldPanel = AddPanel<WorldPanel>("World Panel");
-            modsPanel = AddPanel<ModsPanel>("Mods Panel");
+            itemSpawnerPanel = AddPanel<ItemSpawner>("left");
+            npcSpawnerPanel = AddPanel<NPCSpawner>("left");
+            playerPanel = AddPanel<PlayerPanel>("right");
+            debugPanel = AddPanel<DebugPanel>("right");
+            worldPanel = AddPanel<WorldPanel>("right");
+            modsPanel = AddPanel<ModsPanel>("right");
         }
 
-        private T AddPanel<T>(string title) where T : DraggablePanel, new()
+        private T AddPanel<T>(string side) where T : DraggablePanel, new()
         {
-            T panel = new T(); // Instantiate using the parameterless constructor.
-            panel.Header = title; // Assumes your DraggablePanel (or derived classes) has a SetTitle method.
-            AllPanels.Add(panel);
+            // Create a new panel using reflection
+            T panel = new();
+
+            // Add to appropriate list
+            if (side == "left")
+                LeftSidePanels.Add(panel);
+            else if (side == "right")
+                RightSidePanels.Add(panel);
+
+            // Add to MainState
             Append(panel);
             return panel;
         }
 
-        private T AddButton<T>(Asset<Texture2D> spritesheet, string buttonText, string hoverText = null) where T : BaseButton
+        private void AddButton<T>(float pos, Asset<Texture2D> spritesheet, string buttonText, string hoverText = null) where T : BaseButton
         {
-            // Directly use the current config value.
-            float size = Conf.ButtonSize != 0 ? Conf.ButtonSize : 70;
+            // Create a new button using reflection
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
+
+            // Button dimensions
+            float size = ButtonSize;
             button.Width.Set(size, 0f);
             button.Height.Set(size, 0f);
             button.MaxWidth = new StyleDimension(size, 0);
@@ -94,21 +98,13 @@ namespace SquidTestingMod.UI
             button.MinWidth = new StyleDimension(size, 0);
             button.MinHeight = new StyleDimension(size, 0);
             button.Recalculate();
+            button.VAlign = 1.0f;
+            button.HAlign = 0.5f;
+            button.Left.Set(pixels: pos, precent: 0f);
 
+            // Add the button to the list of all buttons and append it to the MainState
             AllButtons.Add(button);
             Append(button);
-
-            return button;
-        }
-
-        public void ToggleCollapse()
-        {
-            AreButtonsShowing = !AreButtonsShowing;
-
-            foreach (BaseButton btn in AllButtons)
-            {
-                btn.Active = AreButtonsShowing;
-            }
         }
     }
 }

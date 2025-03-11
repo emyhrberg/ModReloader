@@ -23,8 +23,7 @@ namespace SquidTestingMod.Common.Systems
         private void ToggleHitbox(ref bool flag, string hitboxType)
         {
             flag = !flag;
-            if (Conf.ShowCombatTextOnToggle)
-                CombatText.NewText(Main.LocalPlayer.getRect(), flag ? Color.Green : Color.Red, flag ? $"{hitboxType} ON" : $"{hitboxType} OFF");
+            CombatText.NewText(Main.LocalPlayer.getRect(), flag ? Color.Green : Color.Red, flag ? $"{hitboxType} ON" : $"{hitboxType} OFF");
         }
 
         public override void PostDrawInterface(SpriteBatch sb)

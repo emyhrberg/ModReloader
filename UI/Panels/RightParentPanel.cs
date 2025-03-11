@@ -1,5 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -11,7 +13,7 @@ namespace SquidTestingMod.UI.Panels
     /// A parent panel
     /// for Player, Debug, World panels
     /// </summary>
-    public abstract class RightParentPanel : DraggablePanel
+    public abstract class OptionPanel : DraggablePanel
     {
         // Variables
         // 35 is the customtitlepanel height
@@ -24,7 +26,7 @@ namespace SquidTestingMod.UI.Panels
 
         private int panelPadding = 12;
 
-        public RightParentPanel(string title, bool scrollbarEnabled = true) : base(title)
+        public OptionPanel(string title, bool scrollbarEnabled = true) : base(title)
         {
             // panel settings
             BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
@@ -103,6 +105,20 @@ namespace SquidTestingMod.UI.Panels
 
             // Add the panel to the player panel
             return onOffPanel;
+        }
+
+        protected ModItem AddModItem(string name, Texture2D icon, Action leftClick, string hover = "", Action rightClick = null)
+        {
+            // Create a new option panel
+            ModItem modItem = new(name, icon, hover);
+            modItem.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
+            modItem.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
+
+            // Add the option to the ui list
+            uiList.Add(modItem);
+
+            // Add the panel to the player panel
+            return modItem;
         }
 
         protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f)

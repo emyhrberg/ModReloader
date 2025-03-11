@@ -13,7 +13,7 @@ namespace SquidTestingMod.Common.Players
     {
         public override void PostUpdate()
         {
-            if (WorldPanel.isLowAggro)
+            if (PlayerCheatManager.LowAggro)
             {
                 Main.LocalPlayer.aggro = -9999;
             }

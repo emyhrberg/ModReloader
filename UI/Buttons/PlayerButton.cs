@@ -24,7 +24,7 @@ namespace SquidTestingMod.UI.Buttons
         {
             // Toggle player panel
             var sys = ModContent.GetInstance<MainSystem>();
-            var allPanels = sys?.mainState?.AllPanels;
+            var allPanels = sys?.mainState?.RightSidePanels;
             var playerPanel = sys?.mainState?.playerPanel;
 
             // Close other panels

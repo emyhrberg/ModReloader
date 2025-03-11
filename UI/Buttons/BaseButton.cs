@@ -26,7 +26,6 @@ namespace SquidTestingMod.UI.Buttons
         protected string HoverText = "";
         protected float opacity = 0.4f;
         public ButtonText buttonUIText;
-        public float RelativeLeftOffset = 0f;
         public bool Active = true;
 
         // Animation frames
@@ -41,17 +40,6 @@ namespace SquidTestingMod.UI.Buttons
         protected virtual int FrameWidth => 0;
         protected virtual int FrameHeight => 0;
 
-        // Scale mappings (lol)
-        private Dictionary<float, float> textScaleMapping = new()
-        {
-            { 50f, 0.7f },
-            { 60f, 0.8f },
-            { 70f, 0.9f },
-            { 80f, 1f },
-            { 90f, 1.1f },
-            { 100f, 1.2f }
-        };
-
         // Constructor
         protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
         {
@@ -63,8 +51,7 @@ namespace SquidTestingMod.UI.Buttons
 
             // Add a UIText centered horizontally at the bottom of the button.
             // Set the scale; 70f seems to fit to 0.9f scale.
-
-            buttonUIText = new ButtonText(text: buttonText, textScale: textScaleMapping[Conf.ButtonSize != 0 ? Conf.ButtonSize : 70f]);
+            buttonUIText = new ButtonText(text: buttonText, textScale: 0.9f, large: false);
             Append(buttonUIText);
         }
 
@@ -73,24 +60,22 @@ namespace SquidTestingMod.UI.Buttons
         /// </summary>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            if (Conf.HideCollapseButton && !Main.playerInventory)
+                return;
+
             if (!Active || Button == null || Button.Value == null)
                 return;
 
             // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = sys?.mainState?.ButtonSize ?? 70f;
+            float buttonSize = 70f;
 
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
 
             // Set the opacity based on mouse hover.
-            opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
-
-            if (!Conf.AnimateButtons)
-            {
-                opacity = 1f;
-            }
+            opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
 
             // Set UIText opacity
             buttonUIText.TextColor = Color.White * opacity;
@@ -101,7 +86,7 @@ namespace SquidTestingMod.UI.Buttons
             // Draw the animation texture
             if (Spritesheet != null)
             {
-                if (IsMouseHovering && Conf.AnimateButtons)
+                if (IsMouseHovering)
                 {
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
@@ -167,19 +152,12 @@ namespace SquidTestingMod.UI.Buttons
             return base.ContainsPoint(point);
         }
 
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            if (Conf.AnimateButtons)
-            {
-                base.MouseOver(evt);
-            }
-            // Otherwise, do nothing. The UIElement's IsMouseHovering property will still be set,
-            // so your DrawSelf code will properly adjust the opacity.
-        }
-
         // Disable item use on click
         public override void Update(GameTime gameTime)
         {
+            if (Conf.HideCollapseButton && !Main.playerInventory)
+                return;
+
             // base update
             base.Update(gameTime);
 

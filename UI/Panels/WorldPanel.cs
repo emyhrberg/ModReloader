@@ -11,7 +11,7 @@ namespace SquidTestingMod.UI.Panels
     /// <summary>
     /// A panel containing options to modify player behaviour like God, Fast, Build, etc.
     /// </summary>
-    public class WorldPanel : RightParentPanel
+    public class WorldPanel : OptionPanel
     {
         // Variables
         // private string worldName = "";
@@ -19,7 +19,6 @@ namespace SquidTestingMod.UI.Panels
         private OnOffOption difficulty;
         private SliderOption timeOption;
         private bool timeSliderActive = false;
-        public static bool isLowAggro = false;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -59,7 +58,6 @@ namespace SquidTestingMod.UI.Panels
             AddHeader("Enemies");
             AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1);
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleTracking, "Track Enemies Off", "Show all enemies position with an arrow");
-            AddOnOffOption(ToggleLowAggro, "Enemies Don't Attack Off", "Set player aggro to -9999");
             AddPadding();
 
             AddHeader("Pre-HM Events");
@@ -73,7 +71,7 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("HM Events");
-            AddOnOffOption(null, "Start Frost Legion (todo)");
+            // AddOnOffOption(null, "Start Frost Legion (todo)");
             AddOnOffOption(ToggleSolarEclipse, "Start Solar Eclipse");
             AddOnOffOption(() => TryStartInvasion(InvasionID.PirateInvasion), "Start Pirate Invasion");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Start Pumpkin Moon");
@@ -88,18 +86,6 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(() => Main.forceXMasForToday = !Main.forceXMasForToday, "Force XMas");
             AddOnOffOption(() => Main.forceHalloweenForToday = !Main.forceHalloweenForToday, "Force Halloween");
             AddPadding();
-        }
-
-        /// <summary> Check player class and update aggro continously
-        /// If we dont set it every frame, it will reset.
-        /// Aggro must be forced to update every frame.
-        /// <see cref="Common.Players.LowAggro"/> 
-        /// </summary>
-        private void ToggleLowAggro()
-        {
-            // Set low negative aggro to make enemies ignore the player most of the time
-            // Doesnt work for all enemies (e.g flying enemies and most bosses)
-            isLowAggro = !isLowAggro;
         }
 
         private void TryStopInvasion()

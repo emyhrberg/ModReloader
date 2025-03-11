@@ -15,7 +15,7 @@ namespace SquidTestingMod.UI.Panels
     /// <summary>
     /// A panel containing options to modify player behaviour like God,Fast,Build,etc.
     /// </summary>
-    public class DebugPanel : RightParentPanel
+    public class DebugPanel : OptionPanel
     {
         // Variables 
         SliderOption widthOption;
@@ -37,9 +37,9 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(hitboxSystem.ToggleProjAndMeleeHitboxes, "Projectile Hitboxes Off", "Show projectile and melee hitboxes");
             AddPadding();
 
-            AddHeader("Info");
+            // AddHeader("Info");
             // AddOnOffOption(TogglePlayerInfo, "Player Info Off (todo)", "Show player info panel\nRight click to lock to top right corner");
-            AddPadding();
+            // AddPadding();
 
             AddHeader("UI");
             AddOnOffOption(debugSystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");

@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
@@ -11,7 +12,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : ReloadButton(spritesheet, buttonText, hoverText)
+    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
         protected override int MaxFrames => 5;
@@ -21,6 +22,25 @@ namespace SquidTestingMod.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
+            // If alt+click, toggle the mode and return
+            if (Main.keyState.IsKeyDown(Keys.LeftAlt))
+            {
+                Active = false;
+                buttonUIText.Active = false;
+
+                // set MP active
+                MainSystem sys = ModContent.GetInstance<MainSystem>();
+                foreach (var btn in sys?.mainState?.AllButtons)
+                {
+                    if (btn is ReloadMPButton spBtn)
+                    {
+                        spBtn.Active = true;
+                        spBtn.buttonUIText.Active = true;
+                    }
+                }
+                return;
+            }
+
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();
@@ -50,7 +70,7 @@ namespace SquidTestingMod.UI.Buttons
                 return;
 
             // Retrieve the panels and check for null.
-            var allPanels = sys.mainState.AllPanels;
+            var allPanels = sys.mainState.RightSidePanels;
             var modsPanel = sys.mainState.modsPanel;
             if (allPanels == null || modsPanel == null)
             {

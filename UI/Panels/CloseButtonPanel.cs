@@ -50,8 +50,13 @@ namespace SquidTestingMod.UI.Panels
             if (mainState == null)
                 return;
 
+            // Create AllPanels list containing LeftSide and RightSidePanels
+            List<DraggablePanel> AllPanels = new();
+            AllPanels.AddRange(mainState.LeftSidePanels);
+            AllPanels.AddRange(mainState.RightSidePanels);
+
             // Use AllPanels to find the panel that is our parent.
-            foreach (var p in mainState.AllPanels)
+            foreach (var p in AllPanels)
             {
                 if (p != null && p.GetActive())
                 {

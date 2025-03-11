@@ -27,7 +27,7 @@ namespace SquidTestingMod.UI.Panels
         private NPCFilter currentFilter = NPCFilter.All;
         private List<(FilterButton button, NPCFilter filter)> filterButtons = new();
 
-        public NPCSpawner() : base("NPC Spawner")
+        public NPCSpawner() : base(header: "NPC Spawner")
         {
             // Add filter buttons
             AddFilterButton(Assets.FilterAll, "All NPCs", NPCFilter.All, 0);
