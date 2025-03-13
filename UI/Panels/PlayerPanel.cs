@@ -28,16 +28,17 @@ namespace SquidTestingMod.UI.Panels
             options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Teleport Mode Off", "Right click to teleport to the mouse position");
             options["enemiesIgnore"] = AddOnOffOption(PlayerCheatManager.ToggleEnemiesIgnore, "Enemies Ignore Off", "Enemies ignore you due to low player aggro");
             options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Aura Off", "Light up the world around you");
-            options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that youch you");
-            options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you");
+            options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that touch you");
+            options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you (not MP-supported)");
             AddSliderOption(
                 title: "Mine Radius",
                 min: 1,
                 max: 50,
-                defaultValue: 1,
+                defaultValue: 0,
                 onValueChanged: value => MineAura.mineRange = (int)value,
                 increment: 1,
-                textSize: 0.8f
+                textSize: 0.5f,
+                hover: "Mine all tiles around you when moving (not MP-supported)"
             );
             float currentHP = MaxLife.maxLife != 0 ? MaxLife.maxLife : Main.LocalPlayer.statLifeMax2;
             currentHP = MathHelper.Clamp(currentHP, 1, 1000);
@@ -62,7 +63,7 @@ namespace SquidTestingMod.UI.Panels
 
             // === TOGGLE ALL ===
             AddHeader("Toggle All");
-            options["all"] = AddOnOffOption(ToggleAll, "Off", "Toggle all player cheats on/off");
+            options["all"] = AddOnOffOption(ToggleAll, "Off", "Toggle all player abilities on/off");
             AddPadding();
 
             // === BUTTON OPTIONS ===

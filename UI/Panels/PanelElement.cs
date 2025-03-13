@@ -20,11 +20,12 @@ namespace SquidTestingMod.UI.Panels
         public int panelElementHeight = 25;
 
         // The main text on this panel element
+        public float TextScale = 1.0f;
         public UIText textElement;
         public string Title;
 
         // Hover text for tooltips
-        protected string HoverText { get; set; }
+        public string HoverText { get; set; }
         protected bool IsHoverEnabled { get; set; } = true;
 
         public PanelElement(string title, string hoverText = "")
@@ -38,7 +39,7 @@ namespace SquidTestingMod.UI.Panels
             HoverText = hoverText;
 
             // Create the UIText. Default color = Gray
-            textElement = new UIText(text: title, textScale: 1.0f, large: false);
+            textElement = new UIText(text: title, textScale: TextScale, large: false);
             textElement.HAlign = 0.5f; // Center horizontally
             textElement.VAlign = 0.5f; // Center vertically
             textElement.TextColor = Color.Gray;

@@ -62,7 +62,7 @@ Mods: {
 
 				ButtonsPosition: {
 					Label: Buttons Position
-					Tooltip: ""
+					Tooltip: All buttons and collapse will stick to this side of the screen
 				}
 			}
 

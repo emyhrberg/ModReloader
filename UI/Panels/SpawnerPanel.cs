@@ -80,7 +80,7 @@ namespace SquidTestingMod.UI.Panels
             ItemsGrid.SetScrollbar(Scrollbar);
 
             // Resize
-            ResizeButton resizeButton = new(Assets.Resize);
+            ResizeButton resizeButton = new(Ass.Resize);
             resizeButton.OnDragY += offsetY =>
             {
                 // Log.Info($"[BEFORE] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");

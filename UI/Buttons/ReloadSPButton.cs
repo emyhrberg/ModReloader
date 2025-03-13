@@ -22,25 +22,6 @@ namespace SquidTestingMod.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            // If alt+click, toggle the mode and return
-            if (Main.keyState.IsKeyDown(Keys.LeftAlt))
-            {
-                Active = false;
-                buttonUIText.Active = false;
-
-                // set MP active
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                foreach (var btn in sys?.mainState?.AllButtons)
-                {
-                    if (btn is ReloadMPButton spBtn)
-                    {
-                        spBtn.Active = true;
-                        spBtn.buttonUIText.Active = true;
-                    }
-                }
-                return;
-            }
-
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();
@@ -64,34 +45,21 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // Retrieve the MainSystem instance and ensure it and its mainState are not null.
-            var sys = ModContent.GetInstance<MainSystem>();
-            if (sys?.mainState == null)
-                return;
+            // If right click, toggle the mode and return
+            Active = false;
+            buttonUIText.Active = false;
 
-            // Retrieve the panels and check for null.
-            var allPanels = sys.mainState.RightSidePanels;
-            var modsPanel = sys.mainState.modsPanel;
-            if (allPanels == null || modsPanel == null)
+            // set MP active
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            foreach (var btn in sys?.mainState?.AllButtons)
             {
-                Log.Error("ReloadSPButton.RightClick: allPanels or modsPanel is null.");
-                return;
-            }
-
-            // Close all panels except the modsPanel.
-            foreach (var panel in allPanels.Except([modsPanel]))
-            {
-                if (panel != null && panel.GetActive())
+                if (btn is ReloadMPButton spBtn)
                 {
-                    panel.SetActive(false);
+                    spBtn.Active = true;
+                    spBtn.buttonUIText.Active = true;
                 }
             }
-
-            // Toggle the modsPanel's active state.
-            if (modsPanel.GetActive())
-                modsPanel.SetActive(false);
-            else
-                modsPanel.SetActive(true);
+            return;
         }
     }
 }

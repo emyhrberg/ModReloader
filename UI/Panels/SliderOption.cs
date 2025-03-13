@@ -28,9 +28,13 @@ namespace SquidTestingMod.UI.Panels
         public Action<float> _onValueChanged;
 
         // Added an optional "increment" parameter.
-        public SliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize=1.0f)
+        public SliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1.0f, string hover = "")
             : base(title)
         {
+            // Set hover and text size.
+            HoverText = hover;
+            TextScale = textSize;
+
             Min = min;
             Max = max;
             _onValueChanged = onValueChanged;

@@ -45,9 +45,9 @@ namespace SquidTestingMod.UI.Panels
 
                 // If active, draw the active background
                 if (Active)
-                    spriteBatch.Draw(Assets.FilterBGActive.Value, drawRect, Color.White);
+                    spriteBatch.Draw(Ass.FilterBGActive.Value, drawRect, Color.White);
                 else
-                    spriteBatch.Draw(Assets.FilterBG.Value, drawRect, Color.White);
+                    spriteBatch.Draw(Ass.FilterBG.Value, drawRect, Color.White);
 
                 // Always draw the icon on top with full opacity if active,
                 // otherwise draw with the opacity value.

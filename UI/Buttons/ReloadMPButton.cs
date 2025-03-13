@@ -16,7 +16,9 @@ namespace SquidTestingMod.UI.Buttons
         // Constructor
         public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet, buttonText, hoverText)
         {
+            // deactived by default since the SP button is active
             Active = false;
+            buttonUIText.Active = false;
         }
 
         // Set custom animation dimensions
@@ -56,6 +58,25 @@ namespace SquidTestingMod.UI.Buttons
                 await ReloadUtilities.ExitAndKillServer();
                 ReloadUtilities.BuildAndReloadMod();
             }
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            // If right click, toggle the mode and return
+            Active = false;
+            buttonUIText.Active = false;
+
+            // set MP active
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            foreach (var btn in sys?.mainState?.AllButtons)
+            {
+                if (btn is ReloadSPButton spBtn)
+                {
+                    spBtn.Active = true;
+                    spBtn.buttonUIText.Active = true;
+                }
+            }
+            return;
         }
     }
 }

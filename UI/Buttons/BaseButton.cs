@@ -35,15 +35,15 @@ namespace SquidTestingMod.UI.Buttons
         // Animations variables to be set by child classes
         protected virtual float SpriteScale => 1;
         protected virtual int StartFrame => 1;
-        protected virtual int MaxFrames => 3;
-        protected virtual int FrameSpeed => 8; // the speed of the animation, lower is faster
-        protected virtual int FrameWidth => 0;
-        protected virtual int FrameHeight => 0;
+        protected virtual int MaxFrames => 1;
+        protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
+        protected abstract int FrameWidth { get; }
+        protected abstract int FrameHeight { get; }
 
         // Constructor
         protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
         {
-            Button = Assets.Button;
+            Button = Ass.Button;
             Spritesheet = spritesheet;
             HoverText = hoverText;
             SetImage(Button);

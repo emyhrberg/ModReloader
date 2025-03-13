@@ -30,9 +30,9 @@ namespace SquidTestingMod.UI.Panels
         public NPCSpawner() : base(header: "NPC Spawner")
         {
             // Add filter buttons
-            AddFilterButton(Assets.FilterAll, "All NPCs", NPCFilter.All, 0);
-            AddFilterButton(Assets.FilterTown, "Town NPCs", NPCFilter.Town, 25);
-            AddFilterButton(Assets.FilterMob, "Bosses", NPCFilter.Bosses, 50);
+            AddFilterButton(Ass.FilterAll, "All NPCs", NPCFilter.All, 0);
+            AddFilterButton(Ass.FilterTown, "Town NPCs", NPCFilter.Town, 25);
+            AddFilterButton(Ass.FilterMob, "Bosses", NPCFilter.Bosses, 50);
 
             // Populate the grid with NPC slots
             AddItemSlotsToGrid();

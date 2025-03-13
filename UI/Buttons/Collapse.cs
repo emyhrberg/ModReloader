@@ -30,7 +30,7 @@ namespace SquidTestingMod.UI.Buttons
             // Size and position
             Width.Set(37, 0);
             Height.Set(15, 0);
-            Left.Set(0, 0);
+            Left.Set(-20, 0); // CUSTOM CUSTOM CUSTOM -20!
             Top.Set(-70, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
@@ -43,7 +43,7 @@ namespace SquidTestingMod.UI.Buttons
                 VAlign = 0.8f;
                 Top.Set(-70 - 15 / 2, 0);
                 Left.Set(70, 0);
-                // SetImage(CollapseLeft.Value);
+                // SetImage(CollapseLeft.Value); // unsure if this works
             }
         }
 
@@ -118,7 +118,11 @@ namespace SquidTestingMod.UI.Buttons
             if (Conf.HideCollapseButton && !Main.playerInventory)
                 return;
 
-            base.Update(gameTime);
+            // disable item use on click
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)

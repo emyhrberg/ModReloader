@@ -119,12 +119,12 @@ namespace SquidTestingMod.Common.Systems
         private void DrawArrow(SpriteBatch sb, Vector2 position, float rotation, Color color)
         {
             sb.Draw(
-                texture: Assets.Arrow.Value,
+                texture: Ass.Arrow.Value,
                 position: position,
                 sourceRectangle: null,
                 color: color,
                 rotation: rotation,
-                origin: new Vector2(Assets.Arrow.Value.Width / 2f, Assets.Arrow.Value.Height / 2f),
+                origin: new Vector2(Ass.Arrow.Value.Width / 2f, Ass.Arrow.Value.Height / 2f),
                 scale: 1f,
                 effects: SpriteEffects.None,
                 layerDepth: 0f

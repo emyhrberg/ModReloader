@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Systems;
@@ -53,20 +54,34 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
 
             AddHeader("Time");
-            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime, 1800f / 86400f);
+            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime, 1800f / 86400f, 1f, hover: "Click and drag to change time");
             moon = AddOnOffOption(IncreaseMoonphase, $"Moon Phase: {Main.moonPhase} ({GetMoonPhaseName()})", "Click to cycle moon phases", DecreaseMoonphase);
             AddPadding();
 
             AddHeader("Enemies");
-            AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1);
-            // In your DebugPanel or wherever you add the tracking options
+            AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1, 1, hover: "Set the spawn rate multiplier");
+
+            // Town NPCs
+            // Force at least 1 for the max, just so the slider has a range
+            int numberOfTownNPCs = Main.npc.Count(npc => npc.active && npc.townNPC);
+            float maxValue = Math.Max(1f, numberOfTownNPCs);
+            townNpcSlider = AddSliderOption(
+            "Town NPCs",
+            0f,                   // min
+            maxValue,             // max
+            maxValue,             // default value
+            UpdateTownNpcSlider,  // callback
+            1f,                   // increment
+            1f,                   // scroll speed
+            "Set the number of town NPCs (scuffed)"
+        );
+
+            // tracking
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track Enemies Off", "Show all enemies position with an arrow");
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleCritterTracking, "Track Critters Off", "Show all critters position with an arrow");
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track Town NPCs Off", "Show all town NPCs position with an arrow");
 
-            // Town NPCs
-            int numberOfTownNPCs = Main.npc.Count(npc => npc.active && npc.townNPC);
-            AddSliderOption("Town NPCs", min: 0, max: numberOfTownNPCs, numberOfTownNPCs, UpdateTownNpcSlider, increment: 1);
+
 
             AddPadding();
 
@@ -103,15 +118,16 @@ namespace SquidTestingMod.UI.Panels
             int targetCount = (int)newValue;
             int currentCount = GetTownNpcCount();
 
-            // If the slider is moved down (targetCount < currentCount), kill the difference.
             if (targetCount < currentCount)
             {
                 int countToKill = currentCount - targetCount;
                 KillTownNPCs(countToKill);
             }
-            // After updating the NPCs, update the slider’s value (and label) to reflect the new count.
-            townNpcSlider.SetValue(GetTownNpcCount());
-            townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+
+            // Re-sync the slider in case the count actually changed
+            int updatedCount = GetTownNpcCount();
+            townNpcSlider.SetValue(updatedCount);
+            townNpcSlider.UpdateText("Town NPCs: " + updatedCount);
         }
 
         private int GetTownNpcCount() => Main.npc.Count(npc => npc.active && npc.townNPC);

@@ -15,10 +15,6 @@ namespace SquidTestingMod.UI
 {
     public class MainState : UIState
     {
-        // State
-        public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
-        public float ButtonSize = 70f;
-
         // Panels
         public ItemSpawner itemSpawnerPanel;
         public NPCSpawner npcSpawnerPanel;
@@ -30,35 +26,31 @@ namespace SquidTestingMod.UI
         public List<DraggablePanel> RightSidePanels = [];
 
         // Buttons
-        public Collapse collapse;
+        public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
+        public float ButtonSize = 70f;
+        public float offset = -70f * 3; // START offset for first button position relative to center
         public List<BaseButton> AllButtons = [];
 
         // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState()
         {
+            // CUSTOM CUSTOM CUSTOM offset, see collapse also
+            offset -= 20f;
+
             // Add buttons
-            AddButton<ConfigButton>(-210, Assets.ButtonConfig, "Config");
-            AddButton<ItemButton>(-140, Assets.ButtonItems, "Items");
-            AddButton<NPCButton>(-70, Assets.ButtonNPC, "NPC");
-            AddButton<PlayerButton>(0, Assets.ButtonPlayer, "Player");
-            AddButton<DebugButton>(70, Assets.ButtonDebug, "Debug");
-            AddButton<WorldButton>(140, Assets.ButtonWorld, "World");
-            AddButton<ReloadSPButton>(210, Assets.ButtonReloadSP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show multiplayer reload");
-            AddButton<ReloadMPButton>(210, Assets.ButtonReloadMP, "Reload", "Left click to reload\nRight click to open list of mods\nAlt + click to show singleplayer reload");
-            AddButton<TestButton>(280, Assets.CollapseUp, "Test");
+            AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
+            AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
+            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and options");
+            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View hitboxes, UI, logs");
+            AddButton<WorldButton>(Ass.ButtonWorld, "World", "View and change world settings");
+            AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods");
+            AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", "Reload the selected mod\nRight click to show multiplayer reload");
+            offset -= ButtonSize; // move back to place MP above SP.
+            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", "Reload the selected mod\nRight click to show singleplayer reload");
 
             // Add collapse button on top
-            collapse = new(Assets.CollapseDown, Assets.CollapseUp, Assets.CollapseLeft, Assets.CollapseRight);
+            Collapse collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
             Append(collapse);
-
-            // Make the MP button overlap the SP button
-            BaseButton reloadSPButton = AllButtons[6];
-            BaseButton reloadMPButton = AllButtons[7];
-            reloadMPButton.Left.Set(reloadSPButton.Left.Pixels, 0);
-            reloadMPButton.Top.Set(reloadSPButton.Top.Pixels, 0);
-            RemoveChild(reloadMPButton);
-            Append(reloadMPButton);
-            reloadMPButton.Recalculate();
 
             // Add the panels (invisible by default)
             itemSpawnerPanel = AddPanel<ItemSpawner>("left");
@@ -85,7 +77,7 @@ namespace SquidTestingMod.UI
             return panel;
         }
 
-        private void AddButton<T>(float offset, Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null) where T : BaseButton
+        private void AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null) where T : BaseButton
         {
             // Create a new button using reflection
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
@@ -105,7 +97,7 @@ namespace SquidTestingMod.UI
             // set x pos with offset
             button.Left.Set(pixels: offset, precent: 0f);
 
-            // custom left pos
+            // custom left pos. override default
             if (Conf.ButtonsPosition == "left")
             {
                 button.VAlign = 0.73f;
@@ -113,6 +105,9 @@ namespace SquidTestingMod.UI
                 button.Left.Set(pixels: 0, precent: 0f);
                 button.Top.Set(pixels: offset, precent: 0f);
             }
+
+            // increase offset for next button, except MPbutton
+            offset += ButtonSize;
 
             // Add the button to the list of all buttons and append it to the MainState
             AllButtons.Add(button);

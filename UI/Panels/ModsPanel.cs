@@ -20,21 +20,25 @@ namespace SquidTestingMod.UI.Panels
     /// </summary>
     public class ModsPanel : OptionPanel
     {
+        private List<ModItem> myModItems = [];
+        private List<ModItem> enabledModItems = [];
+
         public ModsPanel() : base(title: "Mods List", scrollbarEnabled: true)
         {
             Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
 
-            AddHeader("Your Mods");
+            AddHeader("My Mods");
             foreach (var modPath in GetModFiles())
             {
                 string modFolderName = Path.GetFileName(modPath);
-                AddModItem(
+                ModItem modItem = AddModItem(
+                    isSetToReload: modFolderName == Conf.ModToReload,
                     name: modFolderName,
                     icon: defaultIconTemp.Value,
-                    leftClick: () => ExitWorldAndBuildReloadMod(modFolderName),
-                    hover: "Left click to reload this mod\nRight click to make this the default mod to reload",
-                    rightClick: () => SetModAsDefaultReloadMod(modFolderName)
+                    leftClick: () => SetModAsDefaultReloadMod(modFolderName),
+                    hover: "Click to make this the default mod to reload"
                 );
+                myModItems.Add(modItem);
             }
             AddPadding();
 
@@ -44,57 +48,17 @@ namespace SquidTestingMod.UI.Panels
             foreach (var mod in mods)
             {
                 AddModItem(
+                    isSetToReload: false,
                     name: mod.DisplayNameClean,
                     icon: defaultIconTemp.Value,
                     leftClick: null, // this should disable mod in the future (if possible), so that we can select which mods to reload
                     hover: $"{mod.Name} (v{mod.Version})"
                 );
-
-                //     try
-                //     {
-                //         // Reflect to get LocalMod (the mod's compiled file + properties).
-                //         // 'mod' is a Mod instance, but we need the LocalMod for reading its .tmod contents.
-                //         var localModField = typeof(Mod).GetField("localMod", BindingFlags.NonPublic | BindingFlags.Instance);
-                //         if (localModField == null)
-                //             continue;
-
-                //         var localMod = localModField.GetValue(mod);
-                //         Type localModType = localMod.GetType();
-                //         var modFileProperty = localModType.GetProperty("ModFile", BindingFlags.NonPublic | BindingFlags.Instance);
-                //         var tmodFile = modFileProperty.GetValue(localMod) as TmodFile;
-                //         if (localMod == null)
-                //             continue;
-
-                //         // localMod.ModFile is a TmodFile, which stores all the .tmod contents.
-
-                //         // "icon.png" is the standard name for a mod's icon inside its .tmod file.
-                //         if (!tmodFile.HasFile("icon.png"))
-                //         {
-                //             // fallback if no icon
-                //             continue;
-                //         }
-
-                //         using var stream = tmodFile.GetStream("icon.png");
-                //         // Load into Texture2D
-                //         Texture2D iconTexture = Texture2D.FromStream(Main.graphics.GraphicsDevice, stream);
-
-                //         AddModItem(
-                //             name: mod.Name,
-                //             icon: iconTexture,
-                //             leftClick: () => ExitWorldAndBuildReloadMod(mod.Name),
-                //             hover: $"{mod.Name} (v{mod.Version})"
-                //         );
-                //     }
-                //     catch
-                //     {
-                //         Log.Info($"Failed to load icon for {mod.Name}");
-                //     }
-                // }
+                AddPadding(5f);
             }
-
             AddPadding();
 
-            AddHeader("Disabled Mods");
+            AddHeader("All Mods");
             AddOnOffOption(() => { }, "Mod Name", "Left click to enable");
         }
 
@@ -103,23 +67,21 @@ namespace SquidTestingMod.UI.Panels
             // set mod to reload (just a config change)
             Config c = ModContent.GetInstance<Config>();
             c.ModToReload = modFolderName;
-        }
 
-        private async void ExitWorldAndBuildReloadMod(string modFolderName = "")
-        {
-            if (modFolderName == "")
+            // update the UI opacity
+            foreach (var item in myModItems)
             {
-                return;
+                Log.Info("Item.ModName: " + item.ModName);
+                bool isSetToReload = item.ModName == modFolderName;
+                if (isSetToReload)
+                {
+                    item.SetSelected(true);
+                }
+                else
+                {
+                    item.SetSelected(false);
+                }
             }
-
-            // set mod to reload (just a config change)
-            Config c = ModContent.GetInstance<Config>();
-            c.ModToReload = modFolderName;
-
-            await ReloadUtilities.ExitWorldOrServer();
-
-            ReloadUtilities.ReloadMod();
-            ReloadUtilities.BuildAndReloadMod();
         }
 
         private List<string> GetModFiles()

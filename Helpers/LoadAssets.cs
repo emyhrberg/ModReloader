@@ -12,15 +12,19 @@ using Terraria.ModLoader.UI.Elements;
 
 namespace SquidTestingMod.Helpers
 {
+    /// <summary>
+    /// To add a new asset, simply add a new field like:
+    /// public static Asset<Texture2D> MyAsset;
+    /// </summary>
     public class LoadAssets : ModSystem
     {
         public override void Load()
         {
-            var ignored = Assets.Initialized;
+            var ignored = Ass.Initialized;
         }
     }
 
-    public static class Assets
+    public static class Ass
     {
         // Buttons
         public static Asset<Texture2D> CollapseDown;
@@ -38,6 +42,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonWorld;
         public static Asset<Texture2D> ButtonReloadSP;
         public static Asset<Texture2D> ButtonReloadMP;
+        public static Asset<Texture2D> ButtonMods;
 
         // Filter buttons
         public static Asset<Texture2D> FilterBG;
@@ -54,8 +59,6 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterPlaceables;
         public static Asset<Texture2D> FilterTown;
         public static Asset<Texture2D> FilterMob;
-
-        // Misc
         public static Asset<Texture2D> SortID;
         public static Asset<Texture2D> SortValue;
         public static Asset<Texture2D> SortRarity;
@@ -63,15 +66,17 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> SortDamage;
         public static Asset<Texture2D> SortDefense;
         public static Asset<Texture2D> Resize;
+
+        // Misc
         public static Asset<Texture2D> Arrow;
 
         // Bool for checking if assets are loaded
         public static bool Initialized { get; set; }
 
         // Constructor
-        static Assets()
+        static Ass()
         {
-            foreach (FieldInfo field in typeof(Assets).GetFields())
+            foreach (FieldInfo field in typeof(Ass).GetFields())
             {
                 if (field.FieldType == typeof(Asset<Texture2D>))
                 {

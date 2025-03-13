@@ -107,10 +107,10 @@ namespace SquidTestingMod.UI.Panels
             return onOffPanel;
         }
 
-        protected ModItem AddModItem(string name, Texture2D icon, Action leftClick, string hover = "", Action rightClick = null)
+        protected ModItem AddModItem(bool isSetToReload, string name, Texture2D icon, Action leftClick, string hover = "", Action rightClick = null)
         {
             // Create a new option panel
-            ModItem modItem = new(name, icon, hover);
+            ModItem modItem = new(isSetToReload, name, icon, hover);
             modItem.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
             modItem.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
 
@@ -121,10 +121,10 @@ namespace SquidTestingMod.UI.Panels
             return modItem;
         }
 
-        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f)
+        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f, string hover = "")
         {
             // Create a new option panel
-            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize);
+            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover);
 
             // Add the option to the ui list
             uiList.Add(sliderPanel);
