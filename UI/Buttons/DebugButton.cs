@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
@@ -17,36 +18,25 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Toggle debug panel
+            // Get panels
             var sys = ModContent.GetInstance<MainSystem>();
+            var allPanels = sys?.mainState?.RightSidePanels;
             var debugPanel = sys?.mainState?.debugPanel;
-            var playerPanel = sys?.mainState?.playerPanel;
-            var worldPanel = sys?.mainState?.worldPanel;
 
             // Close other panels
-            if (playerPanel != null && playerPanel.GetActive())
+            foreach (var panel in allPanels.Except([debugPanel]))
             {
-                playerPanel.SetActive(false);
-            }
-            if (worldPanel != null && worldPanel.GetActive())
-            {
-                worldPanel.SetActive(false);
+                if (panel.GetActive())
+                {
+                    panel.SetActive(false);
+                }
             }
 
-            // Toggle debug panel
-            if (debugPanel != null)
-            {
-                if (debugPanel.GetActive())
-                {
-                    debugPanel.SetActive(false);
-                }
-                else
-                {
-                    debugPanel.SetActive(true);
-                }
-            }
+            // Toggle this panel
+            if (debugPanel.GetActive())
+                debugPanel.SetActive(false);
+            else
+                debugPanel.SetActive(true);
         }
-
-
     }
 }

@@ -1,10 +1,13 @@
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
@@ -19,7 +22,6 @@ namespace SquidTestingMod.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();
@@ -43,9 +45,21 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // Go to enabled mods
-            WorldGen.JustQuit();
-            Main.menuMode = 10000;
+            // If right click, toggle the mode and return
+            Active = false;
+            buttonUIText.Active = false;
+
+            // set MP active
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            foreach (var btn in sys?.mainState?.AllButtons)
+            {
+                if (btn is ReloadMPButton spBtn)
+                {
+                    spBtn.Active = true;
+                    spBtn.buttonUIText.Active = true;
+                }
+            }
+            return;
         }
     }
 }

@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Panels
 {
-    //TODO: wow that's a lot of redundant this.
+    //TOsDO: wow that's a lot of redundant this.
     public class CustomGrid : UIElement
     {
         public delegate bool ElementSearchMethod(UIElement element);
@@ -56,7 +56,7 @@ namespace SquidTestingMod.UI.Panels
         // ** added
         public Action<List<UIElement>> ManualSortMethod;
 
-        // todo, vertical/horizontal orientation, left to right, etc?
+        // tosdo, vertical/horizontal orientation, left to right, etc?
         public CustomGrid()
         {
             this._innerList.OverflowHidden = false;

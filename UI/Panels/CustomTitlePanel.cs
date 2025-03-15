@@ -11,7 +11,7 @@ namespace SquidTestingMod.UI.Panels
 {
     public class CustomTitlePanel : UIPanel
     {
-        public UIText HeaderText { get; private set; }
+        public UIText HeaderText;
         private Color lightBlue = new(63, 82, 151);
         private int padding = 12;
         private int height = 35;

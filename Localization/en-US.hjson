@@ -5,10 +5,9 @@ Mods: {
 				DisplayName: Config
 
 				Headers: {
-					ItemNPCSpawner: Item/NPC Browser
 					Reload: Reload
 					Misc: Misc
-					ButtonsToShow: Buttons
+					NPCSpawner: NPC Spawner
 				}
 
 				NPCSpawnLocation: {
@@ -16,18 +15,18 @@ Mods: {
 					Label: NPC Spawn Location
 				}
 
-				MaxItemsToDisplay: {
-					Tooltip: The maximum amount of items shown in the browser
-					Label: Max Items To Display
-				}
-
 				ClearClientLogOnReload: {
-					Tooltip: Whether to clear the client.log or not when you click reload
+					Tooltip: Clears the client.log file when you click reload
 					Label: Clear Client Log On Reload
 				}
 
 				SaveWorldOnReload: {
-					Tooltip: Whether to save the world or not when you click reload
+					Tooltip:
+						'''
+						Save the world when clicking reload. 
+						 Turn on to save items, world changes, etc. 
+						 Turn off for faster reload
+						'''
 					Label: Save World On Reload
 				}
 
@@ -41,81 +40,45 @@ Mods: {
 					Tooltip: Toggle the visual effect showing when god mode is enabled
 				}
 
-				ShowCombatTextOnToggle: {
-					Label: Show Combat Text On Toggle
-					Tooltip: Toggle visual text effect when you toggle player options like god, fast, etc
-				}
-
-				AnimateButtons: {
-					Label: Animate Buttons
-					Tooltip: Show animations and toggle effects on the buttons
-				}
-
-				ShowConfigButton: {
-					Label: Show Config Button
-					Tooltip: ""
-				}
-
-				ShowItemButton: {
-					Label: Show Item Button
-					Tooltip: ""
-				}
-
-				ShowNPCButton: {
-					Label: Show NPC Button
-					Tooltip: ""
-				}
-
-				ShowDebugButton: {
-					Label: Show Debug Button
-					Tooltip: ""
-				}
-
-				ShowPlayerButton: {
-					Label: Show Player Button
-					Tooltip: ""
-				}
-
-				ShowWorldButton: {
-					Label: Show World Button
-					Tooltip: ""
-				}
-
-				ShowReloadSPButton: {
-					Label: Show Reload SP Button
-					Tooltip: ""
-				}
-
-				ShowReloadMPButton: {
-					Label: Show Reload MP Button
-					Tooltip: ""
-				}
-
 				KeepRunningWhenFocusLost: {
 					Label: Keep Running When Focus Lost
 					Tooltip: When you alt+tab or leave the game unfocused, the game will keep running
 				}
 
-				ShowToggleButton: {
-					Label: Show Toggle Button
-					Tooltip: ""
+				EnterWorldSuperMode: {
+					Label: Enter World Super Mode
+					Tooltip: When entering a new world, enables most player abilities, excluding noclip and auras
 				}
 
-				ShowTooltips: {
-					Label: Show Tooltips
-					Tooltip: ""
+				NPCSpawner: {
+					Label: NPC Spawner
+					Tooltip: Set position of the NPC spawner
 				}
 
-				ShowTooltipsDebugPanels: {
-					Label: Show Tooltips Debug Panels
-					Tooltip: ""
+				HideCollapseButton: {
+					Label: Hide Collapse Button
+					Tooltip: Only show collapse button when inventory is open
+				}
+
+				ButtonsPosition: {
+					Label: Buttons Position
+					Tooltip: All buttons and collapse will stick to this side of the screen
+				}
+			}
+
+			NPCSpawnerConfig: {
+				Tooltip: Set position of the NPC spawner
+
+				SpawnOffset: {
+					Label: Spawn Offset
+					Tooltip: The offset the NPC will spawn on relative to your position
 				}
 			}
 		}
 
 		Items: {
 			BorderShaderDye: {
-				Tooltip: ""
+				Tooltip: Shader God Glow
 				DisplayName: Border Shader Dye
 			}
 		}

@@ -10,21 +10,21 @@ using Terraria.UI.Chat;
 
 namespace SquidTestingMod.Common.Systems
 {
-    public class DrawUIState : UIState
+    public class DebugState : UIState
     {
         private List<Color> rainbowColors;
 
-        public DrawUIState()
+        public DebugState()
         {
             GenerateRainbowColors(20);
         }
 
         public void DrawHitbox(UIElement element, SpriteBatch spriteBatch)
         {
-            DrawUISystem uiSys = ModContent.GetInstance<DrawUISystem>();
+            DebugSystem uiSys = ModContent.GetInstance<DebugSystem>();
             if (!uiSys.isUIDebugDrawing) return;
 
-            if (element is DrawUIState || element is MainState) return; // Skip full-screen elements
+            if (element is DebugState || element is MainState) return; // Skip full-screen elements
 
             Rectangle hitbox = element.GetOuterDimensions().ToRectangle();
 

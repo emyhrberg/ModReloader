@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
+using XPT.Core.Audio.MP3Sharp.Decoding;
 
 namespace SquidTestingMod.UI.Panels
 {
@@ -20,6 +21,8 @@ namespace SquidTestingMod.UI.Panels
         protected bool Active = false; // draw and update when true
         protected const int padding = 12;
         protected Color darkBlue = new(73, 85, 186);
+        public string Header = "";
+        public CustomTitlePanel TitlePanel;
 
         // Dragging
         public bool Draggable = false;
@@ -39,9 +42,10 @@ namespace SquidTestingMod.UI.Panels
             HAlign = 1.0f; // right aligned
             VAlign = 1.0f; // bottom aligned
             BackgroundColor = darkBlue;
+            Header = header;
 
             // Create all content in the panel
-            CustomTitlePanel TitlePanel = new(header);
+            TitlePanel = new(header);
             CloseButtonPanel closeButtonPanel = new();
 
             // Add all content in the panel
@@ -53,8 +57,18 @@ namespace SquidTestingMod.UI.Panels
         #region Update
         public override void Update(GameTime gameTime)
         {
+            // if (IsMouseHovering)
+            // {
+            //     Main.LocalPlayer.mouseInterface = true;
+            // }
+
             if (!Active)
                 return;
+
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
 
             base.Update(gameTime);
 
@@ -67,17 +81,11 @@ namespace SquidTestingMod.UI.Panels
                     Left.Set(Main.mouseX - dragOffset.X, 0f);
                     Top.Set(Main.mouseY - dragOffset.Y, 0f);
                     Recalculate();
-                    Main.LocalPlayer.mouseInterface = true;
                 }
             }
             else
             {
                 IsDragging = false;
-            }
-
-            if (dragging || ContainsPoint(Main.MouseScreen))
-            {
-                Main.LocalPlayer.mouseInterface = true;
             }
         }
         #endregion
@@ -101,7 +109,6 @@ namespace SquidTestingMod.UI.Panels
             dragging = true;
             IsDragging = false;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
-            Main.LocalPlayer.mouseInterface = true;
         }
 
         public override void LeftMouseUp(UIMouseEvent evt)
@@ -109,7 +116,6 @@ namespace SquidTestingMod.UI.Panels
             base.LeftMouseUp(evt);
             dragging = false;
             IsDragging = false;
-            Main.LocalPlayer.mouseInterface = false;
             Recalculate();
         }
 
@@ -118,7 +124,6 @@ namespace SquidTestingMod.UI.Panels
             if (IsDragging)
                 return;
             base.LeftClick(evt);
-            Main.LocalPlayer.mouseInterface = true;
         }
         #endregion
 

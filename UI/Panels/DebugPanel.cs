@@ -15,39 +15,60 @@ namespace SquidTestingMod.UI.Panels
     /// <summary>
     /// A panel containing options to modify player behaviour like God,Fast,Build,etc.
     /// </summary>
-    public class DebugPanel : RightParentPanel
+    public class DebugPanel : OptionPanel
     {
         // Variables 
         SliderOption widthOption;
         SliderOption heightOption;
+        bool showPlayerInfo = false;
+        PlayerInfoPanel playerInfoPanel;
 
-        public DebugPanel() : base(title: "Debug", scrollbarEnabled: false)
+        public DebugPanel() : base(title: "Debug", scrollbarEnabled: true)
         {
             // Get instances
             HitboxSystem hitboxSystem = ModContent.GetInstance<HitboxSystem>();
-            DrawUISystem drawUISystem = ModContent.GetInstance<DrawUISystem>();
+            DebugSystem debugSystem = ModContent.GetInstance<DebugSystem>();
+
 
             // Add debug options
             AddHeader("Hitboxes");
-            AddOnOffOption(hitboxSystem.ToggleHitboxes, "Hitboxes Off", "Show hitboxes of all entities");
+            AddOnOffOption(hitboxSystem.TogglePlayerHitboxes, "Player Hitboxes Off", "Show player hitboxes");
+            AddOnOffOption(hitboxSystem.ToggleNPCHitboxes, "NPC Hitboxes Off", "Show NPC hitboxes (town NPCs, enemies and bosses)");
+            AddOnOffOption(hitboxSystem.ToggleProjAndMeleeHitboxes, "Projectile Hitboxes Off", "Show projectile and melee hitboxes");
             AddPadding();
 
+            // AddHeader("Info");
+            // AddOnOffOption(TogglePlayerInfo, "Player Info Off (todo)", "Show player info panel\nRight click to lock to top right corner");
+            // AddPadding();
+
             AddHeader("UI");
-            AddOnOffOption(drawUISystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");
-            AddOnOffOption(drawUISystem.ToggleUIDebugSizeElementDrawing, "UIElements Size Text Off", "Show sizes of UI elements");
-            AddOnOffOption(drawUISystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
+            AddOnOffOption(debugSystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");
+            AddOnOffOption(debugSystem.ToggleUIDebugSizeElementDrawing, "UIElements Size Text Off", "Show sizes of UI elements");
+            AddOnOffOption(debugSystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
             AddPadding();
 
             AddHeader("Debug Panel");
-            widthOption = AddSliderOption("Width", 0, 800, 100);
-            heightOption = AddSliderOption("Height", 0, 800, 100);
-            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a debug panel with the specified dimensions");
+            widthOption = AddSliderOption("Width", 0, 800, 100, null, 5);
+            heightOption = AddSliderOption("Height", 0, 800, 100, null, 5);
+            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a draggable panel with the specified dimensions");
             AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel");
             AddPadding();
 
             AddHeader("Logs");
-            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Right click to open folder location", Log.OpenLogFolder);
+            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Open log file \nRight click to open folder location", Log.OpenLogFolder);
             AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "This file shows currently enabled mods\nRight click to open folder location", Log.OpenEnabledJsonFolder);
+        }
+
+        private void TogglePlayerInfo()
+        {
+            showPlayerInfo = !showPlayerInfo;
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            if (showPlayerInfo)
+                sys.mainState.Append(playerInfoPanel = new PlayerInfoPanel());
+            else
+                sys.mainState.RemoveChild(playerInfoPanel);
         }
 
         private void SpawnDebugPanel()

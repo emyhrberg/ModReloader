@@ -13,6 +13,17 @@ namespace SquidTestingMod.Helpers
     {
         private static Mod ModInstance => ModContent.GetInstance<SquidTestingMod>();
 
+        /// <summary>
+        /// Log a message once every second
+        /// </summary>
+        public static void SlowInfo(string message)
+        {
+            if (Main.GameUpdateCount % 60 == 0)
+            {
+                ModInstance.Logger.Info(message);
+            }
+        }
+
         public static void Info(string message)
         {
             ModInstance.Logger.Info(message);

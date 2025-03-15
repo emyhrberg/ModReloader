@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.UI;
@@ -11,23 +13,24 @@ using Terraria.ModLoader.UI.Elements;
 namespace SquidTestingMod.Helpers
 {
     /// <summary>
-    /// A ModSystem that preloads assets early in the mod loading process.
+    /// To add a new asset, simply add a new field like:
+    /// public static Asset<Texture2D> MyAsset;
     /// </summary>
     public class LoadAssets : ModSystem
     {
         public override void Load()
         {
-            // Preload all assets
-            Assets.PreloadAllAssets();
+            var ignored = Ass.Initialized;
         }
     }
 
-    /// <summary>
-    /// A static helper class for loading and preloading mod assets.
-    /// </summary>
-    public static class Assets
+    public static class Ass
     {
-        // Button textures
+        // Buttons
+        public static Asset<Texture2D> CollapseDown;
+        public static Asset<Texture2D> CollapseUp;
+        public static Asset<Texture2D> CollapseLeft;
+        public static Asset<Texture2D> CollapseRight;
         public static Asset<Texture2D> Button;
         public static Asset<Texture2D> ButtonOnOff;
         public static Asset<Texture2D> ButtonConfig;
@@ -39,6 +42,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonWorld;
         public static Asset<Texture2D> ButtonReloadSP;
         public static Asset<Texture2D> ButtonReloadMP;
+        public static Asset<Texture2D> ButtonMods;
 
         // Filter buttons
         public static Asset<Texture2D> FilterBG;
@@ -51,79 +55,41 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterArmor;
         public static Asset<Texture2D> FilterVanity;
         public static Asset<Texture2D> FilterAccessories;
-        public static Asset<Texture2D> FilterPotions;
+        public static Asset<Texture2D> FilterPotion;
         public static Asset<Texture2D> FilterPlaceables;
-
-        // Filter NPC buttons
         public static Asset<Texture2D> FilterTown;
         public static Asset<Texture2D> FilterMob;
-
-        // Sort buttons
         public static Asset<Texture2D> SortID;
         public static Asset<Texture2D> SortValue;
         public static Asset<Texture2D> SortRarity;
         public static Asset<Texture2D> SortName;
         public static Asset<Texture2D> SortDamage;
         public static Asset<Texture2D> SortDefense;
-
-        // Resize
         public static Asset<Texture2D> Resize;
 
-        public static void PreloadAllAssets()
+        // Misc
+        public static Asset<Texture2D> Arrow;
+
+        // Bool for checking if assets are loaded
+        public static bool Initialized { get; set; }
+
+        // Constructor
+        static Ass()
         {
-            // Start timer
-            Stopwatch s = Stopwatch.StartNew();
-
-            // ALL ASSETS
-            Button = PreloadAsset("Button");
-            ButtonOnOff = PreloadAsset("ButtonOnOff");
-            ButtonConfig = PreloadAsset("ButtonConfig");
-            ButtonItems = PreloadAsset("ButtonItems");
-            ButtonNPC = PreloadAsset("ButtonNPC");
-            ButtonNPC_XMAS = PreloadAsset("ButtonNPC_XMAS");
-            ButtonReloadSP = PreloadAsset("ButtonReloadSP");
-            ButtonReloadMP = PreloadAsset("ButtonReloadMP");
-            ButtonPlayer = PreloadAsset("ButtonPlayer");
-            ButtonDebug = PreloadAsset("ButtonDebug");
-            ButtonWorld = PreloadAsset("ButtonWorld");
-
-            FilterBG = PreloadAsset("FilterBG");
-            FilterBGActive = PreloadAsset("FilterBGActive");
-            FilterAll = PreloadAsset("FilterAll");
-            FilterMelee = PreloadAsset("FilterMelee");
-            FilterRanged = PreloadAsset("FilterRanged");
-            FilterMagic = PreloadAsset("FilterMagic");
-            FilterSummon = PreloadAsset("FilterSummon");
-            FilterArmor = PreloadAsset("FilterArmor");
-            FilterVanity = PreloadAsset("FilterVanity");
-            FilterAccessories = PreloadAsset("FilterAccessories");
-            FilterPotions = PreloadAsset("FilterPotion");
-            FilterPlaceables = PreloadAsset("FilterPlaceables");
-
-            FilterTown = PreloadAsset("FilterTown");
-            FilterMob = PreloadAsset("FilterMob");
-
-            SortID = PreloadAsset("SortID");
-            SortValue = PreloadAsset("SortValue");
-            SortRarity = PreloadAsset("SortRarity");
-            SortName = PreloadAsset("SortName");
-            SortDamage = PreloadAsset("SortDamage");
-            SortDefense = PreloadAsset("SortDefense");
-
-            Resize = PreloadAsset("Resize");
-
-            // Stop timer
-            s.Stop();
-            Log.Info($"Time to Preload all assets in {s.ElapsedMilliseconds}ms.");
+            foreach (FieldInfo field in typeof(Ass).GetFields())
+            {
+                if (field.FieldType == typeof(Asset<Texture2D>))
+                {
+                    field.SetValue(null, RequestAsset(field.Name));
+                }
+            }
         }
 
-
-        /// <summary>
-        /// Preloads an asset with ImmediateLoad mode in the "SquidTestingMod/Assets" directory.
-        /// </summary>
-        private static Asset<Texture2D> PreloadAsset(string path)
+        private static Asset<Texture2D> RequestAsset(string path)
         {
-            return ModContent.Request<Texture2D>("SquidTestingMod/Assets/" + path, AssetRequestMode.AsyncLoad);
+            // string modName = typeof(Assets).Namespace;
+            string modName = "SquidTestingMod"; // Use this, in case above line doesnt work
+            return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }
 }

@@ -17,7 +17,6 @@ public class CustomSlider : CustomSliderBase
     private Action<float> _slideKeyboardAction;
     private Func<float, Color> _blipFunc;
     private Action _slideGamepadAction;
-    private const bool BOTHER_WITH_TEXT = false;
     private bool _isReallyMouseOvered;
     private bool _alreadyHovered;
     private bool _soundedUsage;
@@ -80,7 +79,8 @@ public class CustomSlider : CustomSliderBase
         TextureAssets.ColorBar.Frame();
 
         // actual position of the entire slider here
-        Vector2 vector2 = new(dimensions.X + dimensions.Width, dimensions.Y + num);
+        float X_OFFSET = 18f; // move right
+        Vector2 vector2 = new(dimensions.X + dimensions.Width + X_OFFSET, dimensions.Y + num);
 
 
         bool wasInBar;

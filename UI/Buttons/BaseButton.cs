@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -25,7 +26,6 @@ namespace SquidTestingMod.UI.Buttons
         protected string HoverText = "";
         protected float opacity = 0.4f;
         public ButtonText buttonUIText;
-        public float RelativeLeftOffset = 0f;
         public bool Active = true;
 
         // Animation frames
@@ -35,21 +35,23 @@ namespace SquidTestingMod.UI.Buttons
         // Animations variables to be set by child classes
         protected virtual float SpriteScale => 1;
         protected virtual int StartFrame => 1;
-        protected virtual int MaxFrames => 3;
-        protected virtual int FrameSpeed => 8;
-        protected virtual int FrameWidth => 38;
-        protected virtual int FrameHeight => 48;
+        protected virtual int MaxFrames => 1;
+        protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
+        protected abstract int FrameWidth { get; }
+        protected abstract int FrameHeight { get; }
 
+        // Constructor
         protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
         {
-            Button = Assets.Button;
+            Button = Ass.Button;
             Spritesheet = spritesheet;
             HoverText = hoverText;
             SetImage(Button);
             currFrame = StartFrame;
 
             // Add a UIText centered horizontally at the bottom of the button.
-            buttonUIText = new ButtonText(buttonText);
+            // Set the scale; 70f seems to fit to 0.9f scale.
+            buttonUIText = new ButtonText(text: buttonText, textScale: 0.9f, large: false);
             Append(buttonUIText);
         }
 
@@ -58,22 +60,22 @@ namespace SquidTestingMod.UI.Buttons
         /// </summary>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            if (Conf.HideCollapseButton && !Main.playerInventory)
+                return;
+
             if (!Active || Button == null || Button.Value == null)
                 return;
 
-            // Get the button size from MainState
+            // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = sys?.mainState?.ButtonSize ?? 70f; // default to 70 if MainState is null
+            float buttonSize = 70f;
 
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
-            opacity = IsMouseHovering ? 1f : 0.4f; // Determine opacity based on mouse hover.
 
-            if (!Conf.AnimateButtons)
-            {
-                opacity = 1f;
-            }
+            // Set the opacity based on mouse hover.
+            opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
 
             // Set UIText opacity
             buttonUIText.TextColor = Color.White * opacity;
@@ -84,7 +86,7 @@ namespace SquidTestingMod.UI.Buttons
             // Draw the animation texture
             if (Spritesheet != null)
             {
-                if (IsMouseHovering && Conf.AnimateButtons)
+                if (IsMouseHovering)
                 {
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
@@ -112,9 +114,11 @@ namespace SquidTestingMod.UI.Buttons
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
             }
 
-            // Draw tooltip text if hovering.
-            if (IsMouseHovering)
+            // Draw tooltip text if hovering and HoverText is given (see MainState).
+            if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
+            {
                 UICommon.TooltipMouseText(HoverText);
+            }
         }
 
         //Disable button click if config window is open
@@ -148,19 +152,12 @@ namespace SquidTestingMod.UI.Buttons
             return base.ContainsPoint(point);
         }
 
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            if (Conf.AnimateButtons)
-            {
-                base.MouseOver(evt);
-            }
-            // Otherwise, do nothing. The UIElement's IsMouseHovering property will still be set,
-            // so your DrawSelf code will properly adjust the opacity.
-        }
-
         // Disable item use on click
         public override void Update(GameTime gameTime)
         {
+            if (Conf.HideCollapseButton && !Main.playerInventory)
+                return;
+
             // base update
             base.Update(gameTime);
 

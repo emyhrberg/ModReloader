@@ -1,6 +1,6 @@
+using System.IO;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.PacketHandlers;
-using System.IO;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod
@@ -16,13 +16,11 @@ namespace SquidTestingMod
         public override void Load()
         {
             ClientDataHandler.ReadData();
-            //On_ModLoader.Unload -= On_ModLoader_Unload;
         }
 
         public override void Unload()
         {
             ClientDataHandler.WriteData();
-            //On_ModLoader.Unload += On_ModLoader_Unload;
         }
 
     }

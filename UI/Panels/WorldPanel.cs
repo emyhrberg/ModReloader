@@ -1,30 +1,26 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.GameContent.Events;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace SquidTestingMod.UI.Panels
 {
     /// <summary>
     /// A panel containing options to modify player behaviour like God, Fast, Build, etc.
     /// </summary>
-    public class WorldPanel : RightParentPanel
+    public class WorldPanel : OptionPanel
     {
         // Variables
-        OnOffOption moon;
-        OnOffOption difficulty;
-        SliderOption timeOption;
-        bool timeSliderActive = false;
-        bool enableSpawning = true;
+        // private string worldName = "";
+        private OnOffOption moon;
+        private OnOffOption difficulty;
+        private SliderOption timeOption;
+        private bool timeSliderActive = false;
+        private SliderOption townNpcSlider; // New slider for town NPCs
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -47,54 +43,67 @@ namespace SquidTestingMod.UI.Panels
                 _ => "Unknown Difficulty"
             };
 
-            AddHeader("World Info");
-            AddOnOffOption(null, "Name: " + worldName);
-            AddOnOffOption(null, "Size: " + worldSize);
-            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText);
+            // AddHeader("World Info");
+            // AddOnOffOption(null, "Name: " + worldName);
+            // AddOnOffOption(null, "Size: " + worldSize);
+
+
+            AddHeader("World Name: " + worldName);
+            AddHeader("Size: " + worldSize);
+            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
             AddPadding();
 
             AddHeader("Time");
-            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime);
-            timeOption.textElement.HAlign = 0.05f;
+            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime, 1800f / 86400f, 1f, hover: "Click and drag to change time");
             moon = AddOnOffOption(IncreaseMoonphase, $"Moon Phase: {Main.moonPhase} ({GetMoonPhaseName()})", "Click to cycle moon phases", DecreaseMoonphase);
             AddPadding();
 
-            AddHeader("Weather");
-            AddOnOffOption(ToggleRain, "Rain Off");
-            AddOnOffOption(ToggleSandstorm, "Sandstorm Off");
-            AddPadding();
-
-            AddHeader("Evil");
-            AddOnOffOption(null, "Infection Spread Off");
-            AddOnOffOption(null, "Crimson/Corruption: 0%");
-            AddOnOffOption(null, "Hallow: 0%");
-            AddPadding();
-
             AddHeader("Enemies");
-            AddOnOffOption(() => ToggleEnemySpawnRate(), "Enemies Can Spawn: On");
-            AddPadding();
+            AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1, 1, hover: "Set the spawn rate multiplier");
 
-            AddHeader("Peaceful Events");
-            AddOnOffOption(BirthdayParty.ToggleManualParty, "Party Off");
-            AddOnOffOption(LanternNight.ToggleManualLanterns, "Lantern Night Off");
+            // Town NPCs
+            // Force at least 1 for the max, just so the slider has a range
+            int numberOfTownNPCs = Main.npc.Count(npc => npc.active && npc.townNPC);
+            float maxValue = Math.Max(1f, numberOfTownNPCs);
+            townNpcSlider = AddSliderOption(
+            "Town NPCs",
+            0f,                   // min
+            maxValue,             // max
+            maxValue,             // default value
+            UpdateTownNpcSlider,  // callback
+            1f,                   // increment
+            1f,                   // scroll speed
+            "Set the number of town NPCs (scuffed)"
+        );
+
+            // tracking
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track Enemies Off", "Show all enemies position with an arrow");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleCritterTracking, "Track Critters Off", "Show all critters position with an arrow");
+            AddOnOffOption(DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track Town NPCs Off", "Show all town NPCs position with an arrow");
+
+
+
             AddPadding();
 
             AddHeader("Pre-HM Events");
-            AddOnOffOption(StartBloodMoon, "Start Blood Moon");
+            AddOnOffOption(BirthdayParty.ToggleManualParty, "Party Off");
+            AddOnOffOption(StartBloodMoon, "Start Blood Moon", "Start a Blood Moon event and set the time to 7:30 PM");
             AddOnOffOption(() => TryStartInvasion(InvasionID.GoblinArmy), "Start Goblin Invasion");
             AddOnOffOption(SpawnSlimeRain, "Start Slime Rain");
-            AddOnOffOption(null, "Start Old One's Army");
-            AddOnOffOption(null, "Start Torch God");
+            // AddOnOffOption(null, "Start Old One's Army (todo)");
+            // AddOnOffOption(null, "Start Torch God (todo)");
+            AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
             AddHeader("HM Events");
-            AddOnOffOption(null, "Start Frost Legion");
+            // AddOnOffOption(null, "Start Frost Legion (todo)");
             AddOnOffOption(ToggleSolarEclipse, "Start Solar Eclipse");
             AddOnOffOption(() => TryStartInvasion(InvasionID.PirateInvasion), "Start Pirate Invasion");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Start Pumpkin Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.CachedFrostMoon), "Start Frost Moon");
             AddOnOffOption(() => TryStartInvasion(InvasionID.MartianMadness), "Start Martian Madness");
-            AddOnOffOption(null, "Start Lunar Events");
+            // AddOnOffOption(null, "Start Lunar Events (todo)");
+            AddOnOffOption(TryStopInvasion, "Stop Invasion");
             AddPadding();
 
             AddHeader("World");
@@ -104,6 +113,50 @@ namespace SquidTestingMod.UI.Panels
             AddPadding();
         }
 
+        private void UpdateTownNpcSlider(float newValue)
+        {
+            int targetCount = (int)newValue;
+            int currentCount = GetTownNpcCount();
+
+            if (targetCount < currentCount)
+            {
+                int countToKill = currentCount - targetCount;
+                KillTownNPCs(countToKill);
+            }
+
+            // Re-sync the slider in case the count actually changed
+            int updatedCount = GetTownNpcCount();
+            townNpcSlider.SetValue(updatedCount);
+            townNpcSlider.UpdateText("Town NPCs: " + updatedCount);
+        }
+
+        private int GetTownNpcCount() => Main.npc.Count(npc => npc.active && npc.townNPC);
+
+
+        // Helper method to “kill” a given number of town NPCs.
+        private void KillTownNPCs(int count)
+        {
+            foreach (NPC npc in Main.npc)
+            {
+                if (count <= 0)
+                    break;
+
+                if (npc.active && npc.townNPC)
+                {
+                    // Use StrikeNPC with damage equal to npc.lifeMax to ensure death.
+                    npc.StrikeInstantKill();
+                    count--;
+                }
+            }
+        }
+
+        private void TryStopInvasion()
+        {
+            Main.NewText("Stopping invasion...");
+            Main.invasionType = 0;
+            Main.invasionProgress = 0;
+        }
+
         private string GetInvasionName(int invasionType)
         {
             return invasionType switch
@@ -111,7 +164,6 @@ namespace SquidTestingMod.UI.Panels
                 InvasionID.GoblinArmy => "Goblin Army Invasion",
                 InvasionID.PirateInvasion => "Pirate Invasion",
                 InvasionID.CachedPumpkinMoon => "Pumpkin Moon",
-                // InvasionID.CachedFrostMoon => "Frost Moon",
                 InvasionID.MartianMadness => "Martian Madness",
                 _ => "Unknown Invasion"
             };
@@ -137,12 +189,12 @@ namespace SquidTestingMod.UI.Panels
             }
             else
             {
-                // TODO set time to 7:30 PM
-                // Main.dayTime = false;
-                // Main.time = 48600.0;
+                // set time to 7:29 PM
+                Main.dayTime = true;
+                Main.time = 53999.0;
 
                 Main.bloodMoon = true;
-                Main.NewText("Starting Blood Moon...");
+                Main.NewText("Starting Blood Moon... (and night)");
             }
         }
 
@@ -210,49 +262,6 @@ namespace SquidTestingMod.UI.Panels
             }
             // Set the text element
             moon.UpdateText("Moon Phase: " + Main.moonPhase + " (" + GetMoonPhaseName() + ")");
-        }
-
-        private void ToggleEnemySpawnRate()
-        {
-            enableSpawning = !enableSpawning;
-
-            if (!enableSpawning)
-            {
-                // Butcher all hostile NPCs
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    if (Main.npc[i].active && Main.npc[i].CanBeChasedBy()) // Checks if it's a hostile NPC
-                    {
-                        Main.npc[i].life = 0;
-                        Main.npc[i].HitEffect();
-                        Main.npc[i].active = false;
-                        // NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, i); // Sync NPC despawn
-                    }
-                }
-
-                // Set spawn rate to 0x (disable spawning)
-                SpawnRateMultiplier.Multiplier = 0f;
-                Main.NewText("Enemy spawn rate disabled. All hostiles removed.", 255, 0, 0);
-            }
-            else
-            {
-                // Restore normal spawn rate (1x)
-                SpawnRateMultiplier.Multiplier = 1f;
-                Main.NewText("Enemy spawn rate set to normal (1x).", 0, 255, 0);
-            }
-        }
-
-        private void ToggleSandstorm()
-        {
-            Sandstorm.Happening = !Sandstorm.Happening;
-            Main.NewText(Sandstorm.Happening ? "Starting Sandstorm..." : "Ending Sandstorm...");
-        }
-
-        private void ToggleRain()
-        {
-            Main.raining = !Main.raining;
-            Main.maxRaining = Main.raining ? 1f : 0f;
-            Main.NewText(Main.raining ? "Starting Rain..." : "Ending Rain...");
         }
 
         private void TryStartInvasion(int invasionType)
@@ -389,6 +398,17 @@ namespace SquidTestingMod.UI.Panels
 
         public override void Update(GameTime gameTime)
         {
+            // Check if unknown name still. Then we have to update it
+            // if (TitlePanel.HeaderText.Text.Length == 5)
+            // {
+            //     if (Main.ActiveWorldFileData.GetWorldName() != null)
+            //     {
+            //         TitlePanel.HeaderText.SetText("World: " + Main.ActiveWorldFileData.GetWorldName());
+            //         Main.NewText("World name updated to: " + Main.ActiveWorldFileData.GetWorldName());
+            //         Log.Info("World name updated to: " + Main.ActiveWorldFileData.GetWorldName());
+            //     }
+            // }
+
             if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
             {
                 // Normal game time progression logic

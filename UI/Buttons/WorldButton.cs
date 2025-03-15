@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
@@ -24,36 +25,25 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Toggle world panel
+            // Get panels
             var sys = ModContent.GetInstance<MainSystem>();
+            var allPanels = sys?.mainState?.RightSidePanels;
             var worldPanel = sys?.mainState?.worldPanel;
-            var playerPanel = sys?.mainState?.playerPanel;
-            var debugPanel = sys?.mainState?.debugPanel;
 
             // Close other panels
-            if (playerPanel != null && playerPanel.GetActive())
+            foreach (var panel in allPanels.Except([worldPanel]))
             {
-                playerPanel.SetActive(false);
-            }
-            if (debugPanel != null && debugPanel.GetActive())
-            {
-                debugPanel.SetActive(false);
+                if (panel.GetActive())
+                {
+                    panel.SetActive(false);
+                }
             }
 
-            // Toggle world panel
-            if (worldPanel != null)
-            {
-                if (worldPanel.GetActive())
-                {
-                    worldPanel.SetActive(false);
-                }
-                else
-                {
-                    worldPanel.SetActive(true);
-                }
-            }
+            // Toggle this panel
+            if (worldPanel.GetActive())
+                worldPanel.SetActive(false);
+            else
+                worldPanel.SetActive(true);
         }
-
-
     }
 }

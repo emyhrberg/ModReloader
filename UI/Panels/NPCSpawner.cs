@@ -27,12 +27,12 @@ namespace SquidTestingMod.UI.Panels
         private NPCFilter currentFilter = NPCFilter.All;
         private List<(FilterButton button, NPCFilter filter)> filterButtons = new();
 
-        public NPCSpawner() : base("NPC Spawner")
+        public NPCSpawner() : base(header: "NPC Spawner")
         {
             // Add filter buttons
-            AddFilterButton(Assets.FilterAll, "All NPCs", NPCFilter.All, 0);
-            AddFilterButton(Assets.FilterTown, "Town NPCs", NPCFilter.Town, 25);
-            AddFilterButton(Assets.FilterMob, "Bosses", NPCFilter.Bosses, 50);
+            AddFilterButton(Ass.FilterAll, "All NPCs", NPCFilter.All, 0);
+            AddFilterButton(Ass.FilterTown, "Town NPCs", NPCFilter.Town, 25);
+            AddFilterButton(Ass.FilterMob, "Bosses", NPCFilter.Bosses, 50);
 
             // Populate the grid with NPC slots
             AddItemSlotsToGrid();
@@ -63,9 +63,9 @@ namespace SquidTestingMod.UI.Panels
         private void AddItemSlotsToGrid()
         {
             int allNPCs = NPCLoader.NPCCount; // Use total count including modded NPCs
-            int count = 0;
             Stopwatch s = Stopwatch.StartNew();
 
+            List<UIElement> npcSlots = new List<UIElement>();
             for (int i = 1; i < allNPCs; i++)
             {
                 try
@@ -74,11 +74,7 @@ namespace SquidTestingMod.UI.Panels
                     npc.SetDefaults(i);
 
                     CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);
-                    ItemsGrid.Add(npcSlot);
-
-                    count++;
-                    if (count >= Conf.MaxItemsToDisplay)
-                        break;
+                    npcSlots.Add(npcSlot);
                 }
                 catch (Exception)
                 {
@@ -89,6 +85,9 @@ namespace SquidTestingMod.UI.Panels
                     // Log.Warn($"Skipping NPC index {i} due to error: {ex.Message}");
                 }
             }
+
+            // Add all slots to the grid
+            ItemsGrid.AddRange(npcSlots);
 
             s.Stop();
             ItemCountText.SetText(ItemsGrid.Count + " NPCs in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
@@ -104,8 +103,10 @@ namespace SquidTestingMod.UI.Panels
             ItemsGrid.Clear();
 
             int allNPCs = NPCLoader.NPCCount;
-            int count = 0;
             Stopwatch s = Stopwatch.StartNew();
+
+            // list of NPCSlots
+            List<CustomNPCSlot> npcSlots = new List<CustomNPCSlot>();
 
             for (int i = 1; i < allNPCs; i++)
             {
@@ -127,13 +128,12 @@ namespace SquidTestingMod.UI.Panels
                 if (!passesFilter)
                     continue;
 
-                count++;
-                if (count >= Conf.MaxItemsToDisplay)
-                    break;
-
                 CustomNPCSlot npcSlot = new(npc, ItemSlot.Context.ShopItem);
-                ItemsGrid.Add(npcSlot);
+                npcSlots.Add(npcSlot);
             }
+            // Add all slots to the grid
+            ItemsGrid.AddRange(npcSlots);
+
             s.Stop();
             ItemCountText.SetText(ItemsGrid.Count + " NPCs in " + Math.Round(s.ElapsedMilliseconds / 1000.0, 3) + " seconds");
         }

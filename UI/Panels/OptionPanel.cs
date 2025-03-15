@@ -1,5 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -11,28 +13,37 @@ namespace SquidTestingMod.UI.Panels
     /// A parent panel
     /// for Player, Debug, World panels
     /// </summary>
-    public abstract class RightParentPanel : DraggablePanel
+    public abstract class OptionPanel : DraggablePanel
     {
         // Variables
         // 35 is the customtitlepanel height
         // 12 is minus the padding of a panel
         protected float currentTop = 35 - 12;
 
-        private UIList uiList;
-        private UIScrollbar scrollbar;
+        protected UIList uiList;
+        protected UIScrollbar scrollbar;
         protected bool scrollbarEnabled = true;
 
-        public RightParentPanel(string title, bool scrollbarEnabled = true) : base(title)
+        private int panelPadding = 12;
+
+        public OptionPanel(string title, bool scrollbarEnabled = true) : base(title)
         {
             // panel settings
             BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
             Height.Set(570f, 0f);
-            Draggable = false; // TODO change this later when u fix sliders
+            Top.Set(-20, 0f);
+            Left.Set(-20, 0f);
+
+            Draggable = false; // maybe change this later when u fix sliders
 
             // Create a new list
-            uiList = new()
+            uiList = new UIList
             {
-                Width = { Percent = 1f },
+                MaxWidth = { Percent = 1f, Pixels = panelPadding * 2 },
+                Width = { Percent = 1f, Pixels = panelPadding * 2 },
+                Left = { Pixels = 0 },
+
+                MaxHeight = { Percent = 1f, Pixels = -35 - 12 },
                 Height = { Percent = 1f, Pixels = -35 - 12 },
                 HAlign = 0.5f,
                 VAlign = 0f,
@@ -96,10 +107,24 @@ namespace SquidTestingMod.UI.Panels
             return onOffPanel;
         }
 
-        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null)
+        protected ModItem AddModItem(bool isSetToReload, string name, Texture2D icon, Action leftClick, string hover = "", Action rightClick = null)
         {
             // Create a new option panel
-            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged);
+            ModItem modItem = new(isSetToReload, name, icon, hover);
+            modItem.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
+            modItem.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
+
+            // Add the option to the ui list
+            uiList.Add(modItem);
+
+            // Add the panel to the player panel
+            return modItem;
+        }
+
+        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f, string hover = "")
+        {
+            // Create a new option panel
+            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover);
 
             // Add the option to the ui list
             uiList.Add(sliderPanel);
@@ -110,16 +135,22 @@ namespace SquidTestingMod.UI.Panels
 
         public override void Update(GameTime gameTime)
         {
-            base.Update(gameTime);
+            // test
+            //uiList.Width.Set(0, 1);
 
-            // If the mouse is over your panel, capture mouse input.
-            // NOTE: not working
-            // if (ContainsPoint(Main.MouseScreen))
-            // {
-            //     Log.Info("disable hover");
-            //     Main.LocalPlayer.mouseInterface = true;
-            //     Main.hoverItemName = "";
-            // }
+            // If the inventory is open, move the panel to the left by 350 pixels
+            bool inventoryOpen = Main.playerInventory;
+
+            if (inventoryOpen)
+            {
+                Left.Set(-225, 0f);
+            }
+            else
+            {
+                Left.Set(-20, 0f);
+            }
+
+            base.Update(gameTime);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace SquidTestingMod.UI.Panels
         private NPC displayNPC;
 
         // Animation fields
-        private float bgScale = 0.6f; // Scale for the background slot
+        // private float bgScale = 0.6f; // Scale for the background slot
         private const int desiredSize = 40; // Target size for the NPC sprite drawing
         private int frameCounter = 0;
         private int frameTimer = 0;
