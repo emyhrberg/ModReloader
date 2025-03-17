@@ -40,6 +40,26 @@ namespace SquidTestingMod.Common.Configs
 
         [DefaultValue(false)]
         public bool HideCollapseButton = false;
+
+
+        // public override void OnChanged()
+        // {
+        //     base.OnChanged();
+
+        //     // Get mainstate
+        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
+        //     if (sys == null)
+        //     {
+        //         Log.Info("MainSystem is null in Config.OnChanged()");
+        //         return;
+        //     }
+
+        //     // Delete all buttons and re-add them
+        //     sys.mainState.AllButtons.Clear();
+        //     sys.mainState.RemoveAllChildren();
+        //     sys.mainState.AddEverything();
+        //     Log.Info("Config.OnChanged() ran successfully");
+        // }
     }
 
     public class NPCSpawnerConfig

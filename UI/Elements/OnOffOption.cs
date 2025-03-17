@@ -8,7 +8,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     public class OnOffOption : PanelElement
     {

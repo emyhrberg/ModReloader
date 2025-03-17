@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// NPC Spawner Panel – now structured to match the Item Spawner Panel in size, proportions, and behavior.

@@ -2,7 +2,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
-using SquidTestingMod.UI.Panels;
+using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.ModLoader;
 

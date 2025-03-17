@@ -10,7 +10,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     // Instead of inheriting the vanilla behavior we override the drawing and click behavior.
     public class CustomItemSlot : UIItemSlot

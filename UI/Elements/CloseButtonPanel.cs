@@ -1,16 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Panels;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     public class CloseButtonPanel : UIPanel
     {

@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     // A minimal NPCSlot that displays an NPC in a shop-style slot.
     public class CustomNPCSlot : UIElement
@@ -147,7 +147,7 @@ namespace SquidTestingMod.UI.Panels
             int desiredX = (int)(playerX + Conf.NPCSpawnLocation.X);
             int desiredY = (int)(playerY + Conf.NPCSpawnLocation.Y);
             NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
-            Log.Info("Spawned NPC " + displayNPC.FullName + " at " + desiredX + ", " + desiredY);
+            Log.Info("Spawned NPC " + displayNPC.FullName + " at (X,Y):" + desiredX + ", " + desiredY);
         }
     }
 

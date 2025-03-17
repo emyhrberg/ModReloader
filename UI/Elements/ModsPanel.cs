@@ -10,27 +10,36 @@ using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel to display the contents of client.log.
     /// </summary>
     public class ModsPanel : OptionPanel
     {
-        private List<ModItem> myModItems = [];
-        private List<ModItem> enabledModItems = [];
+        private List<ModItem> myMods = [];
+        private List<ModItem> enabledMods = [];
 
         public ModsPanel() : base(title: "Mods List", scrollbarEnabled: true)
         {
             Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
 
             AddHeader("My Mods");
+            AddPadding(5f);
             foreach (var modPath in GetModFiles())
             {
+                // get folder path and icon
                 string modFolderName = Path.GetFileName(modPath);
+                // UIImage icon = GetIconImage(modPath);
+
+                bool isSetToReload = modFolderName == Conf.ModToReload;
+                Log.Info("Mod name: " + modFolderName + " isSetToReload: " + isSetToReload);
+
+                // create mod item
                 ModItem modItem = AddModItem(
                     isSetToReload: modFolderName == Conf.ModToReload,
                     name: modFolderName,
@@ -38,7 +47,8 @@ namespace SquidTestingMod.UI.Panels
                     leftClick: () => SetModAsDefaultReloadMod(modFolderName),
                     hover: "Click to make this the default mod to reload"
                 );
-                myModItems.Add(modItem);
+                myMods.Add(modItem);
+                AddPadding(5f);
             }
             AddPadding();
 
@@ -57,9 +67,6 @@ namespace SquidTestingMod.UI.Panels
                 AddPadding(5f);
             }
             AddPadding();
-
-            AddHeader("All Mods");
-            AddOnOffOption(() => { }, "Mod Name", "Left click to enable");
         }
 
         private void SetModAsDefaultReloadMod(string modFolderName)
@@ -69,9 +76,9 @@ namespace SquidTestingMod.UI.Panels
             c.ModToReload = modFolderName;
 
             // update the UI opacity
-            foreach (var item in myModItems)
+            foreach (var item in myMods)
             {
-                Log.Info("Item.ModName: " + item.ModName);
+                // Log.Info("Item.ModName: " + item.ModName);
                 bool isSetToReload = item.ModName == modFolderName;
                 if (isSetToReload)
                 {
@@ -84,7 +91,25 @@ namespace SquidTestingMod.UI.Panels
             }
         }
 
-        private List<string> GetModFiles()
+        private void DisableMod(string modName)
+        {
+            // update UI
+            foreach (var item in enabledMods)
+            {
+                if (item.ModName == modName)
+                {
+                    item.SetEnabled(false);
+                }
+                else
+                {
+                    item.SetEnabled(true);
+                }
+            }
+
+            // todo disable mod
+        }
+
+        public List<string> GetModFiles()
         {
             List<string> strings = [];
 
@@ -99,17 +124,6 @@ namespace SquidTestingMod.UI.Panels
             for (int i = 0; i < modSources.Length; i++)
             {
                 strings.Add(modSources[i]);
-            }
-
-            // 3. Finding path by ModToReload name
-            string modPath = modSources.FirstOrDefault(p => Path.GetFileName(p) == Conf.ModToReload);
-            if (modPath != null)
-            {
-                Log.Info($"Path to {Conf.ModToReload}: {modPath}");
-            }
-            else
-            {
-                Console.WriteLine("No path found");
             }
             return strings;
         }

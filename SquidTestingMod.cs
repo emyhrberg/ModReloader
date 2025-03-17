@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod
 {
+    // Use both sides currently (it is default if none is set), but can be changed to client only if needed
     [Autoload(Side = ModSide.Client)]
     public class SquidTestingMod : Mod
     {
@@ -22,6 +23,5 @@ namespace SquidTestingMod
         {
             ClientDataHandler.WriteData();
         }
-
     }
 }

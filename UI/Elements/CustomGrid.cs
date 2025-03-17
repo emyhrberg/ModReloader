@@ -9,7 +9,7 @@ using Terraria.GameInput;
 using Terraria.ModLoader.UI.Elements;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     //TOsDO: wow that's a lot of redundant this.
     public class CustomGrid : UIElement

@@ -12,7 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel containing a grid of all items in the game that can be spawned.
@@ -182,7 +182,7 @@ namespace SquidTestingMod.UI.Panels
                     ItemFilter.Vanity => item.vanity,
                     ItemFilter.Accessories => item.accessory,
                     ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
-                    ItemFilter.Placeables => item.createTile >= 0 || item.createWall >= 0,
+                    ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
                     _ => false
                 };
 

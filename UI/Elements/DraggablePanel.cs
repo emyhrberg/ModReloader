@@ -2,14 +2,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 using XPT.Core.Audio.MP3Sharp.Decoding;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel which can be dragged

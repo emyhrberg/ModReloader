@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ID;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel containing options to modify player behaviour like God, Fast, Build, etc.

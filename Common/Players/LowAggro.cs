@@ -2,7 +2,6 @@
 
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Configs;
-using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;

@@ -6,7 +6,7 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel containing options to modify player behavior like God, Noclip, etc.
@@ -27,6 +27,7 @@ namespace SquidTestingMod.UI.Panels
             options["noclip"] = AddOnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");
             options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Teleport Mode Off", "Right click to teleport to the mouse position");
             options["enemiesIgnore"] = AddOnOffOption(PlayerCheatManager.ToggleEnemiesIgnore, "Enemies Ignore Off", "Enemies ignore you due to low player aggro");
+            options["clickToKill"] = AddOnOffOption(PlayerCheatManager.ToggleClickToKill, "Click to Kill Off", "Click on an enemy to kill it instantly");
             options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Aura Off", "Light up the world around you");
             options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that touch you");
             options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you (not MP-supported)");

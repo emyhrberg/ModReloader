@@ -4,13 +4,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Panels;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel containing options to modify player behaviour like God,Fast,Build,etc.
@@ -47,11 +46,11 @@ namespace SquidTestingMod.UI.Panels
             AddOnOffOption(debugSystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
             AddPadding();
 
-            AddHeader("Debug Panel");
-            widthOption = AddSliderOption("Width", 0, 800, 100, null, 5);
-            heightOption = AddSliderOption("Height", 0, 800, 100, null, 5);
-            AddOnOffOption(SpawnDebugPanel, "Create DebugPanel", "Create a draggable panel with the specified dimensions");
-            AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel");
+            AddHeader("Create DebugPanel");
+            widthOption = AddSliderOption("Width", 0, 800, 100, null, 5, 1, hover: "Width of the panel to create");
+            heightOption = AddSliderOption("Height", 0, 800, 100, null, 5, 1, hover: "Height of the panel to create");
+            AddOnOffOption(SpawnDebugPanel, "Create", "Create a draggable DebugPanel with the specified dimensions");
+            AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel", hoverText: "Remove all DebugPanels from the screen");
             AddPadding();
 
             AddHeader("Logs");

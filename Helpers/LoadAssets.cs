@@ -1,12 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI.Elements;
 
@@ -69,6 +74,7 @@ namespace SquidTestingMod.Helpers
 
         // Misc
         public static Asset<Texture2D> Arrow;
+        public static List<Asset<Texture2D>> ModIcons = new();
 
         // Bool for checking if assets are loaded
         public static bool Initialized { get; set; }
@@ -83,6 +89,37 @@ namespace SquidTestingMod.Helpers
                     field.SetValue(null, RequestAsset(field.Name));
                 }
             }
+
+            // Load Mod Icons
+            // foreach (var modFolderName in GetModFiles())
+            // {
+            // Asset<Texture2D> icon = GetIconImage(modFolderName);
+            // ModIcons.Add(icon);
+            // }
+        }
+
+        private static Asset<Texture2D> GetIconImage(string modPath)
+        {
+            try
+            {
+                string iconPath = Path.Combine(modPath, "icon.png");
+                // Check if icon exists
+                if (!File.Exists(iconPath))
+                {
+                    Log.Info("2 No icon found for mod: " + modPath + ". Using default icon.");
+                    Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+                    return defaultIconTemp;
+                }
+
+                Asset<Texture2D> iconAsset = Main.Assets.Request<Texture2D>(iconPath, AssetRequestMode.ImmediateLoad);
+                return iconAsset;
+            }
+            catch (Exception)
+            {
+                Log.Info("No icon found for mod: " + modPath + ". Using default icon.");
+                Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+                return defaultIconTemp;
+            }
         }
 
         private static Asset<Texture2D> RequestAsset(string path)
@@ -90,6 +127,25 @@ namespace SquidTestingMod.Helpers
             // string modName = typeof(Assets).Namespace;
             string modName = "SquidTestingMod"; // Use this, in case above line doesnt work
             return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
+        }
+
+        private static List<string> GetModFiles()
+        {
+            List<string> strings = [];
+
+            // 1. Getting Assembly 
+            Assembly tModLoaderAssembly = typeof(Main).Assembly;
+
+            // 2. Gettig method for finding modSources paths
+            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
+            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
+
+            for (int i = 0; i < modSources.Length; i++)
+            {
+                strings.Add(modSources[i]);
+            }
+            return strings;
         }
     }
 }

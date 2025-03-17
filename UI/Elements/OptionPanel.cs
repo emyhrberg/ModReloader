@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using XPT.Core.Audio.MP3Sharp.Decoding;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     /// <summary>
     /// A parent panel

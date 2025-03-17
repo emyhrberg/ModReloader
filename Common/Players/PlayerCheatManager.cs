@@ -20,11 +20,12 @@ namespace SquidTestingMod.Common.Players
         public static bool PlaceAnywhere = false;
         public static bool PlaceFaster = false;
         public static bool MineFaster = false;
+        public static bool ClickToKill = false;
 
         // Check if any cheat is active
         public static bool IsAnyCheatEnabled =>
             God || Noclip || TeleportMode || LightMode || KillAura || MineAura ||
-            PlaceAnywhere || PlaceFaster || MineFaster || LowAggro;
+            PlaceAnywhere || PlaceFaster || MineFaster || LowAggro || ClickToKill;
 
         // Helper to set all cheats on/off
         public static void SetAllCheats(bool value)
@@ -39,11 +40,13 @@ namespace SquidTestingMod.Common.Players
             PlaceFaster = value;
             MineFaster = value;
             LowAggro = value;
+            ClickToKill = value;
         }
 
         public static void ToggleNoclip() => ToggleCheat(ref Noclip, "Noclip");
         public static void ToggleGod() => ToggleCheat(ref God, "God Mode");
         public static void ToggleEnemiesIgnore() => ToggleCheat(ref LowAggro, "Enemies Ignore");
+        public static void ToggleClickToKill() => ToggleCheat(ref ClickToKill, "Click To Kill");
         public static void ToggleLightMode() => ToggleCheat(ref LightMode, "Light Mode");
         public static void ToggleTeleportMode() => ToggleCheat(ref TeleportMode, "Teleport Mode");
         public static void ToggleMineFaster() => ToggleCheat(ref MineFaster, "Mine Faster");

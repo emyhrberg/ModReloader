@@ -5,7 +5,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 
-namespace SquidTestingMod.UI.Panels
+namespace SquidTestingMod.UI.Elements
 {
     // A simplified UI panel that mimics the UIModItem appearance.
     public class ModItem : UIPanel
@@ -73,6 +73,20 @@ namespace SquidTestingMod.UI.Panels
             else
             {
                 BackgroundColor = notSelected;
+                BorderColor = notSelected;
+            }
+        }
+
+        public void SetEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                BackgroundColor = this.selected;
+                BorderColor = this.selected;
+            }
+            else
+            {
+                BackgroundColor = new Color(50, 50, 50, 100);
                 BorderColor = notSelected;
             }
         }

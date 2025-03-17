@@ -7,7 +7,7 @@ using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Buttons;
-using SquidTestingMod.UI.Panels;
+using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.UI;
 
@@ -28,14 +28,19 @@ namespace SquidTestingMod.UI
         // Buttons
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
         public float ButtonSize = 70f;
-        public float offset = -70f * 3; // START offset for first button position relative to center
+        public float offset = 0; // START offset for first button position relative to center
         public List<BaseButton> AllButtons = [];
 
         // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState()
         {
-            // CUSTOM CUSTOM CUSTOM offset, see collapse also
-            offset -= 20f;
+            AddEverything();
+        }
+
+        public void AddEverything()
+        {
+            // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
+            offset = -ButtonSize * 3 - 20;
 
             // Add buttons
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
@@ -47,6 +52,8 @@ namespace SquidTestingMod.UI
             AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", "Reload the selected mod\nRight click to show multiplayer reload");
             offset -= ButtonSize; // move back to place MP above SP.
             AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", "Reload the selected mod\nRight click to show singleplayer reload");
+            AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
+            AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
 
             // Add collapse button on top
             Collapse collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);

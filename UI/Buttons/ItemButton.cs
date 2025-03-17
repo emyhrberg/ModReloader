@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
-using SquidTestingMod.UI.Panels;
+using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
