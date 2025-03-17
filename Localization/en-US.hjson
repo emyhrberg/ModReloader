@@ -47,7 +47,12 @@ Mods: {
 
 				EnterWorldSuperMode: {
 					Label: Enter World Super Mode
-					Tooltip: When entering a new world, enables most player abilities, excluding noclip and auras
+					Tooltip:
+						'''
+						When entering a new world:
+						- Enables most player abilities (excluding noclip and auras)
+						- Disable enemy spawns
+						'''
 				}
 
 				NPCSpawner: {
@@ -62,7 +67,7 @@ Mods: {
 
 				ButtonsPosition: {
 					Label: Buttons Position
-					Tooltip: All buttons and collapse will stick to this side of the screen
+					Tooltip: All buttons will stick to this side of the screen
 				}
 			}
 

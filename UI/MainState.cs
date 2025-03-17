@@ -26,6 +26,7 @@ namespace SquidTestingMod.UI
         public List<DraggablePanel> RightSidePanels = [];
 
         // Buttons
+        public Collapse collapse;
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
         public float ButtonSize = 70f;
         public float offset = 0; // START offset for first button position relative to center
@@ -40,7 +41,8 @@ namespace SquidTestingMod.UI
         public void AddEverything()
         {
             // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
-            offset = -ButtonSize * 3 - 20;
+            offset = -ButtonSize * 5 - 20;
+            // offset = -ButtonSize * 3 - 20;
 
             // Add buttons
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
@@ -56,7 +58,7 @@ namespace SquidTestingMod.UI
             AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
 
             // Add collapse button on top
-            Collapse collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
+            collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
             Append(collapse);
 
             // Add the panels (invisible by default)

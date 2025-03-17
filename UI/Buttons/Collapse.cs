@@ -69,7 +69,6 @@ namespace SquidTestingMod.UI.Buttons
                 // force MP button to disable when expanded
                 if (btn is ReloadMPButton mpBtn)
                 {
-                    Log.Info("Collapse: Disabling MP button");
                     mpBtn.Active = false;
                     mpBtn.buttonUIText.Active = false;
                 }
@@ -78,7 +77,7 @@ namespace SquidTestingMod.UI.Buttons
         }
 
         // Update visuals based on state
-        private void UpdateCollapseImage()
+        public void UpdateCollapseImage()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 

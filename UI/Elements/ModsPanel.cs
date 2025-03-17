@@ -21,92 +21,142 @@ namespace SquidTestingMod.UI.Elements
     /// </summary>
     public class ModsPanel : OptionPanel
     {
-        private List<ModItem> myMods = [];
+        private List<ModItem> modSources = [];
         private List<ModItem> enabledMods = [];
 
         public ModsPanel() : base(title: "Mods List", scrollbarEnabled: true)
         {
             Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
 
-            AddHeader("My Mods");
-            AddPadding(5f);
+            AddHeader("Mod Sources");
+            AddPadding(3f);
+
+            // Get the currently selected mod from config
+            string selectedMod = Conf.ModToReload;
+            bool foundSelectedMod = false;
+
             foreach (var modPath in GetModFiles())
             {
-                // get folder path and icon
+                // Get folder path and icon
                 string modFolderName = Path.GetFileName(modPath);
-                // UIImage icon = GetIconImage(modPath);
+                bool isSet = modFolderName == selectedMod;
 
-                bool isSetToReload = modFolderName == Conf.ModToReload;
-                Log.Info("Mod name: " + modFolderName + " isSetToReload: " + isSetToReload);
+                if (isSet)
+                {
+                    foundSelectedMod = true;
+                    Log.Info($"Found selected mod: {modFolderName}");
+                }
 
-                // create mod item
+                // Get icon
+                // Try to load the mod's icon from the file system
+                Texture2D modIcon = defaultIconTemp.Value;
+                string iconPath = Path.Combine(modPath, "icon.png");
+
+                if (File.Exists(iconPath))
+                {
+                    try
+                    {
+                        // Load the icon texture from file
+                        using FileStream stream = new FileStream(iconPath, FileMode.Open);
+                        modIcon = Texture2D.FromStream(Main.graphics.GraphicsDevice, stream);
+                        Log.Info($"Loaded custom icon for mod {modFolderName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Failed to load icon for mod {modFolderName}: {ex.Message}");
+                    }
+                }
+
+                // Create mod item
                 ModItem modItem = AddModItem(
-                    isSetToReload: modFolderName == Conf.ModToReload,
+                    isSetToReload: isSet,
                     name: modFolderName,
-                    icon: defaultIconTemp.Value,
-                    leftClick: () => SetModAsDefaultReloadMod(modFolderName),
-                    hover: "Click to make this the default mod to reload"
+                    icon: modIcon,
+                    leftClick: () => OnClickMyMod(modFolderName),
+                    hover: "Click to make this the mod to reload"
                 );
-                myMods.Add(modItem);
-                AddPadding(5f);
+                modSources.Add(modItem);
+
+                // Explicitly set the state based on whether it's the selected mod
+                modItem.SetState(isSet ? ModItem.ModItemState.Selected : ModItem.ModItemState.Unselected);
             }
+
+            // If no selected mod was found in the config, select the first one
+            if (!foundSelectedMod && modSources.Count > 0)
+            {
+                string firstModName = modSources[0].ModName;
+                Log.Info($"No mod matched '{selectedMod}', defaulting to first mod: {firstModName}");
+
+                // Update config
+                Config c = ModContent.GetInstance<Config>();
+                c.ModToReload = firstModName;
+                ConfigUtilities.SaveConfig(c);
+
+                // Update UI
+                modSources[0].SetState(ModItem.ModItemState.Selected);
+            }
+
             AddPadding();
 
             // Add mod items
             AddHeader("Enabled Mods");
+            AddPadding(3f);
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
             foreach (var mod in mods)
             {
-                AddModItem(
+                var modItem = AddModItem(
                     isSetToReload: false,
                     name: mod.DisplayNameClean,
                     icon: defaultIconTemp.Value,
-                    leftClick: null, // this should disable mod in the future (if possible), so that we can select which mods to reload
+                    leftClick: () => OnClickEnabledMod(mod.DisplayNameClean),
                     hover: $"{mod.Name} (v{mod.Version})"
                 );
-                AddPadding(5f);
+                enabledMods.Add(modItem);
+
+                // Make sure all enabled mods start in the Default state
+                modItem.SetState(ModItem.ModItemState.Default);
             }
-            AddPadding();
         }
 
-        private void SetModAsDefaultReloadMod(string modFolderName)
+        private void OnClickMyMod(string modFolderName)
         {
             // set mod to reload (just a config change)
             Config c = ModContent.GetInstance<Config>();
             c.ModToReload = modFolderName;
+            ConfigUtilities.SaveConfig(c);
 
-            // update the UI opacity
-            foreach (var item in myMods)
+            // set color of this mod to green
+            foreach (var modItem in modSources)
             {
-                // Log.Info("Item.ModName: " + item.ModName);
-                bool isSetToReload = item.ModName == modFolderName;
-                if (isSetToReload)
+                if (modItem.ModName == modFolderName)
                 {
-                    item.SetSelected(true);
+                    modItem.SetState(ModItem.ModItemState.Selected);
                 }
                 else
                 {
-                    item.SetSelected(false);
+                    modItem.SetState(ModItem.ModItemState.Unselected);
                 }
             }
         }
 
-        private void DisableMod(string modName)
+        private void OnClickEnabledMod(string modName)
         {
-            // update UI
-            foreach (var item in enabledMods)
+            foreach (var modItem in enabledMods)
             {
-                if (item.ModName == modName)
+                if (modItem.ModName == modName)
                 {
-                    item.SetEnabled(false);
-                }
-                else
-                {
-                    item.SetEnabled(true);
+                    if (modItem.state == ModItem.ModItemState.Default)
+                    {
+                        // enable mod
+                        modItem.SetState(ModItem.ModItemState.Disabled);
+                    }
+                    else
+                    {
+                        // disable mod
+                        modItem.SetState(ModItem.ModItemState.Default);
+                    }
                 }
             }
-
-            // todo disable mod
         }
 
         public List<string> GetModFiles()

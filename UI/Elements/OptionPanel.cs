@@ -116,6 +116,7 @@ namespace SquidTestingMod.UI.Elements
 
             // Add the option to the ui list
             uiList.Add(modItem);
+            AddPadding(5f);
 
             // Add the panel to the player panel
             return modItem;
