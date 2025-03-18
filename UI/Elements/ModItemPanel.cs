@@ -2,15 +2,16 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
     // A simplified UI panel that mimics the UIModItem appearance.
-    public class ModItem : UIPanel
+    public class ModItemPanel : UIPanel
     {
         private string Hover;
         public bool IsSetToReload { get; set; }
@@ -32,7 +33,7 @@ namespace SquidTestingMod.UI.Elements
         private Color disabled = new(20, 20, 20, 255);
 
         // Constructor
-        public ModItem(bool isSetToReload, string modName, Texture2D ModIcon, string hover) : base()
+        public ModItemPanel(bool isSetToReload, string modName, string hover, string modPath=null) : base()
         {
             // Set hover text
             IsSetToReload = isSetToReload;
@@ -53,29 +54,40 @@ namespace SquidTestingMod.UI.Elements
             }
 
             // --- Mod Icon ---
-            UIImage ModImage = new(ModIcon)
+            Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+
+            if (modPath != null)
             {
-                Left = { Pixels = 0 },
-                Top = { Pixels = 0 },
-                Width = { Pixels = 25 },
-                Height = { Pixels = 25 },
-                MaxWidth = { Pixels = 25 },
-                MaxHeight = { Pixels = 25 },
-                VAlign = 0.5f,
-                ScaleToFit = true
-            };
-            Append(ModImage);
+                float size = 20f;
+                ModImage modImage = new(defaultIconTemp.Value, modPath)
+                {
+                    Left = { Pixels = 0 },
+                    Top = { Pixels = 0 },
+                    Width = { Pixels = size },
+                    Height = { Pixels = size },
+                    MaxWidth = { Pixels = size },
+                    MaxHeight = { Pixels = size },
+                    VAlign = 0.5f,
+                    ScaleToFit = true
+                };
+                Log.Info("created ModImage: " + ModName);
+                Append(modImage);
+            }
+            else
+            {
+                Log.Info("modTex is null: " + ModName);
+            }
+
 
             // --- Mod Name & Version ---
-            // Display a text element for the mod name and version.
-            // Check if the mod name is too long and truncate it if necessary.
             string modName2;
-            if (modName.Length > 30)
-                modName2 = string.Concat(modName.AsSpan(0, 30), "...");
-            else
-                modName2 = modName;
 
-            ModTitle = new(modName);
+            if (ModName.Length > 28)
+                modName2 = string.Concat(ModName.AsSpan(0, 28), "...");
+            else
+                modName2 = ModName;
+
+            ModTitle = new(modName2);
             Append(ModTitle);
         }
 
@@ -99,7 +111,7 @@ namespace SquidTestingMod.UI.Elements
                     break;
                 case ModItemState.Unselected:
                     BackgroundColor = defaultColor;
-                    ModTitle.IsEnabled = false;
+                    //ModTitle.IsEnabled = false; // uncomment to make ModTitle text less opacity
                     break;
                 default:
                     BackgroundColor = Color.Red;

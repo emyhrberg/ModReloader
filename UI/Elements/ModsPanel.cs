@@ -21,13 +21,11 @@ namespace SquidTestingMod.UI.Elements
     /// </summary>
     public class ModsPanel : OptionPanel
     {
-        private List<ModItem> modSources = [];
-        private List<ModItem> enabledMods = [];
+        public List<ModItemPanel> modSources = [];
+        public List<ModItemPanel> enabledMods = [];
 
         public ModsPanel() : base(title: "Mods List", scrollbarEnabled: true)
         {
-            Asset<Texture2D> defaultIconTemp = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
-
             AddHeader("Mod Sources");
             AddPadding(3f);
 
@@ -47,38 +45,18 @@ namespace SquidTestingMod.UI.Elements
                     Log.Info($"Found selected mod: {modFolderName}");
                 }
 
-                // Get icon
-                // Try to load the mod's icon from the file system
-                Texture2D modIcon = defaultIconTemp.Value;
-                string iconPath = Path.Combine(modPath, "icon.png");
-
-                if (File.Exists(iconPath))
-                {
-                    try
-                    {
-                        // Load the icon texture from file
-                        using FileStream stream = new FileStream(iconPath, FileMode.Open);
-                        modIcon = Texture2D.FromStream(Main.graphics.GraphicsDevice, stream);
-                        Log.Info($"Loaded custom icon for mod {modFolderName}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"Failed to load icon for mod {modFolderName}: {ex.Message}");
-                    }
-                }
-
                 // Create mod item
-                ModItem modItem = AddModItem(
+                ModItemPanel modItem = AddModItem(
                     isSetToReload: isSet,
-                    name: modFolderName,
-                    icon: modIcon,
+                    modName: modFolderName,
+                    modPath: null, // TODO
                     leftClick: () => OnClickMyMod(modFolderName),
                     hover: "Click to make this the mod to reload"
                 );
                 modSources.Add(modItem);
 
                 // Explicitly set the state based on whether it's the selected mod
-                modItem.SetState(isSet ? ModItem.ModItemState.Selected : ModItem.ModItemState.Unselected);
+                modItem.SetState(isSet ? ModItemPanel.ModItemState.Selected : ModItemPanel.ModItemState.Unselected);
             }
 
             // If no selected mod was found in the config, select the first one
@@ -93,7 +71,7 @@ namespace SquidTestingMod.UI.Elements
                 ConfigUtilities.SaveConfig(c);
 
                 // Update UI
-                modSources[0].SetState(ModItem.ModItemState.Selected);
+                modSources[0].SetState(ModItemPanel.ModItemState.Selected);
             }
 
             AddPadding();
@@ -102,19 +80,24 @@ namespace SquidTestingMod.UI.Elements
             AddHeader("Enabled Mods");
             AddPadding(3f);
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
-            foreach (var mod in mods)
+            foreach (Mod mod in mods)
             {
+                // get icon texture
+                //Texture2D modTex = ModContent.GetTexture(mod.File.GetIconPath());
+
+                string path = $"{mod.Name}/icon_small";
+
                 var modItem = AddModItem(
                     isSetToReload: false,
-                    name: mod.DisplayNameClean,
-                    icon: defaultIconTemp.Value,
+                    modName: mod.DisplayNameClean,
+                    modPath: path,
                     leftClick: () => OnClickEnabledMod(mod.DisplayNameClean),
-                    hover: $"{mod.Name} (v{mod.Version})"
+                    hover: "Click to disabled this mod"
                 );
                 enabledMods.Add(modItem);
 
                 // Make sure all enabled mods start in the Default state
-                modItem.SetState(ModItem.ModItemState.Default);
+                modItem.SetState(ModItemPanel.ModItemState.Default);
             }
         }
 
@@ -130,11 +113,11 @@ namespace SquidTestingMod.UI.Elements
             {
                 if (modItem.ModName == modFolderName)
                 {
-                    modItem.SetState(ModItem.ModItemState.Selected);
+                    modItem.SetState(ModItemPanel.ModItemState.Selected);
                 }
                 else
                 {
-                    modItem.SetState(ModItem.ModItemState.Unselected);
+                    modItem.SetState(ModItemPanel.ModItemState.Unselected);
                 }
             }
         }
@@ -145,15 +128,15 @@ namespace SquidTestingMod.UI.Elements
             {
                 if (modItem.ModName == modName)
                 {
-                    if (modItem.state == ModItem.ModItemState.Default)
+                    if (modItem.state == ModItemPanel.ModItemState.Default)
                     {
                         // enable mod
-                        modItem.SetState(ModItem.ModItemState.Disabled);
+                        modItem.SetState(ModItemPanel.ModItemState.Disabled);
                     }
                     else
                     {
                         // disable mod
-                        modItem.SetState(ModItem.ModItemState.Default);
+                        modItem.SetState(ModItemPanel.ModItemState.Default);
                     }
                 }
             }

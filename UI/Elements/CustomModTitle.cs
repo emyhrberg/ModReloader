@@ -22,7 +22,7 @@ namespace SquidTestingMod.UI.Elements
 
         // Constants for opacity levels
         private const float ENABLED_OPACITY = 1.0f;
-        private const float DISABLED_OPACITY = 0.7f;
+        private const float DISABLED_OPACITY = 0.3f;
 
         // Colors
         private Color _baseTextColor = Color.White;
@@ -105,11 +105,6 @@ namespace SquidTestingMod.UI.Elements
             ChatManager.DrawColorCodedString(
                 spriteBatch, font, snippets, position,
                 Color.White, 0f, origin, scale, out var _, -1f);
-
-            if (Main.GameUpdateCount % 600 == 0) // Log every 10 seconds or so
-            {
-                Log.Info($"Drawing {_text} with opacity {opacity}, IsEnabled={IsEnabled}");
-            }
         }
     }
 }

@@ -22,3 +22,6 @@
 
 Description:
 This mod adds 50+ cheats to the game - all configurable in an in-game menu - allowing you to modify the game difficulty to your liking and skipping grindy parts of the game.
+
+Drawing other mods icons:
+https://github.com/ScalarVector1/DragonLens/blob/master/Content/Filters/ItemFilters/ItemModFilter.cs#L34

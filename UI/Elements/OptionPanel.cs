@@ -5,6 +5,7 @@ using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using XPT.Core.Audio.MP3Sharp.Decoding;
 
 namespace SquidTestingMod.UI.Elements
@@ -107,10 +108,10 @@ namespace SquidTestingMod.UI.Elements
             return onOffPanel;
         }
 
-        protected ModItem AddModItem(bool isSetToReload, string name, Texture2D icon, Action leftClick, string hover = "", Action rightClick = null)
+        protected ModItemPanel AddModItem(bool isSetToReload, string modName, Action leftClick, string hover = "", Action rightClick = null, string modPath=null)
         {
             // Create a new option panel
-            ModItem modItem = new(isSetToReload, name, icon, hover);
+            ModItemPanel modItem = new(isSetToReload, modName, hover, modPath);
             modItem.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
             modItem.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
 
