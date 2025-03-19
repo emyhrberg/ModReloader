@@ -20,7 +20,7 @@ namespace SquidTestingMod.UI.Buttons
         protected override int FrameWidth => 37;
         protected override int FrameHeight => 15;
 
-        private List<ModMenu> _menus => (List<ModMenu>)TMLData.MenuBackup.FieldValue;
+        private List<ModMenu> _menus => (List<ModMenu>)TMLData.MenusListBackup.FieldValue;
 
         public async override void LeftClick(UIMouseEvent evt)
         {
@@ -60,6 +60,11 @@ namespace SquidTestingMod.UI.Buttons
             Main.NewText($"Events lenght: {((Delegate)TMLData.EventBackup.FieldValue).GetInvocationList().Length}");
             */
             //Delegate.Remove(TestEventNew, TestEventOld).DynamicInvoke();
+        }
+
+        public static void CustomUnload()
+        {
+            
         }
     }
 }

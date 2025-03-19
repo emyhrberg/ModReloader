@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using log4net;
 using MonoMod.RuntimeDetour;
+using MonoMod.RuntimeDetour.HookGen;
 using SquidTestingMod.CustomReload;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.PacketHandlers;
@@ -25,7 +26,7 @@ namespace SquidTestingMod
         {
             ClientDataHandler.ReadData();
             TMLData.SaveTMLData();
-            foreach (var d in DetourManager.GetDetourInfo(typeof(ModContent).GetMethod(
+            foreach (var d in DetourManager.GetDetourInfo(typeof(ModLoader).GetMethod(
                         "Unload",
                         BindingFlags.NonPublic | BindingFlags.Static
                     )).Detours)
@@ -35,20 +36,30 @@ namespace SquidTestingMod
 
                 //Doesn't work for some reason lol
             }
+            HookEndpointManager.Clear();
+            GC.SuppressFinalize(new Hook(typeof(ModLoader).GetMethod(
+                        "Unload",
+                        BindingFlags.NonPublic | BindingFlags.Static
+                    ), (Func<bool> orig) =>
+                    {
+                        bool o = orig();
+                        LogManager.GetLogger("SQUID").Info("Hi!");
+                        return o;
+                    }));
+            GC.SuppressFinalize(new Hook(typeof(ModLoader).GetMethod(
+                        "Unload",
+                        BindingFlags.NonPublic | BindingFlags.Static
+                    ), (Func<bool> orig) =>
+                    {
+                        bool o = orig();
+                        LogManager.GetLogger("SQUID").Info("Hi!");
+                        return o;
+                    }));
         }
 
         public override void Unload()
         {
             ClientDataHandler.WriteData();
-            new Hook(typeof(ModContent).GetMethod(
-                        "Unload",
-                        BindingFlags.NonPublic | BindingFlags.Static
-                    ), (Action orig) =>
-                    {
-                        orig();
-                        LogManager.GetLogger("SQUID").Info("Hi!");
-                        //Outpt in client.log: [SQUID]: Hi!
-                    });
         }
 
     }

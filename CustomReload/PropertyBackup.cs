@@ -6,22 +6,22 @@ using System.Reflection;
 namespace SquidTestingMod.CustomReload
 {
 
-    //Backup of an object, saving it initial state and allowing to restore initial state
-    class ObjectBackup
+    //Backup of an property, saving it initial state and allowing to restore initial state
+    class PropertyBackup
     {
         //private Type _targetType;
         private object _target;
-        private FieldInfo _field;
+        private PropertyInfo _property;
         private object _clonedValue;
         public object FieldValue
         {
             get
             {
-                return _field.GetValue(_target);
+                return _property.GetValue(_target);
             }
             set
             {
-                _field.SetValue(_target, value);
+                _property.SetValue(_target, value);
             }
         }
 
@@ -33,10 +33,10 @@ namespace SquidTestingMod.CustomReload
             }
         }
 
-        public ObjectBackup(Type targetType, FieldInfo field, object target = null)
+        public PropertyBackup(Type targetType, PropertyInfo field, object target = null)
         {
             //_targetType = targetType;
-            _field = field ?? throw new ArgumentException($"Field not found in {targetType.Name}.");
+            _property = field ?? throw new ArgumentException($"Field not found in {targetType.Name}.");
             _target = target;
 
             Backup();
@@ -44,17 +44,17 @@ namespace SquidTestingMod.CustomReload
 
         private void Backup()
         {
-            if (_field.FieldType.IsValueType) // Check if it's a reference type
+            if (_property.PropertyType.IsValueType) // Check if it's a reference type
             {
                 _clonedValue = FieldValue;
-                Log.Info($"Field {_field.Name} of type {_field.FieldType} is Value Type");
+                Log.Info($"Field {_property.Name} of type {_property.PropertyType} is Value Type");
             }
             else
             {
                 if (FieldValue is ICloneable cloneable) // If it implements ICloneable, use it
                 {
                     _clonedValue = cloneable.Clone();
-                    Log.Info($"Field {_field.Name} of type {_field.FieldType} is cloned by ICloneable");
+                    Log.Info($"Field {_property.Name} of type {_property.PropertyType} is cloned by ICloneable");
                 }
                 else if (FieldValue is IDictionary dictionary) // Handle Dictionary cloning
                 {
@@ -66,7 +66,7 @@ namespace SquidTestingMod.CustomReload
                         newDict.Add(entry.Key, entry.Value); // Shallow copy
                     }
                     _clonedValue = newDict;
-                    Log.Info($"Field {_field.Name} of type {_field.FieldType} is cloned as Dictionary");
+                    Log.Info($"Field {_property.Name} of type {_property.PropertyType} is cloned as Dictionary");
                 }
                 else if (FieldValue is IList list) // Handle List cloning
                 {
@@ -78,31 +78,31 @@ namespace SquidTestingMod.CustomReload
                         newList.Add(item); // Shallow copy
                     }
                     _clonedValue = newList;
-                    Log.Info($"Field {_field.Name} of type {_field.FieldType} is cloned as List");
+                    Log.Info($"Field {_property.Name} of type {_property.PropertyType} is cloned as List");
                 }
                 else
                 {
-                    Log.Error($"Field {_field.Name} of type {_field.FieldType} cannot be clonned");
-                    throw new Exception($"Field {_field.Name} of type {_field.FieldType} cannot be clonned");
+                    Log.Error($"Field {_property.Name} of type {_property.PropertyType} cannot be clonned");
+                    throw new Exception($"Field {_property.Name} of type {_property.PropertyType} cannot be clonned");
                 }
             }
         }
 
-        public ObjectBackup(Type targetType, string fieldName, BindingFlags flags, object target = null) :
-            this(targetType, targetType.GetField(fieldName, flags))
+        public PropertyBackup(Type targetType, string propertyName, BindingFlags flags, object target = null) :
+            this(targetType, targetType.GetProperty(propertyName, flags))
         { }
 
         public void Restore()
         {
             if (_clonedValue == null)
             {
-                Log.Error($"No backup exists for field {_field.Name}");
-                throw new Exception($"No backup exists for field {_field.Name}");
+                Log.Error($"No backup exists for field {_property.Name}");
+                throw new Exception($"No backup exists for field {_property.Name}");
             }
 
-            if (_field.FieldType.IsValueType) // If it's a value type, assign directly
+            if (_property.PropertyType.IsValueType) // If it's a value type, assign directly
             {
-                _field.SetValue(_target, _clonedValue);
+                _property.SetValue(_target, _clonedValue);
             }
             else
             {
@@ -116,25 +116,25 @@ namespace SquidTestingMod.CustomReload
                         targetDict.Add(entry.Key, entry.Value);
                     }
 
-                    Log.Info($"Field {_field.Name} of type {_field.FieldType} is restored as Dictionary");
+                    Log.Info($"Field {_property.Name} of type {_property.PropertyType} is restored as Dictionary");
                 }
 
 
                 else if (_clonedValue is IList list) // Restore List
                 {
-                    var targetList = (IList)_field.GetValue(_target);
+                    var targetList = (IList)_property.GetValue(_target);
 
                     targetList.Clear();
                     foreach (var item in list)
                     {
                         targetList.Add(item);
                     }
-                    Log.Info($"Field {_field.Name} of type {_field.FieldType} is restored as List");
+                    Log.Info($"Field {_property.Name} of type {_property.PropertyType} is restored as List");
                 }
                 else // Restore by assigning the cloned reference
                 {
-                    _field.SetValue(_target, _clonedValue);
-                    Log.Info($"Field {_field.Name} of type {_field.FieldType} is restored by direct assignment");
+                    _property.SetValue(_target, _clonedValue);
+                    Log.Info($"Field {_property.Name} of type {_property.PropertyType} is restored by direct assignment");
                 }
             }
         }
