@@ -26,7 +26,7 @@ namespace SquidTestingMod.UI.Elements
 
         // Hover text for tooltips
         public string HoverText { get; set; }
-        protected bool IsHoverEnabled { get; set; } = true;
+        public bool IsHoverEnabled { get; set; } = true;
 
         public PanelElement(string title, string hoverText = "")
         {

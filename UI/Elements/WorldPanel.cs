@@ -5,6 +5,7 @@ using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.Events;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 
 namespace SquidTestingMod.UI.Elements
@@ -422,7 +423,6 @@ namespace SquidTestingMod.UI.Elements
 
             // Update the UI display
             timeOption.UpdateText("Time: " + CalcIngameTime());
-
             base.Update(gameTime);
         }
     }

@@ -19,8 +19,8 @@ namespace SquidTestingMod.UI.Elements
         // Variables 
         SliderOption widthOption;
         SliderOption heightOption;
-        bool showPlayerInfo = false;
-        PlayerInfoPanel playerInfoPanel;
+        // bool showPlayerInfo = false;
+        // PlayerInfoPanel playerInfoPanel;
 
         public DebugPanel() : base(title: "Debug", scrollbarEnabled: true)
         {
@@ -54,21 +54,21 @@ namespace SquidTestingMod.UI.Elements
             AddPadding();
 
             AddHeader("Logs");
-            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Open log file \nRight click to open folder location", Log.OpenLogFolder);
-            AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "This file shows currently enabled mods\nRight click to open folder location", Log.OpenEnabledJsonFolder);
+            AddOnOffOption(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
+            AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "Left click to open enabled.json\nRight click to open folder location", Log.OpenEnabledJsonFolder);
         }
 
-        private void TogglePlayerInfo()
-        {
-            showPlayerInfo = !showPlayerInfo;
+        // private void TogglePlayerInfo()
+        // {
+        //     showPlayerInfo = !showPlayerInfo;
 
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
+        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            if (showPlayerInfo)
-                sys.mainState.Append(playerInfoPanel = new PlayerInfoPanel());
-            else
-                sys.mainState.RemoveChild(playerInfoPanel);
-        }
+        //     if (showPlayerInfo)
+        //         sys.mainState.Append(playerInfoPanel = new PlayerInfoPanel());
+        //     else
+        //         sys.mainState.RemoveChild(playerInfoPanel);
+        // }
 
         private void SpawnDebugPanel()
         {

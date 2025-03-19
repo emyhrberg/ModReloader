@@ -40,11 +40,6 @@ Mods: {
 					Tooltip: Toggle the visual effect showing when god mode is enabled
 				}
 
-				KeepRunningWhenFocusLost: {
-					Label: Keep Running When Focus Lost
-					Tooltip: When you alt+tab or leave the game unfocused, the game will keep running
-				}
-
 				EnterWorldSuperMode: {
 					Label: Enter World Super Mode
 					Tooltip:

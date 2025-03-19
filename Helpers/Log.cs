@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -69,7 +70,7 @@ namespace SquidTestingMod.Helpers
             try
             {
                 string folder = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs";
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
@@ -88,7 +89,7 @@ namespace SquidTestingMod.Helpers
             try
             {
                 string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
@@ -110,7 +111,7 @@ namespace SquidTestingMod.Helpers
             try
             {
                 string file = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods\\enabled.json";
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {

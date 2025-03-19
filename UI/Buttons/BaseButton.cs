@@ -55,6 +55,11 @@ namespace SquidTestingMod.UI.Buttons
             Append(buttonUIText);
         }
 
+        public void UpdateHoverText(string hover)
+        {
+            HoverText = hover;
+        }
+
         /// <summary>
         /// Draws the button with the specified image/animation and tooltip text
         /// </summary>

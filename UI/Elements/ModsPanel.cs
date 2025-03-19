@@ -1,18 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Core;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -21,128 +12,49 @@ namespace SquidTestingMod.UI.Elements
     /// </summary>
     public class ModsPanel : OptionPanel
     {
-        public List<ModItemPanel> modSources = [];
-        public List<ModItemPanel> enabledMods = [];
+        public List<ModSourcesElement> modSourcesElements = [];
+        public List<String> enabledMods = [];
 
         public ModsPanel() : base(title: "Mods List", scrollbarEnabled: true)
         {
             AddHeader("Mod Sources");
-            AddPadding(3f);
-
-            // Get the currently selected mod from config
-            string selectedMod = Conf.ModToReload;
-            bool foundSelectedMod = false;
-
-            foreach (var modPath in GetModFiles())
-            {
-                // Get folder path and icon
-                string modFolderName = Path.GetFileName(modPath);
-                bool isSet = modFolderName == selectedMod;
-
-                if (isSet)
-                {
-                    foundSelectedMod = true;
-                    Log.Info($"Found selected mod: {modFolderName}");
-                }
-
-                // Create mod item
-                ModItemPanel modItem = AddModItem(
-                    isSetToReload: isSet,
-                    modName: modFolderName,
-                    modPath: null, // TODO
-                    leftClick: () => OnClickMyMod(modFolderName),
-                    hover: "Click to make this the mod to reload"
-                );
-                modSources.Add(modItem);
-
-                // Explicitly set the state based on whether it's the selected mod
-                modItem.SetState(isSet ? ModItemPanel.ModItemState.Selected : ModItemPanel.ModItemState.Unselected);
-            }
-
-            // If no selected mod was found in the config, select the first one
-            if (!foundSelectedMod && modSources.Count > 0)
-            {
-                string firstModName = modSources[0].ModName;
-                Log.Info($"No mod matched '{selectedMod}', defaulting to first mod: {firstModName}");
-
-                // Update config
-                Config c = ModContent.GetInstance<Config>();
-                c.ModToReload = firstModName;
-                ConfigUtilities.SaveConfig(c);
-
-                // Update UI
-                modSources[0].SetState(ModItemPanel.ModItemState.Selected);
-            }
-
+            ConstructModSourcesList();
             AddPadding();
 
-            // Add mod items
             AddHeader("Enabled Mods");
-            AddPadding(3f);
+            ConstructEnabledModsList();
+            AddPadding();
+
+            AddHeader("Navigate");
+            AddOnOffOption(GoToModSources, "To Mod Sources (my mods)", "Exit World And Go To Mod Sources");
+            AddOnOffOption(GoToModsList, "To Mods List (enabled mods)", "Exit World And Go To Mods List");
+        }
+
+        private void ConstructEnabledModsList()
+        {
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
             foreach (Mod mod in mods)
             {
-                // get icon texture
-                //Texture2D modTex = ModContent.GetTexture(mod.File.GetIconPath());
-
-                string path = $"{mod.Name}/icon_small";
-
-                var modItem = AddModItem(
-                    isSetToReload: false,
-                    modName: mod.DisplayNameClean,
-                    modPath: path,
-                    leftClick: () => OnClickEnabledMod(mod.DisplayNameClean),
-                    hover: "Click to disabled this mod"
-                );
-                enabledMods.Add(modItem);
-
-                // Make sure all enabled mods start in the Default state
-                modItem.SetState(ModItemPanel.ModItemState.Default);
+                ModElement modElement = new(mod.DisplayNameClean, mod.Name);
+                uiList.Add(modElement);
+                enabledMods.Add(mod.Name);
+                AddPadding(3);
             }
         }
 
-        private void OnClickMyMod(string modFolderName)
+        private void ConstructModSourcesList()
         {
-            // set mod to reload (just a config change)
-            Config c = ModContent.GetInstance<Config>();
-            c.ModToReload = modFolderName;
-            ConfigUtilities.SaveConfig(c);
-
-            // set color of this mod to green
-            foreach (var modItem in modSources)
+            // Create a new ModSourcesElement : PanelElement for each mod in modsources.
+            foreach (string modPath in GetModSourcesPaths())
             {
-                if (modItem.ModName == modFolderName)
-                {
-                    modItem.SetState(ModItemPanel.ModItemState.Selected);
-                }
-                else
-                {
-                    modItem.SetState(ModItemPanel.ModItemState.Unselected);
-                }
+                ModSourcesElement modSourcesElement = new(modPath);
+                modSourcesElements.Add(modSourcesElement);
+                uiList.Add(modSourcesElement);
+                AddPadding(3);
             }
         }
 
-        private void OnClickEnabledMod(string modName)
-        {
-            foreach (var modItem in enabledMods)
-            {
-                if (modItem.ModName == modName)
-                {
-                    if (modItem.state == ModItemPanel.ModItemState.Default)
-                    {
-                        // enable mod
-                        modItem.SetState(ModItemPanel.ModItemState.Disabled);
-                    }
-                    else
-                    {
-                        // disable mod
-                        modItem.SetState(ModItemPanel.ModItemState.Default);
-                    }
-                }
-            }
-        }
-
-        public List<string> GetModFiles()
+        private List<string> GetModSourcesPaths()
         {
             List<string> strings = [];
 
@@ -159,6 +71,18 @@ namespace SquidTestingMod.UI.Elements
                 strings.Add(modSources[i]);
             }
             return strings;
+        }
+
+        private void GoToModSources()
+        {
+            WorldGen.JustQuit();
+            Main.menuMode = 10001;
+        }
+
+        private void GoToModsList()
+        {
+            WorldGen.JustQuit();
+            Main.menuMode = 10000;
         }
     }
 }

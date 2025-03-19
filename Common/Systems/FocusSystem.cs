@@ -12,22 +12,12 @@ namespace SquidTestingMod.Common.Systems
     {
         public override void Load()
         {
-            if (!Conf.KeepRunningWhenFocusLost)
-            {
-                return;
-            }
-
             IL_Main.DoUpdate += GameUpdate;
             IL_Main.DoUpdate += AudioUpdate;
         }
 
         public void GameUpdate(ILContext il)
         {
-            if (!Conf.KeepRunningWhenFocusLost)
-            {
-                return;
-            }
-
             // This is the IL cursor, it's a bit like a text cursor in an editor.
             ILCursor c = new(il);
 
@@ -50,11 +40,6 @@ namespace SquidTestingMod.Common.Systems
 
         public void AudioUpdate(ILContext il)
         {
-            if (!Conf.KeepRunningWhenFocusLost)
-            {
-                return;
-            }
-
             ILCursor c = new(il);
 
             if (c.TryGotoNext(MoveType.After, i => i.MatchLdarg0(), i => i.MatchCall(out _), i => i.MatchStloc(0)))

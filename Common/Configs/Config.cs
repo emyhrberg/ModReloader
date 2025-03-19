@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
@@ -31,9 +32,6 @@ namespace SquidTestingMod.Common.Configs
 
         [DefaultValue(null)]
         public NPCSpawnerConfig NPCSpawner = new();
-
-        [DefaultValue(true)]
-        public bool KeepRunningWhenFocusLost = true;
 
         [DefaultValue(false)]
         public bool EnterWorldSuperMode = false;
@@ -73,6 +71,26 @@ namespace SquidTestingMod.Common.Configs
 
     internal static class Conf
     {
+        // NOTE: Stolen from CalamityMod
+        // https://github.com/CalamityTeam/CalamityModPublic/blob/e0838b30b8fdf86aeb4037931c8123703acd7c7e/CalamityMod.cs#L550
+        #region Force ModConfig save (Reflection)
+        internal static void ForceSaveConfig(Config cfg)
+        {
+            // There is no current way to manually save a mod configuration file in tModLoader.
+            // The method which saves mod config files is private in ConfigManager, so reflection is used to invoke it.
+            try
+            {
+                MethodInfo saveMethodInfo = typeof(ConfigManager).GetMethod("Save", BindingFlags.Static | BindingFlags.NonPublic);
+                if (saveMethodInfo is not null)
+                    saveMethodInfo.Invoke(null, [cfg]);
+            }
+            catch
+            {
+                Log.Error("An error occurred while manually saving ModConfig!.");
+            }
+        }
+        #endregion
+
         // Instance
         public static Config C => ModContent.GetInstance<Config>();
 
@@ -85,7 +103,6 @@ namespace SquidTestingMod.Common.Configs
         public static string ButtonsPosition => C.ButtonsPosition;
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
-        public static bool KeepRunningWhenFocusLost => C.KeepRunningWhenFocusLost;
         public static bool HideCollapseButton => C.HideCollapseButton;
     }
 }

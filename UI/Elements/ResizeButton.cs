@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -72,23 +73,7 @@ namespace SquidTestingMod.UI.Elements
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            if (Texture?.Value != null)
-            {
-                // Get center of the UI element
-                Vector2 center = GetDimensions().ToRectangle().Center.ToVector2();
-
-                // Get center of the texture
-                Vector2 origin = new(Texture.Width() / 2f, Texture.Height() / 2f);
-
-                // Set scale
-                float scale = 1f;
-
-                // Set opacity: 0.8 when not hovering, 1 when hovering
-                float opacity = IsMouseHovering ? 1f : 0.8f;
-
-                // Draw the texture at 'center', anchored by 'origin', scaled by 'scale'
-                spriteBatch.Draw(Texture.Value, center, null, Color.White * opacity, 0f, origin, scale, SpriteEffects.None, 0f);
-            }
+            DrawHelper.DrawProperScale(spriteBatch, element: this, tex: Texture.Value, scale: 0.7f);
         }
     }
 }

@@ -22,6 +22,12 @@ namespace SquidTestingMod.Helpers
 
         public static Task ExitWorldOrServer()
         {
+            // TODO check if Conf is null
+            if (Conf.C == null) // Assuming 'Instance' is a static property or field in 'Conf'
+            {
+                Log.Warn("Conf is null");
+                return Task.CompletedTask;
+            }
 
             if (Conf.SaveWorldOnReload)
             {

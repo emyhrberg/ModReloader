@@ -31,6 +31,7 @@ namespace SquidTestingMod.UI
         public float ButtonSize = 70f;
         public float offset = 0; // START offset for first button position relative to center
         public List<BaseButton> AllButtons = [];
+        public ReloadSPButton reloadSPButton;
 
         // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState()
@@ -51,9 +52,9 @@ namespace SquidTestingMod.UI
             AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View hitboxes, UI, logs");
             AddButton<WorldButton>(Ass.ButtonWorld, "World", "View and change world settings");
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods");
-            AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", "Reload the selected mod\nRight click to show multiplayer reload");
+            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload");
             offset -= ButtonSize; // move back to place MP above SP.
-            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", "Reload the selected mod\nRight click to show singleplayer reload");
+            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload");
             AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
             AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
 
@@ -86,7 +87,7 @@ namespace SquidTestingMod.UI
             return panel;
         }
 
-        private void AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null) where T : BaseButton
+        private T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null) where T : BaseButton
         {
             // Create a new button using reflection
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
@@ -121,6 +122,8 @@ namespace SquidTestingMod.UI
             // Add the button to the list of all buttons and append it to the MainState
             AllButtons.Add(button);
             Append(button);
+
+            return button;
         }
     }
 }

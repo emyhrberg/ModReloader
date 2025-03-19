@@ -1,12 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
-using XPT.Core.Audio.MP3Sharp.Decoding;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -108,21 +104,6 @@ namespace SquidTestingMod.UI.Elements
             return onOffPanel;
         }
 
-        protected ModItemPanel AddModItem(bool isSetToReload, string modName, Action leftClick, string hover = "", Action rightClick = null, string modPath=null)
-        {
-            // Create a new option panel
-            ModItemPanel modItem = new(isSetToReload, modName, hover, modPath);
-            modItem.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
-            modItem.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
-
-            // Add the option to the ui list
-            uiList.Add(modItem);
-            AddPadding(5f);
-
-            // Add the panel to the player panel
-            return modItem;
-        }
-
         protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f, string hover = "")
         {
             // Create a new option panel
@@ -153,6 +134,35 @@ namespace SquidTestingMod.UI.Elements
             }
 
             base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            // first draw everything in the panel
+            base.Draw(spriteBatch);
+
+            // last, draw the hover texture
+            foreach (var element in uiList._items)
+            {
+                if (element is ModElement modElement)
+                {
+                    var icon = modElement.modIcon;
+                    if (icon != null && icon.IsHovered && icon.updatedTex != null)
+                    {
+                        Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
+                        spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
+                    }
+                }
+                else if (element is ModSourcesElement modSourcesElement)
+                {
+                    var icon = modSourcesElement.modIcon;
+                    if (icon != null && icon.IsHovered && icon.tex != null)
+                    {
+                        Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
+                        spriteBatch.Draw(icon.tex, mousePos, Color.White);
+                    }
+                }
+            }
         }
     }
 }
