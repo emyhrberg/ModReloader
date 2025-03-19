@@ -1,16 +1,8 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using Terraria.ID;
-using Terraria;
-using Terraria.UI;
-using System.Reflection;
 using Terraria.ModLoader;
-using System;
-using SquidTestingMod.CustomReload;
-using System.Collections.Generic;
-using log4net;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
@@ -20,7 +12,7 @@ namespace SquidTestingMod.UI.Buttons
         protected override int FrameWidth => 37;
         protected override int FrameHeight => 15;
 
-        private List<ModMenu> _menus => (List<ModMenu>)TMLData.MenuBackup.FieldValue;
+        // private List<ModMenu> _menus => (List<ModMenu>)TMLData.MenuBackup.FieldValue;
 
         public async override void LeftClick(UIMouseEvent evt)
         {

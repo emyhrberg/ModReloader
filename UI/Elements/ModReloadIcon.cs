@@ -44,24 +44,24 @@ namespace SquidTestingMod.UI.Elements
             Conf.ForceSaveConfig(Conf.C);
 
             // 1 Clear client log
-            if (Conf.ClearClientLogOnReload)
-                Log.ClearClientLog();
+            // if (Conf.ClearClientLogOnReload)
+            //     Log.ClearClientLog();
 
-            // 2 Prepare client data
-            ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
+            // // 2 Prepare client data
+            // ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
 
-            // 3 Exit server or world
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                await ReloadUtilities.ExitWorldOrServer();
-            }
-            else if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                await ReloadUtilities.ExitAndKillServer();
-            }
+            // // 3 Exit server or world
+            // if (Main.netMode == NetmodeID.SinglePlayer)
+            // {
+            //     await ReloadUtilities.ExitWorldOrServer();
+            // }
+            // else if (Main.netMode == NetmodeID.MultiplayerClient)
+            // {
+            //     await ReloadUtilities.ExitAndKillServer();
+            // }
 
-            // 3 Reload
-            ReloadUtilities.BuildAndReloadMod();
+            // // 3 Reload
+            // ReloadUtilities.BuildAndReloadMod();
         }
 
         public override void Draw(SpriteBatch spriteBatch)

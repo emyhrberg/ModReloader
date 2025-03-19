@@ -1,170 +1,189 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Helpers;
-using Terraria.Audio;
+using Terraria;
+using Terraria.GameContent;
 using Terraria.GameInput;
-using Terraria.Localization;
 using Terraria.UI;
 
-namespace Terraria.GameContent.UI.Elements;
-
-public class CustomSlider : CustomSliderBase
+namespace SquidTestingMod.UI.Elements
 {
-    private Color _color;
-    private LocalizedText _textKey;
-    private Func<float> _getStatusTextAct;
-    private Action<float> _slideKeyboardAction;
-    private Func<float, Color> _blipFunc;
-    private Action _slideGamepadAction;
-    private bool _isReallyMouseOvered;
-    private bool _alreadyHovered;
-    private bool _soundedUsage;
-
-    public CustomSlider(LocalizedText textKey, Func<float> getStatus, Action<float> setStatusKeyboard, Action setStatusGamepad, Func<float, Color> blipColorFunction, Color color)
+    /// <summary>
+    /// A minimal slider UI element that can be locked (dragged) by the mouse.
+    /// </summary>
+    public class CustomSlider : UIElement
     {
-        _color = color;
-        _textKey = textKey;
-        _getStatusTextAct = ((getStatus != null) ? getStatus : ((Func<float>)(() => 0f)));
-        _slideKeyboardAction = ((setStatusKeyboard != null) ? setStatusKeyboard : ((Action<float>)delegate
+        // Which slider is currently locked/dragged
+        private static CustomSlider _currentLocked;
+
+        // Which slider is currently hovered
+        private static CustomSlider _currentAimed;
+
+        /// <summary>
+        /// Clears any locked/hovered references (e.g., on UI close).
+        /// </summary>
+        public static void EscapeElements()
         {
-        }));
+            _currentLocked = null;
+            _currentAimed = null;
+        }
 
-        _blipFunc = ((blipColorFunction != null) ? blipColorFunction : ((Func<float, Color>)((float s) => Color.Lerp(Color.Black, Color.White, s))));
-        _slideGamepadAction = setStatusGamepad;
-        _isReallyMouseOvered = false;
+        // How we get the current slider value (0..1).
+        private readonly Func<float> _getValue;
 
-        // CUSTOM SIZES
-        Width.Set(170f, 0f);
-        Height.Set(15f, 0f); // this has no effect?
+        // How we set the slider value (0..1) when dragging.
+        private readonly Action<float> _setValue;
 
+        // Returns a color for each portion of the bar, given a [0..1] progress.
+        private readonly Func<float, Color> _barColorFunc;
 
-        // CUSTOM OFFSETS, UNSURE ABOUT THIS
-        // this sets the size in the element
-        VAlign = 0.0f;
-        HAlign = 0.0f;
-        Left.Set(130f, 0f);
-        Top.Set(5f, 0f);
-    }
-
-    protected override void DrawSelf(SpriteBatch spriteBatch)
-    {
-        // hot reload testing
-        Width.Set(180f, 0f);
-        Height.Set(15f, 0f);
-        Top.Set(5f, 0f);
-
-        CustomSliderBase.CurrentAimedSlider = null;
-        if (!Main.mouseLeft)
-            CustomSliderBase.CurrentLockedSlider = null;
-
-        int usageLevel = GetUsageLevel();
-        float num = 8f;
-
-        // draw the yellow highlighting around the bar i think
-        base.DrawSelf(spriteBatch);
-        CalculatedStyle dimensions = GetDimensions();
-        float num2 = dimensions.Width + 1f;
-        Vector2 vector = new Vector2(dimensions.X, dimensions.Y);
-        bool flag = false;
-        bool flag2 = base.IsMouseHovering;
-        if (usageLevel == 2)
-            flag2 = false;
-
-        if (usageLevel == 1)
-            flag2 = true;
-
-        Color value = (flag ? Color.Gold : (flag2 ? Color.White : Color.Silver));
-        value = Color.Lerp(value, Color.White, flag2 ? 0.5f : 0f);
-        TextureAssets.ColorBar.Frame();
-
-        // actual position of the entire slider here
-        float X_OFFSET = 18f; // move right
-        Vector2 vector2 = new(dimensions.X + dimensions.Width + X_OFFSET, dimensions.Y + num);
-
-
-        bool wasInBar;
-        float obj = DrawValueBar(spriteBatch, vector2, 1f, _getStatusTextAct(), usageLevel, out wasInBar, _blipFunc);
-        if (CustomSliderBase.CurrentLockedSlider == this || wasInBar)
+        /// <summary>
+        /// Creates a minimal custom slider.
+        /// </summary>
+        /// <param name="getValue">Return current slider value [0..1].</param>
+        /// <param name="setValue">Set new slider value [0..1] when dragged.</param>
+        /// <param name="barColorFunc">
+        /// Function to color each portion [0..1] of the bar.
+        /// If null, defaults to white.
+        /// </param>
+        public CustomSlider(Func<float> getValue, Action<float> setValue, Func<float, Color> barColorFunc = null)
         {
-            CustomSliderBase.CurrentAimedSlider = this;
-            if (PlayerInput.Triggers.Current.MouseLeft && !PlayerInput.UsingGamepad && CustomSliderBase.CurrentLockedSlider == this)
+            _getValue = getValue ?? (() => 0f);
+            _setValue = setValue ?? (_ => { });
+            _barColorFunc = barColorFunc ?? (_ => Color.White);
+
+            // Example size and position (customize as needed).
+            Width.Set(160f, 0f);
+            Height.Set(20f, 0f);
+            Left.Set(50f, 0f);
+            Top.Set(50f, 0f);
+        }
+
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            base.DrawSelf(spriteBatch);
+
+            // If mouse is released, no slider is locked anymore
+            if (!Main.mouseLeft)
             {
-                _slideKeyboardAction(obj);
-                if (!_soundedUsage)
-                    // SoundEngine.PlaySound(12);
-
-                    _soundedUsage = true;
+                _currentLocked = null;
             }
-            else
+
+            // Determine if this slider is locked, or blocked by another locked slider
+            bool isLockedByThis = (_currentLocked == this);
+            bool anotherLocked = (_currentLocked != null && !isLockedByThis);
+
+            // If another slider is locked, we ignore our hover
+            bool canHover = !anotherLocked && IsMouseHovering;
+
+            // If we are locked by ourselves, we always consider ourselves "hovered"
+            if (isLockedByThis)
             {
-                _soundedUsage = false;
+                canHover = true;
             }
-        }
 
-        if (CustomSliderBase.CurrentAimedSlider != null && CustomSliderBase.CurrentLockedSlider == null)
-            CustomSliderBase.CurrentLockedSlider = CustomSliderBase.CurrentAimedSlider;
+            // Draw the bar and get potential new slider value
+            bool overBar;
+            float newVal = DrawBar(spriteBatch, _getValue(), out overBar);
 
-        if (_isReallyMouseOvered)
-            _slideGamepadAction();
-    }
-
-    private float DrawValueBar(SpriteBatch sb, Vector2 drawPosition, float drawScale, float sliderPosition, int lockMode, out bool wasInBar, Func<float, Color> blipColorFunc)
-    {
-        Texture2D value = TextureAssets.ColorBar.Value;
-        Vector2 vector = new Vector2(value.Width, value.Height) * drawScale;
-        drawPosition.X -= (int)vector.X;
-        Rectangle rectangle = new Rectangle((int)drawPosition.X, (int)drawPosition.Y - (int)vector.Y / 2, (int)vector.X, (int)vector.Y);
-        Rectangle destinationRectangle = rectangle;
-        sb.Draw(value, rectangle, Color.White);
-        float num = (float)rectangle.X + 5f * drawScale;
-        float num2 = (float)rectangle.Y + 4f * drawScale;
-        for (float num3 = 0f; num3 < 167f; num3 += 1f)
-        {
-            float arg = num3 / 167f;
-            Color color = blipColorFunc(arg);
-            sb.Draw(TextureAssets.ColorBlip.Value, new Vector2(num + num3 * drawScale, num2), null, color, 0f, Vector2.Zero, drawScale, SpriteEffects.None, 0f);
-        }
-
-        rectangle.X = (int)num - 2;
-        rectangle.Y = (int)num2;
-        rectangle.Width -= 4;
-        rectangle.Height -= 8;
-        bool flag = (_isReallyMouseOvered = rectangle.Contains(new Point(Main.mouseX, Main.mouseY)));
-        if (IgnoresMouseInteraction)
-            flag = false;
-
-        if (lockMode == 2)
-            flag = false;
-
-        if (flag || lockMode == 1)
-        {
-            sb.Draw(TextureAssets.ColorHighlight.Value, destinationRectangle, Main.OurFavoriteColor);
-            if (!_alreadyHovered)
-                // SoundEngine.PlaySound(12);
-
-                _alreadyHovered = true;
-        }
-        else
-        {
-            _alreadyHovered = false;
-        }
-
-        wasInBar = false;
-        if (!IgnoresMouseInteraction)
-        {
-            // draw the knob
-            sb.Draw(TextureAssets.ColorSlider.Value, new Vector2(num + 167f * drawScale * sliderPosition, num2 + 4f * drawScale), null, Color.White, 0f, new Vector2(0.5f * (float)TextureAssets.ColorSlider.Value.Width, 0.5f * (float)TextureAssets.ColorSlider.Value.Height), drawScale, SpriteEffects.None, 0f);
-            if (Main.mouseX >= rectangle.X && Main.mouseX <= rectangle.X + rectangle.Width)
+            // If we're hovered or locked, we are the aimed slider
+            if (overBar || isLockedByThis)
             {
-                wasInBar = flag;
-                return (float)(Main.mouseX - rectangle.X) / (float)rectangle.Width;
+                _currentAimed = this;
+
+                // If the mouse is held down on us, we lock ourselves
+                if (PlayerInput.Triggers.Current.MouseLeft && !PlayerInput.UsingGamepad)
+                {
+                    // If not already locked, lock ourselves
+                    if (_currentLocked == null)
+                        _currentLocked = this;
+
+                    // If locked, we can set the new value
+                    if (_currentLocked == this)
+                    {
+                        _setValue(newVal);
+                    }
+                }
             }
         }
 
-        if (rectangle.X >= Main.mouseX)
-            return 0f;
+        /// <summary>
+        /// Draws the background bar, the color gradient, and the knob.
+        /// Returns what the new [0..1] slider value *would be* if we're hovered.
+        /// </summary>
+        private float DrawBar(SpriteBatch spriteBatch, float currentVal, out bool overBar)
+        {
+            // Basic textures from Terraria
+            Texture2D barTex = TextureAssets.ColorBar.Value;
+            Texture2D blipTex = TextureAssets.ColorBlip.Value;
+            Texture2D knobTex = TextureAssets.ColorSlider.Value;
+            Texture2D highlight = TextureAssets.ColorHighlight.Value; // for hover effect
 
-        return 1f;
+            // Position for the bar in world space
+            CalculatedStyle dims = GetDimensions();
+            Vector2 barPos = new(dims.X, dims.Y);
+            float scale = 1f;
+
+            // Draw the basic bar
+            spriteBatch.Draw(barTex, barPos, Color.White);
+
+            // The actual bar is 167 px wide (for the gradient).
+            // We'll start drawing the gradient a few px inside the bar.
+            float gradientStartX = barPos.X + 5f;
+            float gradientY = barPos.Y + 4f; // shift slightly down
+
+            // Draw the color gradient
+            for (int i = 0; i < 167; i++)
+            {
+                float progress = i / 167f;
+                spriteBatch.Draw(
+                    blipTex,
+                    new Vector2(gradientStartX + i * scale, gradientY),
+                    null,
+                    _barColorFunc(progress),
+                    0f,
+                    Vector2.Zero,
+                    scale,
+                    SpriteEffects.None,
+                    0f
+                );
+            }
+
+            // Interactive rectangle for hover checks
+            Rectangle interactRect = new(
+                (int)gradientStartX,
+                (int)gradientY,
+                167,
+                barTex.Height - 8 // reduce top/bottom padding
+            );
+
+            // Check if we're hovering inside that rectangle
+            overBar = interactRect.Contains(Main.mouseX, Main.mouseY) && !IgnoresMouseInteraction;
+
+            // If hovered, draw a highlight over the entire bar
+            if (overBar)
+            {
+                Rectangle highlightRect = new((int)barPos.X, (int)barPos.Y, barTex.Width, barTex.Height);
+                spriteBatch.Draw(highlight, highlightRect, Main.OurFavoriteColor);
+            }
+
+            // Draw the knob
+            float knobX = gradientStartX + 167f * currentVal;
+            float knobY = gradientY + 4f;
+            Vector2 knobOrigin = new(knobTex.Width * 0.5f, knobTex.Height * 0.5f);
+            spriteBatch.Draw(knobTex, new Vector2(knobX, knobY), null, Color.White,
+                0f, knobOrigin, scale, SpriteEffects.None, 0f);
+
+            // If hovered, compute new slider value based on mouse position
+            if (overBar)
+            {
+                float mouseOffset = Main.mouseX - interactRect.X;
+                float newVal = MathHelper.Clamp(mouseOffset / interactRect.Width, 0f, 1f);
+                return newVal;
+            }
+
+            // Otherwise, just return the current value
+            return currentVal;
+        }
     }
 }

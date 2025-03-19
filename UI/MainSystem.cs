@@ -36,7 +36,7 @@ namespace SquidTestingMod.UI
                     {
                         // actual drawing of all UI elements
                         // dont mess with this
-                        userInterface?.Draw(Main.spriteBatch, new GameTime());
+                        // userInterface?.Draw(Main.spriteBatch, new GameTime());
                         return true;
                     },
                     InterfaceScaleType.UI));
