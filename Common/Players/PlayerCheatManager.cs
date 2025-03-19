@@ -77,6 +77,7 @@ namespace SquidTestingMod.Common.Players
                 ToggleNoclip();
                 ToggleMineAura();
                 ToggleKillAura();
+                ToggleTeleportMode();
 
                 SpawnRateMultiplier.Multiplier = 0f;
 
