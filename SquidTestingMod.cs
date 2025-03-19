@@ -1,4 +1,5 @@
 using System.IO;
+using SquidTestingMod.Reload;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod
@@ -7,39 +8,19 @@ namespace SquidTestingMod
     // [Autoload(Side = ModSide.Client)]
     public class SquidTestingMod : Mod
     {
-        // public override void HandlePacket(BinaryReader reader, int whoAmI)
-        // {
-        // ModNetHandler.HandlePacket(reader, whoAmI);
-        // }
+        public override void Load()
+        {
+            ReloadUtils.ReadData();
+        }
 
-        // public override void Load()
-        // {
-        // ClientDataHandler.ReadData();
-        // TMLData.SaveTMLData();
-        // foreach (var d in DetourManager.GetDetourInfo(typeof(ModContent).GetMethod(
-        //             "Unload",
-        //             BindingFlags.NonPublic | BindingFlags.Static
-        //         )).Detours)
-        // {
-        //     Log.Info($"{d} is Undo");
-        //     d.Undo();
+        public override void Unload()
+        {
+            ReloadUtils.WriteData();
+        }
 
-        //     //Doesn't work for some reason lol
-        // }
-        // }
-
-        // public override void Unload()
-        // {
-        // ClientDataHandler.WriteData();
-        // new Hook(typeof(ModContent).GetMethod(
-        //             "Unload",
-        //             BindingFlags.NonPublic | BindingFlags.Static
-        //         ), (Action orig) =>
-        //         {
-        //             orig();
-        //             LogManager.GetLogger("SQUID").Info("Hi!");
-        //             //Outpt in client.log: [SQUID]: Hi!
-        //         });
-        // }
+        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+            // Handle packet code here
+        }
     }
 }

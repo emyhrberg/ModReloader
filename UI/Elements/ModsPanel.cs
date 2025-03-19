@@ -57,10 +57,10 @@ namespace SquidTestingMod.UI.Elements
             List<string> strings = [];
 
             // 1. Getting Assembly 
-            Assembly tModLoaderAssembly = typeof(Main).Assembly;
+            Assembly assembly = typeof(Main).Assembly;
 
             // 2. Gettig method for finding modSources paths
-            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            Type modCompileType = assembly.GetType("Terraria.ModLoader.Core.ModCompile");
             MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
             string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
 

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.Reload;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,30 +20,12 @@ namespace SquidTestingMod.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            // 1 Clear logs if needed
-            if (Conf.ClearClientLogOnReload)
-                Log.ClearClientLog();
-
-            // 2 Prepare client data
-            // ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
-
-            // 3 Exit server or world
-            // if (Main.netMode == NetmodeID.SinglePlayer)
-            // {
-            //     await ReloadUtilities.ExitWorldOrServer();
-            // }
-            // else if (Main.netMode == NetmodeID.MultiplayerClient)
-            // {
-            //     await ReloadUtilities.ExitAndKillServer();
-            // }
-
-            // 3 Reload
-            // ReloadUtilities.BuildAndReloadMod();
+            await ReloadUtils.ReloadEverything();
         }
 
+        // If right click, toggle the mode and return
         public override void RightClick(UIMouseEvent evt)
         {
-            // If right click, toggle the mode and return
             Active = false;
             buttonUIText.Active = false;
 

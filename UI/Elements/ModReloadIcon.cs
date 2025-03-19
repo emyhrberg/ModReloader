@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using SquidTestingMod.Reload;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -43,25 +44,7 @@ namespace SquidTestingMod.UI.Elements
             Conf.C.ModToReload = modName;
             Conf.ForceSaveConfig(Conf.C);
 
-            // 1 Clear client log
-            // if (Conf.ClearClientLogOnReload)
-            //     Log.ClearClientLog();
-
-            // // 2 Prepare client data
-            // ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
-
-            // // 3 Exit server or world
-            // if (Main.netMode == NetmodeID.SinglePlayer)
-            // {
-            //     await ReloadUtilities.ExitWorldOrServer();
-            // }
-            // else if (Main.netMode == NetmodeID.MultiplayerClient)
-            // {
-            //     await ReloadUtilities.ExitAndKillServer();
-            // }
-
-            // // 3 Reload
-            // ReloadUtilities.BuildAndReloadMod();
+            await ReloadUtils.ReloadEverything();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
