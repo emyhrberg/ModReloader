@@ -47,8 +47,10 @@ namespace SquidTestingMod.UI.Elements
             AddPadding();
 
             AddHeader("Create DebugPanel");
-            widthOption = AddSliderOption("Width", 0, 800, 100, null, 5, 1, hover: "Width of the panel to create");
-            heightOption = AddSliderOption("Height", 0, 800, 100, null, 5, 1, hover: "Height of the panel to create");
+            widthOption = new("Width", 0, 800, 100, null, 5, hover: "Width of the panel to create");
+            heightOption = new("Height", 0, 800, 100, null, 5, hover: "Height of the panel to create");
+            uiList.Add(widthOption);
+            uiList.Add(heightOption);
             AddOnOffOption(SpawnDebugPanel, "Create", "Create a draggable DebugPanel with the specified dimensions");
             AddOnOffOption(RemoveAllDebugPanels, "Remove All DebugPanel", hoverText: "Remove all DebugPanels from the screen");
             AddPadding();

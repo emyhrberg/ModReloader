@@ -105,18 +105,6 @@ namespace SquidTestingMod.UI.Elements
             return onOffPanel;
         }
 
-        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f, string hover = "")
-        {
-            // Create a new option panel
-            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover);
-
-            // Add the option to the ui list
-            uiList.Add(sliderPanel);
-
-            // Add the panel to the player panel
-            return sliderPanel;
-        }
-
         public override void Update(GameTime gameTime)
         {
             // test

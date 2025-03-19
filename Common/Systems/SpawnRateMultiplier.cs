@@ -40,7 +40,7 @@ namespace SquidTestingMod.Common.Systems
 
         public static void SetSpawnRateMultiplier(float value)
         {
-            SpawnRateMultiplier.Multiplier = value;
+            Multiplier = value;
 
             // If spawn rate is set to 0, butcher all hostile NPCs
             if (value == 0)
@@ -52,7 +52,7 @@ namespace SquidTestingMod.Common.Systems
                         NPC.HitInfo hit = npc.CalculateHitInfo(npc.lifeMax, -npc.direction, false, 0f);
                         hit.InstantKill = true;
                         npc.active = false;
-                        Log.Info("butcher " + npc.FullName);
+                        // Log.Info("butcher " + npc.FullName);
                     }
                 }
                 if (!didPrint)

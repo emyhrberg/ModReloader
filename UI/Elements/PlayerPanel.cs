@@ -30,27 +30,28 @@ namespace SquidTestingMod.UI.Elements
             options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Aura Off", "Light up the world around you");
             options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that touch you");
             options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you (not MP-supported)");
-            AddSliderOption(
+            SliderOption mineRadius = new(
                 title: "Mine Radius",
                 min: 1,
                 max: 50,
                 defaultValue: 0,
                 onValueChanged: value => MineAura.mineRange = (int)value,
                 increment: 1,
-                textSize: 0.5f,
                 hover: "Mine all tiles around you when moving (not MP-supported)"
             );
+            uiList.Add(mineRadius);
+
             float currentHP = MaxLife.maxLife != 0 ? MaxLife.maxLife : Main.LocalPlayer.statLifeMax2;
             currentHP = MathHelper.Clamp(currentHP, 1, 1000);
-            maxLifeSlider = AddSliderOption(
+            maxLifeSlider = new(
                 title: "Extra Life",
                 min: 1,
                 max: 1000,
                 defaultValue: currentHP,    // pass 500
                 onValueChanged: OnLifeMaxChanged,
-                increment: 20,
-                textSize: 1
+                increment: 20
             );
+            uiList.Add(maxLifeSlider);
 
             AddPadding();
 
@@ -156,7 +157,7 @@ namespace SquidTestingMod.UI.Elements
         {
             // Normalize the maxLife value from the range [1, 1000] to a fraction (0 to 1)
             float fraction = (MaxLife.maxLife - 1) / 999f;
-            maxLifeSlider.SetValue(fraction);
+            maxLifeSlider?.SetValue(fraction);
             base.Update(gameTime);
         }
     }

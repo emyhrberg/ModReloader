@@ -7,7 +7,6 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players
 {
-    [Autoload(Side = ModSide.Client)]
     public class PlayerCheatManager : ModPlayer
     {
         // Cheats

@@ -99,18 +99,11 @@ namespace SquidTestingMod.Helpers
 
         public static void OpenEnabledJson()
         {
-            // C:\Users\erikm\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
-            // or
-            // $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
-            // the latter is better, use that
-            // even better, find the actual path ...
-
-            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
             Main.NewText("Opening enabled.json...");
 
             try
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods\\enabled.json";
+                string file = Path.Combine(ModLoader.ModPath, "enabled.json");
                 Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
@@ -131,8 +124,8 @@ namespace SquidTestingMod.Helpers
 
             try
             {
-                string folder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods";
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                string folder = Path.Combine(ModLoader.ModPath, "Mods");
+                Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {

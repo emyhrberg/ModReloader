@@ -51,38 +51,38 @@ namespace SquidTestingMod.UI.Elements
 
             AddHeader("World Name: " + worldName);
             AddHeader("Size: " + worldSize);
-            difficulty = AddOnOffOption(ChangeDifficulty, "Difficulty: " + difficultyText, "Click to cycle difficulty");
+            difficulty = AddOnOffOption(CycleDifficultyForward, "Difficulty: " + difficultyText, "Click to cycle difficulty", rightClick: CycleDifficultyBackward);
             AddPadding();
 
             AddHeader("Time");
-            timeOption = AddSliderOption("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime, 1800f / 86400f, 1f, hover: "Click and drag to change time");
+            timeOption = new("Time", 0f, 1f, GetCurrentTimeNormalized(), UpdateInGameTime, 1800f / 86400f, hover: "Click and drag to change time");
             moon = AddOnOffOption(IncreaseMoonphase, $"Moon Phase: {Main.moonPhase} ({GetMoonPhaseName()})", "Click to cycle moon phases", DecreaseMoonphase);
+            uiList.Add(timeOption);
             AddPadding();
 
             AddHeader("Enemies");
-            AddSliderOption("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1, 1, hover: "Set the spawn rate multiplier");
+            SliderOption spawnRate = new("Spawn Rate", 0, 30, SpawnRateMultiplier.Multiplier, SpawnRateMultiplier.SetSpawnRateMultiplier, increment: 1, hover: "Set the spawn rate multiplier");
+            uiList.Add(spawnRate);
 
             // Town NPCs
             // Force at least 1 for the max, just so the slider has a range
             int numberOfTownNPCs = Main.npc.Count(npc => npc.active && npc.townNPC);
             float maxValue = Math.Max(1f, numberOfTownNPCs);
-            townNpcSlider = AddSliderOption(
-            "Town NPCs",
-            0f,                   // min
-            maxValue,             // max
-            maxValue,             // default value
-            UpdateTownNpcSlider,  // callback
-            1f,                   // increment
-            1f,                   // scroll speed
-            "Set the number of town NPCs (scuffed)"
-        );
+            townNpcSlider = new(
+                "Town NPCs",
+                0f,                   // min
+                maxValue,             // max
+                maxValue,             // default value
+                UpdateTownNpcSlider,  // callback
+                increment: 1f,                   // increment
+                hover: "Set the number of town NPCs (scuffed)"
+            );
+            uiList.Add(townNpcSlider);
 
             // tracking
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track Enemies Off", "Show all enemies position with an arrow");
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleCritterTracking, "Track Critters Off", "Show all critters position with an arrow");
             AddOnOffOption(DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track Town NPCs Off", "Show all town NPCs position with an arrow");
-
-
 
             AddPadding();
 
@@ -214,26 +214,41 @@ namespace SquidTestingMod.UI.Elements
             }
         }
 
-        private void ChangeDifficulty()
+        private void UpdateDifficultyText()
         {
-            // Cycle through the different difficulty settings
-            Main.ActiveWorldFileData.GameMode = Main.ActiveWorldFileData.GameMode switch
-            {
-                GameModeID.Normal => GameModeID.Expert,
-                GameModeID.Expert => GameModeID.Master,
-                GameModeID.Master => GameModeID.Normal,
-                _ => Main.ActiveWorldFileData.GameMode
-            };
-
-            // Update the text element
-            difficulty.UpdateText("Difficulty: " + Main.ActiveWorldFileData.GameMode switch
+            string diffText = Main.GameMode switch
             {
                 GameModeID.Normal => "Normal",
                 GameModeID.Expert => "Expert",
                 GameModeID.Master => "Master",
                 GameModeID.Creative => "Journey",
                 _ => "Unknown Difficulty"
-            });
+            };
+            difficulty.UpdateText("Difficulty: " + diffText);
+        }
+
+        private void CycleDifficultyForward()
+        {
+            Main.GameMode = Main.GameMode switch
+            {
+                GameModeID.Normal => GameModeID.Expert,
+                GameModeID.Expert => GameModeID.Master,
+                GameModeID.Master => GameModeID.Normal,
+                _ => Main.GameMode
+            };
+            UpdateDifficultyText();
+        }
+
+        private void CycleDifficultyBackward()
+        {
+            Main.GameMode = Main.GameMode switch
+            {
+                GameModeID.Normal => GameModeID.Master,
+                GameModeID.Expert => GameModeID.Normal,
+                GameModeID.Master => GameModeID.Expert,
+                _ => Main.GameMode
+            };
+            UpdateDifficultyText();
         }
 
         private void SpawnMeteor()

@@ -1,58 +1,48 @@
 using System;
 using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.UI;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SquidTestingMod.UI.Elements
 {
     public class SliderOption : PanelElement
     {
+        public CustomSlider Slider;
         private float Min;
         private float Max;
         public float normalizedValue;
         private float? snapIncrement;
-        private System.Action<float> _onValueChanged;
+        public Action<float> _onValueChanged;
 
-        // The minimal slider
-        public CustomSlider Slider;
-
-        public SliderOption(string title, float min, float max, float defaultValue,
-            System.Action<float> onValueChanged = null, float? increment = null,
-            float textSize = 1.0f, string hover = "")
+        public SliderOption(
+            string title,
+            float min,
+            float max,
+            float defaultValue,
+            Action<float> onValueChanged = null,
+            float? increment = null,
+            float textSize = 1f,
+            string hover = "")
             : base(title)
         {
             HoverText = hover;
             TextScale = textSize;
-
             Min = min;
             Max = max;
-            snapIncrement = increment;
             _onValueChanged = onValueChanged;
+            snapIncrement = increment;
 
-            // Convert the default value to normalized [0..1]
-            normalizedValue = MathHelper.Clamp((defaultValue - Min) / (Max - Min), 0f, 1f);
+            normalizedValue = MathHelper.Clamp((defaultValue - Min) / (max - Min), 0f, 1f);
+            textElement.HAlign = 0.08f;
 
-            // Position the text label (optional, from your PanelElement base)
-            textElement.HAlign = 0.05f;
-
-            // Create our minimal CustomSlider
             Slider = new CustomSlider(
-                // getValue: return our normalizedValue
-                getValue: () => normalizedValue,
-
-                // setValue: update the slider when dragged
-                setValue: val =>
+                () => normalizedValue,
+                val =>
                 {
-                    // Update normalized value
                     normalizedValue = val;
-
-                    // Convert to actual [Min..Max]
                     float realValue = MathHelper.Lerp(Min, Max, normalizedValue);
-
-                    // If we have a snap increment, snap to the nearest multiple
                     if (snapIncrement.HasValue && snapIncrement.Value > 0)
                     {
-                        float snapped = (float)System.Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
+                        float snapped = (float)Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
                         snapped = MathHelper.Clamp(snapped, Min, Max);
                         normalizedValue = (snapped - Min) / (Max - Min);
                         _onValueChanged?.Invoke(snapped);
@@ -62,34 +52,30 @@ namespace SquidTestingMod.UI.Elements
                         _onValueChanged?.Invoke(realValue);
                     }
                 },
-
-                // barColorFunc: color gradient from black to white
-                barColorFunc: s => Color.Lerp(Color.Black, Color.White, s)
+                s => Color.Lerp(Color.Black, Color.White, s)
             );
-
             Append(Slider);
         }
 
-        public void SetValue(float newValue)
+        public void SetValue(float value)
         {
-            // Make sure it's within [Min..Max]
-            newValue = MathHelper.Clamp(newValue, Min, Max);
+            normalizedValue = MathHelper.Clamp(value, 0f, 1f);
+        }
 
-            // Convert to normalized [0..1]
-            normalizedValue = (newValue - Min) / (Max - Min);
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+            float realValue = MathHelper.Lerp(Min, Max, normalizedValue);
 
-            // If you want to apply snapping here too, do it:
             if (snapIncrement.HasValue && snapIncrement.Value > 0)
             {
-                float snapped = (float)Math.Round(newValue / snapIncrement.Value) * snapIncrement.Value;
-                snapped = MathHelper.Clamp(snapped, Min, Max);
-                normalizedValue = (snapped - Min) / (Max - Min);
-                // Fire callback if needed
-                _onValueChanged?.Invoke(snapped);
+                float snapped = (float)Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
+                textElement.SetText($"{Title}: {snapped}");
             }
             else
             {
-                _onValueChanged?.Invoke(newValue);
+                int currentIntValue = (int)Math.Round(realValue);
+                textElement.SetText($"{Title}: {currentIntValue}");
             }
         }
     }
