@@ -95,7 +95,7 @@ namespace SquidTestingMod.UI.Elements
                 }
 
                 Main.refreshMap = true;
-                // Main.NewText("Map fully revealed!", 255, 255, 255);
+                Main.NewText("Map fully revealed!", 255, 255, 255);
             });
         }
 

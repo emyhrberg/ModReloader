@@ -51,7 +51,15 @@ namespace SquidTestingMod.UI.Elements
             }
             else
             {
-                Log.Info("No icon found for " + modPath);
+                Log.Info("No icon found. Substituting default icon for " + modPath);
+
+                Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+
+                Main.QueueMainThreadAction(() =>
+                {
+                    modIcon = new(defaultIcon.Value);
+                    Append(modIcon);
+                });
             }
 
             // mod name

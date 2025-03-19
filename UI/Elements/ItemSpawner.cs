@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
@@ -124,13 +125,18 @@ namespace SquidTestingMod.UI.Elements
 
         private void AddItemSlotsToGrid()
         {
-            int allItems = TextureAssets.Item.Length - 1;
+            // int allItems = TextureAssets.Item.Length - 1;
+            int allItems = ItemLoader.ItemCount; // Use total count including modded items
+
             Log.Info("Total items (TextureAssets.Item.Length): " + allItems);
 
             Stopwatch s = Stopwatch.StartNew();
 
             for (int i = 1; i <= allItems; i++)
             {
+                if (!ContentSamples.ItemsByType.ContainsKey(i))
+                    continue;
+
                 Item item = new();
                 item.SetDefaults(i, true); // true needed to load modded items?
 
@@ -155,63 +161,64 @@ namespace SquidTestingMod.UI.Elements
         protected override void FilterItems()
         {
             Stopwatch s = Stopwatch.StartNew();
-
             string searchText = SearchTextBox.currentString.ToLower();
 
-            ItemsGrid.Clear();
+            // Clear UI immediately (optional: show "loading" text)
+            ItemCountText.SetText("Filtering...");
 
-            // Add a single item slot to test the performance maybe?
-            // Or add a load icon indicator?
-
-            // 1) Filter the items
-            var filteredSlots = allItemSlots.Where(slot =>
+            // Run the filtering and sorting in a background task
+            Task.Run(() =>
             {
-                Item item = slot.GetDisplayItem();
-                if (!item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
-                    return false;
-
-                bool passesFilter = currentFilter switch
+                var filteredSlots = allItemSlots.Where(slot =>
                 {
-                    ItemFilter.All => true,
-                    ItemFilter.AllWeapons => item.damage > 0,
-                    ItemFilter.Melee => item.damage > 0 && item.DamageType == DamageClass.Melee,
-                    ItemFilter.Ranged => item.damage > 0 && item.DamageType == DamageClass.Ranged,
-                    ItemFilter.Magic => item.damage > 0 && item.DamageType == DamageClass.Magic,
-                    ItemFilter.Summon => item.damage > 0 && item.DamageType == DamageClass.Summon,
-                    ItemFilter.Armor => item.defense > 0 && (item.legSlot > 0 || item.bodySlot > 0 || item.headSlot > 0),
-                    ItemFilter.Vanity => item.vanity,
-                    ItemFilter.Accessories => item.accessory,
-                    ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
-                    ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
-                    _ => false
+                    Item item = slot.GetDisplayItem();
+                    if (!item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
+                        return false;
+
+                    return currentFilter switch
+                    {
+                        ItemFilter.All => true,
+                        ItemFilter.AllWeapons => item.damage > 0,
+                        ItemFilter.Melee => item.damage > 0 && item.DamageType == DamageClass.Melee,
+                        ItemFilter.Ranged => item.damage > 0 && item.DamageType == DamageClass.Ranged,
+                        ItemFilter.Magic => item.damage > 0 && item.DamageType == DamageClass.Magic,
+                        ItemFilter.Summon => item.damage > 0 && item.DamageType == DamageClass.Summon,
+                        ItemFilter.Armor => item.defense > 0 && (item.legSlot > 0 || item.bodySlot > 0 || item.headSlot > 0),
+                        ItemFilter.Vanity => item.vanity,
+                        ItemFilter.Accessories => item.accessory,
+                        ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
+                        ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
+                        _ => false
+                    };
+                }).ToList();
+
+                // Sort the filtered items
+                filteredSlots = currentSort switch
+                {
+                    ItemSort.Value => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().value).ToList()
+                                                : filteredSlots.OrderByDescending(s => s.GetDisplayItem().value).ToList(),
+                    ItemSort.Rarity => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().rare).ToList()
+                                                 : filteredSlots.OrderByDescending(s => s.GetDisplayItem().rare).ToList(),
+                    ItemSort.Name => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().Name).ToList()
+                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().Name).ToList(),
+                    ItemSort.Damage => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().damage).ToList()
+                                                 : filteredSlots.OrderByDescending(s => s.GetDisplayItem().damage).ToList(),
+                    ItemSort.Defense => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().defense).ToList()
+                                                  : filteredSlots.OrderByDescending(s => s.GetDisplayItem().defense).ToList(),
+                    _ => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().type).ToList()
+                                   : filteredSlots.OrderByDescending(s => s.GetDisplayItem().type).ToList()
                 };
 
-                return passesFilter;
+                // 3) Switch back to the main thread to update UI safely
+                Main.QueueMainThreadAction(() =>
+                {
+                    ItemsGrid.Clear();  // UI modification must happen on the main thread
+                    ItemsGrid.AddRange(filteredSlots);
+
+                    s.Stop();
+                    ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.Elapsed.TotalSeconds, 3)} seconds");
+                });
             });
-
-            // 2) Sort the items
-            filteredSlots = currentSort switch
-            {
-                ItemSort.Value => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().value)
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().value),
-                ItemSort.Rarity => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().rare)
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().rare),
-                ItemSort.Name => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().Name)
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().Name),
-                ItemSort.Damage => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().damage)
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().damage),
-                ItemSort.Defense => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().defense)
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().defense),
-                _ => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().type)
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().type)
-            };
-
-            // Add the items to the grid
-            ItemsGrid.AddRange(filteredSlots);
-
-            // Update the item count text
-            s.Stop();
-            ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.Elapsed.TotalSeconds, 3)} seconds");
         }
     }
 }

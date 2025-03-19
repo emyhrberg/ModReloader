@@ -15,19 +15,17 @@ namespace SquidTestingMod.UI.Elements
         public List<ModSourcesElement> modSourcesElements = [];
         public List<String> enabledMods = [];
 
-        public ModsPanel() : base(title: "Mods List", scrollbarEnabled: true)
+        public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
-            AddHeader("Mod Sources");
+            // Active = true; // uncomment to show the panel by default
+
+            AddHeader("Mod Sources", GoToModSources, "Click to exit world and go to mod sources");
             ConstructModSourcesList();
             AddPadding();
 
-            AddHeader("Enabled Mods");
+            AddHeader("Mods List", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
             ConstructEnabledModsList();
             AddPadding();
-
-            AddHeader("Navigate");
-            AddOnOffOption(GoToModSources, "To Mod Sources (my mods)", "Exit World And Go To Mod Sources");
-            AddOnOffOption(GoToModsList, "To Mods List (enabled mods)", "Exit World And Go To Mods List");
         }
 
         private void ConstructEnabledModsList()

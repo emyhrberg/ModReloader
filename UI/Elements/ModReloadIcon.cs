@@ -43,9 +43,6 @@ namespace SquidTestingMod.UI.Elements
             Conf.C.ModToReload = modName;
             Conf.ForceSaveConfig(Conf.C);
 
-            // wait 2 sec
-            // await Task.Delay(2000);
-
             // 1 Clear client log
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();

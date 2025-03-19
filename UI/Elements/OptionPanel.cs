@@ -69,9 +69,10 @@ namespace SquidTestingMod.UI.Elements
             if (scrollbarEnabled) Append(scrollbar);
         }
 
-        protected HeaderElement AddHeader(string title)
+        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "")
         {
-            HeaderElement headerElement = new(title);
+            HeaderElement headerElement = new(title, hover);
+            headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke();
             uiList.Add(headerElement);
             return headerElement;
         }

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.ModLoader;
