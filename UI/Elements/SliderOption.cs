@@ -1,65 +1,58 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.Localization;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
     public class SliderOption : PanelElement
     {
-        // The actual slider control.
-        public CustomSlider Slider;
-
-        // Slider limits.
         private float Min;
         private float Max;
-
-        // The slider’s current normalized value (0..1).
         public float normalizedValue;
-
-        // Optional snap increment.
-        // If set (and > 0), the slider value will snap to multiples of this.
         private float? snapIncrement;
+        private System.Action<float> _onValueChanged;
 
-        public Action<float> _onValueChanged;
+        // The minimal slider
+        public CustomSlider Slider;
 
-        // Added an optional "increment" parameter.
-        public SliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1.0f, string hover = "")
+        public SliderOption(string title, float min, float max, float defaultValue,
+            System.Action<float> onValueChanged = null, float? increment = null,
+            float textSize = 1.0f, string hover = "")
             : base(title)
         {
-            // Set hover and text size.
             HoverText = hover;
             TextScale = textSize;
 
             Min = min;
             Max = max;
-            _onValueChanged = onValueChanged;
             snapIncrement = increment;
+            _onValueChanged = onValueChanged;
 
-            // Convert the default value into a normalized 0..1 value.
-            normalizedValue = MathHelper.Clamp((defaultValue - Min) / (max - min), 0f, 1f);
+            // Convert the default value to normalized [0..1]
+            normalizedValue = MathHelper.Clamp((defaultValue - Min) / (Max - Min), 0f, 1f);
 
-            // Position the text element.
+            // Position the text label (optional, from your PanelElement base)
             textElement.HAlign = 0.05f;
 
-            // Create the slider control.
+            // Create our minimal CustomSlider
             Slider = new CustomSlider(
-                textKey: Language.GetText("UI.SliderLabel"),
-                getStatus: () => normalizedValue,
-                setStatusKeyboard: val =>
+                // getValue: return our normalizedValue
+                getValue: () => normalizedValue,
+
+                // setValue: update the slider when dragged
+                setValue: val =>
                 {
-                    // Update the normalized value.
+                    // Update normalized value
                     normalizedValue = val;
-                    // Convert normalized value to the actual value.
+
+                    // Convert to actual [Min..Max]
                     float realValue = MathHelper.Lerp(Min, Max, normalizedValue);
+
+                    // If we have a snap increment, snap to the nearest multiple
                     if (snapIncrement.HasValue && snapIncrement.Value > 0)
                     {
-                        // Snap to nearest multiple.
-                        float snapped = (float)Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
+                        float snapped = (float)System.Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
                         snapped = MathHelper.Clamp(snapped, Min, Max);
                         normalizedValue = (snapped - Min) / (Max - Min);
                         _onValueChanged?.Invoke(snapped);
@@ -69,35 +62,34 @@ namespace SquidTestingMod.UI.Elements
                         _onValueChanged?.Invoke(realValue);
                     }
                 },
-                setStatusGamepad: () => { },
-                blipColorFunction: s => Color.Lerp(Color.Black, Color.White, s),
-                color: Color.White
+
+                // barColorFunc: color gradient from black to white
+                barColorFunc: s => Color.Lerp(Color.Black, Color.White, s)
             );
 
             Append(Slider);
         }
 
-        public void SetValue(float value)
+        public void SetValue(float newValue)
         {
-            normalizedValue = MathHelper.Clamp(value, 0f, 1f);
-        }
+            // Make sure it's within [Min..Max]
+            newValue = MathHelper.Clamp(newValue, Min, Max);
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            textElement.HAlign = 0.08f;
+            // Convert to normalized [0..1]
+            normalizedValue = (newValue - Min) / (Max - Min);
 
-            base.Draw(spriteBatch);
-
-            float realValue = MathHelper.Lerp(Min, Max, normalizedValue);
+            // If you want to apply snapping here too, do it:
             if (snapIncrement.HasValue && snapIncrement.Value > 0)
             {
-                float snapped = (float)Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
-                textElement.SetText($"{Title}: {snapped}");
+                float snapped = (float)Math.Round(newValue / snapIncrement.Value) * snapIncrement.Value;
+                snapped = MathHelper.Clamp(snapped, Min, Max);
+                normalizedValue = (snapped - Min) / (Max - Min);
+                // Fire callback if needed
+                _onValueChanged?.Invoke(snapped);
             }
             else
             {
-                int currentIntValue = (int)Math.Round(realValue);
-                textElement.SetText($"{Title}: {currentIntValue}");
+                _onValueChanged?.Invoke(newValue);
             }
         }
     }

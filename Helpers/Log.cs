@@ -103,7 +103,7 @@ namespace SquidTestingMod.Helpers
             // or
             // $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
             // the latter is better, use that
-
+            // even better, find the actual path ...
 
             // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
             Main.NewText("Opening enabled.json...");

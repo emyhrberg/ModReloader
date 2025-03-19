@@ -83,7 +83,7 @@ namespace SquidTestingMod.Common.Players
 
                 // Update text
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
-                sys.mainState.playerPanel.RefreshCheatTexts();
+                sys?.mainState?.playerPanel?.RefreshCheatTexts();
             }
         }
     }

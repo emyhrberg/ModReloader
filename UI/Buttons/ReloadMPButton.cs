@@ -31,33 +31,33 @@ namespace SquidTestingMod.UI.Buttons
         public async override void LeftClick(UIMouseEvent evt)
         {
             // If alt+click, toggle the mode and return
-            bool altClick = Main.keyState.IsKeyDown(Keys.LeftAlt);
-            if (altClick)
-            {
-                Active = false;
-                buttonUIText.Active = false;
+            // bool altClick = Main.keyState.IsKeyDown(Keys.LeftAlt);
+            // if (altClick)
+            // {
+            //     Active = false;
+            //     buttonUIText.Active = false;
 
-                // set MP active
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                foreach (var btn in sys?.mainState?.AllButtons)
-                {
-                    if (btn is ReloadSPButton spBtn)
-                    {
-                        spBtn.Active = true;
-                        spBtn.buttonUIText.Active = true;
-                    }
-                }
-                return;
-            }
+            //     // set MP active
+            //     MainSystem sys = ModContent.GetInstance<MainSystem>();
+            //     foreach (var btn in sys?.mainState?.AllButtons)
+            //     {
+            //         if (btn is ReloadSPButton spBtn)
+            //         {
+            //             spBtn.Active = true;
+            //             spBtn.buttonUIText.Active = true;
+            //         }
+            //     }
+            //     return;
+            // }
 
-            ReloadUtilities.PrepareClient(ClientMode.MPMain);
+            // ReloadUtilities.PrepareClient(ClientMode.MPMain);
 
-            // we must be in multiplayer for this to have an effect
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                await ReloadUtilities.ExitAndKillServer();
-                ReloadUtilities.BuildAndReloadMod();
-            }
+            // // we must be in multiplayer for this to have an effect
+            // if (Main.netMode == NetmodeID.MultiplayerClient)
+            // {
+            //     await ReloadUtilities.ExitAndKillServer();
+            //     ReloadUtilities.BuildAndReloadMod();
+            // }
         }
 
         public override void RightClick(UIMouseEvent evt)

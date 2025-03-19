@@ -1,7 +1,4 @@
-using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
@@ -27,20 +24,20 @@ namespace SquidTestingMod.UI.Buttons
                 Log.ClearClientLog();
 
             // 2 Prepare client data
-            ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
+            // ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
 
             // 3 Exit server or world
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                await ReloadUtilities.ExitWorldOrServer();
-            }
-            else if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                await ReloadUtilities.ExitAndKillServer();
-            }
+            // if (Main.netMode == NetmodeID.SinglePlayer)
+            // {
+            //     await ReloadUtilities.ExitWorldOrServer();
+            // }
+            // else if (Main.netMode == NetmodeID.MultiplayerClient)
+            // {
+            //     await ReloadUtilities.ExitAndKillServer();
+            // }
 
             // 3 Reload
-            ReloadUtilities.BuildAndReloadMod();
+            // ReloadUtilities.BuildAndReloadMod();
         }
 
         public override void RightClick(UIMouseEvent evt)

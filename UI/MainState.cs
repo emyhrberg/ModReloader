@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Buttons;
 using SquidTestingMod.UI.Elements;
-using Terraria;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -62,7 +59,7 @@ namespace SquidTestingMod.UI
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
             Append(collapse);
 
-            // Add the panels (invisible by default)
+            // Add the panels(invisible by default)
             itemSpawnerPanel = AddPanel<ItemSpawner>("left");
             npcSpawnerPanel = AddPanel<NPCSpawner>("left");
             playerPanel = AddPanel<PlayerPanel>("right");
