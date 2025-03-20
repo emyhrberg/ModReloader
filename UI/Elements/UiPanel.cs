@@ -115,6 +115,9 @@ namespace SquidTestingMod.UI.Elements
         // add a field to track which types we added toggles for:
         private HashSet<string> addedTypes = new();
 
+        // Add this field to your class (outside of Update)
+        private List<OnOffOption> debugToggles = new();
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -127,7 +130,7 @@ namespace SquidTestingMod.UI.Elements
                     .OrderBy(name => name)
                     .ToList();
 
-                // Temporary list to store new toggles (to avoid modifying uiList while iterating)
+                // Temporary list for new toggles
                 List<OnOffOption> newToggles = new();
 
                 foreach (string typeName in distinctTypes)
@@ -143,15 +146,30 @@ namespace SquidTestingMod.UI.Elements
                             rightClick: () => debugState.PrintDimensionsForType(typeName)
                         );
 
-                        newToggles.Add(typeToggle); // Add to temp list instead of modifying uiList directly
+                        newToggles.Add(typeToggle);
+                        debugToggles.Add(typeToggle);  // Track our dynamic toggles
+                        uiList.Add(typeToggle);
+                        allElements.Add(typeToggle);
                     }
                 }
 
-                // Add new toggles *after* the iteration is finished
-                foreach (var toggle in newToggles)
+                // If new toggles were added, re-sort only our debug toggles.
+                if (newToggles.Any())
                 {
-                    uiList.Add(toggle);
-                    allElements.Add(toggle);
+                    // Get sorted list from our dedicated list.
+                    var sortedToggles = debugToggles.OrderBy(toggle => toggle.textElement.Text).ToList();
+
+                    // Remove our debug toggles from uiList.
+                    foreach (var toggle in debugToggles)
+                    {
+                        uiList.Remove(toggle);
+                    }
+
+                    // Re-add them in sorted order.
+                    foreach (var toggle in sortedToggles)
+                    {
+                        uiList.Add(toggle);
+                    }
                 }
             }
         }
