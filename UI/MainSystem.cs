@@ -19,6 +19,15 @@ namespace SquidTestingMod.UI
             userInterface.SetState(mainState);
         }
 
+        public override void PostSetupContent()
+        {
+            base.PostSetupContent();
+
+            userInterface = new UserInterface();
+            mainState = new MainState();
+            userInterface.SetState(mainState);
+        }
+
         public override void UpdateUI(GameTime gameTime)
         {
             userInterface?.Update(gameTime);
