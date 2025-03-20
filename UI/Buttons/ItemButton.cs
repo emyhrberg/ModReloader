@@ -14,7 +14,7 @@ namespace SquidTestingMod.UI.Buttons
     {
         // Set custom animation dimensions
         protected override float SpriteScale => 1.2f;
-        protected override int MaxFrames => 5;
+        protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 40;
         protected override int FrameHeight => 40;
@@ -54,7 +54,7 @@ namespace SquidTestingMod.UI.Buttons
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
                     {
-                        if (currFrame < MaxFrames) // only increment if not at last frame
+                        if (currFrame < FrameCount) // only increment if not at last frame
                         {
                             currFrame++;
                         }

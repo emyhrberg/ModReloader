@@ -15,10 +15,11 @@ namespace SquidTestingMod.UI.Buttons
     public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
-        protected override int MaxFrames => 5;
+        protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 65;
         protected override int FrameHeight => 65;
+        protected override float SpriteScale => 0.8f;
 
         public async override void LeftClick(UIMouseEvent evt)
         {

@@ -9,9 +9,14 @@ namespace SquidTestingMod.UI.Buttons
 {
     public class UIButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
-        protected override float SpriteScale => 0.1f;
-        protected override int FrameWidth => 512;
-        protected override int FrameHeight => 512;
+        // Sprite size
+        protected override float SpriteScale => 1.3f;
+        protected override int FrameWidth => 28;
+        protected override int FrameHeight => 24;
+
+        // Sprite animation
+        protected override int FrameCount => 4;
+        protected override int FrameSpeed => 10;
 
         public override void LeftClick(UIMouseEvent evt)
         {

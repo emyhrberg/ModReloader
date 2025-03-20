@@ -15,7 +15,7 @@ namespace SquidTestingMod.UI.Buttons
         // Set custom animation dimensions
         protected override float SpriteScale => 0.95f;
         protected override int StartFrame => 3;
-        protected override int MaxFrames => 17;
+        protected override int FrameCount => 17;
         protected override int FrameSpeed => 5;
         protected override int FrameWidth => 44;
         protected override int FrameHeight => 54;

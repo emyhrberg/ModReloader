@@ -1,7 +1,6 @@
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -10,8 +9,8 @@ namespace SquidTestingMod.UI.Buttons
     public class DebugButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set custom animation dimensions
-        protected override float SpriteScale => 0.6f;
-        protected override int MaxFrames => 16;
+        protected override float SpriteScale => 0.55f;
+        protected override int FrameCount => 16;
         protected override int FrameSpeed => 4;
         protected override int FrameWidth => 74;
         protected override int FrameHeight => 78;

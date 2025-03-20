@@ -8,7 +8,7 @@ namespace SquidTestingMod.UI.Buttons
     public class ConfigButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         protected override float SpriteScale => 0.2f;
-        protected override int MaxFrames => 5;
+        protected override int FrameCount => 5;
         protected override int FrameSpeed => 10;
         protected override int FrameWidth => 640;
         protected override int FrameHeight => 640;

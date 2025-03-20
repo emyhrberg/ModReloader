@@ -45,11 +45,16 @@ namespace SquidTestingMod.UI
             offset = -ButtonSize * 5 - 20;
             // offset = -ButtonSize * 3 - 20;
 
+            // 10% chance to make NPC asset xmas themed
+            Asset<Texture2D> npcAss = Ass.ButtonNPC;
+            // if (Main.rand.NextBool(10))
+            // npcAss = Ass.ButtonNPC_XMAS;
+
             // Add buttons
             AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
             AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
-            AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
+            AddButton<NPCButton>(npcAss, "NPC", "Spawn all NPC in the game");
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities");
             AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View and edit hitboxes, world, logs");
             AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements");

@@ -1,9 +1,7 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Buttons;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,7 +21,7 @@ namespace SquidTestingMod.UI.Buttons
 
         // Set custom animation dimensions
         protected override float SpriteScale => 1.25f;
-        protected override int MaxFrames => 5;
+        protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 65;
         protected override int FrameHeight => 65;

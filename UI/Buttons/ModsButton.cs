@@ -1,8 +1,12 @@
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
+using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
@@ -10,9 +14,80 @@ namespace SquidTestingMod.UI.Buttons
     public class ModsButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
     {
         // Set button image size
-        protected override float SpriteScale => 0.7f; // 250 * 0.1 = 25f (reasonable, button is 70f)
-        protected override int FrameWidth => 100;
-        protected override int FrameHeight => 100;
+        protected override float SpriteScale => 0.6f;
+        protected override int FrameWidth => 55;
+        protected override int FrameHeight => 70;
+
+        // Set button image animation
+        protected override int FrameCount => 10;
+        protected override int FrameSpeed => 4;
+
+        /// <summary>
+        /// This is needed because ItemButton is set to end animation at its last frame 5.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            if (Conf.HideCollapseButton && !Main.playerInventory)
+                return;
+
+            if (!Active || Button == null || Button.Value == null)
+                return;
+
+            // Get the button size from MainState
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            float buttonSize = 70f;
+
+            // Get the dimensions based on the button size.
+            CalculatedStyle dimensions = GetInnerDimensions();
+            Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
+            opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
+
+            // Set UIText opacity
+            buttonUIText.TextColor = Color.White * opacity;
+
+            // Draw the texture with the calculated opacity.
+            spriteBatch.Draw(Button.Value, drawRect, Color.White * opacity);
+
+            // Draw the animation texture
+            if (Spritesheet != null)
+            {
+                if (IsMouseHovering)
+                {
+                    frameCounter++;
+                    if (frameCounter >= FrameSpeed)
+                    {
+                        if (currFrame < FrameCount) // only increment if not at last frame
+                        {
+                            currFrame++;
+                        }
+                        // Otherwise, if currFrame is already MaxFrames, do nothing.
+                        frameCounter = 0;
+                    }
+                }
+                else
+                {
+                    currFrame = StartFrame;
+                    frameCounter = 0;
+                }
+
+                // Use a custom scale and offset to draw the animated overlay.
+                Vector2 position = dimensions.Position();
+                Vector2 size = new(dimensions.Width, dimensions.Height);
+                Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * SpriteScale) / 2f;
+                Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
+                centeredPosition.Y -= 7; // magic offset to move it up a bit
+
+                // Draw the spritesheet.
+                spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
+            }
+
+            // Draw tooltip text if hovering and HoverText is given (see MainState).
+            if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
+            {
+                UICommon.TooltipMouseText(HoverText);
+            }
+        }
 
         public override void LeftClick(UIMouseEvent evt)
         {

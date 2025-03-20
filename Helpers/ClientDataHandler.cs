@@ -27,12 +27,22 @@ namespace SquidTestingMod.Helpers
         public static int WorldId { get { return _worldId; } set { _worldId = value; } }
         public static void WriteData()
         {
+            if (Main.dedServ)
+            {
+                return;
+            }
+
             Log.Info("Writing Data");
             Main.instance.Window.Title = $"{_mode}, {_playerId}, {_worldId}";
         }
 
         public static void ReadData()
         {
+            if (Main.dedServ)
+            {
+                return;
+            }
+
             Log.Info("Reading Data");
             if (!string.IsNullOrEmpty(Main.instance.Window.Title))
             {
