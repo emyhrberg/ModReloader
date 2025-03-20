@@ -52,8 +52,9 @@ namespace SquidTestingMod.Common.Systems
             Player p = Main.LocalPlayer;
             Rectangle hitbox = p.Hitbox;
             hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
-            DrawHitbox(spriteBatch, hitbox, Color.Blue);
-            DrawOutlineHitbox(spriteBatch, hitbox);
+            Color lightOrange = new(255, 113, 69);
+            DrawHitbox(spriteBatch, hitbox, lightOrange);
+            DrawOutlineHitbox(spriteBatch, hitbox, lightOrange);
         }
 
         private void DrawNPCHitboxes(SpriteBatch spriteBatch)
@@ -66,8 +67,9 @@ namespace SquidTestingMod.Common.Systems
                     Rectangle hitbox = npc.getRect();
                     hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
                     hitbox = Main.ReverseGravitySupport(hitbox);
-                    DrawHitbox(spriteBatch, hitbox, Color.Red * 0.5f);
-                    DrawOutlineHitbox(spriteBatch, hitbox);
+                    Color red = Color.Red;
+                    DrawHitbox(spriteBatch, hitbox, red);
+                    DrawOutlineHitbox(spriteBatch, hitbox, red);
                 }
             }
         }
@@ -81,8 +83,9 @@ namespace SquidTestingMod.Common.Systems
 
                 Rectangle hitbox = proj.getRect();
                 hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
-                DrawHitbox(spriteBatch, hitbox, Color.Green * 0.5f);
-                DrawOutlineHitbox(spriteBatch, hitbox);
+                Color pink = new(255, 42, 156);
+                DrawHitbox(spriteBatch, hitbox, pink);
+                DrawOutlineHitbox(spriteBatch, hitbox, pink);
             }
         }
 
@@ -95,8 +98,9 @@ namespace SquidTestingMod.Common.Systems
                     Rectangle hitbox = HitboxesGlobalItem.meleeHitbox[i].Value;
                     hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
                     hitbox = Main.ReverseGravitySupport(hitbox);
-                    DrawHitbox(sb, hitbox, Color.Yellow * 0.5f);
-                    DrawOutlineHitbox(sb, hitbox);
+                    Color yellow = Color.Yellow;
+                    DrawHitbox(sb, hitbox, yellow);
+                    DrawOutlineHitbox(sb, hitbox, yellow);
                     HitboxesGlobalItem.meleeHitbox[i] = null;
                 }
             }
@@ -104,16 +108,16 @@ namespace SquidTestingMod.Common.Systems
 
         private void DrawHitbox(SpriteBatch spriteBatch, Rectangle hitbox, Color color)
         {
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, color * 0.5f);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, hitbox, color * 0.3f);
         }
 
-        private void DrawOutlineHitbox(SpriteBatch spriteBatch, Rectangle hitbox)
+        private void DrawOutlineHitbox(SpriteBatch spriteBatch, Rectangle hitbox, Color color)
         {
             hitbox.Inflate(2, 2);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, 2), Color.Black);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, 2, hitbox.Height), Color.Black);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X + hitbox.Width - 2, hitbox.Y, 2, hitbox.Height), Color.Black);
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y + hitbox.Height - 2, hitbox.Width, 2), Color.Black);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, 2), color);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y, 2, hitbox.Height), color);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X + hitbox.Width - 2, hitbox.Y, 2, hitbox.Height), color);
+            spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(hitbox.X, hitbox.Y + hitbox.Height - 2, hitbox.Width, 2), color);
         }
 
         internal class HitboxesGlobalItem : GlobalItem

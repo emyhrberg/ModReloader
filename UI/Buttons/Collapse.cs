@@ -49,6 +49,11 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            CollapseEverything();
+        }
+
+        public void CollapseEverything()
+        {
             UpdateButtonVisibility();
             UpdateCollapseImage();
         }

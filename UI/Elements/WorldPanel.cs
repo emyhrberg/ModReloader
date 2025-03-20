@@ -217,7 +217,7 @@ namespace SquidTestingMod.UI.Elements
         private void ChangeDifficulty()
         {
             // Cycle through the different difficulty settings
-            Main.ActiveWorldFileData.GameMode = Main.ActiveWorldFileData.GameMode switch
+            Main.GameMode = Main.GameMode switch
             {
                 GameModeID.Normal => GameModeID.Expert,
                 GameModeID.Expert => GameModeID.Master,

@@ -76,7 +76,7 @@ namespace SquidTestingMod.UI.Elements
             float dist = 27f;
 
             // checkbox icon
-            checkbox = new(Ass.ModUncheck.Value, modName, "Click to make this the mod to reload");
+            checkbox = new(Ass.ModUncheck.Value, modName, $"Click to make {modName} the mod to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
 

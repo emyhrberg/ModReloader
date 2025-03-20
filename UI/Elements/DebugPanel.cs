@@ -56,6 +56,7 @@ namespace SquidTestingMod.UI.Elements
             AddHeader("Logs");
             AddOnOffOption(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
             AddOnOffOption(Log.OpenEnabledJson, "Open enabled.json", "Left click to open enabled.json\nRight click to open folder location", Log.OpenEnabledJsonFolder);
+            AddOnOffOption(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
         }
 
         // private void TogglePlayerInfo()
