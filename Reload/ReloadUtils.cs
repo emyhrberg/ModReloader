@@ -6,17 +6,29 @@ using System.Threading.Tasks;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
+using Terraria.ID;
 
 namespace SquidTestingMod.Reload
 {
-    // All functions, related to reload
+
+    /// <summary>
+    /// This class provies a set of utilities for reloading the set mod.
+    /// It does so by saving the player and world data in the window title.
+    /// It then reads the data and reloads the mod.
+    /// <see cref="ReloadSystem"/>
+    /// Calls ReadData and WriteData to read and write data.
+    /// <see cref="SquidTestingMod"
+    /// </summary>
     public class ReloadUtils
     {
-        public static int PlayerId;
-        public static int WorldId;
+        public static int PlayerId = 0;
+        public static int WorldId = 0;
 
         public static void WriteData()
         {
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                return;
+
             Log.Info("Writing Data");
             // Write the data in a predictable format.
             Main.instance.Window.Title = $"{PlayerId}, {WorldId}";
@@ -24,29 +36,27 @@ namespace SquidTestingMod.Reload
 
         public static void ReadData()
         {
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                return;
+
             Log.Info("Reading Data");
-            if (!string.IsNullOrEmpty(Main.instance.Window.Title))
+            string[] titleParts = Main.instance.Window.Title.Split([',']);
+
+            if (titleParts.Length != 2)
             {
-                string[] list = Main.instance.Window.Title.Split(", ");
-                if (list.Length >= 2)
-                {
-                    int wid = 0; // Initialize wid with a default value
-                    bool successfulParsing = int.TryParse(list[0], out int pid)
-                        && int.TryParse(list[1], out wid);
-                    if (successfulParsing)
-                    {
-                        PlayerId = pid;
-                        WorldId = wid;
-                    }
-                    else
-                    {
-                        Log.Error("Unable to parse client data from title");
-                    }
-                }
-                else
-                {
-                    Log.Warn("Window title does not contain valid client data.");
-                }
+                Log.Error("Failed to parse client data from window title.");
+                return;
+            }
+
+            if (int.TryParse(titleParts[0], out int parsedPlayerId) &&
+            int.TryParse(titleParts[1], out int parsedWorldId))
+            {
+                PlayerId = parsedPlayerId;
+                WorldId = parsedWorldId;
+            }
+            else
+            {
+                Log.Error("Failed to parse client data from window title.");
             }
         }
 
@@ -96,19 +106,12 @@ namespace SquidTestingMod.Reload
             // Invoke the FindModSources method to get the mod sources.
             string[] modSources = (string[])findModSources.Invoke(null, null);
             if (modSources == null || modSources.Length == 0)
-            {
-                Log.Warn("No mod sources found.");
                 return;
-            }
 
             // Get the mod path that matches the configured mod name.
             string modPath = modSources.FirstOrDefault(path => Path.GetFileName(path) == Conf.ModToReload);
-
             if (string.IsNullOrEmpty(modPath))
-            {
-                Log.Warn($"No mod path found for '{Conf.ModToReload}'.");
                 return;
-            }
 
             Log.Info($"Found mod path to reload: {modPath}");
 

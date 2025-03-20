@@ -10,6 +10,7 @@ namespace SquidTestingMod.Reload
 {
     /// <summary>
     /// Automatically loads a saved player and world after mods have been reloaded.
+    /// Gets data from <see cref="ReloadUtils"/>
     /// </summary>
     public class ReloadSystem : ModSystem
     {
@@ -33,8 +34,7 @@ namespace SquidTestingMod.Reload
         public override void Unload()
         {
             // Reset the OnSuccessfulLoad hook.
-            typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)
-                ?.SetValue(null, null);
+            typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, null);
         }
 
         /// <summary>

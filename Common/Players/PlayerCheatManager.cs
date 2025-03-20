@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Common.Systems;
+using SquidTestingMod.Networking;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.ModLoader;
@@ -42,7 +43,6 @@ namespace SquidTestingMod.Common.Players
         }
 
         public static void ToggleNoclip() => ToggleCheat(ref Noclip, "Noclip");
-        public static void ToggleGod() => ToggleCheat(ref God, "God Mode");
         public static void ToggleEnemiesIgnore() => ToggleCheat(ref LowAggro, "Enemies Ignore");
         public static void ToggleLightMode() => ToggleCheat(ref LightMode, "Light Mode");
         public static void ToggleTeleportMode() => ToggleCheat(ref TeleportMode, "Teleport Mode");
@@ -51,6 +51,17 @@ namespace SquidTestingMod.Common.Players
         public static void TogglePlaceAnywhere() => ToggleCheat(ref PlaceAnywhere, "Place Anywhere");
         public static void ToggleKillAura() => ToggleCheat(ref KillAura, "Kill Aura");
         public static void ToggleMineAura() => ToggleCheat(ref MineAura, "Mine Aura");
+
+        public static void ToggleGod()
+        {
+            ToggleCheat(ref God, "God Mode");
+            var godPlayer = Main.LocalPlayer.GetModPlayer<God>();
+            // Toggle the GodGlow state.
+            godPlayer.GodGlow = !godPlayer.GodGlow;
+            // Send one packet to update this state.
+            PacketManager.GodGlowHandler.SendGodGlowState(-1, Main.myPlayer, Main.myPlayer, godPlayer.GodGlow);
+
+        }
 
         // Helper to toggle cheats
         // This does not need to be modified when adding new cheats

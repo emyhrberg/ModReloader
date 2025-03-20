@@ -1,4 +1,5 @@
 using System.IO;
+using SquidTestingMod.Networking;
 using SquidTestingMod.Reload;
 using Terraria.ModLoader;
 
@@ -20,7 +21,7 @@ namespace SquidTestingMod
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
-            // Handle packet code here
+            PacketManager.HandlePacket(reader, whoAmI);
         }
     }
 }
