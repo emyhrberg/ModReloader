@@ -136,16 +136,21 @@ namespace SquidTestingMod.UI.Elements
             for (int i = 1; i <= allItems2; i++)
             {
                 if (!ContentSamples.ItemsByType.ContainsKey(i))
+                {
+                    Log.Warn($"Item ID {i} not found in ContentSamples.ItemsByType");
                     continue;
+                }
+
 
                 Item item = new();
                 item.SetDefaults(i, true); // true needed to load modded items?
 
-                // if (item.IsAir)
-                // {
-                // Log.Warn($"Skipping invalid item ID {i}: '{item.Name}'");
-                // continue;
-                // }
+                // check if air or invalid item
+                if (item.type == ItemID.None || item.type == ItemID.Count)
+                {
+                    Log.Warn($"Item ID {i} is invalid");
+                    continue;
+                }
 
                 CustomItemSlot itemSlot = new([item], 0, ItemSlot.Context.ChestItem);
                 allItemSlots.Add(itemSlot);
