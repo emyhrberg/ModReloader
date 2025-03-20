@@ -1,32 +1,38 @@
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using Terraria;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader.UI;
+using System;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
     public class OnOffOption : PanelElement
     {
-        // Variables
+        private Action _leftClickAction; // store the delegate
+        private Action _rightClickAction; // store the delegate
 
-        public OnOffOption(string text, string hoverText) : base(text, hoverText)
+        public OnOffOption(Action leftClick, string text, string hoverText, Action rightClick = null) : base(text, hoverText)
         {
+            _leftClickAction = leftClick; // save the provided action
+            _rightClickAction = rightClick; // save the provided action
         }
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // handle regular base click event like acting on its event
-            // e.g PlayerCheats.ToggleGodMode() for GodMode option
+            // Execute base functionality if any
             base.LeftClick(evt);
 
-            // handle toggle event
-            // set text to replace to either on or off
-            UpdateText(textElement.Text.Contains("On") ? textElement.Text.Replace("On", "Off") : textElement.Text.Replace("Off", "On"));
+            // Execute the left click action
+            _leftClickAction?.Invoke();
+
+            // Toggle text between "On" and "Off"
+            UpdateText(textElement.Text.Contains("On")
+                ? textElement.Text.Replace("On", "Off")
+                : textElement.Text.Replace("Off", "On"));
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            base.RightClick(evt);
+
+            _rightClickAction?.Invoke();
         }
     }
 }

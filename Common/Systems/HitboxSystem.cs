@@ -12,18 +12,15 @@ namespace SquidTestingMod.Common.Systems
 {
     public class HitboxSystem : ModSystem
     {
-        private bool drawPlayerHitbox = false;
-        private bool drawNPCHitbox = false;
-        private bool drawProjAndMeleeHitbox = false;
+        private static bool drawPlayerHitbox = false;
+        private static bool drawNPCHitbox = false;
+        private static bool drawProjAndMeleeHitbox = false;
 
-        public void TogglePlayerHitboxes() => ToggleHitbox(ref drawPlayerHitbox, "Player Hitboxes");
-        public void ToggleNPCHitboxes() => ToggleHitbox(ref drawNPCHitbox, "NPC Hitboxes");
-        public void ToggleProjAndMeleeHitboxes() => ToggleHitbox(ref drawProjAndMeleeHitbox, "Projectile and Melee Hitboxes");
-
-        private void ToggleHitbox(ref bool flag, string hitboxType)
+        public static void ToggleAllHitboxes()
         {
-            flag = !flag;
-            CombatText.NewText(Main.LocalPlayer.getRect(), flag ? Color.Green : Color.Red, flag ? $"{hitboxType} ON" : $"{hitboxType} OFF");
+            drawPlayerHitbox = !drawPlayerHitbox;
+            drawNPCHitbox = !drawNPCHitbox;
+            drawProjAndMeleeHitbox = !drawProjAndMeleeHitbox;
         }
 
         public override void PostDrawInterface(SpriteBatch sb)

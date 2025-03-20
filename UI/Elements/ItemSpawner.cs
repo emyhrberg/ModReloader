@@ -61,14 +61,14 @@ namespace SquidTestingMod.UI.Elements
             AddFilterButton(Ass.FilterAll, "Filter All", ItemFilter.All, 0);
             AddFilterButton(Ass.FilterMelee, "Filter All Weapons", ItemFilter.AllWeapons, 25);
             AddFilterButton(Ass.FilterMelee, "Filter Melee Weapons", ItemFilter.Melee, 50);
-            AddFilterButton(Ass.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
-            AddFilterButton(Ass.FilterMagic, "Filter Magic Weapons", ItemFilter.Magic, 100);
-            AddFilterButton(Ass.FilterSummon, "Filter Summon Weapons", ItemFilter.Summon, 125);
-            AddFilterButton(Ass.FilterArmor, "Filter Armor", ItemFilter.Armor, 150);
-            AddFilterButton(Ass.FilterVanity, "Filter Vanity", ItemFilter.Vanity, 175);
-            AddFilterButton(Ass.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 200);
-            AddFilterButton(Ass.FilterPotion, "Filter Potions", ItemFilter.Potions, 225);
-            AddFilterButton(Ass.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 250);
+            // AddFilterButton(Ass.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
+            // AddFilterButton(Ass.FilterMagic, "Filter Magic Weapons", ItemFilter.Magic, 100);
+            // AddFilterButton(Ass.FilterSummon, "Filter Summon Weapons", ItemFilter.Summon, 125);
+            AddFilterButton(Ass.FilterArmor, "Filter Armor", ItemFilter.Armor, 75);
+            // AddFilterButton(Ass.FilterVanity, "Filter Vanity", ItemFilter.Vanity, 175);
+            AddFilterButton(Ass.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 100);
+            AddFilterButton(Ass.FilterPotion, "Filter Potions", ItemFilter.Potions, 125);
+            AddFilterButton(Ass.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 150);
 
             // Add sort buttons
             SortButton id = AddSortButton(Ass.SortID, "Sort by ID", ItemSort.ID, 0);

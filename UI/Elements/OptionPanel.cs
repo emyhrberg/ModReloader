@@ -28,8 +28,8 @@ namespace SquidTestingMod.UI.Elements
         {
             // panel settings
             BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
-            Height.Set(570f, 0f);
-            Top.Set(-20, 0f);
+            Height.Set(400, 0f);
+            Top.Set(-70, 0f);
             Left.Set(-20, 0f);
 
             Draggable = false; // maybe change this later when u fix sliders
@@ -42,10 +42,10 @@ namespace SquidTestingMod.UI.Elements
                 Left = { Pixels = 0 },
 
                 MaxHeight = { Percent = 1f, Pixels = -35 - 12 },
-                Height = { Percent = 1f, Pixels = -35 - 12 },
+                Height = { Percent = 1f, Pixels = -35 },
                 HAlign = 0.5f,
                 VAlign = 0f,
-                Top = { Pixels = 35 + 12 },
+                Top = { Pixels = 35 },
                 ListPadding = 0f, // 0 or 5f
                 ManualSortMethod = (e) => { }
             };
@@ -86,36 +86,9 @@ namespace SquidTestingMod.UI.Elements
             // Create a blank UIElement to act as a spacer.
             HeaderElement paddingElement = new("");
             paddingElement.Height.Set(padding, 0f);
-            // Optionally, you can set the width to fill the list.
             paddingElement.Width.Set(0, 1f);
             uiList.Add(paddingElement);
             return paddingElement;
-        }
-
-        protected OnOffOption AddOnOffOption(Action leftClick, string title, string hoverText = "", Action rightClick = null)
-        {
-            // Create a new option panel
-            OnOffOption onOffPanel = new(title, hoverText);
-            onOffPanel.OnLeftClick += (mouseEvent, element) => leftClick?.Invoke();
-            onOffPanel.OnRightClick += (mouseEvent, element) => rightClick?.Invoke();
-
-            // Add the option to the ui list
-            uiList.Add(onOffPanel);
-
-            // Add the panel to the player panel
-            return onOffPanel;
-        }
-
-        protected SliderOption AddSliderOption(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float increment = 1, float textSize = 1.0f, string hover = "")
-        {
-            // Create a new option panel
-            SliderOption sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover);
-
-            // Add the option to the ui list
-            uiList.Add(sliderPanel);
-
-            // Add the panel to the player panel
-            return sliderPanel;
         }
 
         public override void Update(GameTime gameTime)

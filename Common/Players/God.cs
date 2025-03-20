@@ -1,6 +1,3 @@
-using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -10,13 +7,6 @@ namespace SquidTestingMod.Common.Players
 {
     public class God : ModPlayer
     {
-        // MAYBE use this?
-        // prob not needed, it works with ImmuneTo and PreKill
-        // public override void PreUpdate()
-        // {
-        // base.PreUpdate();
-        // }
-
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
             if (PlayerCheatManager.God)

@@ -16,8 +16,8 @@ namespace SquidTestingMod.UI.Elements
     public abstract class SpawnerPanel : DraggablePanel
     {
         // Panel size
-        private const int W = 530 + padding; // Width of the panel
-        private const int H = 570; // Height of the panel
+        private const int W = 400 + padding; // Width of the panel
+        private const int H = 400; // Height of the panel
 
         // UI Elements
         protected CustomGrid ItemsGrid;
@@ -37,7 +37,7 @@ namespace SquidTestingMod.UI.Elements
             Height.Set(H, 0f);
             HAlign = 0.0f;
             VAlign = 1.0f;
-            Top.Set(-20, 0f);
+            Top.Set(-70, 0f);
             Left.Set(20, 0f);
 
             // Create all content in the panel
@@ -61,7 +61,7 @@ namespace SquidTestingMod.UI.Elements
             Scrollbar = new UIScrollbar()
             {
                 HAlign = 1f,
-                Height = { Pixels = 440 - 10 }, // -10 because of scrollbarPadding=5 on top and bottom
+                Height = { Pixels = H - 130 - 10 }, // -10 because of scrollbarPadding=5 on top and bottom
                 Width = { Pixels = 20 },
                 Top = { Pixels = -padding + 30 + padding + 35 + padding + 5 },
                 Left = { Pixels = 0f },
@@ -69,7 +69,7 @@ namespace SquidTestingMod.UI.Elements
 
             ItemsGrid = new CustomGrid()
             {
-                Height = { Pixels = 440 },
+                Height = { Pixels = H - 130 },
                 Width = { Percent = 1f, Pixels = -20 },
                 ListPadding = 0f, // distance between items
                 Top = { Pixels = -padding + 30 + padding + 35 + padding },

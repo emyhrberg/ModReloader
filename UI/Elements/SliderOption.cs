@@ -13,6 +13,7 @@ namespace SquidTestingMod.UI.Elements
         private float? snapIncrement;
         public Action<float> _onValueChanged;
 
+        // Constructor
         public SliderOption(
             string title,
             float min,
@@ -21,8 +22,9 @@ namespace SquidTestingMod.UI.Elements
             Action<float> onValueChanged = null,
             float? increment = null,
             float textSize = 1f,
-            string hover = "")
-            : base(title)
+            string hover = "",
+            Action onClickText = null
+            ) : base(title)
         {
             HoverText = hover;
             TextScale = textSize;
@@ -32,6 +34,9 @@ namespace SquidTestingMod.UI.Elements
             snapIncrement = increment;
 
             normalizedValue = MathHelper.Clamp((defaultValue - Min) / (max - Min), 0f, 1f);
+
+            // text element
+            textElement.OnLeftClick += (evt, element) => onClickText?.Invoke();
             textElement.HAlign = 0.08f;
 
             Slider = new CustomSlider(

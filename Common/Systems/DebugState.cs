@@ -62,10 +62,11 @@ namespace SquidTestingMod.Common.Systems
         {
             hitbox.Inflate(1, 1);
             Texture2D t = TextureAssets.MagicPixel.Value;
-            spriteBatch.Draw(t, new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, 2), Color.White);
-            spriteBatch.Draw(t, new Rectangle(hitbox.X, hitbox.Y, 2, hitbox.Height), Color.White);
-            spriteBatch.Draw(t, new Rectangle(hitbox.X + hitbox.Width - 2, hitbox.Y, 2, hitbox.Height), Color.White);
-            spriteBatch.Draw(t, new Rectangle(hitbox.X, hitbox.Y + hitbox.Height - 2, hitbox.Width, 2), Color.White);
+            Color white = new Color(255, 255, 255, 255);
+            spriteBatch.Draw(t, new Rectangle(hitbox.X, hitbox.Y, hitbox.Width, 2), white);
+            spriteBatch.Draw(t, new Rectangle(hitbox.X, hitbox.Y, 2, hitbox.Height), white);
+            spriteBatch.Draw(t, new Rectangle(hitbox.X + hitbox.Width - 2, hitbox.Y, 2, hitbox.Height), white);
+            spriteBatch.Draw(t, new Rectangle(hitbox.X, hitbox.Y + hitbox.Height - 2, hitbox.Width, 2), white);
         }
 
         private void GenerateRainbowColors(int count)

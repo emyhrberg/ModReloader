@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
 using Terraria;
 using Terraria.ModLoader;
@@ -9,6 +10,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.Common.Systems
 {
+    [Autoload(Side = ModSide.Client)]
     public class DebugSystem : ModSystem
     {
         private UserInterface ui;
@@ -18,7 +20,6 @@ namespace SquidTestingMod.Common.Systems
 
         // Flag to enable/disable UI debug drawing
         public bool isUIDebugDrawing = false;
-
         public bool isUIDebugSizeElementDrawing = false;
 
         public void ToggleUIDebugSizeElementDrawing()
@@ -59,6 +60,7 @@ namespace SquidTestingMod.Common.Systems
                     () =>
                     {
                         ui?.Draw(Main.spriteBatch, new GameTime());
+                        Log.SlowInfo("Drawing UI State: " + drawUIState.GetType().Name);
                         return true;
                     },
                     InterfaceScaleType.UI));
@@ -67,6 +69,8 @@ namespace SquidTestingMod.Common.Systems
 
         private void UIElement_Draw(On_UIElement.orig_Draw orig, UIElement self, SpriteBatch spriteBatch)
         {
+            Log.Info("DrawElement: " + self.GetType().Name);
+
             orig(self, spriteBatch); // Keep normal UI behavior
 
             // Also, log the element like this: Name: "UIElement", Inner: 100x100, Outer: 100x100

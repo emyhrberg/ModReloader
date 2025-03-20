@@ -20,7 +20,6 @@ namespace SquidTestingMod.UI
         public NPCSpawner npcSpawnerPanel;
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
-        public WorldPanel worldPanel;
         public ModsPanel modsPanel;
         public List<DraggablePanel> LeftSidePanels = [];
         public List<DraggablePanel> RightSidePanels = [];
@@ -46,17 +45,16 @@ namespace SquidTestingMod.UI
             // offset = -ButtonSize * 3 - 20;
 
             // Add buttons
+            AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
+            AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
-            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and options");
-            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View hitboxes, UI, logs");
-            AddButton<WorldButton>(Ass.ButtonWorld, "World", "View and change world settings");
+            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities");
+            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View hitboxes, UI, world, logs");
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods");
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload");
             offset -= ButtonSize; // move back to place MP above SP.
             AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload");
-            AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
-            AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
@@ -67,7 +65,6 @@ namespace SquidTestingMod.UI
             npcSpawnerPanel = AddPanel<NPCSpawner>("left");
             playerPanel = AddPanel<PlayerPanel>("right");
             debugPanel = AddPanel<DebugPanel>("right");
-            worldPanel = AddPanel<WorldPanel>("right");
             modsPanel = AddPanel<ModsPanel>("right");
         }
 

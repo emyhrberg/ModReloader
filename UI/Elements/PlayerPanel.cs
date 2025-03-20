@@ -16,60 +16,53 @@ namespace SquidTestingMod.UI.Elements
         // Keep references to the options for updating them later
         public Dictionary<string, OnOffOption> options = [];
 
-        // Slider for Max Life
-        private SliderOption maxLifeSlider;
-
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
             // === ABILITIES ===
             AddHeader("Abilities");
-            options["god"] = AddOnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
-            options["noclip"] = AddOnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");
-            options["teleport"] = AddOnOffOption(PlayerCheatManager.ToggleTeleportMode, "Teleport Mode Off", "Right click to teleport to the mouse position");
-            options["enemiesIgnore"] = AddOnOffOption(PlayerCheatManager.ToggleEnemiesIgnore, "Enemies Ignore Off", "Enemies ignore you due to low player aggro");
-            options["light"] = AddOnOffOption(PlayerCheatManager.ToggleLightMode, "Light Aura Off", "Light up the world around you");
-            options["killAura"] = AddOnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that touch you");
-            options["mineAura"] = AddOnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you (not MP-supported)");
-            AddSliderOption(
+            options["god"] = new OnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
+            options["light"] = new OnOffOption(PlayerCheatManager.ToggleLightMode, "Light Off", "Light up the world around you");
+            options["noclip"] = new OnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");
+            options["killAura"] = new OnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that touch you");
+            options["mineAura"] = new OnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you (not MP-supported)");
+            SliderOption mineRadius = new(
                 title: "Mine Radius",
                 min: 1,
                 max: 50,
                 defaultValue: 0,
                 onValueChanged: value => MineAura.mineRange = (int)value,
                 increment: 1,
-                textSize: 0.5f,
                 hover: "Mine all tiles around you when moving (not MP-supported)"
             );
-            float currentHP = MaxLife.maxLife != 0 ? MaxLife.maxLife : Main.LocalPlayer.statLifeMax2;
-            currentHP = MathHelper.Clamp(currentHP, 1, 1000);
-            maxLifeSlider = AddSliderOption(
-                title: "Extra Life",
-                min: 0,
-                max: 1000,
-                defaultValue: currentHP,    // pass 500
-                onValueChanged: OnLifeMaxChanged,
-                increment: 20,
-                textSize: 1
-            );
-
+            // add to uilist
+            uiList.Add(options["god"]);
+            uiList.Add(options["light"]);
+            uiList.Add(options["noclip"]);
+            uiList.Add(options["killAura"]);
+            uiList.Add(options["mineAura"]);
+            uiList.Add(mineRadius);
             AddPadding();
 
             // === BUILD ===
             AddHeader("Build");
-            options["placeAnywhere"] = AddOnOffOption(PlayerCheatManager.TogglePlaceAnywhere, "Place Anywhere Off", "Place blocks and walls anywhere in the air");
-            options["placeFaster"] = AddOnOffOption(PlayerCheatManager.TogglePlaceFaster, "Place Faster Off", "Place tiles and walls faster");
-            options["mineFaster"] = AddOnOffOption(PlayerCheatManager.ToggleMineFaster, "Mine Faster Off", "Mine tiles and walls faster");
+            options["buildAnywhere"] = new OnOffOption(PlayerCheatManager.ToggleBuildAnywhere, "Build Anywhere Off", "Place blocks and walls anywhere in the air");
+            options["buildFaster"] = new OnOffOption(PlayerCheatManager.ToggleBuildFaster, "Build Faster Off", "Place tiles and walls faster, also mine faster");
+            uiList.Add(options["buildAnywhere"]);
+            uiList.Add(options["buildFaster"]);
             AddPadding();
 
             // === TOGGLE ALL ===
             AddHeader("Toggle All");
-            options["all"] = AddOnOffOption(ToggleAll, "Off", "Toggle all player abilities on/off");
+            options["all"] = new OnOffOption(ToggleAll, "Off", "Toggle all player abilities on/off");
+            uiList.Add(options["all"]);
             AddPadding();
 
             // === BUTTON OPTIONS ===
             AddHeader("Options");
-            AddOnOffOption(clearInventory, "Clear Inventory", "Clears your inventory except favorited items");
-            AddOnOffOption(revealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
+            OnOffOption clearInv = new(clearInventory, "Clear Inventory", "Clears your inventory except favorited items");
+            OnOffOption revealMapOption = new(revealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
+            uiList.Add(clearInv);
+            uiList.Add(revealMapOption);
         }
 
         private void revealMap()
@@ -131,33 +124,12 @@ namespace SquidTestingMod.UI.Elements
         {
             options["god"].UpdateText(PlayerCheatManager.God ? "God On" : "God Off");
             options["noclip"].UpdateText(PlayerCheatManager.Noclip ? "Noclip On" : "Noclip Off");
-            options["teleport"].UpdateText(PlayerCheatManager.TeleportMode ? "Teleport Mode On" : "Teleport Mode Off");
-            options["enemiesIgnore"].UpdateText(PlayerCheatManager.LowAggro ? "Enemies Ignore On" : "Enemies Ignore Off");
-            options["light"].UpdateText(PlayerCheatManager.LightMode ? "Light Aura On" : "Light Aura Off");
+            options["light"].UpdateText(PlayerCheatManager.LightMode ? "Light On" : "Light Off");
             options["killAura"].UpdateText(PlayerCheatManager.KillAura ? "Kill Aura On" : "Kill Aura Off");
             options["mineAura"].UpdateText(PlayerCheatManager.MineAura ? "Mine Aura On" : "Mine Aura Off");
-            options["placeAnywhere"].UpdateText(PlayerCheatManager.PlaceAnywhere ? "Place Anywhere On" : "Place Anywhere Off");
-            options["placeFaster"].UpdateText(PlayerCheatManager.PlaceFaster ? "Place Faster On" : "Place Faster Off");
-            options["mineFaster"].UpdateText(PlayerCheatManager.MineFaster ? "Mine Faster On" : "Mine Faster Off");
+            options["buildAnywhere"].UpdateText(PlayerCheatManager.BuildAnywhere ? "Build Anywhere On" : "Build Anywhere Off");
+            options["buildFaster"].UpdateText(PlayerCheatManager.BuildFaster ? "Build Faster On" : "Build Faster Off");
             options["all"].UpdateText(PlayerCheatManager.IsAnyCheatEnabled ? "Off" : "On");
-        }
-
-        // Callback for the Max Life slider
-        // This callback interprets the normalized slider value back into an absolute number (0–2000).
-        private void OnLifeMaxChanged(float value)
-        {
-            // Update the static max life variable
-            MaxLife.maxLife = (int)value;
-            // Main.LocalPlayer.statLifeMax2 = MaxLife.maxLife;
-        }
-
-        // During Update, keep the slider in sync if the player's life is changed elsewhere.
-        public override void Update(GameTime gameTime)
-        {
-            // Normalize the maxLife value from the range [1, 1000] to a fraction (0 to 1)
-            float fraction = (MaxLife.maxLife - 1) / 999f;
-            maxLifeSlider.SetValue(fraction);
-            base.Update(gameTime);
         }
     }
 }

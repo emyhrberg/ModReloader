@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players
 {
-    public class PlaceAnywhere : ModPlayer
+    public class BuildAnywhere : ModPlayer
     {
         public override void Load()
         {
@@ -25,7 +25,7 @@ namespace SquidTestingMod.Common.Players
         // Fixed by setting to a high value (e.g 100) instead of max value.
         public override void UpdateEquips()
         {
-            if (PlayerCheatManager.PlaceAnywhere)
+            if (PlayerCheatManager.BuildAnywhere)
             {
                 // Set infinite range
                 int range = 100;
@@ -43,7 +43,7 @@ namespace SquidTestingMod.Common.Players
 
         private void PlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player player)
         {
-            if (PlayerCheatManager.PlaceAnywhere && player == Main.LocalPlayer)
+            if (PlayerCheatManager.BuildAnywhere && player == Main.LocalPlayer)
             {
                 Tile tile = Framing.GetTileSafely(Player.tileTargetX, Player.tileTargetY);
                 ushort wallType = tile.WallType;
@@ -60,7 +60,7 @@ namespace SquidTestingMod.Common.Players
         private void PlaceThing_Walls(On_Player.orig_PlaceThing_Walls orig, Player player)
         {
             // Only apply when build mode is on
-            if (PlayerCheatManager.PlaceAnywhere && player == Main.LocalPlayer)
+            if (PlayerCheatManager.BuildAnywhere && player == Main.LocalPlayer)
             {
                 Tile tile = Framing.GetTileSafely(Player.tileTargetX - 1, Player.tileTargetY);
                 bool hasTile = tile.HasTile;

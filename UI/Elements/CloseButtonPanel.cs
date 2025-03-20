@@ -57,7 +57,7 @@ namespace SquidTestingMod.UI.Elements
                 if (p != null && p.GetActive())
                 {
                     p.SetActive(false);
-                    Log.Info("CloseButtonPanel: Deactivated panel with name: " + p.GetType().Name);
+                    // Log.Info("CloseButtonPanel: Deactivated panel with name: " + p.GetType().Name);
                     break;
                 }
             }
