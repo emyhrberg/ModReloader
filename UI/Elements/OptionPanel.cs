@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -143,14 +144,14 @@ namespace SquidTestingMod.UI.Elements
             base.Draw(spriteBatch);
 
             // last, draw the hover texture
-            foreach (var element in uiList._items)
+            foreach (var element in uiList._items.ToList())
             {
                 if (element is ModElement modElement)
                 {
                     var icon = modElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.updatedTex != null)
                     {
-                        Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
+                        Vector2 mousePos = new(Main.mouseX, Main.mouseY);
                         spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
                     }
                 }
@@ -159,7 +160,7 @@ namespace SquidTestingMod.UI.Elements
                     var icon = modSourcesElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.tex != null)
                     {
-                        Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
+                        Vector2 mousePos = new(Main.mouseX, Main.mouseY);
                         spriteBatch.Draw(icon.tex, mousePos, Color.White);
                     }
                 }

@@ -110,7 +110,8 @@ namespace SquidTestingMod.Helpers
 
             try
             {
-                string file = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods\\enabled.json";
+                // string file = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods\\enabled.json";
+                string file = Path.Combine(ModLoader.ModPath, "enabled.json");
                 Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
@@ -131,8 +132,9 @@ namespace SquidTestingMod.Helpers
 
             try
             {
-                string folder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods";
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                // string folder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods";
+                string folder = Path.Combine(ModLoader.ModPath);
+                Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {

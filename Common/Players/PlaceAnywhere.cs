@@ -19,14 +19,19 @@ namespace SquidTestingMod.Common.Players
             On_Player.PlaceThing_Walls += PlaceThing_Walls;
         }
 
+        // NOTE: DANGER
+        // There was a bug here where the
+        // UI stops working because PlaceAnywhere modifies tile interaction while UI is open.
+        // Fixed by setting to a high value (e.g 100) instead of max value.
         public override void UpdateEquips()
         {
             if (PlayerCheatManager.PlaceAnywhere)
             {
                 // Set infinite range
-                Player.tileRangeX = int.MaxValue;
-                Player.tileRangeY = int.MaxValue;
-                Player.blockRange = int.MaxValue;
+                int range = 100;
+                Player.tileRangeX = range;
+                Player.tileRangeY = range;
+                Player.blockRange = range;
             }
         }
 

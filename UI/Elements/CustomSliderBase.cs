@@ -1,29 +1,28 @@
 using Terraria.UI;
 
-namespace Terraria.GameContent.UI.Elements;
-
-public class CustomSliderBase : UIElement
+namespace SquidTestingMod.UI.Elements
 {
-    internal const int UsageLevel_NotSelected = 0;
-    internal const int UsageLevel_SelectedAndLocked = 1;
-    internal const int UsageLevel_OtherElementIsLocked = 2;
-    internal static UIElement CurrentLockedSlider;
-    internal static UIElement CurrentAimedSlider;
-
-    internal int GetUsageLevel()
+    public enum SliderUsageLevel
     {
-        int result = 0;
-        if (CurrentLockedSlider == this)
-            result = 1;
-        else if (CurrentLockedSlider != null)
-            result = 2;
-
-        return result;
+        NotSelected,
+        SelectedAndLocked,
+        OtherElementIsLocked
     }
 
-    public static void EscapeElements()
+    public class CustomSliderBase : UIElement
     {
-        CurrentLockedSlider = null;
-        CurrentAimedSlider = null;
+        internal static UIElement CurrentLockedSlider;
+        internal static UIElement CurrentAimedSlider;
+
+        internal SliderUsageLevel UsageLevel =>
+            CurrentLockedSlider == this ? SliderUsageLevel.SelectedAndLocked :
+            CurrentLockedSlider != null ? SliderUsageLevel.OtherElementIsLocked :
+            SliderUsageLevel.NotSelected;
+
+        public static void EscapeElements()
+        {
+            CurrentLockedSlider = null;
+            CurrentAimedSlider = null;
+        }
     }
 }

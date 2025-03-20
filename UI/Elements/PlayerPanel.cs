@@ -44,7 +44,7 @@ namespace SquidTestingMod.UI.Elements
             currentHP = MathHelper.Clamp(currentHP, 1, 1000);
             maxLifeSlider = AddSliderOption(
                 title: "Extra Life",
-                min: 1,
+                min: 0,
                 max: 1000,
                 defaultValue: currentHP,    // pass 500
                 onValueChanged: OnLifeMaxChanged,
