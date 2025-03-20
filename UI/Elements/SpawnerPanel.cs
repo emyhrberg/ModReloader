@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -26,13 +27,15 @@ namespace SquidTestingMod.UI.Elements
         protected UIText ItemCountText;
         public CustomTextBox GetCustomTextBox() => SearchTextBox;
 
+        // Resize button
+        ResizeButton resizeButton;
+
         // Store item slots
         protected List<CustomItemSlot> allItemSlots = [];
 
         public SpawnerPanel(string header) : base(header)
         {
             // Set the panel properties
-            Draggable = false;
             Width.Set(W, 0f);
             Height.Set(H, 0f);
             HAlign = 0.0f;
@@ -80,16 +83,17 @@ namespace SquidTestingMod.UI.Elements
             ItemsGrid.SetScrollbar(Scrollbar);
 
             // Resize
-            ResizeButton resizeButton = new(Ass.Resize);
+            resizeButton = new(Ass.Resize);
             resizeButton.OnDragY += offsetY =>
             {
                 // Log.Info($"[BEFORE] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
 
                 float oldHeight = Height.Pixels;
                 float newHeight = oldHeight + offsetY;
+                float maxHeight = 180f;
 
                 // Clamp max height
-                if (newHeight > H || newHeight < 200f)
+                if (newHeight > H || newHeight < maxHeight)
                 {
                     return;
                 }
@@ -128,6 +132,15 @@ namespace SquidTestingMod.UI.Elements
             if (Scrollbar != null && Scrollbar.ContainsPoint(evt.MousePosition))
                 return;
 
+            if (!Active)
+                return;
+
+            mouseDownPos = evt.MousePosition;
+            base.LeftMouseDown(evt);
+            dragging = true;
+            IsDragging = false;
+            dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
+
             base.LeftMouseDown(evt);
         }
 
@@ -136,16 +149,72 @@ namespace SquidTestingMod.UI.Elements
             // Implement this in child classes
         }
 
+        #region Update
         public override void Update(GameTime gameTime)
         {
+            // if (IsMouseHovering)
+            // {
+            //     Main.LocalPlayer.mouseInterface = true;
+            // }
+
+            if (!Active)
+                return;
+
+            if (ContainsPoint(Main.MouseScreen))
+            {
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
             base.Update(gameTime);
 
-            // if (Main.keyState.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
-            // {
-            //     Active = false;
-            //     Main.playerInventory = false; // does not always work
-            //     return;
-            // }
+            if (resizeButton.draggingResize)
+            {
+                dragging = false;  // Prevent panel dragging while resizing
+                IsDragging = false;
+                return;
+            }
+
+            if (Draggable & dragging)
+            {
+                float dragDistance = Vector2.Distance(new Vector2(Main.mouseX, Main.mouseY), mouseDownPos);
+                if (dragDistance > DragThreshold)
+                {
+                    IsDragging = true;
+                    Left.Set(Main.mouseX - dragOffset.X, 0f);
+                    Top.Set(Main.mouseY - dragOffset.Y, 0f);
+                    Recalculate();
+                }
+            }
+            else
+            {
+                IsDragging = false;
+            }
         }
+        #endregion
+
+        #region Dragging
+        public override bool ContainsPoint(Vector2 point)
+        {
+            if (!Active)
+                return false;
+
+            return base.ContainsPoint(point);
+        }
+
+        public override void LeftMouseUp(UIMouseEvent evt)
+        {
+            base.LeftMouseUp(evt);
+            dragging = false;
+            IsDragging = false;
+            Recalculate();
+        }
+
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            if (IsDragging)
+                return;
+            base.LeftClick(evt);
+        }
+        #endregion
     }
 }

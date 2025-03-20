@@ -64,6 +64,11 @@ Mods: {
 					Label: Buttons Position
 					Tooltip: All buttons will stick to this side of the screen
 				}
+
+				DraggablePanels: {
+					Label: Draggable Panels
+					Tooltip: Makes all panels draggable
+				}
 			}
 
 			NPCSpawnerConfig: {

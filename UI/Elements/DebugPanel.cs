@@ -20,21 +20,7 @@ namespace SquidTestingMod.UI.Elements
         public DebugPanel() : base(title: "Debug", scrollbarEnabled: true)
         {
             // Add debug options
-            AddHeader("Hitboxes");
-            OnOffOption hitboxes = new(HitboxSystem.ToggleAllHitboxes, "Hitboxes Off", "Show player, NPC, melee and projectile hitboxes");
-            uiList.Add(hitboxes);
-            AddPadding();
-
-            AddHeader("UI");
-            DebugSystem debugSystem = ModContent.GetInstance<DebugSystem>();
-            OnOffOption uiDebug = new(debugSystem.ToggleUIDebugDrawing, "UIElements Hitboxes Off", "Show all UI elements from mods");
-            OnOffOption uiDebugSize = new(debugSystem.ToggleUIDebugSizeElementDrawing, "UIElements Size Text Off", "Show sizes of UI elements");
-            // OnOffOption printUI = new(debugSystem.PrintAllUIElements, "Print UIElements", "Prints all UI elements and dimensions to chat");
-            uiList.Add(uiDebug);
-            uiList.Add(uiDebugSize);
-            // uiList.Add(printUI);
-            AddPadding();
-
+            AddPadding(5);
             AddHeader("World");
             timeOption = new(
                 title: "Time",
@@ -81,6 +67,8 @@ namespace SquidTestingMod.UI.Elements
             uiList.Add(enemyTrack);
             uiList.Add(townTrack);
             uiList.Add(critterTrack);
+            OnOffOption hitboxes = new(HitboxSystem.ToggleAllHitboxes, "Hitboxes Off", "Show player, NPC, melee and projectile hitboxes");
+            uiList.Add(hitboxes);
             AddPadding();
 
             AddHeader("Logs");

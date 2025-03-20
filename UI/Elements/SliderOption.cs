@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Helpers;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -75,10 +77,33 @@ namespace SquidTestingMod.UI.Elements
             if (snapIncrement.HasValue && snapIncrement.Value > 0)
             {
                 float snapped = (float)Math.Round(realValue / snapIncrement.Value) * snapIncrement.Value;
-                textElement.SetText($"{Title}: {snapped}");
+
+                // Check known increments, and format accordingly:
+                if (snapIncrement.Value == 1f)
+                {
+                    // Round to integer
+                    int currentIntValue = (int)Math.Round(snapped);
+                    textElement.SetText($"{Title}: {currentIntValue}");
+                }
+                else if (snapIncrement.Value == 0.1f)
+                {
+                    // Round to 1 decimal place
+                    textElement.SetText($"{Title}: {snapped:F1}");
+                }
+                else if (snapIncrement.Value == 0.01f)
+                {
+                    // Round to 2 decimal places
+                    textElement.SetText($"{Title}: {snapped:F2}");
+                }
+                else
+                {
+                    // Fallback to showing the raw snapped value if not one of the above
+                    textElement.SetText($"{Title}: {snapped}");
+                }
             }
             else
             {
+                // No snap increment => treat as an integer
                 int currentIntValue = (int)Math.Round(realValue);
                 textElement.SetText($"{Title}: {currentIntValue}");
             }

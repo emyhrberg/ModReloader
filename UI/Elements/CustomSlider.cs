@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameInput;
@@ -10,6 +11,8 @@ namespace SquidTestingMod.UI.Elements
 {
     public class CustomSlider : CustomSliderBase
     {
+        public static bool IsDraggingSlider = false;
+
         private readonly Func<float> _getStatus;
         private readonly Action<float> _slideKeyboard;
         private readonly Func<float, Color> _blipFunc;
@@ -23,10 +26,30 @@ namespace SquidTestingMod.UI.Elements
             _slideKeyboard = setStatusKeyboard ?? (_ => { });
             _blipFunc = blipColorFunction ?? (s => Color.Lerp(Color.Black, Color.White, s));
 
-            Width.Set(170f, 0f);
+            Width.Set(175f, 0f);
             Height.Set(15f, 0f);
             Left.Set(130f, 0f);
             Top.Set(5f, 0f);
+        }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            // Indicate that the slider is being dragged
+            IsDraggingSlider = true;
+            Log.Info("Slider dragging started");
+
+            // Call the base class behavior for mouse over
+            base.MouseOver(evt);
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            // Call the base class behavior for mouse out
+            base.MouseOut(evt);
+
+            // Reset the dragging flag
+            Log.Info("Slider dragging stopped");
+            IsDraggingSlider = false;
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -41,7 +64,7 @@ namespace SquidTestingMod.UI.Elements
             var usageLevel = UsageLevel;
             CalculatedStyle dimensions = GetDimensions();
 
-            float offsetX = dimensions.X + dimensions.Width + 32f;
+            float offsetX = dimensions.X + dimensions.Width + 22f;
             float offsetY = dimensions.Y + 8f;
 
             bool wasInBar;

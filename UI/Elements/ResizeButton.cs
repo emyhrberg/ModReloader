@@ -12,7 +12,7 @@ namespace SquidTestingMod.UI.Elements
     public class ResizeButton : UIImageButton
     {
         private Asset<Texture2D> Texture;
-        private bool dragging;
+        public bool draggingResize;
         private float clickOffsetY;
 
         // Fired every frame while dragging, passing how far we moved in Y
@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI.Elements
             base.LeftMouseDown(evt);  // needed for correct event handling
 
             // We only start dragging if the user explicitly clicked this button
-            dragging = true;
+            draggingResize = true;
             clickOffsetY = evt.MousePosition.Y - GetDimensions().Y;
             // Main.LocalPlayer.mouseInterface = true;
         }
@@ -47,7 +47,7 @@ namespace SquidTestingMod.UI.Elements
         public override void LeftMouseUp(UIMouseEvent evt)
         {
             base.LeftMouseUp(evt);
-            dragging = false;
+            draggingResize = false;
         }
 
         public override void Update(GameTime gameTime)
@@ -55,12 +55,12 @@ namespace SquidTestingMod.UI.Elements
             base.Update(gameTime);
 
             // If we are dragging, keep sending offset events
-            if (dragging)
+            if (draggingResize)
             {
                 // If the mouse was released outside this UI, stop
                 if (!Main.mouseLeft)
                 {
-                    dragging = false;
+                    draggingResize = false;
                 }
                 else
                 {

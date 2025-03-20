@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -22,14 +24,19 @@ namespace SquidTestingMod.UI.Elements
         // Dragging
         public bool Draggable = false;
         public bool IsDragging;
-        private bool dragging;
-        private Vector2 dragOffset;
-        private const float DragThreshold = 3f; // very low threshold for dragging
-        private Vector2 mouseDownPos;
+        protected bool dragging;
+        protected Vector2 dragOffset;
+        protected const float DragThreshold = 3f; // very low threshold for dragging
+        protected Vector2 mouseDownPos;
 
         #region Constructor
         public DraggablePanel(string header)
         {
+            if (Conf.DraggablePanels)
+            {
+                Draggable = true;
+            }
+
             // Set some default panel properties 
             // Children will override this hopefully :)
             Width.Set(350, 0f);
@@ -57,12 +64,23 @@ namespace SquidTestingMod.UI.Elements
             //     Main.LocalPlayer.mouseInterface = true;
             // }
 
+            // update this with 2 second intervals lol
+            if (Main.GameUpdateCount % 120 == 0)
+                Draggable = Conf.DraggablePanels;
+
             if (!Active)
                 return;
 
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
+            }
+
+            if (CustomSlider.IsDraggingSlider)
+            {
+                Log.Info("is dragging slider2");
+                IsDragging = false;
+                return;
             }
 
             base.Update(gameTime);
@@ -90,6 +108,12 @@ namespace SquidTestingMod.UI.Elements
         {
             if (!Active)
                 return false;
+
+            // Make a hitbox of the width 1f and the height 25f
+            // This is the title bar
+
+            // Rectangle hitbox = new((int)Left.Pixels, (int)Top.Pixels, (int)Width.Pixels, 25);
+            // return hitbox.Contains(point.ToPoint());
 
             return base.ContainsPoint(point);
         }

@@ -15,7 +15,7 @@ namespace SquidTestingMod.Common.Configs
 
         [Header("Reload")]
         [DefaultValue("SquidTestingMod")]
-        public string ModToReload = "EnterYourModHere";
+        public string ModToReload = "SquidTestingMod";
 
         [DefaultValue(false)]
         public bool SaveWorldOnReload = false;
@@ -30,14 +30,19 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue("bottom")]
         public string ButtonsPosition;
 
-        [DefaultValue(null)]
-        public NPCSpawnerConfig NPCSpawner = new();
-
         [DefaultValue(false)]
         public bool EnterWorldSuperMode = false;
 
         [DefaultValue(false)]
         public bool HideCollapseButton = false;
+
+        [DefaultValue(false)]
+        public bool DraggablePanels = false;
+
+        [Header("NPCSpawner")]
+
+        [DefaultValue(null)]
+        public NPCSpawnerConfig NPCSpawner = new();
 
 
         public override void OnChanged()
@@ -104,5 +109,6 @@ namespace SquidTestingMod.Common.Configs
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
         public static bool HideCollapseButton => C.HideCollapseButton;
+        public static bool DraggablePanels => C.DraggablePanels;
     }
 }

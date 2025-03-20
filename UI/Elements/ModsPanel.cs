@@ -13,12 +13,12 @@ namespace SquidTestingMod.UI.Elements
     public class ModsPanel : OptionPanel
     {
         public List<ModSourcesElement> modSourcesElements = [];
-        public List<String> enabledMods = [];
+        public List<string> enabledMods = [];
 
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
             // Active = true; // uncomment to show the panel by default
-
+            AddPadding(5);
             AddHeader("Mod Sources", GoToModSources, "Click to exit world and go to mod sources");
             ConstructModSourcesList();
             AddPadding();

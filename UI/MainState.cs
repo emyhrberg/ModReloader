@@ -21,6 +21,7 @@ namespace SquidTestingMod.UI
         public PlayerPanel playerPanel;
         public DebugPanel debugPanel;
         public ModsPanel modsPanel;
+        public UiPanel uiPanel;
         public List<DraggablePanel> LeftSidePanels = [];
         public List<DraggablePanel> RightSidePanels = [];
 
@@ -50,7 +51,8 @@ namespace SquidTestingMod.UI
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities");
-            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View hitboxes, UI, world, logs");
+            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View and edit hitboxes, world, logs");
+            AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements");
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods");
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload");
             offset -= ButtonSize; // move back to place MP above SP.
@@ -66,6 +68,7 @@ namespace SquidTestingMod.UI
             playerPanel = AddPanel<PlayerPanel>("right");
             debugPanel = AddPanel<DebugPanel>("right");
             modsPanel = AddPanel<ModsPanel>("right");
+            uiPanel = AddPanel<UiPanel>("right");
         }
 
         private T AddPanel<T>(string side) where T : DraggablePanel, new()

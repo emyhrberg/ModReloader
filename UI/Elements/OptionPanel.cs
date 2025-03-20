@@ -2,8 +2,11 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SquidTestingMod.Common.Configs;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -39,13 +42,12 @@ namespace SquidTestingMod.UI.Elements
             {
                 MaxWidth = { Percent = 1f, Pixels = panelPadding * 2 },
                 Width = { Percent = 1f, Pixels = panelPadding * 2 },
-                Left = { Pixels = 0 },
-
-                MaxHeight = { Percent = 1f, Pixels = -35 - 12 },
-                Height = { Percent = 1f, Pixels = -35 },
+                MaxHeight = { Percent = 1f, Pixels = -20 },
+                Height = { Percent = 1f, Pixels = -20 },
                 HAlign = 0.5f,
                 VAlign = 0f,
-                Top = { Pixels = 35 },
+                Top = { Pixels = 24 },
+                Left = { Pixels = 0 },
                 ListPadding = 0f, // 0 or 5f
                 ManualSortMethod = (e) => { }
             };
@@ -96,6 +98,13 @@ namespace SquidTestingMod.UI.Elements
             // test
             //uiList.Width.Set(0, 1);
 
+            base.Update(gameTime);
+
+            if (Conf.DraggablePanels)
+            {
+                return;
+            }
+
             // If the inventory is open, move the panel to the left by 350 pixels
             bool inventoryOpen = Main.playerInventory;
 
@@ -108,7 +117,6 @@ namespace SquidTestingMod.UI.Elements
                 Left.Set(-20, 0f);
             }
 
-            base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

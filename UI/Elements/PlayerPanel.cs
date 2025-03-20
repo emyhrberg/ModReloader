@@ -18,7 +18,9 @@ namespace SquidTestingMod.UI.Elements
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
+            Draggable = true;
             // === ABILITIES ===
+            AddPadding(5);
             AddHeader("Abilities");
             options["god"] = new OnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
             options["light"] = new OnOffOption(PlayerCheatManager.ToggleLightMode, "Light Off", "Light up the world around you");

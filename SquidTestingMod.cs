@@ -26,6 +26,10 @@ namespace SquidTestingMod
         public override void Load()
         {
             ClientDataHandler.ReadData();
+
+            // Temporary comment out to fix UIElements not drawing
+            /*
+
             TMLData.SaveTMLData();
             foreach (var d in DetourManager.GetDetourInfo(typeof(ModLoader).GetMethod(
                         "Unload",
@@ -56,6 +60,8 @@ namespace SquidTestingMod
                         LogManager.GetLogger("SQUID").Info("Hi!");
                         return o;
                     }));
+                    
+                    */
         }
 
         public override void Unload()

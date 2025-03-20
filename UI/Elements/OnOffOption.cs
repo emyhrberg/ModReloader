@@ -8,7 +8,7 @@ namespace SquidTestingMod.UI.Elements
         private Action _leftClickAction; // store the delegate
         private Action _rightClickAction; // store the delegate
 
-        public OnOffOption(Action leftClick, string text, string hoverText, Action rightClick = null) : base(text, hoverText)
+        public OnOffOption(Action leftClick, string text, string tooltip, Action rightClick = null) : base(text, tooltip)
         {
             _leftClickAction = leftClick; // save the provided action
             _rightClickAction = rightClick; // save the provided action
