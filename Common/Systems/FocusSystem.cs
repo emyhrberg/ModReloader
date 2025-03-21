@@ -12,8 +12,8 @@ namespace SquidTestingMod.Common.Systems
     {
         public override void Load()
         {
-            IL_Main.DoUpdate += GameUpdate;
-            IL_Main.DoUpdate += AudioUpdate;
+            // IL_Main.DoUpdate += GameUpdate;
+            // IL_Main.DoUpdate += AudioUpdate;
         }
 
         public void GameUpdate(ILContext il)
