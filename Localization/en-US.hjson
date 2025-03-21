@@ -8,6 +8,8 @@ Mods: {
 					Reload: Reload
 					Misc: Misc
 					NPCSpawner: NPC Spawner
+					Game: Game
+					UI: UI
 				}
 
 				NPCSpawnLocation: {
@@ -68,6 +70,16 @@ Mods: {
 				DraggablePanels: {
 					Label: Draggable Panels
 					Tooltip: Makes all panels draggable
+				}
+
+				ButtonSize: {
+					Tooltip: ""
+					Label: Button Size
+				}
+
+				TextSize: {
+					Tooltip: ""
+					Label: Text Size
 				}
 			}
 

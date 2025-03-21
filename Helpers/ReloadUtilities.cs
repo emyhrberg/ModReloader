@@ -19,9 +19,9 @@ namespace SquidTestingMod.Helpers
 
         public static void PrepareClient(ClientModes clientMode)
         {
-            ClientDataHandler.Mode = clientMode;
-            ClientDataHandler.PlayerId = Utilities.FindPlayerId();
-            ClientDataHandler.WorldId = Utilities.FindWorldId();
+            ClientDataHandler.ClientMode = clientMode;
+            ClientDataHandler.PlayerID = Utilities.FindPlayerId();
+            ClientDataHandler.WorldID = Utilities.FindWorldId();
         }
 
         public static Task ExitWorldOrServer()

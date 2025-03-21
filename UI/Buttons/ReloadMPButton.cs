@@ -18,15 +18,15 @@ namespace SquidTestingMod.UI.Buttons
     public class ReloadMPButton : BaseButton
     {
         // Constructor
-        public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet, buttonText, hoverText)
+        public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : base(spritesheet, buttonText, hoverText, textSize)
         {
             // deactived by default since the SP button is active
             Active = false;
-            buttonUIText.Active = false;
+            ButtonText.Active = false;
         }
 
         // Set custom animation dimensions
-        protected override float SpriteScale => 1.25f;
+        protected override float Scale => 1.25f;
         protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 65;
@@ -39,7 +39,7 @@ namespace SquidTestingMod.UI.Buttons
             if (altClick)
             {
                 Active = false;
-                buttonUIText.Active = false;
+                ButtonText.Active = false;
 
                 // set MP active
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -48,7 +48,7 @@ namespace SquidTestingMod.UI.Buttons
                     if (btn is ReloadSPButton spBtn)
                     {
                         spBtn.Active = true;
-                        spBtn.buttonUIText.Active = true;
+                        spBtn.ButtonText.Active = true;
                     }
                 }
                 return;
@@ -111,7 +111,7 @@ namespace SquidTestingMod.UI.Buttons
         {
             // If right click, toggle the mode and return
             Active = false;
-            buttonUIText.Active = false;
+            ButtonText.Active = false;
 
             // set MP active
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -120,7 +120,7 @@ namespace SquidTestingMod.UI.Buttons
                 if (btn is ReloadSPButton spBtn)
                 {
                     spBtn.Active = true;
-                    spBtn.buttonUIText.Active = true;
+                    spBtn.ButtonText.Active = true;
                 }
             }
             return;

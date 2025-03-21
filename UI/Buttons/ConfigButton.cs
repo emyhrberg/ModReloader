@@ -1,13 +1,15 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ConfigButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
+    public class ConfigButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
-        protected override float SpriteScale => 0.2f;
+        protected override float Scale => 0.2f;
         protected override int FrameCount => 5;
         protected override int FrameSpeed => 10;
         protected override int FrameWidth => 640;

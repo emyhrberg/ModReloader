@@ -9,8 +9,9 @@ namespace SquidTestingMod.Common.Players
     {
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
-            if (PlayerCheatManager.God)
-                return true; // Immune to all damage
+            // If God mode is enabled and KillAura is NOT enabled, be immune.
+            if (PlayerCheatManager.God && !PlayerCheatManager.KillAura)
+                return true;
             return false;
         }
 

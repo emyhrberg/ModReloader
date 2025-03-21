@@ -6,10 +6,10 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class DebugButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
+    public class DebugButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
-        protected override float SpriteScale => 0.55f;
+        protected override float Scale => 0.55f;
         protected override int FrameCount => 16;
         protected override int FrameSpeed => 4;
         protected override int FrameWidth => 74;

@@ -6,14 +6,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class NPCButton(Asset<Texture2D> image, string buttonText, string hoverText) : BaseButton(image, buttonText, hoverText)
+    public class NPCButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
         protected override int FrameCount => 3;
         protected override int FrameSpeed => 8;
         protected override int FrameWidth => 38;
         protected override int FrameHeight => 48;
-        protected override float SpriteScale => 0.9f;
+        protected override float Scale => 0.9f;
 
         public override void LeftClick(UIMouseEvent evt)
         {

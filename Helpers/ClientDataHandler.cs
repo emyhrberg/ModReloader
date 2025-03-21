@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using Terraria;
 using Terraria.IO;
 using static XPT.Core.Audio.MP3Sharp.Decoding.Decoder;
@@ -14,55 +10,89 @@ namespace SquidTestingMod.Helpers
 {
 
 
-    internal static class ClientDataHandler
+    public class ClientDataJson
+    {
+        // This is needed to serialize enums as strings
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ClientMode ClientMode { get; set; }
+        public int PlayerID { get; set; }
+        public int WorldID { get; set; }
+    }
+
+    public static class ClientDataHandler
     {
         //Function that handles writing info that shoud survive modlreload
-        static int _mode = (int)ClientModes.FreshClient;
-        static int _playerId = 0;
-        static int _worldId = 0;
+        public static ClientMode ClientMode = ClientMode.FreshClient;
+        public static int PlayerID = 0;
+        public static int WorldID = 0;
 
-        //static Dictionary<int, ClientData> ClientsData;
+        private static string GetFolderPath()
+        {
+            try
+            {
+                string path = Path.Combine(Main.SavePath, "SquidTestingMod");
+                Directory.CreateDirectory(path); // Ensure the directory exists
+                path = Path.Combine(path, "SquidTestingMod.json");
+                Log.Info("Found save path: " + path);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Could not find part of the path: " + ex.Message);
+                return null;
+            }
+        }
 
-        public static ClientModes Mode { get { return (ClientModes)_mode; } set { _mode = ((int)value); } }
-        public static int PlayerId { get { return _playerId; } set { _playerId = value; } }
-        public static int WorldId { get { return _worldId; } set { _worldId = value; } }
         public static void WriteData()
         {
             if (Main.dedServ)
-            {
                 return;
-            }
+
+            string path = GetFolderPath();
+            if (path == null)
+                return;
 
             Log.Info("Writing Data");
-            Main.instance.Window.Title = $"{_mode}, {_playerId}, {_worldId}";
+
+            // Use the strongly typed class:
+            var data = new ClientDataJson
+            {
+                ClientMode = ClientMode,
+                PlayerID = PlayerID,
+                WorldID = WorldID
+            };
+
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(data, jsonOptions);
+            File.WriteAllText(path, jsonString);
         }
 
         public static void ReadData()
         {
             if (Main.dedServ)
-            {
                 return;
-            }
 
             Log.Info("Reading Data");
-            if (!string.IsNullOrEmpty(Main.instance.Window.Title))
+            string path = GetFolderPath();
+            if (path == null)
+                return;
+
+            try
             {
-                string[] list = Main.instance.Window.Title.Split(", ");
-                Array.Resize(ref list, 3);
-
-                bool succesfulParsing = true;
-                succesfulParsing &= int.TryParse(list[0], out _mode);
-                succesfulParsing &= int.TryParse(list[1], out _playerId);
-                succesfulParsing &= int.TryParse(list[2], out _worldId);
-
-                if (!succesfulParsing)
+                string jsonString = File.ReadAllText(path);
+                var data = JsonSerializer.Deserialize<ClientDataJson>(jsonString);
+                if (data != null)
                 {
-                    Log.Error("Unable to parce client data from title");
+                    ClientMode = data.ClientMode;
+                    PlayerID = data.PlayerID;
+                    WorldID = data.WorldID;
                 }
-
-
             }
-            Main.instance.Window.Title = "SquidTestingMod: this is hard";
+            catch (Exception ex)
+            {
+                Log.Error("Error reading or deserializing data: " + ex.Message);
+            }
+
         }
     }
 }

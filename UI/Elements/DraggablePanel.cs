@@ -59,10 +59,12 @@ namespace SquidTestingMod.UI.Elements
         #region Update
         public override void Update(GameTime gameTime)
         {
-            // if (IsMouseHovering)
-            // {
-            //     Main.LocalPlayer.mouseInterface = true;
-            // }
+            if (CustomSliderBase.IsAnySliderLocked)
+            {
+                // Log.Info("is dragging slider1");
+                IsDragging = false;
+                return;
+            }
 
             // update this with 2 second intervals lol
             if (Main.GameUpdateCount % 120 == 0)
@@ -74,13 +76,6 @@ namespace SquidTestingMod.UI.Elements
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
-            }
-
-            if (CustomSlider.IsDraggingSlider)
-            {
-                Log.Info("is dragging slider2");
-                IsDragging = false;
-                return;
             }
 
             base.Update(gameTime);

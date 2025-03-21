@@ -19,7 +19,7 @@ namespace SquidTestingMod.Helpers
         /// </summary>
         public static void SlowInfo(string message)
         {
-            if (Main.GameUpdateCount % 60 == 0)
+            if (Main.GameUpdateCount % 60 * 5 == 0)
             {
                 ModInstance.Logger.Info(message);
             }

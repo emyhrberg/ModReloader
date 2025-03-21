@@ -15,6 +15,8 @@ namespace SquidTestingMod.UI.Elements
         private float? snapIncrement;
         public Action<float> _onValueChanged;
 
+        public void UpdateSliderMax(float newMax) => Max = newMax;
+
         // Constructor
         public SliderOption(
             string title,

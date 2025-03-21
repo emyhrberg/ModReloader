@@ -61,7 +61,7 @@ namespace SquidTestingMod.UI.Elements
                     HAlign = 1f,
                     VAlign = 0f,
                     Left = { Pixels = 5 }, // scrollbar has 20 width
-                    Top = { Pixels = 35 + 12 }
+                    Top = { Pixels = 35 + 12 },
                 };
             }
 
@@ -117,6 +117,21 @@ namespace SquidTestingMod.UI.Elements
                 Left.Set(-20, 0f);
             }
 
+        }
+
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
+            if (scrollbar != null && scrollbar.ContainsPoint(evt.MousePosition))
+                return;
+
+            if (!Active)
+                return;
+
+            mouseDownPos = evt.MousePosition;
+            base.LeftMouseDown(evt);
+            dragging = true;
+            IsDragging = false;
+            dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
