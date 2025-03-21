@@ -36,13 +36,13 @@ namespace SquidTestingMod.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
 
-                if (ClientDataHandler.Mode == ClientModes.SinglePlayer)
+                if (ClientDataHandler.ClientMode == ClientModes.SinglePlayer)
                 {
                     onSuccessfulLoad += EnterSingleplayerWorld;
-                }else if (ClientDataHandler.Mode == ClientModes.MPMain)
+                }else if (ClientDataHandler.ClientMode == ClientModes.MPMain)
                 {
                     onSuccessfulLoad += StartServerAndEnterMultiplayerWorld;
-                }else if (ClientDataHandler.Mode == ClientModes.MPMinor)
+                }else if (ClientDataHandler.ClientMode == ClientModes.MPMinor)
                 {
                     onSuccessfulLoad += EnterLocalServer;
                 }
@@ -73,13 +73,13 @@ namespace SquidTestingMod.Common.Systems
                 throw new Exception("No players or worlds found.");
 
             // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList[ClientDataHandler.PlayerId];
-            var world = Main.WorldList[ClientDataHandler.WorldId];
+            var player = Main.PlayerList[ClientDataHandler.PlayerID];
+            var world = Main.WorldList[ClientDataHandler.WorldID];
 
             StartGameWithPair(player, world);
             
             // Reset Mode status (maybe should be moved to Exit World hook but naaaah)
-            ClientDataHandler.Mode = ClientModes.FreshClient;
+            ClientDataHandler.ClientMode = ClientModes.FreshClient;
         }
 
         private void StartGameWithPair(PlayerFileData player, WorldFileData world)
@@ -107,7 +107,7 @@ namespace SquidTestingMod.Common.Systems
                     throw new Exception("No worlds found.");
 
                 // Getting Player and World from ClientDataHandler
-                var world = Main.WorldList[ClientDataHandler.WorldId];
+                var world = Main.WorldList[ClientDataHandler.WorldID];
 
                 string fileNameStartProcess = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\start-tModLoaderServer.bat";
 
@@ -145,7 +145,7 @@ namespace SquidTestingMod.Common.Systems
                 throw new Exception("No players found.");
 
             // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList[ClientDataHandler.PlayerId];
+            var player = Main.PlayerList[ClientDataHandler.PlayerID];
 
             Main.SelectPlayer(player);
 

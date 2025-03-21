@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,6 +17,8 @@ namespace SquidTestingMod.Helpers
     //Class basically for universal helping functions
     internal class Utilities
     {
+        public static int ProccesId => Process.GetCurrentProcess().Id;
+
         public static int FindPlayerId()
         {
             Main.LoadPlayers();

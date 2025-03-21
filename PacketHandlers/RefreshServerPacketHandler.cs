@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using MonoMod.RuntimeDetour;
+using SquidTestingMod.Common.Players;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
@@ -82,6 +83,10 @@ namespace SquidTestingMod.PacketHandlers
                     {
                         bool o = orig();
                         LogManager.GetLogger("SQUID").Info($"Hi! I am {Process.GetCurrentProcess().Id} procces id!");
+                        object loadMods = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface").GetField("loadMods", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
+
+                        
                         using var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut);
                         pipeClient.Connect();
 
