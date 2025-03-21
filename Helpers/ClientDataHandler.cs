@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace SquidTestingMod.Helpers
 {
@@ -14,32 +14,60 @@ namespace SquidTestingMod.Helpers
         MPMinor, // Client that is in multiplayer and is not main
     }
 
-    internal static class ClientDataHandler
+    public class ClientDataJson
+    {
+        // This is needed to serialize enums as strings
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ClientMode ClientMode { get; set; }
+        public int PlayerID { get; set; }
+        public int WorldID { get; set; }
+    }
+
+    public static class ClientDataHandler
     {
         //Function that handles writing info that shoud survive modlreload
-        static int _mode = (int)ClientMode.FreshClient;
-        static int _playerId = 0;
-        static int _worldId = 0;
+        public static ClientMode ClientMode = ClientMode.FreshClient;
+        public static int PlayerID = 0;
+        public static int WorldID = 0;
 
-        public static ClientMode Mode { get { return (ClientMode)_mode; } set { _mode = (int)value; } }
-        public static int PlayerId { get { return _playerId; } set { _playerId = value; } }
-        public static int WorldId { get { return _worldId; } set { _worldId = value; } }
+        private static string GetFolderPath()
+        {
+            try
+            {
+                string path = Path.Combine(Main.SavePath, "SquidTestingMod");
+                Directory.CreateDirectory(path); // Ensure the directory exists
+                path = Path.Combine(path, "SquidTestingMod.json");
+                Log.Info("Found save path: " + path);
+                return path;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Could not find part of the path: " + ex.Message);
+                return null;
+            }
+        }
+
         public static void WriteData()
         {
             if (Main.dedServ)
                 return;
 
+            string path = GetFolderPath();
+            if (path == null)
+                return;
+
             Log.Info("Writing Data");
-            Main.instance.Window.Title = $"{_mode}, {_playerId}, {_worldId}";
 
-            string path = Path.Combine(Main.SavePath, "SquidTestingMod");
-            Directory.CreateDirectory(path);
-            path = Path.Combine(path, "SquidTestingMod.json");
+            // Use the strongly typed class:
+            var data = new ClientDataJson
+            {
+                ClientMode = ClientMode,
+                PlayerID = PlayerID,
+                WorldID = WorldID
+            };
 
-            // Serialize to json
-            // new array for players with entry of array: Mode, playerId, worldId
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(new int[] { _mode, _playerId, _worldId }, options);
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(data, jsonOptions);
             File.WriteAllText(path, jsonString);
         }
 
@@ -49,29 +77,26 @@ namespace SquidTestingMod.Helpers
                 return;
 
             Log.Info("Reading Data");
-            string path = Path.Combine(Main.SavePath, "SquidTestingMod");
+            string path = GetFolderPath();
+            if (path == null)
+                return;
+
             try
             {
-                Directory.CreateDirectory(path); // Ensure the directory exists
-                path = Path.Combine(path, "SquidTestingMod.json");
-                Log.Info("save path: " + path);
+                string jsonString = File.ReadAllText(path);
+                var data = JsonSerializer.Deserialize<ClientDataJson>(jsonString);
+                if (data != null)
+                {
+                    ClientMode = data.ClientMode;
+                    PlayerID = data.PlayerID;
+                    WorldID = data.WorldID;
+                }
             }
             catch (Exception ex)
             {
-                Log.Error("Could not find part of the path: " + ex.Message);
-                return;
+                Log.Error("Error reading or deserializing data: " + ex.Message);
             }
 
-            // Read from json
-            // Set the values of the mode, playerId, and worldId
-            int mode = JsonSerializer.Deserialize<int[]>(File.ReadAllText(path))[0];
-            int playerId = JsonSerializer.Deserialize<int[]>(File.ReadAllText(path))[1];
-            int worldId = JsonSerializer.Deserialize<int[]>(File.ReadAllText(path))[2];
-
-            Log.Info($"Mode: {mode}, PlayerId: {playerId}, WorldId: {worldId}");
-            _mode = mode;
-            _playerId = playerId;
-            _worldId = worldId;
         }
     }
 }

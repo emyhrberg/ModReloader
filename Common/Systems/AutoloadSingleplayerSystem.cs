@@ -34,7 +34,7 @@ namespace SquidTestingMod.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
 
-                if (ClientDataHandler.Mode == ClientMode.SinglePlayer)
+                if (ClientDataHandler.ClientMode == ClientMode.SinglePlayer)
                 {
                     onSuccessfulLoad += EnterSingleplayerWorld;
                 }
@@ -65,13 +65,13 @@ namespace SquidTestingMod.Common.Systems
                 throw new Exception("No players or worlds found.");
 
             // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList[ClientDataHandler.PlayerId];
-            var world = Main.WorldList[ClientDataHandler.WorldId];
+            var player = Main.PlayerList[ClientDataHandler.PlayerID];
+            var world = Main.WorldList[ClientDataHandler.WorldID];
 
             StartGameWithPair(player, world);
-            
+
             // Reset Mode status (maybe should be moved to Exit World hook but naaaah)
-            ClientDataHandler.Mode = ClientMode.FreshClient;
+            ClientDataHandler.ClientMode = ClientMode.FreshClient;
         }
 
         private void StartGameWithPair(PlayerFileData player, WorldFileData world)

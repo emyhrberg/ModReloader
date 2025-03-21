@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.PacketHandlers;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 
 namespace SquidTestingMod.Helpers
 {
@@ -15,9 +14,9 @@ namespace SquidTestingMod.Helpers
     {
         public static void PrepareClient(ClientMode clientMode)
         {
-            ClientDataHandler.Mode = clientMode;
-            ClientDataHandler.PlayerId = Utilities.FindPlayerId();
-            ClientDataHandler.WorldId = Utilities.FindWorldId();
+            ClientDataHandler.ClientMode = clientMode;
+            ClientDataHandler.PlayerID = Utilities.FindPlayerId();
+            ClientDataHandler.WorldID = Utilities.FindWorldId();
         }
 
         public static Task ExitWorldOrServer()
