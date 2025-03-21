@@ -61,6 +61,22 @@ namespace SquidTestingMod.Helpers
             try
             {
                 string folder = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs";
+                if (File.Exists(folder))
+                {
+                    Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                }
+                else
+                {
+                    string file2 = "C:\\Program Files\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
+                    if (File.Exists(file2))
+                    {
+                        Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                    }
+                    else
+                    {
+                        Error("client.log not found.");
+                    }
+                }
                 Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }
             catch (Exception ex)
@@ -80,7 +96,22 @@ namespace SquidTestingMod.Helpers
             try
             {
                 string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
-                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                if (File.Exists(file))
+                {
+                    Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                }
+                else
+                {
+                    string file2 = "C:\\Program Files\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
+                    if (File.Exists(file2))
+                    {
+                        Process.Start(new ProcessStartInfo($@"{file2}") { UseShellExecute = true });
+                    }
+                    else
+                    {
+                        Error("client.log not found.");
+                    }
+                }
             }
             catch (Exception ex)
             {
