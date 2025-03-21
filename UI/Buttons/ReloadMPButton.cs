@@ -15,8 +15,8 @@ namespace SquidTestingMod.UI.Buttons
         public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : base(spritesheet, buttonText, hoverText, textSize)
         {
             // deactived by default since the SP button is active
-            Active = false;
-            ButtonText.Active = false;
+            Active = true;
+            ButtonText.Active = true;
         }
 
         // Set custom animation dimensions
