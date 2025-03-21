@@ -23,15 +23,24 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(false)]
         public bool ClearClientLogOnReload = false;
 
-        [Header("Misc")]
+        [Header("UI")]
 
         [DrawTicks]
         [OptionStrings(["left", "bottom"])]
         [DefaultValue("bottom")]
         public string ButtonsPosition;
 
-        [DefaultValue(false)]
-        public bool EnterWorldSuperMode = false;
+        [DrawTicks]
+        [Range(50f, 80f)]
+        [Increment(10f)]
+        [DefaultValue(70)]
+        public float ButtonSize = 70;
+
+        [DrawTicks]
+        [Range(0.4f, 1.0f)]
+        [Increment(0.1f)]
+        [DefaultValue(0.9f)]
+        public float TextSize = 0.9f;
 
         [DefaultValue(false)]
         public bool HideCollapseButton = false;
@@ -39,11 +48,14 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(false)]
         public bool DraggablePanels = false;
 
+        [Header("Game")]
+        [DefaultValue(false)]
+        public bool EnterWorldSuperMode = false;
+
         [Header("NPCSpawner")]
 
         [DefaultValue(null)]
         public NPCSpawnerConfig NPCSpawner = new();
-
 
         public override void OnChanged()
         {
@@ -104,11 +116,15 @@ namespace SquidTestingMod.Common.Configs
         public static bool SaveWorldOnReload => C.SaveWorldOnReload;
         public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
 
-        // Misc
+        // UI
+        public static float TextSize => C.TextSize;
+        public static float ButtonSize => C.ButtonSize;
         public static string ButtonsPosition => C.ButtonsPosition;
-        public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
-        public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
         public static bool HideCollapseButton => C.HideCollapseButton;
         public static bool DraggablePanels => C.DraggablePanels;
+
+        // Game
+        public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
+        public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
     }
 }

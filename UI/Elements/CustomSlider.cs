@@ -11,8 +11,6 @@ namespace SquidTestingMod.UI.Elements
 {
     public class CustomSlider : CustomSliderBase
     {
-        public static bool IsDraggingSlider = false;
-
         private readonly Func<float> _getStatus;
         private readonly Action<float> _slideKeyboard;
         private readonly Func<float, Color> _blipFunc;
@@ -32,29 +30,15 @@ namespace SquidTestingMod.UI.Elements
             Top.Set(5f, 0f);
         }
 
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            // Indicate that the slider is being dragged
-            IsDraggingSlider = true;
-            Log.Info("Slider dragging started");
-
-            // Call the base class behavior for mouse over
-            base.MouseOver(evt);
-        }
-
-        public override void MouseOut(UIMouseEvent evt)
-        {
-            // Call the base class behavior for mouse out
-            base.MouseOut(evt);
-
-            // Reset the dragging flag
-            Log.Info("Slider dragging stopped");
-            IsDraggingSlider = false;
-        }
-
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             base.DrawSelf(spriteBatch);
+
+            Height.Set(15, 0);
+            Width.Set(175, 0f);
+            Left.Set(155, 0);
+            VAlign = 0.0f;
+            HAlign = 0.0f;
 
             CurrentAimedSlider = null;
             if (!Main.mouseLeft)
@@ -82,17 +66,20 @@ namespace SquidTestingMod.UI.Elements
         }
 
         private float DrawValueBar(
-            SpriteBatch sb,
-            Vector2 pos,
-            float scale,
-            float sliderPos,
-            SliderUsageLevel usageLevel,
-            out bool wasInBar,
-            Func<float, Color> colorFunc)
+    SpriteBatch sb,
+    Vector2 pos,
+    float scale,
+    float sliderPos,
+    SliderUsageLevel usageLevel,
+    out bool wasInBar,
+    Func<float, Color> colorFunc)
         {
             Texture2D barTex = TextureAssets.ColorBar.Value;
             Vector2 barSize = new Vector2(barTex.Width, barTex.Height) * scale;
             pos.X -= (int)barSize.X;
+
+            // extra offset
+            pos.X -= 20f;
 
             Rectangle barRect = new((int)pos.X, (int)pos.Y - (int)barSize.Y / 2, (int)barSize.X, (int)barSize.Y);
             sb.Draw(barTex, barRect, Color.White);
@@ -100,6 +87,7 @@ namespace SquidTestingMod.UI.Elements
             float innerX = barRect.X + 5f * scale;
             float innerY = barRect.Y + 4f * scale;
 
+            // Draw the blips along the slider track
             for (float i = 0; i < 167f; i++)
             {
                 float t = i / 167f;
@@ -107,24 +95,37 @@ namespace SquidTestingMod.UI.Elements
                 sb.Draw(TextureAssets.ColorBlip.Value, new Vector2(innerX + i * scale, innerY), null, c, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
 
-            Rectangle clickRect = new((int)innerX - 2, (int)innerY, barRect.Width - 4, barRect.Height - 8);
-            bool hovered = clickRect.Contains(Main.mouseX, Main.mouseY);
+            // This is the original rectangle for value calculation:
+            Rectangle valueRect = new((int)innerX, (int)innerY, barRect.Width - 10, barRect.Height - 8);
+
+            // Create an extended hitbox rectangle (for example, 10 pixels larger on each side):
+            int padding = 9;
+            Rectangle extendedClickRect = new(
+                (int)innerX - padding,
+                (int)innerY - padding,
+                (int)(barRect.Width - 10) + 2 * padding,
+                (int)barRect.Height - 8 + 2 * padding);
+
+            // Use the extended hitbox for detecting mouse hover:
+            bool hovered = extendedClickRect.Contains(Main.mouseX, Main.mouseY);
             if (usageLevel == SliderUsageLevel.OtherElementIsLocked)
                 hovered = false;
 
+            // Draw highlight if hovered or active:
             if (hovered || usageLevel == SliderUsageLevel.SelectedAndLocked)
                 sb.Draw(TextureAssets.ColorHighlight.Value, barRect, Main.OurFavoriteColor);
 
+            // Draw the slider "blip"
             sb.Draw(TextureAssets.ColorSlider.Value,
                     new Vector2(innerX + 167 * scale * sliderPos, innerY + 4f * scale),
                     null, Color.White, 0f,
                     new Vector2(TextureAssets.ColorSlider.Value.Width * 0.5f, TextureAssets.ColorSlider.Value.Height * 0.5f),
                     scale, SpriteEffects.None, 0f);
 
-            // --- Changed Code Here ---
-            float ratio = (Main.mouseX - clickRect.X) / (float)clickRect.Width;
+            // Compute slider ratio based on the original slider area (valueRect)
+            float ratio = (Main.mouseX - valueRect.X) / (float)valueRect.Width;
             ratio = MathHelper.Clamp(ratio, 0f, 1f);
-            wasInBar = clickRect.Contains(Main.mouseX, Main.mouseY) && !IgnoresMouseInteraction;
+            wasInBar = extendedClickRect.Contains(Main.mouseX, Main.mouseY) && !IgnoresMouseInteraction;
             return ratio;
         }
     }

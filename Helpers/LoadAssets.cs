@@ -41,6 +41,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> ButtonReloadSP;
         public static Asset<Texture2D> ButtonReloadMP;
         public static Asset<Texture2D> ButtonMods;
+        public static Asset<Texture2D> ButtonSecond;
 
         // Filter buttons
         public static Asset<Texture2D> FilterBG;

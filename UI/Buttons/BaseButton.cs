@@ -25,23 +25,23 @@ namespace SquidTestingMod.UI.Buttons
         protected Asset<Texture2D> Spritesheet { get; set; }
         protected string HoverText = "";
         protected float opacity = 0.4f;
-        public ButtonText buttonUIText;
+        public ButtonText ButtonText;
         public bool Active = true;
 
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed
 
-        // Animations variables to be set by child classes
-        protected virtual float SpriteScale => 1;
+        // Animations variables to be set by child classes. virtual means it can be overridden by child classes.
+        protected virtual float Scale { get; set; } = 1; // the scale of the animation.
         protected virtual int StartFrame => 1;
         protected virtual int FrameCount => 1;
         protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
-        protected abstract int FrameWidth { get; }
-        protected abstract int FrameHeight { get; }
+        protected abstract int FrameWidth { get; } // abstract means force child classes to implement this
+        protected abstract int FrameHeight { get; } // abstract means force child classes to implement this
 
         // Constructor
-        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : base(spritesheet)
+        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize = 0.9f) : base(spritesheet)
         {
             Button = Ass.Button;
             Spritesheet = spritesheet;
@@ -51,8 +51,8 @@ namespace SquidTestingMod.UI.Buttons
 
             // Add a UIText centered horizontally at the bottom of the button.
             // Set the scale; 70f seems to fit to 0.9f scale.
-            buttonUIText = new ButtonText(text: buttonText, textScale: 0.9f, large: false);
-            Append(buttonUIText);
+            ButtonText = new ButtonText(text: buttonText, textScale: textSize, large: false);
+            Append(ButtonText);
         }
 
         public void UpdateHoverText(string hover)
@@ -73,7 +73,9 @@ namespace SquidTestingMod.UI.Buttons
 
             // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = 70f;
+            float buttonSize = sys.mainState?.ButtonSize ?? 70f;
+
+            // Update the scale based on the buttonsize. 70f means a scale of 1. For every 10 pixels, the scale is increased by 0.1f.
 
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
@@ -83,7 +85,7 @@ namespace SquidTestingMod.UI.Buttons
             opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
 
             // Set UIText opacity
-            buttonUIText.TextColor = Color.White * opacity;
+            ButtonText.TextColor = Color.White * opacity;
 
             // Draw the texture with the calculated opacity.
             spriteBatch.Draw(Button.Value, drawRect, Color.White * opacity);
@@ -111,12 +113,12 @@ namespace SquidTestingMod.UI.Buttons
                 // Use a custom scale and offset to draw the animated overlay.
                 Vector2 position = dimensions.Position();
                 Vector2 size = new(dimensions.Width, dimensions.Height);
-                Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * SpriteScale) / 2f;
+                Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * Scale) / 2f;
                 Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
                 centeredPosition.Y -= 7; // magic offset to move it up a bit
 
                 // Draw the spritesheet.
-                spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, SpriteScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
             }
 
             // Draw tooltip text if hovering and HoverText is given (see MainState).

@@ -1,20 +1,20 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using Terraria.ID;
-using Terraria;
-using Terraria.UI;
-using System.Reflection;
-using Terraria.ModLoader;
-using System;
 using SquidTestingMod.CustomReload;
-using System.Collections.Generic;
-using log4net;
+using SquidTestingMod.Helpers;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class TestButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
+    public class TestButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set the button icon size
         protected override int FrameWidth => 37;
@@ -64,7 +64,7 @@ namespace SquidTestingMod.UI.Buttons
 
         public static void CustomUnload()
         {
-            
+
         }
     }
 }

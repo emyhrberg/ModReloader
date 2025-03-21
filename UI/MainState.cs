@@ -9,6 +9,7 @@ using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Buttons;
 using SquidTestingMod.UI.Elements;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI
@@ -29,40 +30,44 @@ namespace SquidTestingMod.UI
         public Collapse collapse;
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
         public float ButtonSize = 70f;
+        public float TextSize = 0.9f;
         public float offset = 0; // START offset for first button position relative to center
         public List<BaseButton> AllButtons = [];
         public ReloadSPButton reloadSPButton;
 
         // MainState Constructor. This is where we create all the buttons and set up their positions.
-        public MainState()
-        {
-            AddEverything();
-        }
+        public MainState() => AddEverything();
 
         public void AddEverything()
         {
-            // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
-            offset = -ButtonSize * 5 - 20;
-            // offset = -ButtonSize * 3 - 20;
+            // Set buttonsize according to config
+            Config c = ModContent.GetInstance<Config>();
+            if (c != null)
+                ButtonSize = Conf.ButtonSize;
 
-            // 10% chance to make NPC asset xmas themed
-            Asset<Texture2D> npcAss = Ass.ButtonNPC;
-            // if (Main.rand.NextBool(10))
-            // npcAss = Ass.ButtonNPC_XMAS;
+            // Set text size
+            if (c != null)
+                TextSize = Conf.TextSize;
+
+            Log.Info("TextSize: " + TextSize);
+
+            // Set offset for first button position relative to center
+            offset = -ButtonSize * 5;
+            offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
             // Add buttons
-            AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
-            AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
-            AddButton<StartGameButton>(Ass.CollapseDown, "Start", "Start additional tML client");
-            AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
-            AddButton<NPCButton>(npcAss, "NPC", "Spawn all NPC in the game");
-            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities");
-            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View and edit hitboxes, world, logs");
-            AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements");
-            AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods");
-            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload");
+            AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access.", textSize: TextSize);
+            AddButton<TestButton>(Ass.CollapseUp, "Testing", "Temporary button used for testing", textSize: TextSize);
+            AddButton<StartGameButton>(Ass.ButtonSecond, "Launch tML", "Start additional tML client", textSize: TextSize - 0.2f);
+            AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game", textSize: TextSize);
+            AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game", textSize: TextSize);
+            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
+            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View and edit hitboxes, world, logs", textSize: TextSize);
+            AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
+            AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);
+            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload", textSize: TextSize);
             offset -= ButtonSize; // move back to place MP above SP.
-            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload");
+            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
@@ -93,10 +98,10 @@ namespace SquidTestingMod.UI
             return panel;
         }
 
-        private T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null) where T : BaseButton
+        private T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null, float textSize = 0.9f) where T : BaseButton
         {
             // Create a new button using reflection
-            T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText);
+            T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText, textSize);
 
             // Button dimensions
             float size = ButtonSize;

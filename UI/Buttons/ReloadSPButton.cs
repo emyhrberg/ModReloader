@@ -12,14 +12,14 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText) : BaseButton(spritesheet, buttonText, hoverText)
+    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
         protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 65;
         protected override int FrameHeight => 65;
-        protected override float SpriteScale => 0.8f;
+        protected override float Scale => 0.8f;
 
         public async override void LeftClick(UIMouseEvent evt)
         {
@@ -48,7 +48,7 @@ namespace SquidTestingMod.UI.Buttons
         {
             // If right click, toggle the mode and return
             Active = false;
-            buttonUIText.Active = false;
+            ButtonText.Active = false;
 
             // set MP active
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -57,7 +57,7 @@ namespace SquidTestingMod.UI.Buttons
                 if (btn is ReloadMPButton spBtn)
                 {
                     spBtn.Active = true;
-                    spBtn.buttonUIText.Active = true;
+                    spBtn.ButtonText.Active = true;
                 }
             }
             return;

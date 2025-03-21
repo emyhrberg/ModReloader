@@ -66,16 +66,16 @@ namespace SquidTestingMod.UI.Buttons
             foreach (BaseButton btn in sys.mainState.AllButtons)
             {
                 btn.Active = sys.mainState.AreButtonsShowing;
-                if (btn.buttonUIText != null)
+                if (btn.ButtonText != null)
                 {
-                    btn.buttonUIText.Active = sys.mainState.AreButtonsShowing;
+                    btn.ButtonText.Active = sys.mainState.AreButtonsShowing;
                 }
 
                 // force MP button to disable when expanded
                 if (btn is ReloadMPButton mpBtn)
                 {
                     mpBtn.Active = false;
-                    mpBtn.buttonUIText.Active = false;
+                    mpBtn.ButtonText.Active = false;
                 }
 
             }

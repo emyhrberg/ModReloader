@@ -11,10 +11,12 @@ namespace SquidTestingMod.UI.Elements
 
     public class CustomSliderBase : UIElement
     {
-        internal static UIElement CurrentLockedSlider;
-        internal static UIElement CurrentAimedSlider;
+        protected static UIElement CurrentLockedSlider;
+        protected static UIElement CurrentAimedSlider;
 
-        internal SliderUsageLevel UsageLevel =>
+        public static bool IsAnySliderLocked => CurrentLockedSlider != null;
+
+        protected SliderUsageLevel UsageLevel =>
             CurrentLockedSlider == this ? SliderUsageLevel.SelectedAndLocked :
             CurrentLockedSlider != null ? SliderUsageLevel.OtherElementIsLocked :
             SliderUsageLevel.NotSelected;

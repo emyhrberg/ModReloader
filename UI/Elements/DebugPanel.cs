@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
@@ -48,15 +49,19 @@ namespace SquidTestingMod.UI.Elements
             // Town NPCs
             // Force at least 1 for the max, just so the slider has a range
             int numberOfTownNPCs = GetTownNpcCount();
-            float maxValue = Math.Max(1f, numberOfTownNPCs);
+            if (numberOfTownNPCs <= 0)
+            {
+                numberOfTownNPCs = 0;
+            }
+
             townNpcSlider = new(
                 title: "Town NPCs",
-                defaultValue: maxValue,
+                defaultValue: 1,
                 min: 0f,
-                max: maxValue,
+                max: 1f,
                 onValueChanged: UpdateTownNpcSlider,
                 increment: 1f,
-                hover: "Set the number of town NPCs (scuffed)"
+                hover: "Set the number of town NPCs"
             );
             uiList.Add(townNpcSlider);
 
@@ -85,36 +90,23 @@ namespace SquidTestingMod.UI.Elements
             int targetCount = (int)newValue;
             int currentCount = GetTownNpcCount();
 
+            // If the slider target is lower than the current count, kill one NPC only
             if (targetCount < currentCount)
             {
-                int countToKill = currentCount - targetCount;
-                KillTownNPCs(countToKill);
+                var activeTownNpcs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
+                if (activeTownNpcs.Count > 0)
+                {
+                    int index = Main.rand.Next(activeTownNpcs.Count);
+                    activeTownNpcs[index].StrikeInstantKill();
+                }
             }
 
-            // Re-sync the slider in case the count actually changed
-            int updatedCount = GetTownNpcCount();
-            townNpcSlider.SetValue(updatedCount);
-            townNpcSlider.UpdateText("Town NPCs: " + updatedCount);
+            // this is preferable to having the code in update but idk how to make it work
+            // townNpcSlider.SetValue(GetTownNpcCount());
+            // townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
         }
 
         private int GetTownNpcCount() => Main.npc.Where(npc => npc.active && npc.townNPC).Count();
-
-        // Helper method to “kill” a given number of town NPCs.
-        private void KillTownNPCs(int count)
-        {
-            foreach (NPC npc in Main.npc)
-            {
-                if (count <= 0)
-                    break;
-
-                if (npc.active && npc.townNPC)
-                {
-                    // Use StrikeNPC with damage equal to npc.lifeMax to ensure death.
-                    npc.StrikeInstantKill();
-                    count--;
-                }
-            }
-        }
 
         private float GetCurrentTimeNormalized()
         {
@@ -213,17 +205,47 @@ namespace SquidTestingMod.UI.Elements
 
         public override void Update(GameTime gameTime)
         {
-            // Check if unknown name still. Then we have to update it
-            // if (TitlePanel.HeaderText.Text.Length == 5)
-            // {
-            //     if (Main.ActiveWorldFileData.GetWorldName() != null)
-            //     {
-            //         TitlePanel.HeaderText.SetText("World: " + Main.ActiveWorldFileData.GetWorldName());
-            //         Main.NewText("World name updated to: " + Main.ActiveWorldFileData.GetWorldName());
-            //         Log.Info("World name updated to: " + Main.ActiveWorldFileData.GetWorldName());
-            //     }
-            // }
+            base.Update(gameTime);
 
+            // Update the hover text town npc slider
+            // If 0 town NPCs, show the default "Set the number of town NPCs" text
+            // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
+            var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
+            if (townNPCs.Count > 0)
+            {
+                var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
+                var formattedNames = string.Join("\n", npcNames
+                    .Select((name, index) => (name, index))
+                    .GroupBy(x => x.index / 5)
+                    .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
+
+                // Remove the trailing comma from the last row
+                if (formattedNames.EndsWith(","))
+                {
+                    formattedNames = formattedNames.TrimEnd(',');
+                }
+
+                townNpcSlider.HoverText = "Town NPCs:\n" + formattedNames;
+            }
+            else
+            {
+                townNpcSlider.HoverText = "Town NPCs:\nSet the number of town NPCs";
+            }
+
+            // Update the town NPC count
+            if (!CustomSliderBase.IsAnySliderLocked)
+            {
+                // Slider is not being used, update the max value
+                townNpcSlider.UpdateSliderMax(GetTownNpcCount());
+            }
+            else
+            {
+                // Slider is being used, update the current value
+                townNpcSlider.SetValue(GetTownNpcCount());
+                townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+            }
+
+            // Update the time
             if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
             {
                 // Normal game time progression logic
@@ -237,7 +259,6 @@ namespace SquidTestingMod.UI.Elements
 
             // Update the UI display
             timeOption.UpdateText("Time: " + CalcIngameTime());
-            base.Update(gameTime);
         }
     }
 }
