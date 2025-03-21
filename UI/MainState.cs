@@ -53,6 +53,7 @@ namespace SquidTestingMod.UI
             // Add buttons
             AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access. To be removed later");
             AddButton<TestButton>(Ass.CollapseUp, "Test", "TestButton");
+            AddButton<StartGameButton>(Ass.CollapseDown, "Start", "Start additional tML client");
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
             AddButton<NPCButton>(npcAss, "NPC", "Spawn all NPC in the game");
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities");
