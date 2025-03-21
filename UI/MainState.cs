@@ -66,7 +66,7 @@ namespace SquidTestingMod.UI
             AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload", textSize: TextSize);
-            offset -= ButtonSize; // move back to place MP above SP.
+            // offset -= ButtonSize; // move back to place MP above SP.
             AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
 
             // Add collapse button on top
