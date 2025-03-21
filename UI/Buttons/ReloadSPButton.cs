@@ -28,7 +28,7 @@ namespace SquidTestingMod.UI.Buttons
                 Log.ClearClientLog();
 
             // 2 Prepare client data
-            ReloadUtilities.PrepareClient(ClientMode.SinglePlayer);
+            ReloadUtilities.PrepareClient(ClientModes.SinglePlayer);
 
             // 3 Exit server or world
             if (Main.netMode == NetmodeID.SinglePlayer)

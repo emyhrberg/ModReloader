@@ -2,6 +2,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Pipes;
+using System.Linq;
+using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -48,12 +54,55 @@ namespace SquidTestingMod.UI.Buttons
                 return;
             }
 
-            ReloadUtilities.PrepareClient(ClientMode.MPMain);
+            ReloadUtilities.PrepareClient(ClientModes.MPMain);
 
             // we must be in multiplayer for this to have an effect
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 await ReloadUtilities.ExitAndKillServer();
+
+                int clientCount = Main.player.Where((p) => p.active).Count() - 1;
+                List<NamedPipeServerStream> clients = new List<NamedPipeServerStream>();
+                List<Task<string?>> clientResponses = new List<Task<string?>>();
+
+                Log.Info($"Waiting for {clientCount} clients...");
+
+                // Wait for conecting all clients
+                for (int i = 0; i < clientCount; i++)
+                {
+                    var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeName, PipeDirection.InOut, clientCount);
+                    await pipeServer.WaitForConnectionAsync();
+                    clients.Add(pipeServer);
+                    Log.Info($"Client {i + 1} connected!");
+                }
+
+                foreach (var client in clients)
+                {
+                    clientResponses.Add(ReloadUtilities.ReadPipeMessage(client));
+                }
+
+                // Чекаємо, поки всі клієнти надішлють свої повідомлення
+                await Task.WhenAll(clientResponses);
+
+                ReloadUtilities.BuildAndReloadMod();
+
+                Log.Info("Mod Builded");
+                // After building - reload all other clients
+                for (int i = 0; i < clients.Count; i++)
+                {
+                    using StreamWriter writer = new StreamWriter(clients[i]) { AutoFlush = true };
+                    await writer.WriteLineAsync($"yes, go reload yourself now");
+                }
+
+                foreach (var client in clients)
+                {
+                    client.Close();
+                    client.Dispose();
+                }
+            }
+            else if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                await ReloadUtilities.ExitWorldOrServer();
                 ReloadUtilities.BuildAndReloadMod();
             }
         }

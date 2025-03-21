@@ -1,19 +1,23 @@
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.PacketHandlers;
 using System;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.PacketHandlers;
 using Terraria;
-using Terraria.GameContent.UI.Elements;
 
 namespace SquidTestingMod.Helpers
 {
     //All functions, related to reload
     internal class ReloadUtilities
     {
-        public static void PrepareClient(ClientMode clientMode)
+        public const string pipeName = "SquidTestingModPipe";
+
+        //public static NamedPipeServerStream Pipe {  get; set; }\
+
+        public static void PrepareClient(ClientModes clientMode)
         {
             ClientDataHandler.Mode = clientMode;
             ClientDataHandler.PlayerId = Utilities.FindPlayerId();
@@ -95,9 +99,9 @@ namespace SquidTestingMod.Helpers
             // 3. Find the mod folder that matches the desired mod name.
 
             string modPath = modSources.FirstOrDefault(p =>
-    !string.IsNullOrEmpty(p) &&
-    Directory.Exists(p) &&
-    Path.GetFileName(p)?.Equals(Conf.ModToReload, StringComparison.InvariantCultureIgnoreCase) == true);
+                !string.IsNullOrEmpty(p) &&
+                Directory.Exists(p) &&
+                Path.GetFileName(p)?.Equals(Conf.ModToReload, StringComparison.InvariantCultureIgnoreCase) == true);
 
             if (modPath != null)
             {
@@ -118,6 +122,14 @@ namespace SquidTestingMod.Helpers
 
             // 5.Invoking a Build method
             buildMethod.Invoke(buildModInstance, [modPath, true]);
+        }
+
+        //string can be replaced with json if needed
+        //for me the fact of sending messages would be enough
+        public static async Task<string?> ReadPipeMessage(NamedPipeServerStream pipe)
+        {
+            using StreamReader reader = new StreamReader(pipe);
+            return await reader.ReadLineAsync();
         }
     }
 }

@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.IO;
+using static XPT.Core.Audio.MP3Sharp.Decoding.Decoder;
 
 namespace SquidTestingMod.Helpers
 {
-    public enum ClientMode
-    {
-        FreshClient,
-        SinglePlayer,
-        MPMain,
-        MPMinor,
-    }
+
 
     internal static class ClientDataHandler
     {
         //Function that handles writing info that shoud survive modlreload
-        static int _mode = (int)ClientMode.FreshClient;
+        static int _mode = (int)ClientModes.FreshClient;
         static int _playerId = 0;
         static int _worldId = 0;
 
-        public static ClientMode Mode { get { return (ClientMode)_mode; } set { _mode = ((int)value); } }
+        //static Dictionary<int, ClientData> ClientsData;
+
+        public static ClientModes Mode { get { return (ClientModes)_mode; } set { _mode = ((int)value); } }
         public static int PlayerId { get { return _playerId; } set { _playerId = value; } }
         public static int WorldId { get { return _worldId; } set { _worldId = value; } }
         public static void WriteData()
@@ -47,6 +48,7 @@ namespace SquidTestingMod.Helpers
             if (!string.IsNullOrEmpty(Main.instance.Window.Title))
             {
                 string[] list = Main.instance.Window.Title.Split(", ");
+                Array.Resize(ref list, 3);
 
                 bool succesfulParsing = true;
                 succesfulParsing &= int.TryParse(list[0], out _mode);
@@ -58,9 +60,9 @@ namespace SquidTestingMod.Helpers
                     Log.Error("Unable to parce client data from title");
                 }
 
+
             }
             Main.instance.Window.Title = "SquidTestingMod: this is hard";
-
         }
     }
 }

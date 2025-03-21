@@ -1,5 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
+using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
+using MonoMod.RuntimeDetour;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
@@ -65,16 +71,31 @@ namespace SquidTestingMod.PacketHandlers
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                ReloadUtilities.PrepareClient(ClientMode.MPMain);
+                ReloadUtilities.PrepareClient(ClientModes.MPMinor);
 
-                if (Main.netMode == NetmodeID.SinglePlayer)
-                {
-                    await ReloadUtilities.ExitWorldOrServer();
-                }
-                else if (Main.netMode == NetmodeID.MultiplayerClient)
-                {
-                    await ReloadUtilities.ExitAndKillServer();
-                }
+                await ReloadUtilities.ExitWorldOrServer();
+
+                var hookForUnload = new Hook(typeof(ModLoader).GetMethod(
+                        "Unload",
+                        BindingFlags.NonPublic | BindingFlags.Static
+                    ), (Func<bool> orig) =>
+                    {
+                        bool o = orig();
+                        LogManager.GetLogger("SQUID").Info($"Hi! I am {Process.GetCurrentProcess().Id} procces id!");
+                        using var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut);
+                        pipeClient.Connect();
+
+                        using var reader = new StreamReader(pipeClient);
+                        using var writer = new StreamWriter(pipeClient) { AutoFlush = true };
+
+                        writer.WriteLine("Im here and ready to reload");
+
+                        string? response = reader.ReadLine();
+                        return o;
+                    });
+
+                //stops GC from deleting it
+                GC.SuppressFinalize(hookForUnload);
 
                 ReloadUtilities.ReloadMod();
             }

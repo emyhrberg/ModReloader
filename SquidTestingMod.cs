@@ -10,6 +10,7 @@ using SquidTestingMod.Helpers;
 using SquidTestingMod.PacketHandlers;
 using SquidTestingMod.UI.Buttons;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod
@@ -25,24 +26,19 @@ namespace SquidTestingMod
 
         public override void Load()
         {
-            ClientDataHandler.ReadData();
-
-            // Temporary comment out to fix UIElements not drawing
+            if (Main.netMode != NetmodeID.Server)
+                ClientDataHandler.ReadData();
             /*
-
-            TMLData.SaveTMLData();
+            HookEndpointManager.Clear();
             foreach (var d in DetourManager.GetDetourInfo(typeof(ModLoader).GetMethod(
                         "Unload",
                         BindingFlags.NonPublic | BindingFlags.Static
-                    )).Detours)
+                    )).Detours.ToList())
             {
                 Log.Info($"{d} is Undo");
                 d.Undo();
-
-                //Doesn't work for some reason lol
             }
-            HookEndpointManager.Clear();
-            GC.SuppressFinalize(new Hook(typeof(ModLoader).GetMethod(
+            var hookForUnload = new Hook(typeof(ModLoader).GetMethod(
                         "Unload",
                         BindingFlags.NonPublic | BindingFlags.Static
                     ), (Func<bool> orig) =>
@@ -50,23 +46,18 @@ namespace SquidTestingMod
                         bool o = orig();
                         LogManager.GetLogger("SQUID").Info("Hi!");
                         return o;
-                    }));
-            GC.SuppressFinalize(new Hook(typeof(ModLoader).GetMethod(
-                        "Unload",
-                        BindingFlags.NonPublic | BindingFlags.Static
-                    ), (Func<bool> orig) =>
-                    {
-                        bool o = orig();
-                        LogManager.GetLogger("SQUID").Info("Hi!");
-                        return o;
-                    }));
-                    
-                    */
+                    });
+
+            //stops GC from deleting it
+            GC.SuppressFinalize(hookForUnload);
+            //TMLData.SaveTMLData();*/
+
         }
 
         public override void Unload()
         {
-            ClientDataHandler.WriteData();
+            if (Main.netMode != NetmodeID.Server)
+                ClientDataHandler.WriteData();
         }
     }
 }
