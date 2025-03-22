@@ -80,10 +80,21 @@ namespace SquidTestingMod.Common.Configs
             Log.Info("Config.OnChanged() ran successfully");
 
             // If super mode is enabled, enable it
+            return;
             if (Conf.EnterWorldSuperMode)
             {
                 // Get the player cheat manager
+                if (Main.LocalPlayer == null)
+                {
+                    Log.Info("Main.LocalPlayer is null in Config.OnChanged()");
+                    return;
+                }
                 PlayerCheatManager pcm = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+                if (pcm == null)
+                {
+                    Log.Info("PlayerCheatManager is null in Config.OnChanged()");
+                    return;
+                }
                 pcm.EnableSupermode();
 
                 // Update the enabled texts all enabled except mine aura and noclip
@@ -103,7 +114,17 @@ namespace SquidTestingMod.Common.Configs
             else
             {
                 // Get the player cheat manager
+                if (Main.LocalPlayer == null)
+                {
+                    Log.Info("Main.LocalPlayer is null in Config.OnChanged()");
+                    return;
+                }
                 PlayerCheatManager pcm = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+                if (pcm == null)
+                {
+                    Log.Info("PlayerCheatManager is null in Config.OnChanged()");
+                    return;
+                }
                 pcm.DisableSupermode();
 
                 // Update the enabled texts all Disabled
