@@ -1,15 +1,14 @@
-﻿using System;
+﻿using log4net;
+using MonoMod.RuntimeDetour;
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Threading.Tasks;
-using log4net;
-using MonoMod.RuntimeDetour;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Common.Players;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -68,7 +67,6 @@ namespace SquidTestingMod.PacketHandlers
             Log.Info($"Receiving ReceiveRefreshClients to {Main.myPlayer} from {fromWho}");
             Task.Run(ReceiveRefreshClientsAsync);
         }
-
         private async static void ReceiveRefreshClientsAsync()
         {
 
@@ -80,46 +78,35 @@ namespace SquidTestingMod.PacketHandlers
 
                 var modName = Conf.ModToReload;
 
-                var hookForUnload = new Hook(typeof(ModLoader).GetMethod(
-                        "Unload",
-                        BindingFlags.NonPublic | BindingFlags.Static
-                    ), (Func<bool> orig) =>
+                var hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
                     {
                         bool o = orig();
                         var logger = LogManager.GetLogger("SQUID");
 
-
-                        logger.Info($"Hi! I am {Process.GetCurrentProcess().Id} procces id!");
+                        
                         object loadMods = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface").GetField("loadMods", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
+
+                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client"]);
 
 
                         using (var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut))
                         {
+                            logger.Info($"Waiting for main client");
                             pipeClient.Connect();
 
                             using var writer = new StreamWriter(pipeClient) { AutoFlush = true };
-                            writer.WriteLine("Im here and ready to reload");
-
-
+                            writer.WriteLine("Im here and ready to reload!");
                         }
 
+                        logger.Info("Wait to continue loading");
 
                         using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
                         pipeClientafterRebuild.Connect();
 
-                        //if (ModLoader.TryGetMod(modName, out var loadedMod))
-                        //{
-                        //    loadedMod.Close();
-                        //}
+                        logger.Info("Clearing modsDirCache");
 
-                        //typeof(ModLoader).GetMethod("EnableMod", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { modName });
-
-                        //object[] localMods = (object[])typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { });
-
-                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, new Dictionary<string, object>());
-
-
+                        var cache = (Dictionary<string, object>)typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+                        cache.Clear();
 
                         logger.Info("Loading mods");
 

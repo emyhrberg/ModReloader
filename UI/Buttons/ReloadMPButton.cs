@@ -1,14 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Pipes;
-using System.Linq;
-using System.Threading.Tasks;
 using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
+using System;
+using System.Collections.Generic;
+using System.IO.Pipes;
+using System.Linq;
+using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -99,7 +98,6 @@ namespace SquidTestingMod.UI.Buttons
                     client.Dispose();
                 }
 
-
                 ReloadUtilities.BuildAndReloadMod(() =>
                 {
                     var logger = LogManager.GetLogger("SQUID");
@@ -116,7 +114,7 @@ namespace SquidTestingMod.UI.Buttons
                         GC.SuppressFinalize(pipeServer);
                         pipeServer.WaitForConnection();
                         clientsAfterRebuild.Add(pipeServer);
-                        logger.Info($"Client {i + 1} connected!");
+                        logger.Info($"Client {i + 1} connected after building!");
                     }
 
                     foreach (var client in clientsAfterRebuild)
@@ -126,7 +124,7 @@ namespace SquidTestingMod.UI.Buttons
                     }
                 });
 
-                
+
             }
             else if (Main.netMode == NetmodeID.SinglePlayer)
             {
@@ -134,7 +132,6 @@ namespace SquidTestingMod.UI.Buttons
                 ReloadUtilities.BuildAndReloadMod();
             }
         }
-
         public override void RightClick(UIMouseEvent evt)
         {
             // If right click, toggle the mode and return
