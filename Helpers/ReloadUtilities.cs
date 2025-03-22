@@ -1,3 +1,4 @@
+using MonoMod.RuntimeDetour;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.PacketHandlers;
 using System;
@@ -14,6 +15,7 @@ namespace SquidTestingMod.Helpers
     internal class ReloadUtilities
     {
         public const string pipeName = "SquidTestingModPipe";
+        public const string pipeNameAfterRebuild = "SquidTestingModPipeAfterRebuild";
 
         //public static NamedPipeServerStream Pipe {  get; set; }\
 
@@ -68,7 +70,7 @@ namespace SquidTestingMod.Helpers
             Main.menuMode = 10002;
         }
 
-        public static void BuildAndReloadMod()
+        public static void BuildAndReloadMod(Action action = null)
         {
             // 1. Getting Assembly
             Assembly tModLoaderAssembly = typeof(Main).Assembly;
@@ -119,6 +121,12 @@ namespace SquidTestingMod.Helpers
             object buildModInstance = buildModField?.GetValue(null);
             Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
             MethodInfo buildMethod = uiBuildModType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string), typeof(bool)]);
+
+            new Hook(buildMethod, (Action<object, string, bool> orig, object self, string path, bool reload) =>
+            {
+                orig(self, path, reload); // Call original method correctly
+                action?.Invoke(); // Execute custom action after the method
+            });
 
             // 5.Invoking a Build method
             buildMethod.Invoke(buildModInstance, [modPath, true]);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
@@ -6,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using MonoMod.RuntimeDetour;
+using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Common.Players;
 using SquidTestingMod.Helpers;
 using Terraria;
@@ -76,26 +78,51 @@ namespace SquidTestingMod.PacketHandlers
 
                 await ReloadUtilities.ExitWorldOrServer();
 
+                var modName = Conf.ModToReload;
+
                 var hookForUnload = new Hook(typeof(ModLoader).GetMethod(
                         "Unload",
                         BindingFlags.NonPublic | BindingFlags.Static
                     ), (Func<bool> orig) =>
                     {
                         bool o = orig();
-                        LogManager.GetLogger("SQUID").Info($"Hi! I am {Process.GetCurrentProcess().Id} procces id!");
+                        var logger = LogManager.GetLogger("SQUID");
+
+
+                        logger.Info($"Hi! I am {Process.GetCurrentProcess().Id} procces id!");
                         object loadMods = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface").GetField("loadMods", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
                         typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
 
-                        
-                        using var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut);
-                        pipeClient.Connect();
 
-                        using var reader = new StreamReader(pipeClient);
-                        using var writer = new StreamWriter(pipeClient) { AutoFlush = true };
+                        using (var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut))
+                        {
+                            pipeClient.Connect();
 
-                        writer.WriteLine("Im here and ready to reload");
+                            using var writer = new StreamWriter(pipeClient) { AutoFlush = true };
+                            writer.WriteLine("Im here and ready to reload");
 
-                        string? response = reader.ReadLine();
+
+                        }
+
+
+                        using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
+                        pipeClientafterRebuild.Connect();
+
+                        //if (ModLoader.TryGetMod(modName, out var loadedMod))
+                        //{
+                        //    loadedMod.Close();
+                        //}
+
+                        //typeof(ModLoader).GetMethod("EnableMod", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { modName });
+
+                        //object[] localMods = (object[])typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { });
+
+                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, new Dictionary<string, object>());
+
+
+
+                        logger.Info("Loading mods");
+
                         return o;
                     });
 

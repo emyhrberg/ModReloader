@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
+using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
@@ -79,6 +80,7 @@ namespace SquidTestingMod.UI.Buttons
                 for (int i = 0; i < clientCount; i++)
                 {
                     var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeName, PipeDirection.InOut, clientCount);
+                    GC.SuppressFinalize(pipeServer);
                     await pipeServer.WaitForConnectionAsync();
                     clients.Add(pipeServer);
                     Log.Info($"Client {i + 1} connected!");
@@ -89,24 +91,42 @@ namespace SquidTestingMod.UI.Buttons
                     clientResponses.Add(ReloadUtilities.ReadPipeMessage(client));
                 }
 
-                // ������, ���� �� �볺��� �������� ��� �����������
                 await Task.WhenAll(clientResponses);
-
-                ReloadUtilities.BuildAndReloadMod();
-
-                Log.Info("Mod Builded");
-                // After building - reload all other clients
-                for (int i = 0; i < clients.Count; i++)
-                {
-                    using StreamWriter writer = new StreamWriter(clients[i]) { AutoFlush = true };
-                    await writer.WriteLineAsync($"yes, go reload yourself now");
-                }
 
                 foreach (var client in clients)
                 {
                     client.Close();
                     client.Dispose();
                 }
+
+
+                ReloadUtilities.BuildAndReloadMod(() =>
+                {
+                    var logger = LogManager.GetLogger("SQUID");
+
+                    logger.Info("Mod Builded");
+                    // After building - reload all other clients
+                    List<NamedPipeServerStream> clientsAfterRebuild = new List<NamedPipeServerStream>();
+
+                    logger.Info($"Waiting for {clientCount} clients...");
+
+                    for (int i = 0; i < clientCount; i++)
+                    {
+                        var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut, clientCount);
+                        GC.SuppressFinalize(pipeServer);
+                        pipeServer.WaitForConnection();
+                        clientsAfterRebuild.Add(pipeServer);
+                        logger.Info($"Client {i + 1} connected!");
+                    }
+
+                    foreach (var client in clientsAfterRebuild)
+                    {
+                        client.Close();
+                        client.Dispose();
+                    }
+                });
+
+                
             }
             else if (Main.netMode == NetmodeID.SinglePlayer)
             {
