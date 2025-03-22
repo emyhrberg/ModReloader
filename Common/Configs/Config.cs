@@ -2,8 +2,11 @@
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Common.Players;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
+using SquidTestingMod.UI.Elements;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -75,6 +78,41 @@ namespace SquidTestingMod.Common.Configs
             sys.mainState.AddEverything();
             sys.mainState.collapse.UpdateCollapseImage();
             Log.Info("Config.OnChanged() ran successfully");
+
+            // If super mode is enabled, enable it
+            if (Conf.EnterWorldSuperMode)
+            {
+                // Get the player cheat manager
+                PlayerCheatManager pcm = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+                pcm.EnableSupermode();
+
+                // Update the enabled texts all enabled except mine aura and noclip
+                PlayerPanel p = sys.mainState.playerPanel;
+                foreach (Option o in p.cheatOptions)
+                {
+                    if (o.text == "Mine Aura" || o.text == "Noclip")
+                    {
+                        o.SetState(Option.State.Disabled);
+                    }
+                    else
+                    {
+                        o.SetState(Option.State.Enabled);
+                    }
+                }
+            }
+            else
+            {
+                // Get the player cheat manager
+                PlayerCheatManager pcm = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+                pcm.DisableSupermode();
+
+                // Update the enabled texts all Disabled
+                PlayerPanel p = sys.mainState.playerPanel;
+                foreach (Option o in p.cheatOptions)
+                {
+                    o.SetState(Option.State.Disabled);
+                }
+            }
         }
     }
 

@@ -64,7 +64,7 @@ namespace SquidTestingMod.UI
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game", textSize: TextSize);
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game", textSize: TextSize);
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
-            AddButton<DebugButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
+            AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
             AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Oversee all things in the world: NPCs, time, spawn rate, etc", textSize: TextSize);
             AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);

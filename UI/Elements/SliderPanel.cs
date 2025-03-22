@@ -10,7 +10,7 @@ namespace SquidTestingMod.UI.Elements
     public class SliderPanel : UIPanel
     {
         // Text
-        public UIText textElement;
+        public OptionTitleText optionTitle;
         public string Title;
         public float TextScale;
         public string HoverText { get; set; }
@@ -22,7 +22,6 @@ namespace SquidTestingMod.UI.Elements
         public float normalizedValue;
         private float? snapIncrement;
         public Action<float> _onValueChanged;
-        public bool AutoUpdateText { get; set; } = true;
 
         public void UpdateSliderMax(float newMax) => Max = newMax;
 
@@ -78,17 +77,22 @@ namespace SquidTestingMod.UI.Elements
             TextScale = textSize;
             Title = title;
             HoverText = hover;
-            textElement = new UIText(Title, TextScale, false);
-            textElement.VAlign = 0.5f;
-            textElement.TextColor = Color.White;
+            optionTitle = new OptionTitleText(text: Title, hover: HoverText, textSize: TextScale);
+            optionTitle.VAlign = 0.5f;
+            optionTitle.TextColor = Color.White;
             // textElement.Left.Set(30, 0);
-            textElement.Left.Set(0, 0);
-            textElement.OnLeftClick += (evt, element) => onClickText?.Invoke();
-            Append(textElement);
+            optionTitle.Left.Set(0, 0);
+            optionTitle.OnLeftClick += (evt, element) => onClickText?.Invoke();
+            Append(optionTitle);
         }
 
         public void SetValue(float value)
         {
+            if (Max <= Min)
+            {
+                Max = Min + 1f; // Ensure a valid range
+            }
+
             normalizedValue = MathHelper.Clamp(value, 0f, 1f);
         }
 
@@ -107,28 +111,28 @@ namespace SquidTestingMod.UI.Elements
                 {
                     // Round to integer
                     int currentIntValue = (int)Math.Round(snapped);
-                    textElement.SetText($"{Title}: {currentIntValue}");
+                    optionTitle.SetText($"{Title}: {currentIntValue}");
                 }
                 else if (snapIncrement.Value == 0.1f)
                 {
                     // Round to 1 decimal place
-                    textElement.SetText($"{Title}: {snapped:F1}");
+                    optionTitle.SetText($"{Title}: {snapped:F1}");
                 }
                 else if (snapIncrement.Value == 0.01f)
                 {
                     // Round to 2 decimal places
-                    textElement.SetText($"{Title}: {snapped:F2}");
+                    optionTitle.SetText($"{Title}: {snapped:F2}");
                 }
                 else
                 {
                     // user-provided dynamic title (e.g TimeSlider)
-                    textElement.SetText(Title);
+                    optionTitle.SetText(Title);
                 }
             }
             else
             {
                 // No snap increment => title only
-                textElement.SetText(Title);
+                optionTitle.SetText(Title);
             }
         }
 

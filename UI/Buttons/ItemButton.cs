@@ -14,11 +14,23 @@ namespace SquidTestingMod.UI.Buttons
     public class ItemButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
-        protected override float Scale => 1.2f;
+        private float _scale = 1.2f;
+        protected override float Scale => _scale;
         protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 40;
         protected override int FrameHeight => 40;
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            // Update Scale dynamically based on the size of the button
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+            float buttonSize = mainState?.ButtonSize ?? 70f;
+            _scale = 1.2f + (buttonSize - 70f) * 0.005f;
+        }
 
         /// <summary>
         /// This is needed because ItemButton is set to end animation at its last frame 5.

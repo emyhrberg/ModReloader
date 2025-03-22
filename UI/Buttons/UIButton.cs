@@ -10,7 +10,8 @@ namespace SquidTestingMod.UI.Buttons
     public class UIButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Sprite size
-        protected override float Scale => 1.3f;
+        private float _scale = 1.3f;
+        protected override float Scale => _scale;
         protected override int FrameWidth => 28;
         protected override int FrameHeight => 24;
 

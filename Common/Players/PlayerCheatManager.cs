@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Common.Systems;
+using SquidTestingMod.UI;
+using SquidTestingMod.UI.Elements;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players
@@ -21,15 +23,15 @@ namespace SquidTestingMod.Common.Players
         public static bool BuildFaster = false;
 
         // Master list of cheats
-        public static List<CheatDefinition> Cheats =
+        public static List<Cheat> Cheats =
         [
-            new CheatDefinition("God", "Makes you immortal", () => God, v => God = v),
-            new CheatDefinition("Noclip", "Fly through blocks (use shift+ctrl to go faster)", () => Noclip, v => Noclip = v),
-            new CheatDefinition("Light", "Light up your surroundings", () => LightMode, v => LightMode = v),
-            new CheatDefinition("Kill Aura", "Insta-kill touching enemies", () => KillAura, v => KillAura = v),
-            new CheatDefinition("Mine Aura", "Mine tiles around you", () => MineAura, v => MineAura = v),
-            new CheatDefinition("Build Anywhere", "Place blocks in mid-air", () => BuildAnywhere, v => BuildAnywhere = v),
-            new CheatDefinition("Build Faster", "Place and mine faster", () => BuildFaster, v => BuildFaster = v)
+            new Cheat("God", "Makes you immortal", () => God, v => God = v),
+            new Cheat("Noclip", "Fly through blocks (use shift+ctrl to go faster)", () => Noclip, v => Noclip = v),
+            new Cheat("Light", "Light up your surroundings", () => LightMode, v => LightMode = v),
+            new Cheat("Kill Aura", "Insta-kill touching enemies", () => KillAura, v => KillAura = v),
+            new Cheat("Mine Aura", "Mine tiles around you", () => MineAura, v => MineAura = v),
+            new Cheat("Build Anywhere", "Place blocks in mid-air", () => BuildAnywhere, v => BuildAnywhere = v),
+            new Cheat("Build Faster", "Place and mine faster", () => BuildFaster, v => BuildFaster = v)
         ];
 
         // Called by “Toggle All”
@@ -46,30 +48,62 @@ namespace SquidTestingMod.Common.Players
             // Toggle super mode
             if (Conf.EnterWorldSuperMode)
             {
-                SetAllCheats(true);
-                // noclip and mine aura are not included in super mode
-                Noclip = false;
-                MineAura = false;
-
-                SpawnRateMultiplier.Multiplier = 0f;
+                EnableSupermode();
             }
         }
 
-        public class CheatDefinition
+        public void EnableSupermode()
         {
-            public string Name { get; }
-            public string Description { get; }
-            public Func<bool> GetValue { get; }
-            public Action<bool> SetValue { get; }
+            SetAllCheats(true);
+            Noclip = false;
+            MineAura = false;
+            KillAura = false;
+            SpawnRateMultiplier.Multiplier = 0f;
 
-            public CheatDefinition(string name, string description, Func<bool> getter, Action<bool> setter)
+            // Update the enabled texts all enabled except mine aura and noclip
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            PlayerPanel p = sys.mainState.playerPanel;
+            foreach (Option o in p.cheatOptions)
             {
-                Name = name;
-                Description = description;
-                GetValue = getter;
-                SetValue = setter;
+                if (o.text == "Mine Aura" || o.text == "Noclip" || o.text == "Kill Aura")
+                {
+                    o.SetState(Option.State.Disabled);
+                }
+                else
+                {
+                    o.SetState(Option.State.Enabled);
+                }
             }
 
+            // WorldPanel w = sys.mainState.worldPanel;
+            // w.spawnRateSlider.SetValue(0f);
+
+            Conf.C.EnterWorldSuperMode = true;
+            Conf.ForceSaveConfig(Conf.C);
+        }
+
+        public void DisableSupermode()
+        {
+            SetAllCheats(false);
+            SpawnRateMultiplier.Multiplier = 1f;
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            // WorldPanel w = sys.mainState.worldPanel;
+            // w.spawnRateSlider.SetValue(0f);
+
+            // Update the enabled texts all Disabled
+            PlayerPanel p = sys.mainState.playerPanel;
+            foreach (Option o in p.cheatOptions)
+            {
+                o.SetState(Option.State.Disabled);
+            }
+
+            // Disable the config option
+            Conf.C.EnterWorldSuperMode = false;
+            Conf.ForceSaveConfig(Conf.C);
+        }
+
+        public record Cheat(string Name, string Description, Func<bool> GetValue, Action<bool> SetValue)
+        {
             public void Toggle() => SetValue(!GetValue());
         }
     }

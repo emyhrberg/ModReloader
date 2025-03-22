@@ -14,15 +14,7 @@ namespace SquidTestingMod.UI.Elements
     /// </summary>
     public class PlayerPanel : OptionPanel
     {
-        private Option god;
-        private Option light;
-        private Option noclip;
-        private Option buildAnywhere;
-        private Option buildFaster;
-        private Option killAura;
-        private Option mineAura;
-
-        private List<Option> cheatOptions = new();
+        public List<Option> cheatOptions = new();
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
@@ -44,7 +36,8 @@ namespace SquidTestingMod.UI.Elements
                 defaultValue: 1,
                 onValueChanged: value => MineAura.mineRange = (int)value,
                 increment: 1,
-                hover: "Mine all tiles around you when moving (not MP-supported)"
+                hover: "Mine all tiles around you when moving (not MP-supported)",
+                textSize: 0.9f
             );
             AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
             AddPadding();
@@ -106,8 +99,8 @@ namespace SquidTestingMod.UI.Elements
             PlayerCheatManager.SetAllCheats(newVal);
 
             // Update each option’s UI text
-            var newState = newVal ? State.Enabled : State.Disabled;
-            foreach (var option in cheatOptions)
+            State newState = newVal ? State.Enabled : State.Disabled;
+            foreach (Option option in cheatOptions)
             {
                 option.SetState(newState);
             }

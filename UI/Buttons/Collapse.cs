@@ -27,11 +27,15 @@ namespace SquidTestingMod.UI.Buttons
             CollapseLeft = left;
             CollapseRight = right;
 
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+            float buttonSize = mainState?.ButtonSize ?? 0;
+
             // Size and position
             Width.Set(37, 0);
             Height.Set(15, 0);
             Left.Set(-20, 0); // CUSTOM CUSTOM CUSTOM -20!
-            Top.Set(-70, 0); // Start at normal position for Expanded state
+            Top.Set(-buttonSize, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
             VAlign = 1f;
@@ -41,8 +45,8 @@ namespace SquidTestingMod.UI.Buttons
             {
                 HAlign = 0f;
                 VAlign = 0.8f;
-                Top.Set(-70 - 15 / 2, 0);
-                Left.Set(70, 0);
+                Top.Set(-buttonSize - 15 / 2, 0);
+                Left.Set(buttonSize, 0);
                 // SetImage(CollapseLeft.Value); // unsure if this works
             }
         }
@@ -85,15 +89,17 @@ namespace SquidTestingMod.UI.Buttons
         public void UpdateCollapseImage()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+            float buttonSize = mainState?.ButtonSize ?? 0;
 
-            if (sys?.mainState != null)
+            if (mainState != null)
             {
                 if (Conf.ButtonsPosition == "bottom")
                 {
-                    if (sys.mainState.AreButtonsShowing)
+                    if (mainState.AreButtonsShowing)
                     {
                         SetImage(CollapseDown.Value);
-                        Top.Set(-70, 0); // Expanded
+                        Top.Set(-buttonSize, 0); // Expanded
                     }
                     else
                     {
@@ -103,10 +109,10 @@ namespace SquidTestingMod.UI.Buttons
                 }
                 else if (Conf.ButtonsPosition == "left")
                 {
-                    if (sys.mainState.AreButtonsShowing)
+                    if (mainState.AreButtonsShowing)
                     {
                         SetImage(CollapseLeft.Value);
-                        Left.Set(70, 0); // Expanded
+                        Left.Set(-buttonSize, 0); // Expanded
                     }
                     else
                     {
