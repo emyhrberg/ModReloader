@@ -24,10 +24,11 @@ namespace SquidTestingMod.UI.Elements
             _slideKeyboard = setStatusKeyboard ?? (_ => { });
             _blipFunc = blipColorFunction ?? (s => Color.Lerp(Color.Black, Color.White, s));
 
-            Width.Set(175f, 0f);
-            Height.Set(15f, 0f);
-            Left.Set(130f, 0f);
-            Top.Set(5f, 0f);
+            Height.Set(15, 0);
+            Width.Set(175, 0f);
+            Left.Set(155, 0);
+            VAlign = 0.0f;
+            HAlign = 0.0f;
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -52,7 +53,7 @@ namespace SquidTestingMod.UI.Elements
             float offsetY = dimensions.Y + 8f;
 
             bool wasInBar;
-            float newValue = DrawValueBar(spriteBatch, new Vector2(offsetX, offsetY), 1f, _getStatus(), usageLevel, out wasInBar, _blipFunc);
+            float newValue = DrawValueBar(spriteBatch, new Vector2(offsetX, offsetY), 0.95f, _getStatus(), usageLevel, out wasInBar, _blipFunc);
 
             if (CurrentLockedSlider == this || wasInBar)
             {
@@ -75,11 +76,15 @@ namespace SquidTestingMod.UI.Elements
     Func<float, Color> colorFunc)
         {
             Texture2D barTex = TextureAssets.ColorBar.Value;
-            Vector2 barSize = new Vector2(barTex.Width, barTex.Height) * scale;
+            int width = barTex.Width;
+            int height = barTex.Height;
+
+            Vector2 barSize = new Vector2(width, height) * scale;
             pos.X -= (int)barSize.X;
 
             // extra offset
-            pos.X -= 20f;
+            pos.X -= 55f;
+            pos.Y -= 6f;
 
             Rectangle barRect = new((int)pos.X, (int)pos.Y - (int)barSize.Y / 2, (int)barSize.X, (int)barSize.Y);
             sb.Draw(barTex, barRect, Color.White);
@@ -88,9 +93,9 @@ namespace SquidTestingMod.UI.Elements
             float innerY = barRect.Y + 4f * scale;
 
             // Draw the blips along the slider track
-            for (float i = 0; i < 167f; i++)
+            for (float i = 0; i < 167; i++)
             {
-                float t = i / 167f;
+                float t = i / 167;
                 Color c = colorFunc(t);
                 sb.Draw(TextureAssets.ColorBlip.Value, new Vector2(innerX + i * scale, innerY), null, c, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
             }
@@ -117,7 +122,7 @@ namespace SquidTestingMod.UI.Elements
 
             // Draw the slider "blip"
             sb.Draw(TextureAssets.ColorSlider.Value,
-                    new Vector2(innerX + 167 * scale * sliderPos, innerY + 4f * scale),
+                    new Vector2(innerX + width * scale * sliderPos, innerY + 4f * scale),
                     null, Color.White, 0f,
                     new Vector2(TextureAssets.ColorSlider.Value.Width * 0.5f, TextureAssets.ColorSlider.Value.Height * 0.5f),
                     scale, SpriteEffects.None, 0f);

@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Systems;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -12,19 +14,15 @@ namespace SquidTestingMod.UI.Elements
         private DebugSystem debugSystem;
         private DebugState debugState;
 
-        private List<OnOffOption> allElements = [];
-
         public UiPanel() : base(title: "UI", scrollbarEnabled: true)
         {
             debugSystem = ModContent.GetInstance<DebugSystem>();
             debugState = debugSystem.debugState;
 
             AddPadding(5);
-            AddHeader("UIElement Hitboxes");
-            OnOffOption showAll = new(debugState.ToggleShowAll, "Show All Off", "Show all UI elements from mods");
-            uiList.Add(showAll);
-            OnOffOption showSize = new(debugState.ToggleShowSize, "Show Text Size Off", "Show all sizes for active UIElements");
-            uiList.Add(showSize);
+            AddOption("Show All", debugState.ToggleShowAll, "Show all UI elements from mods");
+            AddOption("Show Text Size", debugState.ToggleShowSize, "Show all sizes for active UIElements");
+
 
             // SliderOption xOffset = new(
             //     title: "X Offset",
@@ -59,12 +57,14 @@ namespace SquidTestingMod.UI.Elements
             // uiList.Add(yOffset);
 
             // colors
-            OnOffOption randomizeColors = new(debugState.RandomizeRainbowColors, "Randomize Colors", "Randomize the colors of the boxes");
-            uiList.Add(randomizeColors);
-            OnOffOption randomOutline = new(debugState.ToggleRandomOutlineColor, "Random Outline Off", "Randomize the outline color of the boxes");
-            uiList.Add(randomOutline);
+            ActionOption rand = new(debugState.RandomizeRainbowColors, "Randomize Colors", "Randomize the colors of the boxes");
+            uiList.Add(rand);
+            AddPadding(3f);
+            ActionOption randOut = new(debugState.ToggleRandomOutlineColor, "Randomize Outline", "Randomize the outline color of the boxes");
+            uiList.Add(randOut);
+            AddPadding(3f);
 
-            SliderOption opacity = new(
+            SliderPanel opacity = new(
                 title: "Opacity",
                 min: 0,
                 max: 0.69f,
@@ -73,7 +73,7 @@ namespace SquidTestingMod.UI.Elements
                 hover: "Set the opacity of the UI elements hitboxes",
                 increment: 0.01f
             );
-            SliderOption outlineColor = new(
+            SliderPanel outlineColor = new(
                 title: "Color",
                 min: 0,
                 max: 1f,
@@ -87,7 +87,7 @@ namespace SquidTestingMod.UI.Elements
                 hover: "Set the opacity of the UI elements hitboxes",
                 increment: 0.01f
             );
-            SliderOption thickness = new(
+            SliderPanel thickness = new(
                 title: "Thickness",
                 min: 1,
                 max: 10,
@@ -97,80 +97,83 @@ namespace SquidTestingMod.UI.Elements
                 increment: 1f
             );
             uiList.Add(opacity);
+            AddPadding(3f);
             uiList.Add(outlineColor);
+            AddPadding(3f);
             uiList.Add(thickness);
             AddPadding();
 
             AddHeader($"All UIElements");
         }
 
-        public void UpdateText()
-        {
-            foreach (var toggle in allElements)
-            {
-                toggle.textElement.SetText($"{toggle.textElement.Text.Split(' ')[0]} {(toggle.textElement.Text.Contains("On") ? "Off" : "On")}");
-            }
-        }
-
-        // add a field to track which types we added toggles for:
-        private HashSet<string> addedTypes = new();
-
-        // Add this field to your class (outside of Update)
-        private List<OnOffOption> debugToggles = new();
+        // Dynamic UI elements for each UIElement type
+        private List<string> elements = new List<string>();
+        public Dictionary<string, UIElement> dynamicOptions = new();
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (Main.GameUpdateCount % 60 == 0) // Every 60 frames, check for new elements
+            // Only update once a second
+            if (Main.GameUpdateCount % 60 != 0)
+                return;
+
+            // Gather distinct UIElement type names
+            var distinctTypes = debugState.elements
+                .Select(ele => ele.GetType().Name)
+                .Where(name => !string.IsNullOrEmpty(name))
+                .Distinct()
+                .OrderBy(name => name)
+                .ToList();
+
+            // 1. Remove old ones that no longer exist
+            for (int i = elements.Count - 1; i >= 0; i--)
             {
-                var distinctTypes = debugState.elements
-                    .Select(ele => ele.GetType().Name)
-                    .Distinct()
-                    .OrderBy(name => name)
-                    .ToList();
-
-                // Temporary list for new toggles
-                List<OnOffOption> newToggles = new();
-
-                foreach (string typeName in distinctTypes)
+                if (!distinctTypes.Contains(elements[i]))
                 {
-                    if (!addedTypes.Contains(typeName))
+                    // Remove from the UI if we’re tracking it
+                    if (dynamicOptions.TryGetValue(elements[i], out UIElement oldOption))
                     {
-                        addedTypes.Add(typeName);
-
-                        OnOffOption typeToggle = new(
-                            leftClick: () => debugState.ToggleAllUIElementsOfType(typeName),
-                            text: $"{typeName} Off",
-                            tooltip: $"Click to toggle all {typeName} hitboxes\nRight click to print dimensions",
-                            rightClick: () => debugState.PrintDimensionsForType(typeName)
-                        );
-
-                        newToggles.Add(typeToggle);
-                        debugToggles.Add(typeToggle);  // Track our dynamic toggles
-                        uiList.Add(typeToggle);
-                        allElements.Add(typeToggle);
+                        uiList.Remove(oldOption);
+                        dynamicOptions.Remove(elements[i]);
                     }
+                    elements.RemoveAt(i);
                 }
+            }
 
-                // If new toggles were added, re-sort only our debug toggles.
-                if (newToggles.Any())
+            // 2. Add new ones
+            foreach (var typeName in distinctTypes)
+            {
+                if (!elements.Contains(typeName))
                 {
-                    // Get sorted list from our dedicated list.
-                    var sortedToggles = debugToggles.OrderBy(toggle => toggle.textElement.Text).ToList();
+                    elements.Add(typeName);
 
-                    // Remove our debug toggles from uiList.
-                    foreach (var toggle in debugToggles)
-                    {
-                        uiList.Remove(toggle);
-                    }
+                    // Create the UI option
+                    var newOption = AddOption(
+                        text: typeName,
+                        leftClick: () => debugState.ToggleElement(typeName),
+                        hover: $"Show all {typeName} UIElements",
+                        padding: 0f
+                    );
 
-                    // Re-add them in sorted order.
-                    foreach (var toggle in sortedToggles)
-                    {
-                        uiList.Add(toggle);
-                    }
+                    dynamicOptions[typeName] = newOption;
                 }
+            }
+
+            // 3. Sort everything in alphabetical order by typeName
+            elements.Sort();
+
+            // 4. Remove existing “dynamic” UI elements from uiList
+            foreach (var pair in dynamicOptions)
+            {
+                uiList.Remove(pair.Value);
+            }
+
+            // 5. Re-add them in sorted order
+            foreach (var typeName in elements)
+            {
+                if (dynamicOptions.TryGetValue(typeName, out UIElement elem))
+                    uiList.Add(elem);
             }
         }
     }

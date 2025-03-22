@@ -13,7 +13,6 @@ namespace SquidTestingMod.UI.Elements
     public class ModsPanel : OptionPanel
     {
         public List<ModSourcesElement> modSourcesElements = [];
-        public List<string> enabledMods = [];
 
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
@@ -35,7 +34,6 @@ namespace SquidTestingMod.UI.Elements
             {
                 ModElement modElement = new(mod.DisplayNameClean, mod.Name);
                 uiList.Add(modElement);
-                enabledMods.Add(mod.Name);
                 AddPadding(3);
             }
         }

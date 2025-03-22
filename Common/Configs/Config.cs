@@ -32,7 +32,7 @@ namespace SquidTestingMod.Common.Configs
 
         [DrawTicks]
         [Range(50f, 80f)]
-        [Increment(10f)]
+        [Increment(5f)]
         [DefaultValue(70)]
         public float ButtonSize = 70;
 

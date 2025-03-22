@@ -2,23 +2,32 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Helpers;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
-    public class SliderOption : PanelElement
+    public class SliderPanel : UIPanel
     {
+        // Text
+        public UIText textElement;
+        public string Title;
+        public float TextScale;
+        public string HoverText { get; set; }
+
+        // Slider
         public CustomSlider Slider;
         private float Min;
         private float Max;
         public float normalizedValue;
         private float? snapIncrement;
         public Action<float> _onValueChanged;
+        public bool AutoUpdateText { get; set; } = true;
 
         public void UpdateSliderMax(float newMax) => Max = newMax;
 
         // Constructor
-        public SliderOption(
+        public SliderPanel(
             string title,
             float min,
             float max,
@@ -28,20 +37,19 @@ namespace SquidTestingMod.UI.Elements
             float textSize = 1f,
             string hover = "",
             Action onClickText = null
-            ) : base(title)
+            )
         {
-            HoverText = hover;
-            TextScale = textSize;
+            // Size
+            Width.Set(-35f, 1f);
+            Height.Set(30, 0);
+            Left.Set(5, 0);
+
+            // Slider
             Min = min;
             Max = max;
             _onValueChanged = onValueChanged;
             snapIncrement = increment;
-
             normalizedValue = MathHelper.Clamp((defaultValue - Min) / (max - Min), 0f, 1f);
-
-            // text element
-            textElement.OnLeftClick += (evt, element) => onClickText?.Invoke();
-            textElement.HAlign = 0.08f;
 
             Slider = new CustomSlider(
                 () => normalizedValue,
@@ -64,6 +72,19 @@ namespace SquidTestingMod.UI.Elements
                 s => Color.Lerp(Color.Black, Color.White, s)
             );
             Append(Slider);
+
+
+            // Create the text element with the proper TextScale value
+            TextScale = textSize;
+            Title = title;
+            HoverText = hover;
+            textElement = new UIText(Title, TextScale, false);
+            textElement.VAlign = 0.5f;
+            textElement.TextColor = Color.White;
+            // textElement.Left.Set(30, 0);
+            textElement.Left.Set(0, 0);
+            textElement.OnLeftClick += (evt, element) => onClickText?.Invoke();
+            Append(textElement);
         }
 
         public void SetValue(float value)
@@ -74,6 +95,7 @@ namespace SquidTestingMod.UI.Elements
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+
             float realValue = MathHelper.Lerp(Min, Max, normalizedValue);
 
             if (snapIncrement.HasValue && snapIncrement.Value > 0)
@@ -99,16 +121,20 @@ namespace SquidTestingMod.UI.Elements
                 }
                 else
                 {
-                    // Fallback to showing the raw snapped value if not one of the above
-                    textElement.SetText($"{Title}: {snapped}");
+                    // user-provided dynamic title (e.g TimeSlider)
+                    textElement.SetText(Title);
                 }
             }
             else
             {
-                // No snap increment => treat as an integer
-                int currentIntValue = (int)Math.Round(realValue);
-                textElement.SetText($"{Title}: {currentIntValue}");
+                // No snap increment => title only
+                textElement.SetText(Title);
             }
+        }
+
+        public void UpdateText(string newText)
+        {
+            Title = newText;
         }
     }
 }

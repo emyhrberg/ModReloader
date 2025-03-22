@@ -12,9 +12,9 @@ namespace SquidTestingMod.UI.Elements
 {
     public class WorldPanel : OptionPanel
     {
-        private SliderOption timeOption;
+        private SliderPanel timeOption;
         private bool timeSliderActive = false;
-        private SliderOption townNpcSlider;
+        private SliderPanel townNpcSlider;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -30,8 +30,9 @@ namespace SquidTestingMod.UI.Elements
                 hover: "Click and drag to change time"
             );
             uiList.Add(timeOption);
+            AddPadding(3f);
 
-            SliderOption spawnRate = new(
+            SliderPanel spawnRate = new(
                 title: "Spawn Rate",
                 min: 0,
                 max: 30,
@@ -42,6 +43,7 @@ namespace SquidTestingMod.UI.Elements
                 onClickText: () => SpawnRateMultiplier.Multiplier = 0
             );
             uiList.Add(spawnRate);
+            AddPadding(3f);
 
             // Town NPCs
             // Force at least 1 for the max, just so the slider has a range
@@ -65,17 +67,13 @@ namespace SquidTestingMod.UI.Elements
 
             // tracking
             AddHeader("Tracking");
-            OnOffOption enemyTrack = new(DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track Enemies Off", "Show all enemies position with an arrow");
-            OnOffOption townTrack = new(DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track Town NPCs Off", "Show all town NPCs position with an arrow");
-            OnOffOption critterTrack = new(DebugEnemyTrackingSystem.ToggleCritterTracking, "Track Critters Off", "Show all critters position with an arrow");
-            uiList.Add(enemyTrack);
-            uiList.Add(townTrack);
-            uiList.Add(critterTrack);
+            AddOption("Track Enemies", DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track all enemies");
+            AddOption("Track Town NPCs", DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track all town NPCs");
+            AddOption("Track Critters", DebugEnemyTrackingSystem.ToggleCritterTracking, "Track all critters");
             AddPadding();
 
             AddHeader("Hitboxes");
-            OnOffOption hitboxes = new(HitboxSystem.ToggleAllHitboxes, "Hitboxes Off", "Show player, NPC, melee and projectile hitboxes");
-            uiList.Add(hitboxes);
+            AddOption("Show Hitboxes", HitboxSystem.ToggleAllHitboxes, "Show hitboxes for player, NPCs, melee projectiles");
             AddPadding();
         }
 
@@ -236,7 +234,7 @@ namespace SquidTestingMod.UI.Elements
             {
                 // Slider is being used, update the current value
                 townNpcSlider.SetValue(GetTownNpcCount());
-                townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+                //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
             }
 
             // Update the time

@@ -1,15 +1,17 @@
-using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Common.Systems;
-using SquidTestingMod.UI;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players
 {
+
+
     public class PlayerCheatManager : ModPlayer
     {
-        // Cheats
+        // Booleans for each cheat
         public static bool God = false;
         public static bool Noclip = false;
         public static bool LightMode = false;
@@ -18,42 +20,23 @@ namespace SquidTestingMod.Common.Players
         public static bool BuildAnywhere = false;
         public static bool BuildFaster = false;
 
-        // Check if any cheat is active
-        public static bool IsAnyCheatEnabled =>
-            God || Noclip || LightMode || KillAura || MineAura ||
-            BuildAnywhere || BuildFaster;
+        // Master list of cheats
+        public static List<CheatDefinition> Cheats =
+        [
+            new CheatDefinition("God", "Makes you immortal", () => God, v => God = v),
+            new CheatDefinition("Noclip", "Fly through blocks (use shift+ctrl to go faster)", () => Noclip, v => Noclip = v),
+            new CheatDefinition("Light", "Light up your surroundings", () => LightMode, v => LightMode = v),
+            new CheatDefinition("Kill Aura", "Insta-kill touching enemies", () => KillAura, v => KillAura = v),
+            new CheatDefinition("Mine Aura", "Mine tiles around you", () => MineAura, v => MineAura = v),
+            new CheatDefinition("Build Anywhere", "Place blocks in mid-air", () => BuildAnywhere, v => BuildAnywhere = v),
+            new CheatDefinition("Build Faster", "Place and mine faster", () => BuildFaster, v => BuildFaster = v)
+        ];
 
-        // Helper to set all cheats on/off
+        // Called by “Toggle All”
         public static void SetAllCheats(bool value)
         {
-            God = value;
-            Noclip = value;
-            LightMode = value;
-            KillAura = value;
-            MineAura = value;
-            BuildAnywhere = value;
-            BuildFaster = value;
-        }
-
-        public static void ToggleNoclip() => ToggleCheat(ref Noclip, "Noclip");
-        public static void ToggleGod() => ToggleCheat(ref God, "God Mode");
-        public static void ToggleLightMode() => ToggleCheat(ref LightMode, "Light Mode");
-        public static void ToggleBuildFaster() => ToggleCheat(ref BuildFaster, "Build Faster");
-        public static void ToggleBuildAnywhere() => ToggleCheat(ref BuildAnywhere, "Build Anywhere");
-        public static void ToggleKillAura() => ToggleCheat(ref KillAura, "Kill Aura");
-        public static void ToggleMineAura() => ToggleCheat(ref MineAura, "Mine Aura");
-
-        // Helper to toggle cheats
-        // This does not need to be modified when adding new cheats
-        private static void ToggleCheat<T>(ref T value, string name) where T : struct
-        {
-            if (value is bool booleanValue)
-            {
-                value = (T)(object)!booleanValue;
-            }
-
-            bool isOn = value is bool bVal && bVal;
-            CombatText.NewText(Main.LocalPlayer.getRect(), Color.White, $"{name} {(isOn ? "On" : "Off")}");
+            foreach (var cheat in Cheats)
+                cheat.SetValue(value);
         }
 
         public override void OnEnterWorld()
@@ -64,16 +47,30 @@ namespace SquidTestingMod.Common.Players
             if (Conf.EnterWorldSuperMode)
             {
                 SetAllCheats(true);
-                ToggleNoclip();
-                ToggleMineAura();
-                ToggleKillAura();
+                // noclip and mine aura are not included in super mode
+                Noclip = false;
+                MineAura = false;
 
                 SpawnRateMultiplier.Multiplier = 0f;
-
-                // Update text
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                sys.mainState.playerPanel.RefreshCheatTexts();
             }
+        }
+
+        public class CheatDefinition
+        {
+            public string Name { get; }
+            public string Description { get; }
+            public Func<bool> GetValue { get; }
+            public Action<bool> SetValue { get; }
+
+            public CheatDefinition(string name, string description, Func<bool> getter, Action<bool> setter)
+            {
+                Name = name;
+                Description = description;
+                GetValue = getter;
+                SetValue = setter;
+            }
+
+            public void Toggle() => SetValue(!GetValue());
         }
     }
 }

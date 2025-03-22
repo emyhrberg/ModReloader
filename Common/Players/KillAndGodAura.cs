@@ -12,7 +12,7 @@ namespace SquidTestingMod.Common.Players
 
             if (PlayerCheatManager.KillAura && PlayerCheatManager.God)
             {
-                Log.SlowInfo("Both KillAura and God mode are enabled!");
+                // Log.SlowInfo("Both KillAura and God mode are enabled!");
 
                 // check if within range 1 blocks
                 if (npc.Distance(Main.LocalPlayer.Center) < 5 * 16)

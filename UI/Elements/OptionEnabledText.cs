@@ -15,18 +15,21 @@ using static SquidTestingMod.UI.Elements.Option;
 
 namespace SquidTestingMod.UI.Elements
 {
-    public class ModEnabledText : UIText
+    public class OptionEnabledText : UIText
     {
-        private State state;
         private Color red = new(226, 57, 39);
 
-        public ModEnabledText(string text) : base(text)
+        private State state;
+
+        public OptionEnabledText(string text) : base(text)
         {
             // text and size and position
             // enabledText.ShadowColor = new Color(226, 57, 39); // TODO change background color to this, shadowcolor is not it.
-            float def = -65f;
-            TextColor = Color.Green;
+            TextColor = red;
+
+            // Position: Centered vertically, 65 pixels from the right
             VAlign = 0.5f;
+            float def = -65f;
             Left.Set(def, 1f);
         }
 

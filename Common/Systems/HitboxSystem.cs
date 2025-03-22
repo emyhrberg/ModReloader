@@ -64,7 +64,7 @@ namespace SquidTestingMod.Common.Systems
                     Rectangle hitbox = npc.getRect();
                     hitbox.Offset((int)-Main.screenPosition.X, (int)-Main.screenPosition.Y);
                     hitbox = Main.ReverseGravitySupport(hitbox);
-                    Color red = Color.Red;
+                    Color red = new(226, 57, 39);
                     DrawHitbox(spriteBatch, hitbox, red);
                     DrawOutlineHitbox(spriteBatch, hitbox, red);
                 }

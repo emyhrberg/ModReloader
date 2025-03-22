@@ -8,22 +8,19 @@ namespace SquidTestingMod.UI.Buttons
 {
     public class WorldButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
-        // Set custom animation dimensions
         // Spinning globe pixel art
-        protected override float Scale => 0.08f;
-        protected override int FrameWidth => 1080;
-        protected override int FrameHeight => 576;
-
-        // Animation
-        protected override int FrameCount => 11;
-        protected override int FrameSpeed => 7;
+        // protected override float Scale => 0.08f;
+        // protected override int FrameWidth => 1080;
+        // protected override int FrameHeight => 576;
+        // protected override int FrameCount => 11;
+        // protected override int FrameSpeed => 7;
 
         // Old pylon texture, do not delete
-        // protected override float SpriteScale => 0.65f;
-        // protected override int MaxFrames => 8;
-        // protected override int FrameSpeed => 7;
-        // protected override int FrameWidth => 48;
-        // protected override int FrameHeight => 68;
+        protected override float Scale => 0.65f;
+        protected override int FrameCount => 8;
+        protected override int FrameSpeed => 7;
+        protected override int FrameWidth => 48;
+        protected override int FrameHeight => 68;
 
         public override void LeftClick(UIMouseEvent evt)
         {

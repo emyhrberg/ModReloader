@@ -5,6 +5,7 @@ using SquidTestingMod.Common.Players;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using static SquidTestingMod.UI.Elements.Option;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -13,57 +14,46 @@ namespace SquidTestingMod.UI.Elements
     /// </summary>
     public class PlayerPanel : OptionPanel
     {
-        // Keep references to the options for updating them later
-        public Dictionary<string, OnOffOption> options = [];
+        private Option god;
+        private Option light;
+        private Option noclip;
+        private Option buildAnywhere;
+        private Option buildFaster;
+        private Option killAura;
+        private Option mineAura;
+
+        private List<Option> cheatOptions = new();
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
-            // === ABILITIES ===
             AddPadding(5);
-            AddHeader("Abilities");
-            options["god"] = new OnOffOption(PlayerCheatManager.ToggleGod, "God Off", "Makes you immortal");
-            options["light"] = new OnOffOption(PlayerCheatManager.ToggleLightMode, "Light Off", "Light up the world around you");
-            options["noclip"] = new OnOffOption(PlayerCheatManager.ToggleNoclip, "Noclip Off", "Fly through blocks\nHold shift/ctrl to go faster");
-            options["killAura"] = new OnOffOption(PlayerCheatManager.ToggleKillAura, "Kill Aura Off", "Insta-kill all enemies that touch you");
-            options["mineAura"] = new OnOffOption(PlayerCheatManager.ToggleMineAura, "Mine Aura Off", "Mine tiles around you (not MP-supported)");
-            SliderOption mineRadius = new(
+            // Automatically create an option for each cheat
+            foreach (var cheat in PlayerCheatManager.Cheats)
+            {
+                var option = AddOption(
+                    text: cheat.Name,
+                    leftClick: cheat.Toggle,
+                    hover: cheat.Description
+                );
+                cheatOptions.Add(option);
+            }
+            AddSlider(
                 title: "Mine Radius",
                 min: 1,
                 max: 50,
-                defaultValue: 0,
+                defaultValue: 1,
                 onValueChanged: value => MineAura.mineRange = (int)value,
                 increment: 1,
                 hover: "Mine all tiles around you when moving (not MP-supported)"
             );
-            // add to uilist
-            uiList.Add(options["god"]);
-            uiList.Add(options["light"]);
-            uiList.Add(options["noclip"]);
-            uiList.Add(options["killAura"]);
-            uiList.Add(options["mineAura"]);
-            uiList.Add(mineRadius);
+            AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
             AddPadding();
 
-            // === BUILD ===
-            AddHeader("Build");
-            options["buildAnywhere"] = new OnOffOption(PlayerCheatManager.ToggleBuildAnywhere, "Build Anywhere Off", "Place blocks and walls anywhere in the air");
-            options["buildFaster"] = new OnOffOption(PlayerCheatManager.ToggleBuildFaster, "Build Faster Off", "Place tiles and walls faster, also mine faster");
-            uiList.Add(options["buildAnywhere"]);
-            uiList.Add(options["buildFaster"]);
-            AddPadding();
-
-            // === TOGGLE ALL ===
-            AddHeader("Toggle All");
-            options["all"] = new OnOffOption(ToggleAll, "Off", "Toggle all player abilities on/off");
-            uiList.Add(options["all"]);
-            AddPadding();
-
-            // === BUTTON OPTIONS ===
-            AddHeader("Options");
-            OnOffOption clearInv = new(clearInventory, "Clear Inventory", "Clears your inventory except favorited items");
-            OnOffOption revealMapOption = new(revealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
-            uiList.Add(clearInv);
-            uiList.Add(revealMapOption);
+            AddHeader("Actions");
+            ActionOption clear = new(ClearInventory, "Clear Inventory", "Clears your inventory except favorited items");
+            uiList.Add(clear);
+            ActionOption reveal = new(revealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
+            uiList.Add(reveal);
         }
 
         private void revealMap()
@@ -93,7 +83,7 @@ namespace SquidTestingMod.UI.Elements
             });
         }
 
-        private void clearInventory()
+        private void ClearInventory()
         {
             // start at 10 to skip the hotbar
             for (int i = 10; i < Main.LocalPlayer.inventory.Length; i++)
@@ -107,30 +97,20 @@ namespace SquidTestingMod.UI.Elements
             Main.NewText("Inventory cleared", byte.MaxValue, byte.MaxValue, byte.MaxValue);
         }
 
-        public void ToggleAll()
+        private void ToggleAll()
         {
-            // Decide if we want to turn everything on or off
-            bool turnOn = !PlayerCheatManager.IsAnyCheatEnabled;
+            // Decide whether to enable or disable everything
+            bool anyOff = PlayerCheatManager.Cheats.Exists(c => c.GetValue() == false);
+            // If at least one is off, we enable them all; if all are on, we disable them all
+            bool newVal = anyOff;
+            PlayerCheatManager.SetAllCheats(newVal);
 
-            // Set all cheats to the same state
-            PlayerCheatManager.SetAllCheats(turnOn);
-
-            // Update the text of each OnOffOption
-            // (These keys match exactly what we used when inserting into the dictionary.)
-            RefreshCheatTexts();
-        }
-
-        // In PlayerPanel.cs, add a method:
-        public void RefreshCheatTexts()
-        {
-            options["god"].UpdateText(PlayerCheatManager.God ? "God On" : "God Off");
-            options["noclip"].UpdateText(PlayerCheatManager.Noclip ? "Noclip On" : "Noclip Off");
-            options["light"].UpdateText(PlayerCheatManager.LightMode ? "Light On" : "Light Off");
-            options["killAura"].UpdateText(PlayerCheatManager.KillAura ? "Kill Aura On" : "Kill Aura Off");
-            options["mineAura"].UpdateText(PlayerCheatManager.MineAura ? "Mine Aura On" : "Mine Aura Off");
-            options["buildAnywhere"].UpdateText(PlayerCheatManager.BuildAnywhere ? "Build Anywhere On" : "Build Anywhere Off");
-            options["buildFaster"].UpdateText(PlayerCheatManager.BuildFaster ? "Build Faster On" : "Build Faster Off");
-            options["all"].UpdateText(PlayerCheatManager.IsAnyCheatEnabled ? "Off" : "On");
+            // Update each option’s UI text
+            var newState = newVal ? State.Enabled : State.Disabled;
+            foreach (var option in cheatOptions)
+            {
+                option.SetState(newState);
+            }
         }
     }
 }

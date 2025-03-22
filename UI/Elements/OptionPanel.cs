@@ -72,6 +72,22 @@ namespace SquidTestingMod.UI.Elements
             if (scrollbarEnabled) Append(scrollbar);
         }
 
+        protected SliderPanel AddSlider(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1f, string hover = "", Action onClickText = null)
+        {
+            SliderPanel sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover, onClickText);
+            uiList.Add(sliderPanel);
+            AddPadding(3);
+            return sliderPanel;
+        }
+
+        protected Option AddOption(string text, Action leftClick, string hover = "", Action rightClick = null, float padding = 3f)
+        {
+            Option option = new(leftClick, text, hover, rightClick);
+            uiList.Add(option);
+            AddPadding(padding);
+            return option;
+        }
+
         protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "")
         {
             HeaderElement headerElement = new(title, hover);

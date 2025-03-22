@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.UI;
+using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -15,7 +16,7 @@ namespace SquidTestingMod.Common.Systems
     public class DebugState : UIState
     {
         // Flag to enable/disable UI debug drawing
-        public bool drawAll = false;
+        public bool showAll = false;
         public bool isUIDebugSizeElementDrawing = false;
 
         // Elements
@@ -34,7 +35,7 @@ namespace SquidTestingMod.Common.Systems
 
         // Toggle stuff
         public void ToggleShowSize() => isUIDebugSizeElementDrawing = !isUIDebugSizeElementDrawing;
-        public void ToggleAllUIElementsOfType(string typeName)
+        public void ToggleElement(string typeName)
         {
             UIElement firstMatch = elements.Find(e => e.GetType().Name == typeName);
             if (firstMatch == null)
@@ -56,8 +57,8 @@ namespace SquidTestingMod.Common.Systems
 
         public void ToggleShowAll()
         {
-            drawAll = !drawAll;
-            if (drawAll)
+            showAll = !showAll;
+            if (showAll)
                 foreach (var elem in elements)
                     elementToggles[elem] = false;
             else
@@ -67,7 +68,22 @@ namespace SquidTestingMod.Common.Systems
 
             // Update text
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys.mainState.uiPanel.UpdateText();
+            UiPanel uiPanel = sys.mainState.uiPanel;
+
+            foreach (var uiElement in uiPanel.dynamicOptions.Values)
+            {
+                if (uiElement is Option o)
+                {
+                    if (showAll)
+                    {
+                        o.SetState(Option.State.Enabled);
+                    }
+                    else
+                    {
+                        o.SetState(Option.State.Disabled);
+                    }
+                }
+            }
         }
 
         // Settings

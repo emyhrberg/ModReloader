@@ -15,22 +15,21 @@ namespace SquidTestingMod.UI.Elements
         public LogPanel() : base(title: "Log", scrollbarEnabled: true)
         {
             AddPadding(5);
-            AddHeader("Client");
-            OnOffOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
-            OnOffOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            OnOffOption clearClientOnReload = new(ClearClientOnReload, "Clear When Reload Off", "Clear the client.log file when reloading");
-            OnOffOption logOption = new(ToggleLogging, "Log On", "Whether to log anything at all to client.log");
-            uiList.Add(openClient);
-            uiList.Add(clearClient);
-            uiList.Add(clearClientOnReload);
-            uiList.Add(logOption);
+            AddHeader("Client Log");
+            Option log = AddOption("Log On", ToggleLogging, "Whether to log anything at all to client.log");
+            log.SetState(Option.State.Enabled);
+            Option clearOnReload = AddOption("Clear On Reload", ClearClientOnReload, "Clear the client.log file when reloading");
+            clearOnReload.SetState(Conf.C.ClearClientLogOnReload ? Option.State.Enabled : Option.State.Disabled);
             AddPadding();
 
-            AddHeader("Other Files");
-            OnOffOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "Shows a list of currently enabled mods", Log.OpenEnabledJsonFolder);
+            AddHeader("Open Files");
+            ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
+            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
+            ActionOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "Shows a list of currently enabled mods", Log.OpenEnabledJsonFolder);
+            uiList.Add(clearClient);
+            uiList.Add(openClient);
             uiList.Add(openEnabled);
             AddPadding();
-
         }
 
         private Logger GetLogger()
