@@ -16,13 +16,13 @@ namespace SquidTestingMod.UI.Elements
         {
             AddPadding(5);
             AddHeader("Client Log");
-            Option log = AddOption("Log On", ToggleLogging, "Whether to log anything at all to client.log");
+            Option log = AddOption("Logging", ToggleLogging, "Enable or disable all logging to client.log");
             log.SetState(Option.State.Enabled);
             Option clearOnReload = AddOption("Clear On Reload", ClearClientOnReload, "Clear the client.log file when reloading");
             clearOnReload.SetState(Conf.C.ClearClientLogOnReload ? Option.State.Enabled : Option.State.Disabled);
             AddPadding();
 
-            AddHeader("Open Files");
+            AddHeader("Options");
             ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
             ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
             ActionOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "Shows a list of currently enabled mods", Log.OpenEnabledJsonFolder);

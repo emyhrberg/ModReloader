@@ -28,7 +28,7 @@ namespace SquidTestingMod.UI.Elements
         public override void Draw(SpriteBatch spriteBatch)
         {
             // Draw the base image
-            DrawHelper.DrawProperScale(spriteBatch, this, tex, scale: 1.0f);
+            //DrawHelper.DrawProperScale(spriteBatch, this, tex, scale: 1.0f);
         }
     }
 }

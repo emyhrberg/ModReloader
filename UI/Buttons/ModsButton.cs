@@ -14,7 +14,8 @@ namespace SquidTestingMod.UI.Buttons
     public class ModsButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set button image size
-        protected override float Scale => 0.6f;
+        private float _scale = 0.6f;
+        protected override float Scale => _scale;
         protected override int FrameWidth => 55;
         protected override int FrameHeight => 70;
 

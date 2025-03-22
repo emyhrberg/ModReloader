@@ -10,9 +10,10 @@ namespace SquidTestingMod.UI.Buttons
     public class StartGameButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set the button icon size
+        private float _scale = 0.5f;
+        protected override float Scale => _scale;
         protected override int FrameWidth => 100;
         protected override int FrameHeight => 100;
-        protected override float Scale => 0.5f;
 
         public override void LeftClick(UIMouseEvent evt)
         {

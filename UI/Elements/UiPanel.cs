@@ -67,7 +67,7 @@ namespace SquidTestingMod.UI.Elements
             SliderPanel opacity = new(
                 title: "Opacity",
                 min: 0,
-                max: 0.69f,
+                max: 1f,
                 defaultValue: 0.1f,
                 onValueChanged: debugState.SetOpacity,
                 hover: "Set the opacity of the UI elements hitboxes",
@@ -84,7 +84,7 @@ namespace SquidTestingMod.UI.Elements
                     Color col = Color.Lerp(Color.White, Color.Black, value);
                     debugState.SetOutlineColor(col);
                 },
-                hover: "Set the opacity of the UI elements hitboxes",
+                hover: "Set the outline color of the UI elements hitboxes",
                 increment: 0.01f
             );
             SliderPanel thickness = new(
@@ -93,7 +93,7 @@ namespace SquidTestingMod.UI.Elements
                 max: 10,
                 defaultValue: 1f,
                 onValueChanged: (value) => debugState.SetThickness((int)value),
-                hover: "Set the opacity of the UI elements hitboxes",
+                hover: "Set the thickness of the UI elements hitboxes",
                 increment: 1f
             );
             uiList.Add(opacity);

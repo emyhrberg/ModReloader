@@ -15,6 +15,7 @@ namespace SquidTestingMod.UI.Elements
         private SliderPanel timeOption;
         private bool timeSliderActive = false;
         private SliderPanel townNpcSlider;
+        public SliderPanel spawnRateSlider;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -27,12 +28,13 @@ namespace SquidTestingMod.UI.Elements
                 defaultValue: GetCurrentTimeNormalized(),
                 onValueChanged: UpdateInGameTime,
                 increment: 1800f / 86400f,
-                hover: "Click and drag to change time"
+                hover: "Click and drag to change time",
+                textSize: 0.9f
             );
             uiList.Add(timeOption);
             AddPadding(3f);
 
-            SliderPanel spawnRate = new(
+            spawnRateSlider = new(
                 title: "Spawn Rate",
                 min: 0,
                 max: 30,
@@ -40,9 +42,10 @@ namespace SquidTestingMod.UI.Elements
                 onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
                 increment: 1,
                 hover: "Set the spawn rate multiplier",
-                onClickText: () => SpawnRateMultiplier.Multiplier = 0
+                onClickText: () => SpawnRateMultiplier.Multiplier = 0,
+                textSize: 0.9f
             );
-            uiList.Add(spawnRate);
+            uiList.Add(spawnRateSlider);
             AddPadding(3f);
 
             // Town NPCs
@@ -60,7 +63,8 @@ namespace SquidTestingMod.UI.Elements
                 max: 1f,
                 onValueChanged: UpdateTownNpcSlider,
                 increment: 1f,
-                hover: "Set the number of town NPCs"
+                hover: "Set the number of town NPCs",
+                textSize: 0.9f
             );
             uiList.Add(townNpcSlider);
             AddPadding();
@@ -217,11 +221,11 @@ namespace SquidTestingMod.UI.Elements
                     formattedNames = formattedNames.TrimEnd(',');
                 }
 
-                townNpcSlider.HoverText = "Town NPCs:\n" + formattedNames;
+                townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
             }
             else
             {
-                townNpcSlider.HoverText = "Town NPCs:\nSet the number of town NPCs";
+                townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
             }
 
             // Update the town NPC count
@@ -235,6 +239,8 @@ namespace SquidTestingMod.UI.Elements
                 // Slider is being used, update the current value
                 townNpcSlider.SetValue(GetTownNpcCount());
                 //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+                // disable mouse input
+                Main.LocalPlayer.mouseInterface = true;
             }
 
             // Update the time

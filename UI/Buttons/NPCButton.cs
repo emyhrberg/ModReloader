@@ -9,11 +9,12 @@ namespace SquidTestingMod.UI.Buttons
     public class NPCButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
+        private float _scale = 0.9f;
+        protected override float Scale => _scale;
         protected override int FrameCount => 3;
         protected override int FrameSpeed => 8;
         protected override int FrameWidth => 38;
         protected override int FrameHeight => 48;
-        protected override float Scale => 0.9f;
 
         public override void LeftClick(UIMouseEvent evt)
         {

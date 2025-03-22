@@ -6,12 +6,13 @@ namespace SquidTestingMod.UI.Elements
 {
     public class OptionTitleText : UIText
     {
-        private string hover = "";
+        public string hover = "";
 
-        public OptionTitleText(string text, string hover = "") : base(text)
+        public OptionTitleText(string text, string hover = "", float textSize = 1f) : base(text, textSize)
         {
             this.hover = hover;
-            Left.Set(30, 0);
+            //Left.Set(30, 0);
+            Left.Set(0, 0);
             VAlign = 0.5f;
         }
 
