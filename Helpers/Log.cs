@@ -53,30 +53,18 @@ namespace SquidTestingMod.Helpers
 
         public static void OpenLogFolder()
         {
-            // C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs
-
-            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
             Main.NewText("Opening log folder...");
 
             try
             {
-                string folder = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs";
-                if (File.Exists(folder))
+                string steamPath = GetSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
                 {
-                    Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                    Error("Steam path not found.");
+                    return;
                 }
-                else
-                {
-                    string file2 = "C:\\Program Files\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
-                    if (File.Exists(file2))
-                    {
-                        Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
-                    }
-                    else
-                    {
-                        Error("client.log not found.");
-                    }
-                }
+
+                string folder = Path.Combine(GetSteamPath(), "tModLoader-Logs");
                 Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }
             catch (Exception ex)
@@ -85,33 +73,29 @@ namespace SquidTestingMod.Helpers
             }
         }
 
+        private static string GetSteamPath()
+        {
+            // get the DLL file from the steam path
+            string tMLDLL = Assembly.GetEntryAssembly()?.Location;
+            string steamPath = Path.GetDirectoryName(tMLDLL);
+            return steamPath;
+        }
+
         public static void OpenClientLog()
         {
-            // C:\Program Files (x86)\Steam\steamapps\common\tModLoader\tModLoader-Logs
-
-            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
-
             Main.NewText("Opening client.log...");
 
             try
             {
-                string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
-                if (File.Exists(file))
+                string steamPath = GetSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
                 {
-                    Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                    Error("Steam path not found.");
+                    return;
                 }
-                else
-                {
-                    string file2 = "C:\\Program Files\\Steam\\steamapps\\common\\tModLoader\\tModLoader-Logs\\client.log";
-                    if (File.Exists(file2))
-                    {
-                        Process.Start(new ProcessStartInfo($@"{file2}") { UseShellExecute = true });
-                    }
-                    else
-                    {
-                        Error("client.log not found.");
-                    }
-                }
+
+                string file = Path.Combine(GetSteamPath(), "tModLoader-Logs", "client.log");
+                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
@@ -121,18 +105,11 @@ namespace SquidTestingMod.Helpers
 
         public static void OpenEnabledJson()
         {
-            // C:\Users\erikm\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
-            // or
-            // $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods\enabled.json
-            // the latter is better, use that
-
-
-            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
             Main.NewText("Opening enabled.json...");
 
+            // Get the path to the enabled.json file in $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
             try
             {
-                // string file = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods\\enabled.json";
                 string file = Path.Combine(ModLoader.ModPath, "enabled.json");
                 Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
@@ -144,17 +121,10 @@ namespace SquidTestingMod.Helpers
 
         public static void OpenEnabledJsonFolder()
         {
-            // C:\Users\erikm\Documents\My Games\Terraria\tModLoader\Mods
-            // or
-            // $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
-            // the latter is better, use that
-
-            // TODO do something other than hardcoding the path, some users may have steam installed in a different location, another hard drive, etc.
             Main.NewText("Opening enabled.json folder...");
 
             try
             {
-                // string folder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Documents\\My Games\\Terraria\\tModLoader\\Mods";
                 string folder = Path.Combine(ModLoader.ModPath);
                 Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }

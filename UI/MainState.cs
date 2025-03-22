@@ -9,6 +9,7 @@ using SquidTestingMod.Helpers;
 using SquidTestingMod.UI.Buttons;
 using SquidTestingMod.UI.Elements;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -20,9 +21,10 @@ namespace SquidTestingMod.UI
         public ItemSpawner itemSpawnerPanel;
         public NPCSpawner npcSpawnerPanel;
         public PlayerPanel playerPanel;
-        public DebugPanel debugPanel;
+        public LogPanel logPanel;
         public ModsPanel modsPanel;
         public UiPanel uiPanel;
+        public WorldPanel worldPanel;
         public List<DraggablePanel> LeftSidePanels = [];
         public List<DraggablePanel> RightSidePanels = [];
 
@@ -62,12 +64,22 @@ namespace SquidTestingMod.UI
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game", textSize: TextSize);
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game", textSize: TextSize);
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
-            AddButton<DebugButton>(Ass.ButtonDebug, "Debug", "View and edit hitboxes, world, logs", textSize: TextSize);
+            AddButton<DebugButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
+            AddButton<WorldButton>(Ass.ButtonWorld, "World", "Oversee all things in the world: NPCs, time, spawn rate, etc", textSize: TextSize);
             AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);
-            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload", textSize: TextSize);
-            // offset -= ButtonSize; // move back to place MP above SP.
-            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
+
+            // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
+            }
+            else if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload", textSize: TextSize);
+                offset -= ButtonSize; // move back to place MP above SP.
+                AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
+            }
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
@@ -77,9 +89,10 @@ namespace SquidTestingMod.UI
             itemSpawnerPanel = AddPanel<ItemSpawner>("left");
             npcSpawnerPanel = AddPanel<NPCSpawner>("left");
             playerPanel = AddPanel<PlayerPanel>("right");
-            debugPanel = AddPanel<DebugPanel>("right");
+            logPanel = AddPanel<LogPanel>("right");
             modsPanel = AddPanel<ModsPanel>("right");
             uiPanel = AddPanel<UiPanel>("right");
+            worldPanel = AddPanel<WorldPanel>("right");
         }
 
         private T AddPanel<T>(string side) where T : DraggablePanel, new()

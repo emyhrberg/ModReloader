@@ -1,13 +1,13 @@
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,8 +21,16 @@ namespace SquidTestingMod.UI.Buttons
         public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : base(spritesheet, buttonText, hoverText, textSize)
         {
             // deactived by default since the SP button is active
-            Active = true;
-            ButtonText.Active = true;
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                Active = false;
+                ButtonText.Active = false;
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                Active = true;
+                ButtonText.Active = true;
+            }
         }
 
         // Set custom animation dimensions
@@ -81,7 +89,7 @@ namespace SquidTestingMod.UI.Buttons
                     clientResponses.Add(ReloadUtilities.ReadPipeMessage(client));
                 }
 
-                // Чекаємо, поки всі клієнти надішлють свої повідомлення
+                // пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅлієпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 await Task.WhenAll(clientResponses);
 
                 ReloadUtilities.BuildAndReloadMod();

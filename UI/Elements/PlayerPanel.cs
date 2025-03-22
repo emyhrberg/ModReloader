@@ -18,7 +18,6 @@ namespace SquidTestingMod.UI.Elements
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
-            Draggable = true;
             // === ABILITIES ===
             AddPadding(5);
             AddHeader("Abilities");

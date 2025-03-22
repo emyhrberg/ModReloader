@@ -24,8 +24,6 @@ namespace SquidTestingMod.Common.Players
             {
                 // Instantly kill the NPC...
                 npc.StrikeInstantKill();
-                // ...and cancel any damage to the player.
-                // da = 0;
             }
         }
     }

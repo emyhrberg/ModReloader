@@ -13,7 +13,7 @@ namespace SquidTestingMod.UI.Buttons
     public class PlayerButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
-        protected override float Scale => 0.95f;
+        protected override float Scale => 0.9f;
         protected override int StartFrame => 3;
         protected override int FrameCount => 17;
         protected override int FrameSpeed => 5;

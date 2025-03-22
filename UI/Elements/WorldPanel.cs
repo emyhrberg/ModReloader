@@ -1,26 +1,23 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Common.Players;
 using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
 using Terraria;
-using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace SquidTestingMod.UI.Elements
 {
-    /// <summary>
-    /// A panel containing options to modify player behaviour like God,Fast,Build,etc.
-    /// </summary>
-    public class DebugPanel : OptionPanel
+    public class WorldPanel : OptionPanel
     {
         private SliderOption timeOption;
         private bool timeSliderActive = false;
         private SliderOption townNpcSlider;
 
-        public DebugPanel() : base(title: "Debug", scrollbarEnabled: true)
+        public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
-            // Add debug options
             AddPadding(5);
             AddHeader("World");
             timeOption = new(
@@ -64,25 +61,22 @@ namespace SquidTestingMod.UI.Elements
                 hover: "Set the number of town NPCs"
             );
             uiList.Add(townNpcSlider);
+            AddPadding();
 
             // tracking
+            AddHeader("Tracking");
             OnOffOption enemyTrack = new(DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track Enemies Off", "Show all enemies position with an arrow");
             OnOffOption townTrack = new(DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track Town NPCs Off", "Show all town NPCs position with an arrow");
             OnOffOption critterTrack = new(DebugEnemyTrackingSystem.ToggleCritterTracking, "Track Critters Off", "Show all critters position with an arrow");
             uiList.Add(enemyTrack);
             uiList.Add(townTrack);
             uiList.Add(critterTrack);
+            AddPadding();
+
+            AddHeader("Hitboxes");
             OnOffOption hitboxes = new(HitboxSystem.ToggleAllHitboxes, "Hitboxes Off", "Show player, NPC, melee and projectile hitboxes");
             uiList.Add(hitboxes);
             AddPadding();
-
-            AddHeader("Logs");
-            OnOffOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
-            OnOffOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "Left click to open enabled.json\nRight click to open folder location", Log.OpenEnabledJsonFolder);
-            OnOffOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            uiList.Add(openClient);
-            uiList.Add(openEnabled);
-            uiList.Add(clearClient);
         }
 
         private void UpdateTownNpcSlider(float newValue)
