@@ -154,7 +154,7 @@ namespace SquidTestingMod.Helpers
 
         private static void LockingFile(string filePath, Action<StreamReader, StreamWriter> action)
         {
-            int retryDelay = 50; // 50ms delay between retries
+            int retryDelay = 200; // 200ms delay between retries
             int maxAttempts = 20; // Maximum retries before giving up
             int attempts = 0;
 
