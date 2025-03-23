@@ -1,13 +1,13 @@
-using log4net;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
+using log4net;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using ReLogic.Content;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -29,16 +29,16 @@ namespace SquidTestingMod.UI.Buttons
         public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : base(spritesheet, buttonText, hoverText, textSize)
         {
             // deactived by default since the SP button is active
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                Active = false;
-                ButtonText.Active = false;
-            }
-            else if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                Active = true;
-                ButtonText.Active = true;
-            }
+            // if (Main.netMode == NetmodeID.SinglePlayer)
+            // {
+            // Active = false;
+            // ButtonText.Active = false;
+            // }
+            // else if (Main.netMode == NetmodeID.MultiplayerClient)
+            // {
+            // Active = true;
+            // ButtonText.Active = true;
+            // }
         }
 
         public async override void LeftClick(UIMouseEvent evt)
@@ -133,23 +133,23 @@ namespace SquidTestingMod.UI.Buttons
                 ReloadUtilities.BuildAndReloadMod();
             }
         }
-        public override void RightClick(UIMouseEvent evt)
-        {
-            // If right click, toggle the mode and return
-            Active = false;
-            ButtonText.Active = false;
+        // public override void RightClick(UIMouseEvent evt)
+        // {
+        //     // If right click, toggle the mode and return
+        //     Active = false;
+        //     ButtonText.Active = false;
 
-            // set MP active
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            foreach (var btn in sys?.mainState?.AllButtons)
-            {
-                if (btn is ReloadSPButton spBtn)
-                {
-                    spBtn.Active = true;
-                    spBtn.ButtonText.Active = true;
-                }
-            }
-            return;
-        }
+        //     // set MP active
+        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
+        //     foreach (var btn in sys?.mainState?.AllButtons)
+        //     {
+        //         if (btn is ReloadSPButton spBtn)
+        //         {
+        //             spBtn.Active = true;
+        //             spBtn.ButtonText.Active = true;
+        //         }
+        //     }
+        //     return;
+        // }
     }
 }

@@ -35,6 +35,9 @@ namespace SquidTestingMod.UI.Elements
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            if (modIcon.IsMouseHovering)
+                return;
+
             base.LeftClick(evt);
 
             // Toggle state

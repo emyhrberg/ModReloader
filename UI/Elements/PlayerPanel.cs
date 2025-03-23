@@ -19,6 +19,7 @@ namespace SquidTestingMod.UI.Elements
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
             AddPadding(5);
+            AddHeader("Player");
             // Automatically create an option for each cheat
             foreach (var cheat in PlayerCheatManager.Cheats)
             {

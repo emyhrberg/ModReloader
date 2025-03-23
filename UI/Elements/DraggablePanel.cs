@@ -61,7 +61,6 @@ namespace SquidTestingMod.UI.Elements
         {
             if (CustomSliderBase.IsAnySliderLocked)
             {
-                // Log.Info("is dragging slider1");
                 IsDragging = false;
                 return;
             }

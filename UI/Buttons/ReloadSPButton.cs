@@ -45,23 +45,23 @@ namespace SquidTestingMod.UI.Buttons
             ReloadUtilities.BuildAndReloadMod();
         }
 
-        public override void RightClick(UIMouseEvent evt)
-        {
-            // If right click, toggle the mode and return
-            Active = false;
-            ButtonText.Active = false;
+        // public override void RightClick(UIMouseEvent evt)
+        // {
+        //     // If right click, toggle the mode and return
+        //     Active = false;
+        //     ButtonText.Active = false;
 
-            // set MP active
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            foreach (var btn in sys?.mainState?.AllButtons)
-            {
-                if (btn is ReloadMPButton spBtn)
-                {
-                    spBtn.Active = true;
-                    spBtn.ButtonText.Active = true;
-                }
-            }
-            return;
-        }
+        //     // set MP active
+        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
+        //     foreach (var btn in sys?.mainState?.AllButtons)
+        //     {
+        //         if (btn is ReloadMPButton spBtn)
+        //         {
+        //             spBtn.Active = true;
+        //             spBtn.ButtonText.Active = true;
+        //         }
+        //     }
+        //     return;
+        // }
     }
 }

@@ -16,6 +16,7 @@ namespace SquidTestingMod.UI.Elements
         private bool timeSliderActive = false;
         private SliderPanel townNpcSlider;
         public SliderPanel spawnRateSlider;
+        public SliderPanel rainSlider;
 
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
@@ -46,6 +47,19 @@ namespace SquidTestingMod.UI.Elements
                 textSize: 0.9f
             );
             uiList.Add(spawnRateSlider);
+            AddPadding(3f);
+
+            rainSlider = new(
+                title: "Rain",
+                min: 0,
+                max: 1,
+                defaultValue: Main.raining ? 1 : 0,
+                onValueChanged: UpdateRainSlider,
+                increment: 0.1f,
+                hover: "Set rain",
+                textSize: 0.9f
+            );
+            uiList.Add(rainSlider);
             AddPadding(3f);
 
             // Town NPCs
@@ -79,6 +93,37 @@ namespace SquidTestingMod.UI.Elements
             AddHeader("Hitboxes");
             AddOption("Show Hitboxes", HitboxSystem.ToggleAllHitboxes, "Show hitboxes for player, NPCs, melee projectiles");
             AddPadding();
+        }
+
+        private void UpdateRainSlider(float newValue)
+        {
+            if (newValue == 0)
+            {
+                // Stop rain completely
+                Main.rainTime = 0;
+                Main.StopRain();
+                Main.cloudAlpha = 0f;
+                Main.maxRaining = 0f;
+                return;
+            }
+
+            // Start rain if it's not already raining
+            if (!Main.raining)
+            {
+                Main.StartRain();
+            }
+
+            // Set rain and cloud intensity based on slider value (0.01-1.0)
+            Main.maxRaining = newValue;
+            Main.cloudAlpha = newValue / 2;
+            // Main.rainTime = 3600; // Set a reasonable duration for rain
+
+            // Optional: Send network message if in multiplayer
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                // You'd need to implement network sync if in multiplayer
+                // NetMessage.SendData(MessageID.WorldData);
+            }
         }
 
         private void UpdateTownNpcSlider(float newValue)

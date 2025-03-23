@@ -12,7 +12,22 @@ namespace SquidTestingMod.Helpers
 {
     public static class Log
     {
-        private static Mod ModInstance => ModContent.GetInstance<SquidTestingMod>();
+        private static Mod ModInstance
+        {
+            // try catch get
+            get
+            {
+                try
+                {
+                    return ModLoader.GetMod("SquidTestingMod");
+                }
+                catch (Exception ex)
+                {
+                    Error("Error getting mod instance: " + ex.Message);
+                    return null;
+                }
+            }
+        }
 
         /// <summary>
         /// Log a message once every second
@@ -25,15 +40,35 @@ namespace SquidTestingMod.Helpers
             }
         }
 
-        public static void Info(string message) => ModInstance.Logger.Info(message);
+        public static void Info(string message)
+        {
+            var instance = ModInstance;
+            if (instance == null || instance.Logger == null)
+                return; // Skip logging if the mod is unloading or null
 
-        public static void Warn(string message) => ModInstance.Logger.Warn(message);
+            instance.Logger.Info(message);
+        }
 
-        public static void Error(string message) => ModInstance.Logger.Error(message);
+        public static void Warn(string message)
+        {
+            var instance = ModInstance;
+            if (instance == null || instance.Logger == null)
+                return; // Skip logging if the mod is unloading or null
+
+            instance.Logger.Warn(message);
+        }
+
+        public static void Error(string message)
+        {
+            var instance = ModInstance;
+            if (instance == null || instance.Logger == null)
+                return; // Skip logging if the mod is unloading or null
+
+            instance.Logger.Error(message);
+        }
 
         public static void ClearClientLog()
         {
-            Info("Clearing client logs....");
             // Get all file appenders from log4net's repository
             var appenders = LogManager.GetRepository().GetAppenders().OfType<FileAppender>();
 
@@ -49,6 +84,7 @@ namespace SquidTestingMod.Helpers
                 // Reactivate the appender so that logging resumes.
                 appender.ActivateOptions();
             }
+            Main.NewText("Client.log cleared.");
         }
 
         public static void OpenLogFolder()
@@ -60,6 +96,7 @@ namespace SquidTestingMod.Helpers
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
+                    Main.NewText("Steam path not found.");
                     Error("Steam path not found.");
                     return;
                 }
@@ -69,11 +106,12 @@ namespace SquidTestingMod.Helpers
             }
             catch (Exception ex)
             {
+                Main.NewText("Error opening log folder: " + ex.Message);
                 Error("Error opening log folder: " + ex.Message);
             }
         }
 
-        private static string GetSteamPath()
+        public static string GetSteamPath()
         {
             // get the DLL file from the steam path
             string tMLDLL = Assembly.GetEntryAssembly()?.Location;
@@ -90,16 +128,18 @@ namespace SquidTestingMod.Helpers
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    Error("Steam path not found.");
+                    Main.NewText("Steam path is null or empty.");
+                    Log.Error("Steam path is null or empty.");
                     return;
                 }
 
-                string file = Path.Combine(GetSteamPath(), "tModLoader-Logs", "client.log");
+                string file = Path.Combine(steamPath, "tModLoader-Logs", "client.log");
                 Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
-                Error("Error opening client.log: " + ex.Message);
+                Main.NewText("Error opening client.log: " + ex.Message);
+                Log.Error("Error opening client.log: " + ex.Message);
             }
         }
 
@@ -125,7 +165,9 @@ namespace SquidTestingMod.Helpers
 
             try
             {
-                string folder = Path.Combine(ModLoader.ModPath);
+                string folder = Path.Combine(ModLoader.ModPath); // gets Documents/My Games/Terraria/tModLoader/Mods
+                // go up one directory (to the tModLoader folder)
+                folder = Path.GetFullPath(Path.Combine(folder, @"..\"));
                 Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }
             catch (Exception ex)

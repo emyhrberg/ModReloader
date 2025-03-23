@@ -10,24 +10,32 @@ namespace SquidTestingMod.UI.Elements
 {
     public class LogPanel : OptionPanel
     {
-        private bool log = false;
+        private bool log = true;
 
         public LogPanel() : base(title: "Log", scrollbarEnabled: true)
         {
             AddPadding(5);
-            AddHeader("Client Log");
-            Option log = AddOption("Logging", ToggleLogging, "Enable or disable all logging to client.log");
+            AddHeader(title: "Log Path",
+                onLeftClick: Log.OpenLogFolder,
+                hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
+            AddPadding(3);
+
+            ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
+            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
+            uiList.Add(openClient);
+            uiList.Add(clearClient);
+            AddPadding(3);
+
+            Option log = AddOption("All Client Logging", ToggleClientLogging, "Enable or disable all logging to client.log");
             log.SetState(Option.State.Enabled);
             Option clearOnReload = AddOption("Clear On Reload", ClearClientOnReload, "Clear the client.log file when reloading");
             clearOnReload.SetState(Conf.C.ClearClientLogOnReload ? Option.State.Enabled : Option.State.Disabled);
             AddPadding();
 
-            AddHeader("Options");
-            ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
-            ActionOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "Shows a list of currently enabled mods", Log.OpenEnabledJsonFolder);
-            uiList.Add(clearClient);
-            uiList.Add(openClient);
+            AddHeader(title: "Game Path",
+                onLeftClick: Log.OpenEnabledJsonFolder,
+                hover: "Click to open the folder at Documents/My Games/Terraria/ModLoader");
+            ActionOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "This is a json file that shows a list of all your currently enabled mods", Log.OpenEnabledJsonFolder);
             uiList.Add(openEnabled);
             AddPadding();
         }
@@ -51,7 +59,7 @@ namespace SquidTestingMod.UI.Elements
             Conf.ForceSaveConfig(Conf.C);
         }
 
-        private void ToggleLogging()
+        private void ToggleClientLogging()
         {
             Logger logger = GetLogger();
             if (logger == null)

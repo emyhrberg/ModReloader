@@ -51,8 +51,6 @@ namespace SquidTestingMod.UI
             if (c != null)
                 TextSize = Conf.TextSize;
 
-            Log.Info("TextSize: " + TextSize);
-
             // Set offset for first button position relative to center
             offset = -ButtonSize * 5;
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
@@ -70,16 +68,8 @@ namespace SquidTestingMod.UI
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
-            }
-            else if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show multiplayer reload", textSize: TextSize);
-                offset -= ButtonSize; // move back to place MP above SP.
-                AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload} \nRight click to show singleplayer reload", textSize: TextSize);
-            }
+            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
+            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);

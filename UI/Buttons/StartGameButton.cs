@@ -1,8 +1,10 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
+using Terraria;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
@@ -26,6 +28,25 @@ namespace SquidTestingMod.UI.Buttons
             catch (Exception ex)
             {
                 Log.Error("Error opening tmodloader: " + ex.Message);
+            }
+
+            try
+            {
+                string steamPath = Log.GetSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    Main.NewText("Steam path is null or empty.");
+                    Log.Error("Steam path is null or empty.");
+                    return;
+                }
+
+                string file = Path.Combine(steamPath, "tModLoader-Logs", "client.log");
+                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Main.NewText("Error opening client.log: " + ex.Message);
+                Log.Error("Error opening client.log: " + ex.Message);
             }
         }
     }

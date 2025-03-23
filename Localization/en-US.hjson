@@ -10,6 +10,7 @@ Mods: {
 					NPCSpawner: NPC Spawner
 					Game: Game
 					UI: UI
+					Logging: Logging Header
 				}
 
 				NPCSpawnLocation: {
@@ -80,6 +81,11 @@ Mods: {
 				TextSize: {
 					Tooltip: ""
 					Label: Text Size
+				}
+
+				Logging: {
+					Label: Logging
+					Tooltip: ""
 				}
 			}
 

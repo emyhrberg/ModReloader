@@ -55,6 +55,10 @@ namespace SquidTestingMod.Common.Configs
         [DefaultValue(false)]
         public bool EnterWorldSuperMode = false;
 
+        [Header("Logging")]
+        [DefaultValue(true)]
+        public bool Logging = true;
+
         [Header("NPCSpawner")]
 
         [DefaultValue(null)]
@@ -185,5 +189,8 @@ namespace SquidTestingMod.Common.Configs
         // Game
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
+
+        // Logging
+        public static bool Logging => C.Logging;
     }
 }
