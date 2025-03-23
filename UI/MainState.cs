@@ -68,8 +68,8 @@ namespace SquidTestingMod.UI
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
-            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
-            reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
+            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
+            reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);

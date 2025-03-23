@@ -1,12 +1,12 @@
-using MonoMod.RuntimeDetour;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.PacketHandlers;
 using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using MonoMod.RuntimeDetour;
+using SquidTestingMod.Common.Configs;
+using SquidTestingMod.PacketHandlers;
 using Terraria;
 
 namespace SquidTestingMod.Helpers
@@ -68,6 +68,74 @@ namespace SquidTestingMod.Helpers
         {
             // Going to reload mod menu(that automaticly invokes reload)
             Main.menuMode = 10002;
+        }
+
+        public static void BuildAndReloadMods(Action action = null)
+        {
+            // 1. Getting Assembly
+            Assembly tModLoaderAssembly = typeof(Main).Assembly;
+
+            // 2. Getting method for finding modSources paths
+            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
+            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
+
+            // Check if modSources is null or empty.
+            if (modSources == null || modSources.Length == 0)
+            {
+                Log.Warn("No mod sources were found via reflection.");
+                return;
+            }
+
+            // Optionally, log what modSources contains:
+            foreach (var src in modSources)
+            {
+                if (src == null)
+                {
+                    Log.Warn("A mod source entry is null.");
+                    continue;
+                }
+                Log.Info($"Found mod source: {src}");
+            }
+
+            // 3. Getting method for reloading a mod
+            Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
+            FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.NonPublic | BindingFlags.Static);
+            object buildModInstance = buildModField?.GetValue(null);
+            Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
+            MethodInfo buildMethod = uiBuildModType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string), typeof(bool)]);
+
+            // 4. Loop through each mod name in the global list
+            foreach (string modName in ModsToReload.modsToReload)
+            {
+                // Find the mod folder that matches the current mod name.
+                string modPath = modSources.FirstOrDefault(p =>
+                    !string.IsNullOrEmpty(p) &&
+                    Directory.Exists(p) &&
+                    Path.GetFileName(p)?.Equals(modName, StringComparison.InvariantCultureIgnoreCase) == true);
+
+                if (modPath != null)
+                {
+                    Log.Info($"Path to {modName}: {modPath}");
+                }
+                else
+                {
+                    Log.Warn($"No mod path found matching {modName}.");
+                    continue;
+                }
+
+                // 5. Setup a hook for reloading the mod
+                Hook buildHook = null;
+                buildHook = new Hook(buildMethod, (Action<object, string, bool> orig, object self, string path, bool reload) =>
+                {
+                    orig(self, path, reload); // Call original method correctly
+                    action?.Invoke();           // Execute custom action after the method
+                    buildHook?.Dispose();       // Disable hook
+                });
+
+                // 6. Invoke the Build method for the current mod
+                buildMethod.Invoke(buildModInstance, new object[] { modPath, true });
+            }
         }
 
         public static void BuildAndReloadMod(Action action = null)

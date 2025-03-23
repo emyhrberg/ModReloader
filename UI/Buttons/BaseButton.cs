@@ -55,9 +55,14 @@ namespace SquidTestingMod.UI.Buttons
             Append(ButtonText);
         }
 
-        public void UpdateHoverText(string hover)
+        public void UpdateHoverText()
         {
-            HoverText = hover;
+            // Based on modstoreload, make the hovertext.
+            HoverText = "Reload\n";
+            foreach (var mod in ModsToReload.modsToReload)
+            {
+                HoverText += $"{mod}\n";
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -18,14 +19,14 @@ namespace SquidTestingMod.UI.Elements
         private Texture2D uncheck;
         private Texture2D check;
         private string hover;
-        private string modName;
+        private string modSourcePathString;
 
-        public ModCheckbox(Texture2D uncheck, string modName, string hover = "") : base(uncheck)
+        public ModCheckbox(Texture2D uncheck, string modSourcePathString, string hover = "") : base(uncheck)
         {
             this.uncheck = uncheck;
             this.check = Ass.ModCheck.Value;
             this.hover = hover;
-            this.modName = modName;
+            this.modSourcePathString = modSourcePathString;
 
             // size and pos
             float size = 25f;
@@ -34,6 +35,11 @@ namespace SquidTestingMod.UI.Elements
             Width.Set(size, 0f);
             Height.Set(size, 0f);
             VAlign = 0.5f;
+        }
+
+        public void ToggleCheckState()
+        {
+            isChecked = !isChecked;
         }
 
         public void SetCheckState(bool state)
@@ -51,25 +57,41 @@ namespace SquidTestingMod.UI.Elements
 
             foreach (var mod in modsPanel.modSourcesElements)
             {
-                if (mod.modName == modName)
+                if (mod.modSourcePathString == modSourcePathString)
                 {
-                    // set config and save
-                    Conf.C.ModToReload = modName;
-                    Conf.ForceSaveConfig(Conf.C);
+                    // set checkbox
+                    mod.checkbox.ToggleCheckState();
+
+                    // update list
+                    if (mod.checkbox.isChecked)
+                    {
+                        // Update config
+                        Conf.C.ModToReload = modSourcePathString;
+                        Conf.ForceSaveConfig(Conf.C);
+
+                        // only add if it doesnt already exist
+                        if (!ModsToReload.modsToReload.Contains(modSourcePathString))
+                        {
+                            ModsToReload.modsToReload.Add(modSourcePathString);
+                        }
+                    }
+                    else
+                    {
+                        ModsToReload.modsToReload.Remove(modSourcePathString);
+                    }
 
                     // set hovertext in reloadSP
                     ReloadSPButton sp = sys.mainState.reloadSPButton;
                     ReloadMPButton mp = sys.mainState.reloadMPButton;
-                    sp.UpdateHoverText("Reload " + modName);
-                    mp.UpdateHoverText("Reload " + modName);
+                    sp.UpdateHoverText();
+                    mp.UpdateHoverText();
 
-                    // set checkbox
-                    mod.checkbox.SetCheckState(true);
+                    Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
                 }
-                else
-                {
-                    mod.checkbox.SetCheckState(false);
-                }
+                // else
+                // {
+                // mod.checkbox.SetCheckState(false);
+                // }
             }
             modsPanel.Recalculate();
         }

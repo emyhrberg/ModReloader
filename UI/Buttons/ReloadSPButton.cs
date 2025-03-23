@@ -42,7 +42,7 @@ namespace SquidTestingMod.UI.Buttons
             }
 
             // 3 Reload
-            ReloadUtilities.BuildAndReloadMod();
+            ReloadUtilities.BuildAndReloadMods();
         }
 
         // public override void RightClick(UIMouseEvent evt)

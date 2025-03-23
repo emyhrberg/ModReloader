@@ -23,7 +23,7 @@ namespace SquidTestingMod.UI.Elements
     // A .csproj icon which opens the project in Visual Studio
     public class ModSourcesElement : UIPanel
     {
-        public string modName;
+        public string modSourcePathString;
         public ModCheckbox checkbox;
         public ModSourcesIcon modIcon;
 
@@ -63,10 +63,10 @@ namespace SquidTestingMod.UI.Elements
             }
 
             // mod name
-            modName = Path.GetFileName(modPath);
-            if (modName.Length > 20)
-                modName = string.Concat(modName.AsSpan(0, 20), "...");
-            OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: modName);
+            modSourcePathString = Path.GetFileName(modPath);
+            if (modSourcePathString.Length > 20)
+                modSourcePathString = string.Concat(modSourcePathString.AsSpan(0, 20), "...");
+            OptionTitleText modNameText = new(text: modSourcePathString, hover: $"Open {modSourcePathString} config", internalModName: modSourcePathString);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);
@@ -76,19 +76,26 @@ namespace SquidTestingMod.UI.Elements
             float dist = 27f;
 
             // checkbox icon
-            checkbox = new(Ass.ModUncheck.Value, modName, $"Click to make {modName} the mod to reload");
+            checkbox = new(Ass.ModUncheck.Value, modSourcePathString, $"Click to make {modSourcePathString} the mod to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
 
             // if this is the current mod, add checkmark
-            bool isCurrentModToReload = Conf.ModToReload == modName;
+            bool isCurrentModToReload = Conf.ModToReload == modSourcePathString;
             if (isCurrentModToReload)
             {
                 checkbox.SetCheckState(true);
+
+                // add initial mod
+                if (!ModsToReload.modsToReload.Contains(modSourcePathString))
+                {
+                    ModsToReload.modsToReload.Add(modSourcePathString);
+                }
             }
 
+
             // reload icon
-            ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, modName, "Reload " + modName);
+            ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, modSourcePathString, "Reload " + modSourcePathString);
             modReloadIcon.Left.Set(def - dist * 2, 1f);
             Append(modReloadIcon);
 
