@@ -122,10 +122,13 @@ namespace SquidTestingMod.Helpers
             Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
             MethodInfo buildMethod = uiBuildModType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string), typeof(bool)]);
 
-            new Hook(buildMethod, (Action<object, string, bool> orig, object self, string path, bool reload) =>
+            Hook buildHook = null;
+
+            buildHook = new Hook(buildMethod, (Action<object, string, bool> orig, object self, string path, bool reload) =>
             {
                 orig(self, path, reload); // Call original method correctly
                 action?.Invoke(); // Execute custom action after the method
+                buildHook?.Dispose(); // Disable hook
             });
 
             // 5.Invoking a Build method

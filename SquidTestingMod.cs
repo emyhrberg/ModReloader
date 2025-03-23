@@ -26,6 +26,7 @@ namespace SquidTestingMod
 
         public override void Load()
         {
+            
             if (Main.netMode != NetmodeID.Server)
                 ClientDataHandler.ReadData();
             /*
