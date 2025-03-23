@@ -70,7 +70,7 @@ namespace SquidTestingMod.Helpers
             Main.menuMode = 10002;
         }
 
-        public static void BuildAndReloadMods(Action action = null)
+        public static void BuildAndReloadMods(Action actionAfterBuild = null)
         {
             // 1. Getting Assembly
             Assembly tModLoaderAssembly = typeof(Main).Assembly;
@@ -87,58 +87,55 @@ namespace SquidTestingMod.Helpers
                 return;
             }
 
-            // Optionally, log what modSources contains:
-            foreach (var src in modSources)
-            {
-                if (src == null)
-                {
-                    Log.Warn("A mod source entry is null.");
-                    continue;
-                }
-                Log.Info($"Found mod source: {src}");
-            }
+            // 3. Get all modPaths for future
+            var modPaths = ModsToReload.modsToReload.Select((modName) =>
+                modSources.FirstOrDefault(p =>
+                    !string.IsNullOrEmpty(p) &&
+                    Directory.Exists(p) &&
+                    Path.GetFileName(p)?.Equals(modName, StringComparison.InvariantCultureIgnoreCase) == true));
 
-            // 3. Getting method for reloading a mod
+            // 4. Getting method for reloading a mod
+            // 4.1 Getting UIBuildMod Instance
             Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
             FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.NonPublic | BindingFlags.Static);
             object buildModInstance = buildModField?.GetValue(null);
+
+            // 4.2 Getting correct BuildMod method of UIBuildMod
             Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
-            MethodInfo buildMethod = uiBuildModType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string), typeof(bool)]);
+            MethodInfo buildModMethod = uiBuildModType.GetMethod("BuildMod", BindingFlags.Instance | BindingFlags.NonPublic, [typeof(Action<>).MakeGenericType(modCompileType), typeof(bool)]);
 
-            // 4. Loop through each mod name in the global list
-            foreach (string modName in ModsToReload.modsToReload)
+            // Check if it exist
+            if (buildModMethod == null)
             {
-                // Find the mod folder that matches the current mod name.
-                string modPath = modSources.FirstOrDefault(p =>
-                    !string.IsNullOrEmpty(p) &&
-                    Directory.Exists(p) &&
-                    Path.GetFileName(p)?.Equals(modName, StringComparison.InvariantCultureIgnoreCase) == true);
-
-                if (modPath != null)
-                {
-                    Log.Info($"Path to {modName}: {modPath}");
-                }
-                else
-                {
-                    Log.Warn($"No mod path found matching {modName}.");
-                    continue;
-                }
-
-                // 5. Setup a hook for reloading the mod
-                Hook buildHook = null;
-                buildHook = new Hook(buildMethod, (Action<object, string, bool> orig, object self, string path, bool reload) =>
-                {
-                    orig(self, path, reload); // Call original method correctly
-                    action?.Invoke();           // Execute custom action after the method
-                    buildHook?.Dispose();       // Disable hook
-                });
-
-                // 6. Invoke the Build method for the current mod
-                buildMethod.Invoke(buildModInstance, new object[] { modPath, true });
+                Log.Warn("No buildMethod were found via reflection.");
+                return;
             }
+
+            // 4.3 Getting correct Build method from ModCompile
+            MethodInfo mcBuildModFolder = modCompileType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string)]);
+
+            // 5. Setting a hook on BuildMod method of UIBuildMod
+            Hook buildModMethodHook = null;
+            buildModMethodHook = new Hook(buildModMethod, (Func<object, Action<object>, bool, Task> orig, object self, Action<object> buildAction, bool reload) =>
+            {
+                Task origTask = orig(self, buildAction, reload); // Call original method correctly
+
+                return origTask.ContinueWith(t =>
+                {
+                    actionAfterBuild?.Invoke(); // Execute custom action after the method finishes
+                    buildModMethodHook?.Dispose(); // Disable hook
+                });
+            });
+
+            //
+            buildModMethod.Invoke(buildModInstance, [(object mc) => {
+                foreach (var modPath in modPaths) {
+                    mcBuildModFolder.Invoke(mc, null);
+                }
+            }, true]);
         }
 
-        public static void BuildAndReloadMod(Action action = null)
+        public static void BuildAndReloadMod(Action actionAfterBuild = null)
         {
             // 1. Getting Assembly
             Assembly tModLoaderAssembly = typeof(Main).Assembly;
@@ -195,7 +192,7 @@ namespace SquidTestingMod.Helpers
             buildHook = new Hook(buildMethod, (Action<object, string, bool> orig, object self, string path, bool reload) =>
             {
                 orig(self, path, reload); // Call original method correctly
-                action?.Invoke(); // Execute custom action after the method
+                actionAfterBuild?.Invoke(); // Execute custom action after the method
                 buildHook?.Dispose(); // Disable hook
             });
 
