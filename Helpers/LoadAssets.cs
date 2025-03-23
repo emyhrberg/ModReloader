@@ -47,6 +47,7 @@ namespace SquidTestingMod.Helpers
         // Filter buttons
         public static Asset<Texture2D> FilterBG;
         public static Asset<Texture2D> FilterBGActive;
+        public static Asset<Texture2D> FilterBGActiveModSort;
         public static Asset<Texture2D> FilterAll;
         public static Asset<Texture2D> FilterMelee;
         public static Asset<Texture2D> FilterRanged;

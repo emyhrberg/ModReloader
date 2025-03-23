@@ -33,6 +33,7 @@ namespace SquidTestingMod.UI.Elements
             Accessories,
             Potions,
             Placeables,
+            Misc // everything except all the other categories
         }
 
         // Filtering fields
@@ -147,7 +148,7 @@ namespace SquidTestingMod.UI.Elements
 
             Stopwatch s = Stopwatch.StartNew();
 
-            for (int i = -200; i <= allItems2; i++)
+            for (int i = 0; i <= allItems2; i++)
             {
                 if (!ContentSamples.ItemsByType.ContainsKey(i))
                 {

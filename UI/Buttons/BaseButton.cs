@@ -24,7 +24,7 @@ namespace SquidTestingMod.UI.Buttons
         protected Asset<Texture2D> Button;
         protected Asset<Texture2D> Spritesheet { get; set; }
         protected string HoverText = "";
-        protected float opacity = 0.4f;
+        protected float opacity = 0.8f;
         public ButtonText ButtonText;
         public bool Active = true;
 
@@ -87,7 +87,7 @@ namespace SquidTestingMod.UI.Buttons
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
 
             // Set the opacity based on mouse hover.
-            opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
+            opacity = IsMouseHovering ? 1f : 0.8f; // Determine opacity based on mouse hover.
 
             // Set UIText opacity
             ButtonText.TextColor = Color.White * opacity;

@@ -38,7 +38,7 @@ namespace SquidTestingMod.UI.Elements
                 title: "Mine Radius",
                 min: 1,
                 max: 50,
-                defaultValue: 1,
+                defaultValue: 3,
                 onValueChanged: value => MineAura.mineRange = (int)value,
                 increment: 1,
                 hover: "Mine all tiles around you when moving (not MP-supported)",

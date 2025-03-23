@@ -9,7 +9,7 @@ namespace SquidTestingMod.UI.Buttons
     public class LogButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set custom animation dimensions
-        private float _scale = 0.55f;
+        private float _scale = 0.5f;
         protected override float Scale => _scale;
         protected override int FrameCount => 16;
         protected override int FrameSpeed => 4;

@@ -47,7 +47,7 @@ namespace SquidTestingMod.UI.Buttons
                 VAlign = 0.8f;
                 Top.Set(-buttonSize - 15 / 2, 0);
                 Left.Set(buttonSize, 0);
-                // SetImage(CollapseLeft.Value); // unsure if this works
+                SetImage(CollapseLeft.Value); // unsure if this works
             }
         }
 
@@ -90,7 +90,7 @@ namespace SquidTestingMod.UI.Buttons
                 btn.Active = sys.mainState.AreButtonsShowing;
                 if (btn.ButtonText != null)
                 {
-                    btn.ButtonText.Active = sys.mainState.AreButtonsShowing;
+                    // btn.ButtonText.Active = sys.mainState.AreButtonsShowing;
                 }
 
                 // force MP button to disable when expanded
@@ -129,7 +129,7 @@ namespace SquidTestingMod.UI.Buttons
                     if (mainState.AreButtonsShowing)
                     {
                         SetImage(CollapseLeft.Value);
-                        Left.Set(-buttonSize, 0); // Expanded
+                        Left.Set(buttonSize, 0); // Expanded
                     }
                     else
                     {

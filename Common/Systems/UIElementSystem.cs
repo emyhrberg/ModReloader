@@ -7,16 +7,16 @@ using Terraria.UI;
 namespace SquidTestingMod.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
-    public class DebugSystem : ModSystem
+    public class UIElementSystem : ModSystem
     {
         // State
         private UserInterface ui;
-        public DebugState debugState;
+        public UIElementState debugState;
 
         public override void Load()
         {
             ui = new UserInterface();
-            debugState = new DebugState();
+            debugState = new UIElementState();
             ui.SetState(debugState);
 
             On_UIElement.Draw += debugState.UIElement_Draw;

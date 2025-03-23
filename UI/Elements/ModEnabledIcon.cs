@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Helpers;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
-using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {

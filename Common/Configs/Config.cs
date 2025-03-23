@@ -2,10 +2,8 @@
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Players;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.UI;
-using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -36,8 +34,8 @@ namespace SquidTestingMod.Common.Configs
         [DrawTicks]
         [Range(50f, 80f)]
         [Increment(5f)]
-        [DefaultValue(70)]
-        public float ButtonSize = 70;
+        [DefaultValue(60)]
+        public float ButtonSize = 60;
 
         [DrawTicks]
         [Range(0.4f, 1.0f)]
@@ -57,7 +55,10 @@ namespace SquidTestingMod.Common.Configs
 
         [Header("Logging")]
         [DefaultValue(true)]
-        public bool Logging = true;
+        public bool LogToLogFile = true;
+
+        [DefaultValue(true)]
+        public bool LogToChat = true;
 
         [Header("NPCSpawner")]
 
@@ -75,69 +76,23 @@ namespace SquidTestingMod.Common.Configs
                 Log.Info("MainSystem is null in Config.OnChanged()");
                 return;
             }
+            MainState mainState = sys.mainState;
+            if (mainState == null)
+            {
+                Log.Info("MainState is null in Config.OnChanged()");
+                return;
+            }
+            Log.Info("Collapse left before: " + mainState.collapse.Left.Pixels);
 
             // Delete all buttons and re-add them
-            sys.mainState.AllButtons.Clear();
-            sys.mainState.RemoveAllChildren();
-            sys.mainState.AddEverything();
-            sys.mainState.collapse.UpdateCollapseImage();
+            mainState.AllButtons.Clear();
+            mainState.RemoveAllChildren();
+            mainState.AddEverything();
+            mainState.collapse.UpdateCollapseImage();
             Log.Info("Config.OnChanged() ran successfully");
 
-            // If super mode is enabled, enable it
-            return;
-            if (Conf.EnterWorldSuperMode)
-            {
-                // Get the player cheat manager
-                if (Main.LocalPlayer == null)
-                {
-                    Log.Info("Main.LocalPlayer is null in Config.OnChanged()");
-                    return;
-                }
-                PlayerCheatManager pcm = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
-                if (pcm == null)
-                {
-                    Log.Info("PlayerCheatManager is null in Config.OnChanged()");
-                    return;
-                }
-                pcm.EnableSupermode();
+            Log.Info("Collapse left after: " + mainState.collapse.Left.Pixels);
 
-                // Update the enabled texts all enabled except mine aura and noclip
-                PlayerPanel p = sys.mainState.playerPanel;
-                foreach (Option o in p.cheatOptions)
-                {
-                    if (o.text == "Mine Aura" || o.text == "Noclip")
-                    {
-                        o.SetState(Option.State.Disabled);
-                    }
-                    else
-                    {
-                        o.SetState(Option.State.Enabled);
-                    }
-                }
-            }
-            else
-            {
-                // Get the player cheat manager
-                if (Main.LocalPlayer == null)
-                {
-                    Log.Info("Main.LocalPlayer is null in Config.OnChanged()");
-                    return;
-                }
-                PlayerCheatManager pcm = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
-                if (pcm == null)
-                {
-                    Log.Info("PlayerCheatManager is null in Config.OnChanged()");
-                    return;
-                }
-                pcm.DisableSupermode();
-
-                // Update the enabled texts all Disabled
-                PlayerPanel p = sys.mainState.playerPanel;
-                foreach (Option o in p.cheatOptions)
-                {
-                    o.SetState(Option.State.Disabled);
-                }
-            }
         }
     }
 
@@ -191,6 +146,7 @@ namespace SquidTestingMod.Common.Configs
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
 
         // Logging
-        public static bool Logging => C.Logging;
+        public static bool LogToLogFile => C.LogToLogFile;
+        public static bool LogToChat => C.LogToChat;
     }
 }

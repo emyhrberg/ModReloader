@@ -21,7 +21,7 @@ namespace SquidTestingMod.UI.Elements
             AddPadding(3);
 
             ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Left click to open client.log\nRight click to open folder location", Log.OpenLogFolder);
+            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log");
             uiList.Add(openClient);
             uiList.Add(clearClient);
             AddPadding(3);

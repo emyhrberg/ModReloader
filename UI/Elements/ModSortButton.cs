@@ -50,20 +50,7 @@ namespace SquidTestingMod.UI.Elements
             {
                 // Get rectangle dimensions
                 Rectangle drawRect = GetDimensions().ToRectangle();
-                float opacity = IsMouseHovering ? 1f : 0.7f;
-
-                // If active, draw the active background
-                if (Active)
-                    spriteBatch.Draw(Ass.FilterBGActive.Value, drawRect, Color.White);
-                else
-                    spriteBatch.Draw(Ass.FilterBG.Value, drawRect, Color.White);
-
-                // Always draw the icon on top with full opacity if active,
-                // otherwise draw with the opacity value.
-                if (Active)
-                    spriteBatch.Draw(icon.Value, drawRect, Color.White);
-                else
-                    spriteBatch.Draw(icon.Value, drawRect, Color.White * opacity);
+                float opacity = IsMouseHovering ? 1f : 0.8f;
 
                 // Draw the icon
                 if (internalModName != null)
@@ -74,11 +61,21 @@ namespace SquidTestingMod.UI.Elements
 
                     if (updatedTex != null)
                     {
-                        DrawHelper.DrawProperScale(spriteBatch, this, updatedTex);
+                        DrawHelper.DrawProperScale(spriteBatch, this, updatedTex, opacity: opacity, active: Active);
                     }
+                    // If active, draw the active background
+                    if (Active)
+                        spriteBatch.Draw(Ass.FilterBGActiveModSort.Value, drawRect, Color.White * 0.5f);
                 }
                 else
                 {
+                    // If active, draw the active background
+                    if (Active)
+                        spriteBatch.Draw(Ass.FilterBGActive.Value, drawRect, Color.White);
+                    else
+                        spriteBatch.Draw(Ass.FilterBG.Value, drawRect, Color.White);
+
+                    // Draw the given texture
                     updatedTex = givenTexture;
                     DrawHelper.DrawProperScale(spriteBatch, this, updatedTex);
                 }
