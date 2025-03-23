@@ -87,6 +87,16 @@ Mods: {
 					Label: Logging
 					Tooltip: Whether to log debug statements from this mod to client.log. Useful for modders.
 				}
+
+				LogToLogFile: {
+					Label: Log To Log File
+					Tooltip: ""
+				}
+
+				LogToChat: {
+					Label: Log To Chat
+					Tooltip: ""
+				}
 			}
 
 			NPCSpawnerConfig: {

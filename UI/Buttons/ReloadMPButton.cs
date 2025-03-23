@@ -1,30 +1,30 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.IO.Pipelines;
+using System.Diagnostics;
 using System.IO;
+using System.IO.Pipelines;
 using System.IO.Pipes;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoMod.RuntimeDetour;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
-using System.Collections;
-using System.Reflection;
-using MonoMod.RuntimeDetour;
-using System.Diagnostics;
 
 namespace SquidTestingMod.UI.Buttons
 {
     public class ReloadMPButton : BaseButton
     {
         // Set custom animation dimensions
-        private float _scale = 1.25f;
+        private float _scale = 1.15f;
         protected override float Scale => _scale;
         protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
@@ -291,7 +291,7 @@ namespace SquidTestingMod.UI.Buttons
                         return o;
                     });
 
-                    
+
                 });
 
 

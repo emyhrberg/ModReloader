@@ -33,6 +33,7 @@ namespace SquidTestingMod.UI.Elements
             Accessories,
             Potions,
             Placeables,
+            Misc // everything except all the other categories
         }
 
         // Filtering fields

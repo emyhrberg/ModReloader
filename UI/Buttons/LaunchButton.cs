@@ -9,10 +9,10 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class StartGameButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class LaunchButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Set the button icon size
-        private float _scale = 0.5f;
+        private float _scale = 0.45f;
         protected override float Scale => _scale;
         protected override int FrameWidth => 100;
         protected override int FrameHeight => 100;

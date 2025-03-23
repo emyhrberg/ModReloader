@@ -16,7 +16,7 @@ namespace SquidTestingMod.UI.Buttons
         // protected override int FrameSpeed => 7;
 
         // Old pylon texture, do not delete
-        private float _scale = 0.65f;
+        private float _scale = 0.58f;
         protected override float Scale => _scale;
         protected override int FrameCount => 8;
         protected override int FrameSpeed => 7;

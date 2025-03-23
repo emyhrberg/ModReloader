@@ -8,7 +8,7 @@ namespace SquidTestingMod.Helpers
 {
     public static class DrawHelper
     {
-        public static void DrawProperScale(SpriteBatch spriteBatch, UIElement element, Texture2D tex, float scale = 1.0f)
+        public static void DrawProperScale(SpriteBatch spriteBatch, UIElement element, Texture2D tex, float scale = 1.0f, float opacity = 1.0f, bool active = false)
         {
             if (tex == null || element == null)
                 if (Main.GameUpdateCount % 60 * 5 == 0)
@@ -25,12 +25,18 @@ namespace SquidTestingMod.Helpers
             // Top-left anchor: just place it at dims.X, dims.Y
             Vector2 drawPosition = new Vector2(dims.X, dims.Y);
 
+            float actualOpacity = opacity;
+            if (active)
+            {
+                actualOpacity = 1f;
+            }
+
             // Draw the texture anchored at top-left with the chosen scale
             spriteBatch.Draw(
                 tex,
                 drawPosition,
                 null,
-                Color.White,
+                Color.White * actualOpacity,
                 0f,
                 Vector2.Zero,
                 drawScale,

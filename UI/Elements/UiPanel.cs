@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using SquidTestingMod.Common.Systems;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -11,69 +10,29 @@ namespace SquidTestingMod.UI.Elements
 {
     public class UiPanel : OptionPanel
     {
-        private DebugSystem debugSystem;
-        private DebugState debugState;
+        private UIElementSystem elementSystem;
+        private UIElementState elementState;
 
         public UiPanel() : base(title: "UI", scrollbarEnabled: true)
         {
-            debugSystem = ModContent.GetInstance<DebugSystem>();
-            debugState = debugSystem.debugState;
+            elementSystem = ModContent.GetInstance<UIElementSystem>();
+            elementState = elementSystem.debugState;
 
+            AddHeader("UIElement Hitboxes");
             AddPadding(5);
-            AddOption("Show All", debugState.ToggleShowAll, "Show all UI elements from mods");
-            AddOption("Show Text Size", debugState.ToggleShowSize, "Show all sizes for active UIElements");
+            AddOption("Show All", elementState.ToggleShowAll, "Show all UI elements from mods");
 
-
-            // SliderOption xOffset = new(
-            //     title: "X Offset",
-            //     min: -20,
-            //     max: 20,
-            //     defaultValue: 0,
-            //     onValueChanged: debugState.SetXOffset,
-            //     hover: "Adjust the X offset of the text size",
-            //     increment: 1
-            // );
-            // SliderOption yOffset = new(
-            //     title: "Y Offset",
-            //     min: -20,
-            //     max: 20,
-            //     defaultValue: 0,
-            //     onValueChanged: debugState.SetYOffset,
-            //     hover: "Adjust the Y offset of the text size",
-            //     increment: 1
-            // );
-            // SliderOption textSize = new(
-            //     title: "Text Size",
-            //     min: 0.1f,
-            //     max: 1f,
-            //     defaultValue: 0.5f,
-            //     onValueChanged: debugState.SetTextSize,
-            //     hover: "Adjust the size of the text",
-            //     increment: 0.1f
-            // );
-
-            // uiList.Add(textSize);
-            // uiList.Add(xOffset);
-            // uiList.Add(yOffset);
-
-            // colors
-            ActionOption rand = new(debugState.RandomizeRainbowColors, "Randomize Colors", "Randomize the colors of the boxes");
-            uiList.Add(rand);
-            AddPadding(3f);
-            ActionOption randOut = new(debugState.ToggleRandomOutlineColor, "Randomize Outline", "Randomize the outline color of the boxes");
-            uiList.Add(randOut);
-            AddPadding(3f);
-
-            SliderPanel opacity = new(
+            AddSlider(
                 title: "Opacity",
                 min: 0,
                 max: 1f,
                 defaultValue: 0.1f,
-                onValueChanged: debugState.SetOpacity,
+                onValueChanged: elementState.SetOpacity,
                 hover: "Set the opacity of the UI elements hitboxes",
                 increment: 0.01f
             );
-            SliderPanel outlineColor = new(
+
+            AddSlider(
                 title: "Color",
                 min: 0,
                 max: 1f,
@@ -82,26 +41,129 @@ namespace SquidTestingMod.UI.Elements
                 {
                     // Interpolate from Black (value=0f) to White (value=1f)
                     Color col = Color.Lerp(Color.White, Color.Black, value);
-                    debugState.SetOutlineColor(col);
+                    elementState.SetOutlineColor(col);
                 },
                 hover: "Set the outline color of the UI elements hitboxes",
                 increment: 0.01f
             );
-            SliderPanel thickness = new(
+
+            AddSlider(
                 title: "Thickness",
-                min: 1,
+                min: 0,
                 max: 10,
                 defaultValue: 1f,
-                onValueChanged: (value) => debugState.SetThickness((int)value),
+                onValueChanged: (value) => elementState.SetThickness((int)value),
                 hover: "Set the thickness of the UI elements hitboxes",
                 increment: 1f
             );
-            uiList.Add(opacity);
+
+            // colors
+            ActionOption rand = new(elementState.RandomizeRainbowColors, "Randomize Colors", "Randomize the colors of the boxes");
+            uiList.Add(rand);
             AddPadding(3f);
-            uiList.Add(outlineColor);
-            AddPadding(3f);
-            uiList.Add(thickness);
+            ActionOption randOut = new(elementState.ToggleRandomOutlineColor, "Randomize Outline", "Randomize the outline color of the boxes");
+            uiList.Add(randOut);
             AddPadding();
+
+            AddHeader("UIElement Size");
+            AddOption("Show Size", elementState.ToggleShowSize, "Show the size of every element for active UIElements");
+
+            AddSlider(
+                title: "X Offset",
+                min: -100,
+                max: 100,
+                defaultValue: 0,
+                onValueChanged: elementState.SetSizeXOffset,
+                hover: "Set the X offset of the type text",
+                increment: 1
+            );
+
+            AddSlider(
+                title: "Y Offset",
+                min: -100,
+                max: 100,
+                defaultValue: 0,
+                onValueChanged: elementState.SetSizeYOffset,
+                hover: "Set the Y offset of the type text",
+                increment: 1
+            );
+
+            AddSlider(
+                title: "Text Size",
+                min: 0.1f,
+                max: 2f,
+                defaultValue: 0.5f,
+                onValueChanged: elementState.SetSizeTextSize,
+                hover: "Set the text size of the size text",
+                increment: 0.1f
+            );
+            AddPadding(3f);
+            ActionOption randomizeSizeOffset = new(
+                leftClick: elementState.RandomizeSizeOffset,
+                text: "Randomize Offset",
+                hover: "Randomize the offset of the size text"
+            );
+            uiList.Add(randomizeSizeOffset);
+
+            ActionOption resetSizeOffset = new(
+                leftClick: elementState.ResetSizeOffset,
+                text: "Reset Offset",
+                hover: "Reset the offset of the size text"
+            );
+            uiList.Add(resetSizeOffset);
+            AddPadding();
+
+            AddHeader("UIElement Types");
+            AddOption("Show Type", elementState.ToggleShowType, "Show the type of every element for active UIElements");
+
+            AddSlider(
+                title: "X Offset",
+                min: -100,
+                max: 100,
+                defaultValue: 0,
+                onValueChanged: elementState.SetSizeXOffset,
+                hover: "Set the X offset of the type text",
+                increment: 1
+            );
+
+            AddSlider(
+                title: "Y Offset",
+                min: -100,
+                max: 100,
+                defaultValue: 0,
+                onValueChanged: elementState.SetSizeYOffset,
+                hover: "Set the Y offset of the type text",
+                increment: 1
+            );
+
+            AddSlider(
+                title: "Text Size",
+                min: 0.1f,
+                max: 2f,
+                defaultValue: 0.5f,
+                onValueChanged: elementState.SetSizeTextSize,
+                hover: "Set the text size of the type text",
+                increment: 0.1f
+            );
+            AddPadding(3f);
+
+            ActionOption randomizeTypeOffset = new(
+                leftClick: elementState.RandomizeTypeOffset,
+                text: "Randomize Offset",
+                hover: "Randomize the offset of the type text"
+            );
+            uiList.Add(randomizeTypeOffset);
+            AddPadding(3f);
+
+            ActionOption resetTypeOffset = new(
+                leftClick: elementState.ResetTypeOffset,
+                text: "Reset Offset",
+                hover: "Reset the offset of the type text"
+            );
+            uiList.Add(resetTypeOffset);
+
+            AddPadding();
+
 
             AddHeader($"All UIElements");
         }
@@ -119,7 +181,7 @@ namespace SquidTestingMod.UI.Elements
                 return;
 
             // Gather distinct UIElement type names
-            var distinctTypes = debugState.elements
+            var distinctTypes = elementState.elements
                 .Select(ele => ele.GetType().Name)
                 .Where(name => !string.IsNullOrEmpty(name))
                 .Distinct()
@@ -151,7 +213,7 @@ namespace SquidTestingMod.UI.Elements
                     // Create the UI option
                     var newOption = AddOption(
                         text: typeName,
-                        leftClick: () => debugState.ToggleElement(typeName),
+                        leftClick: () => elementState.ToggleElement(typeName),
                         hover: $"Show all {typeName} UIElements",
                         padding: 0f
                     );

@@ -15,7 +15,7 @@ namespace SquidTestingMod.Common.Players
                 // Log.SlowInfo("Both KillAura and God mode are enabled!");
 
                 // check if within range 1 blocks
-                if (npc.Distance(Main.LocalPlayer.Center) < 5 * 16)
+                if (npc.Distance(Main.LocalPlayer.Center) < 5 * 16 && !npc.townNPC)
                 {
                     // Instantly kill the NPC...
                     npc.StrikeInstantKill();
