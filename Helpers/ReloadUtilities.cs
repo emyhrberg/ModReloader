@@ -127,12 +127,13 @@ namespace SquidTestingMod.Helpers
                 });
             });
 
-            //
-            buildModMethod.Invoke(buildModInstance, [(object mc) => {
+            // 6. Creating a task
+            Main.menuMode = 10003;
+            Task.Run(() => (Task)buildModMethod.Invoke(buildModInstance, [(object mc) => {
                 foreach (var modPath in modPaths) {
-                    mcBuildModFolder.Invoke(mc, null);
+                    mcBuildModFolder.Invoke(mc, [modPath]);
                 }
-            }, true]);
+            }, true]));
         }
 
         public static void BuildAndReloadMod(Action actionAfterBuild = null)
