@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
@@ -36,75 +35,90 @@ namespace SquidTestingMod.UI.Elements
             Placeables,
         }
 
-        private enum ItemSort
-        {
-            ID,
-            Value,
-            Rarity,
-            Name,
-            Damage,
-            Defense
-        }
-
         // Filtering fields
         private ItemFilter currentFilter = ItemFilter.All;
         private List<(FilterButton button, ItemFilter filter)> filterButtons = new();
 
-        // Sorting fields
-        private bool ascending = true;  // default ascending
-        private ItemSort currentSort = ItemSort.ID;
-        private List<(SortButton button, ItemSort sort)> sortButtons = new();
+        // Mod sorting fields
+        private List<ModSortButton> modSortButtons = new();
+        private string currentModFilter = "";
+
+        // Call this when user selects a particular mod (e.g., from a ModSortButton).
+        private void FilterByMod(string modName)
+        {
+            currentModFilter = modName; // or set to "" to disable mod filtering
+            FilterItems();
+        }
 
         public ItemSpawner() : base(header: "Item Spawner")
         {
             // Add filter buttons
             AddFilterButton(Ass.FilterAll, "Filter All", ItemFilter.All, 0);
             AddFilterButton(Ass.FilterMelee, "Filter All Weapons", ItemFilter.AllWeapons, 25);
-            AddFilterButton(Ass.FilterMelee, "Filter Melee Weapons", ItemFilter.Melee, 50);
-            // AddFilterButton(Ass.FilterRanged, "Filter Ranged Weapons", ItemFilter.Ranged, 75);
-            // AddFilterButton(Ass.FilterMagic, "Filter Magic Weapons", ItemFilter.Magic, 100);
-            // AddFilterButton(Ass.FilterSummon, "Filter Summon Weapons", ItemFilter.Summon, 125);
-            AddFilterButton(Ass.FilterArmor, "Filter Armor", ItemFilter.Armor, 75);
-            // AddFilterButton(Ass.FilterVanity, "Filter Vanity", ItemFilter.Vanity, 175);
+            AddFilterButton(Ass.FilterArmor, "Filter Armor", ItemFilter.Armor, 50);
+            AddFilterButton(Ass.FilterVanity, "Filter Vanity", ItemFilter.Vanity, 75);
             AddFilterButton(Ass.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 100);
             AddFilterButton(Ass.FilterPotion, "Filter Potions", ItemFilter.Potions, 125);
             AddFilterButton(Ass.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 150);
-
-            // Add sort buttons
-            SortButton id = AddSortButton(Ass.SortID, "Sort by ID", ItemSort.ID, 0);
-            id.Active = true; // Set "ID" to active sort by default
-            AddSortButton(Ass.SortValue, "Sort by Value", ItemSort.Value, 25);
-            AddSortButton(Ass.SortName, "Sort by Name", ItemSort.Name, 50);
-            AddSortButton(Ass.SortRarity, "Sort by Rarity", ItemSort.Rarity, 75);
-            // Additional sort buttons can be added here.
 
             // Activate the correct buttons for filters and sorts
             foreach (var (btn, flt) in filterButtons)
                 btn.Active = flt == currentFilter;
 
-            foreach (var (btn, srt) in sortButtons)
-                btn.Active = srt == currentSort;
+            AddModSortButtons();
 
             // Add items to the grid
             AddItemSlotsToGrid();
         }
 
-        private SortButton AddSortButton(Asset<Texture2D> texture, string hoverText, ItemSort sort, float left)
+        private void AddModSortButtons()
         {
-            SortButton button = new SortButton(texture, hoverText);
-            button.Left.Set(left, 0);
-            button.Width.Set(21f, 0f);
-            sortButtons.Add((button, sort));
-            button.OnLeftClick += (evt, element) =>
+            // Add "All Mods" button first:
+            ModSortButton allMods = new(
+                texture: Ass.FilterAll,
+                hoverText: "All Mods",
+                internalModName: null,
+                left: 0
+            );
+            allMods.OnLeftClick += (evt, ele) =>
             {
-                ascending = !ascending; // flip sort order
-                currentSort = sort; // set current sort
-                foreach (var (btn, srt) in sortButtons)
-                    btn.Active = srt == sort; // set only this sort button to active
-                FilterItems(); // clear and re-add items to grid
+                // Use empty filter for all mods.
+                FilterByMod("");
+                // Set only the All Mods button active.
+                foreach (var btn in modSortButtons)
+                    btn.Active = btn == allMods;
+                allMods.Active = true;
             };
-            Append(button);
-            return button;
+            Append(allMods);
+            modSortButtons.Add(allMods);
+
+            // Add other ModSortButtons:
+            Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+            var mods = ModLoader.Mods.Skip(1); // ignore the built in Modloader mod
+            float left = 25;
+            Log.Info("mods count: " + mods.Count());
+            foreach (Mod mod in mods)
+            {
+                ModSortButton modSortButton = new(
+                    texture: defaultIcon,
+                    hoverText: mod.DisplayNameClean,
+                    internalModName: mod.Name,
+                    left: left
+                );
+                modSortButton.OnLeftClick += (evt, ele) =>
+                {
+                    // When clicking a mod button, use its DisplayNameClean as the filter.
+                    FilterByMod(mod.Name);
+                    // Update active state for all buttons
+                    foreach (var btn in modSortButtons)
+                        btn.Active = (btn == modSortButton);
+                    modSortButton.Active = true;
+                };
+                Append(modSortButton);
+                modSortButtons.Add(modSortButton);
+                left += 25f;
+                Log.Info("ItemSpawner: Added: " + mod.Name);
+            }
         }
 
         private FilterButton AddFilterButton(Asset<Texture2D> texture, string hoverText, ItemFilter filter, float left)
@@ -133,11 +147,11 @@ namespace SquidTestingMod.UI.Elements
 
             Stopwatch s = Stopwatch.StartNew();
 
-            for (int i = 1; i <= allItems2; i++)
+            for (int i = -200; i <= allItems2; i++)
             {
                 if (!ContentSamples.ItemsByType.ContainsKey(i))
                 {
-                    // Log.Warn($"Item ID {i} not found in ContentSamples.ItemsByType");
+                    Log.Warn($"Item ID {i} not found in ContentSamples.ItemsByType");
                     continue;
                 }
 
@@ -148,7 +162,7 @@ namespace SquidTestingMod.UI.Elements
                 // check if air or invalid item
                 if (item.type == ItemID.None || item.type == ItemID.Count)
                 {
-                    // Log.Warn($"Item ID {i} is invalid");
+                    Log.Warn($"Item ID {i} is invalid");
                     continue;
                 }
 
@@ -178,9 +192,18 @@ namespace SquidTestingMod.UI.Elements
                 var filteredSlots = allItemSlots.Where(slot =>
                 {
                     Item item = slot.GetDisplayItem();
+                    // 1) Optional search by name.
                     if (!item.Name.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                         return false;
 
+                    // 2) Mod-based filter if set (skip if item.ModItem == null or different mod).
+                    if (!string.IsNullOrEmpty(currentModFilter))
+                    {
+                        if (item.ModItem == null || item.ModItem.Mod?.Name != currentModFilter)
+                            return false;
+                    }
+
+                    // 3) Standard type-based filter.
                     return currentFilter switch
                     {
                         ItemFilter.All => true,
@@ -197,23 +220,6 @@ namespace SquidTestingMod.UI.Elements
                         _ => false
                     };
                 }).ToList();
-
-                // Sort the filtered items
-                filteredSlots = currentSort switch
-                {
-                    ItemSort.Value => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().value).ToList()
-                                                : filteredSlots.OrderByDescending(s => s.GetDisplayItem().value).ToList(),
-                    ItemSort.Rarity => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().rare).ToList()
-                                                 : filteredSlots.OrderByDescending(s => s.GetDisplayItem().rare).ToList(),
-                    ItemSort.Name => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().Name).ToList()
-                                               : filteredSlots.OrderByDescending(s => s.GetDisplayItem().Name).ToList(),
-                    ItemSort.Damage => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().damage).ToList()
-                                                 : filteredSlots.OrderByDescending(s => s.GetDisplayItem().damage).ToList(),
-                    ItemSort.Defense => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().defense).ToList()
-                                                  : filteredSlots.OrderByDescending(s => s.GetDisplayItem().defense).ToList(),
-                    _ => ascending ? filteredSlots.OrderBy(s => s.GetDisplayItem().type).ToList()
-                                   : filteredSlots.OrderByDescending(s => s.GetDisplayItem().type).ToList()
-                };
 
                 // 3) Switch back to the main thread to update UI safely
                 Main.QueueMainThreadAction(() =>

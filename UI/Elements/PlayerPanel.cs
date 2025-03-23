@@ -15,11 +15,15 @@ namespace SquidTestingMod.UI.Elements
     public class PlayerPanel : OptionPanel
     {
         public List<Option> cheatOptions = new();
+        private Option toggleAll;
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
             AddPadding(5);
             AddHeader("Player");
+
+            toggleAll = AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
+
             // Automatically create an option for each cheat
             foreach (var cheat in PlayerCheatManager.Cheats)
             {
@@ -40,7 +44,6 @@ namespace SquidTestingMod.UI.Elements
                 hover: "Mine all tiles around you when moving (not MP-supported)",
                 textSize: 0.9f
             );
-            AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
             AddPadding();
 
             AddHeader("Actions");
@@ -105,6 +108,8 @@ namespace SquidTestingMod.UI.Elements
             {
                 option.SetState(newState);
             }
+            // Set itself
+            toggleAll.SetState(newState);
         }
     }
 }

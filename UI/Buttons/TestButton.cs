@@ -36,8 +36,11 @@ namespace SquidTestingMod.UI.Buttons
             _scale = 1f + (buttonSize - 70f) * 0.005f;
         }
 
+        private int count = 1;
+
         public async override void LeftClick(UIMouseEvent evt)
         {
+            Main.NewText("TestButton LeftClick. Count: " + count++);
             // Perform actions on leftclick here
             /*
             if (Conf.ClearClientLogOnReload)

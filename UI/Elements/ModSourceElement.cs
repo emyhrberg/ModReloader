@@ -66,7 +66,7 @@ namespace SquidTestingMod.UI.Elements
             modName = Path.GetFileName(modPath);
             if (modName.Length > 20)
                 modName = string.Concat(modName.AsSpan(0, 20), "...");
-            UIText modNameText = new(modName);
+            OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: modName);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);

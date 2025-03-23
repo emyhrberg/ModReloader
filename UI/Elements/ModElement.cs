@@ -22,10 +22,12 @@ namespace SquidTestingMod.UI.Elements
     public class ModElement : UIPanel
     {
         public string modName;
-        private string internalName;
+        public string internalName;
         private ModEnabledText enabledText;
         public ModEnabledIcon modIcon;
         private State state = State.Enabled;
+
+        public State GetState() => state;
 
         public void SetState(State state)
         {
@@ -33,29 +35,10 @@ namespace SquidTestingMod.UI.Elements
             enabledText.SetTextState(state);
         }
 
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            if (modIcon.IsMouseHovering)
-                return;
-
-            base.LeftClick(evt);
-
-            // Toggle state
-            state = state == State.Enabled ? State.Disabled : State.Enabled;
-            enabledText.SetTextState(state);
-            bool enabled = state == State.Enabled;
-
-            Log.Info("Setting mod enabled: " + internalName + " to " + enabled);
-
-            // Use reflection to call SetModEnabled on internalModName
-            var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-            setModEnabled?.Invoke(null, [internalName, enabled]);
-        }
-
-        public ModElement(string modName, string internalName)
+        public ModElement(string modName, string internalModName)
         {
             this.modName = modName;
-            this.internalName = internalName;
+            this.internalName = internalModName;
 
             // size and position
             Width.Set(-35f, 1f);
@@ -70,19 +53,19 @@ namespace SquidTestingMod.UI.Elements
             // maybe because path its not loaded yet.
             Texture2D temp = TextureAssets.MagicPixel.Value;
 
-            modIcon = new(temp, internalName);
+            modIcon = new(temp, internalModName);
             Append(modIcon);
 
             // mod name
             if (modName.Length > 20)
                 modName = string.Concat(modName.AsSpan(0, 20), "...");
-            OptionTitleText modNameText = new(text: modName, hover: internalName);
+            OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);
 
             // enabled text
-            enabledText = new(text: "Enabled");
+            enabledText = new(text: "Enabled", internalModName: internalModName);
             Append(enabledText);
         }
     }

@@ -36,6 +36,7 @@ namespace SquidTestingMod.UI
         public float offset = 0; // START offset for first button position relative to center
         public List<BaseButton> AllButtons = [];
         public ReloadSPButton reloadSPButton;
+        public ReloadMPButton reloadMPButton;
 
         // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState() => AddEverything();
@@ -56,20 +57,19 @@ namespace SquidTestingMod.UI
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
             // Add buttons
-            AddButton<ConfigButton>(Ass.ButtonConfig, "Config", "Temporary config for easy access.", textSize: TextSize);
             AddButton<TestButton>(Ass.CollapseUp, "Testing", "Temporary button used for testing", textSize: TextSize);
-            AddButton<StartGameButton>(Ass.ButtonSecond, "Launch tML", "Start additional tML client", textSize: TextSize - 0.2f);
+            AddButton<StartGameButton>(Ass.ButtonSecond, "Launch", "Start additional tML client", textSize: TextSize);
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game", textSize: TextSize);
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game", textSize: TextSize);
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
-            AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
             AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Oversee all things in the world: NPCs, time, spawn rate, etc", textSize: TextSize);
             AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
+            AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
-            AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
+            reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.ModToReload}", textSize: TextSize);
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);

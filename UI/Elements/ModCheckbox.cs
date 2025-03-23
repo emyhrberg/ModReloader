@@ -59,7 +59,9 @@ namespace SquidTestingMod.UI.Elements
 
                     // set hovertext in reloadSP
                     ReloadSPButton sp = sys.mainState.reloadSPButton;
+                    ReloadMPButton mp = sys.mainState.reloadMPButton;
                     sp.UpdateHoverText("Reload " + modName);
+                    mp.UpdateHoverText("Reload " + modName);
 
                     // set checkbox
                     mod.checkbox.SetCheckState(true);

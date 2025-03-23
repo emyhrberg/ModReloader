@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
 using Terraria;
@@ -40,13 +41,16 @@ namespace SquidTestingMod.Helpers
             }
         }
 
-        public static void Info(string message)
+        public static void Info(string message, [CallerFilePath] string callerFilePath = "")
         {
+            // Extract the class name from the caller's file path.
+            string className = Path.GetFileNameWithoutExtension(callerFilePath);
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null
 
-            instance.Logger.Info(message);
+            // Prepend the class name to the log message.
+            instance.Logger.Info($"[{className}] {message}");
         }
 
         public static void Warn(string message)

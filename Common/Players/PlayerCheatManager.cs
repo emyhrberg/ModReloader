@@ -9,10 +9,13 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Common.Players
 {
-
-
     public class PlayerCheatManager : ModPlayer
     {
+        public record Cheat(string Name, string Description, Func<bool> GetValue, Action<bool> SetValue)
+        {
+            public void Toggle() => SetValue(!GetValue());
+        }
+
         // Booleans for each cheat
         public static bool God = false;
         public static bool Noclip = false;
@@ -21,6 +24,7 @@ namespace SquidTestingMod.Common.Players
         public static bool MineAura = false;
         public static bool BuildAnywhere = false;
         public static bool BuildFaster = false;
+        public static bool TeleportWithRightClick = false;
 
         // Master list of cheats
         public static List<Cheat> Cheats =
@@ -31,7 +35,8 @@ namespace SquidTestingMod.Common.Players
             new Cheat("Kill Aura", "Insta-kill touching enemies", () => KillAura, v => KillAura = v),
             new Cheat("Mine Aura", "Mine tiles around you", () => MineAura, v => MineAura = v),
             new Cheat("Build Anywhere", "Place blocks in mid-air", () => BuildAnywhere, v => BuildAnywhere = v),
-            new Cheat("Build Faster", "Place and mine faster", () => BuildFaster, v => BuildFaster = v)
+            new Cheat("Build Faster", "Place and mine faster", () => BuildFaster, v => BuildFaster = v),
+            new Cheat("Teleport With Right Click", "Right click to teleport to your mouse position", () => TeleportWithRightClick, v => TeleportWithRightClick = v)
         ];
 
         // Called by “Toggle All”
@@ -100,11 +105,6 @@ namespace SquidTestingMod.Common.Players
             // Disable the config option
             Conf.C.EnterWorldSuperMode = false;
             Conf.ForceSaveConfig(Conf.C);
-        }
-
-        public record Cheat(string Name, string Description, Func<bool> GetValue, Action<bool> SetValue)
-        {
-            public void Toggle() => SetValue(!GetValue());
         }
     }
 }

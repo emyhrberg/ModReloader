@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using SquidTestingMod.Common.Systems;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
+using static SquidTestingMod.UI.Elements.Option;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -56,7 +58,7 @@ namespace SquidTestingMod.UI.Elements
                 defaultValue: Main.raining ? 1 : 0,
                 onValueChanged: UpdateRainSlider,
                 increment: 0.1f,
-                hover: "Set rain",
+                hover: "Set rain and cloud intensity",
                 textSize: 0.9f
             );
             uiList.Add(rainSlider);
@@ -85,15 +87,72 @@ namespace SquidTestingMod.UI.Elements
 
             // tracking
             AddHeader("Tracking");
-            AddOption("Track Enemies", DebugEnemyTrackingSystem.ToggleEnemyTracking, "Track all enemies");
-            AddOption("Track Town NPCs", DebugEnemyTrackingSystem.ToggleTownNPCTracking, "Track all town NPCs");
-            AddOption("Track Critters", DebugEnemyTrackingSystem.ToggleCritterTracking, "Track all critters");
+            toggleAllTracking = AddOption("Toggle All", ToggleAllTracking, "Toggle all tracking");
+            foreach (var tracking in TrackingSystem.Trackings)
+            {
+                var option = new Option(
+                    leftClick: tracking.Toggle,
+                    text: tracking.Name,
+                    hover: tracking.TooltipHoverText
+                );
+                trackingOptions.Add(option);
+                uiList.Add(option);
+                AddPadding(3f);
+            }
             AddPadding();
 
             AddHeader("Hitboxes");
-            AddOption("Show Hitboxes", HitboxSystem.ToggleAllHitboxes, "Show hitboxes for player, NPCs, melee projectiles");
+            toggleAllHitboxes = AddOption("Toggle All", ToggleAllHitboxes, "Toggle all hitboxes");
+            foreach (var hitbox in HitboxSystem.Hitboxes)
+            {
+                var option = new Option(
+                    leftClick: hitbox.Toggle,
+                    text: hitbox.Name,
+                    hover: hitbox.HoverTooltipText
+                );
+                hitboxOptions.Add(option);
+                uiList.Add(option);
+                AddPadding(3f);
+            }
             AddPadding();
         }
+
+        private void ToggleAllTracking()
+        {
+            // Decide whether to enable or disable everything
+            bool newVal = !TrackingSystem.AreAllActive;
+            TrackingSystem.SetAll(newVal);
+
+            // Update each option’s UI text
+            State newState = newVal ? State.Enabled : State.Disabled;
+            foreach (Option option in trackingOptions)
+            {
+                option.SetState(newState);
+            }
+            // Set itself
+            toggleAllTracking.SetState(newState);
+        }
+
+        private void ToggleAllHitboxes()
+        {
+            // Decide whether to enable or disable everything
+            bool newVal = !HitboxSystem.AreAllActive;
+            HitboxSystem.SetAllHitboxes(newVal);
+
+            // Update each option’s UI text
+            State newState = newVal ? State.Enabled : State.Disabled;
+            foreach (Option option in hitboxOptions)
+            {
+                option.SetState(newState);
+            }
+            // Set itself
+            toggleAllHitboxes.SetState(newState);
+        }
+
+        private Option toggleAllTracking;
+        public List<Option> trackingOptions = [];
+        private Option toggleAllHitboxes;
+        public List<Option> hitboxOptions = [];
 
         private void UpdateRainSlider(float newValue)
         {

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
+using static SquidTestingMod.UI.Elements.Option;
 
 namespace SquidTestingMod.UI.Elements
 {
@@ -13,6 +15,7 @@ namespace SquidTestingMod.UI.Elements
     public class ModsPanel : OptionPanel
     {
         public List<ModSourcesElement> modSourcesElements = [];
+        private List<ModElement> modElements = [];
 
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
@@ -24,7 +27,31 @@ namespace SquidTestingMod.UI.Elements
 
             AddHeader("Mods List", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
             ConstructEnabledModsList();
-            AddPadding();
+            toggleAllMods = AddOption("Toggle All", leftClick: ToggleAllMods, hover: "Toggle all mods on or off");
+            toggleAllMods.SetState(State.Enabled);
+        }
+
+        private Option toggleAllMods;
+
+        private void ToggleAllMods()
+        {
+            // Determine the new state based on whether all mods are currently enabled
+            bool anyDisabled = modElements.Any(modElement => modElement.GetState() == State.Disabled);
+            State newState = anyDisabled ? State.Enabled : State.Disabled;
+
+            // Set the state for all mod elements
+            foreach (ModElement modElement in modElements)
+            {
+                modElement.SetState(newState);
+                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+
+                // Use reflection to call SetModEnabled on internalModName
+                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
+            }
+
+            // Update the "Toggle All" option's state
+            toggleAllMods.SetState(newState);
         }
 
         private void ConstructEnabledModsList()
@@ -34,6 +61,7 @@ namespace SquidTestingMod.UI.Elements
             {
                 ModElement modElement = new(mod.DisplayNameClean, mod.Name);
                 uiList.Add(modElement);
+                modElements.Add(modElement);
                 AddPadding(3);
             }
         }

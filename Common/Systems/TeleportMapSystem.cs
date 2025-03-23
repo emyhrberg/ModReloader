@@ -34,6 +34,7 @@ namespace SquidTestingMod.Common.Systems
         }
 
         // NOTE: not working in multiplayer
+        // NOTE UPDATE: it DOES work in multiplayer
         private void TP_Map(Vector2 arg1, float arg2)
         {
             if (Main.mouseRight)

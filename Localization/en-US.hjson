@@ -10,7 +10,7 @@ Mods: {
 					NPCSpawner: NPC Spawner
 					Game: Game
 					UI: UI
-					Logging: Logging Header
+					Logging: Logging
 				}
 
 				NPCSpawnLocation: {
@@ -85,7 +85,7 @@ Mods: {
 
 				Logging: {
 					Label: Logging
-					Tooltip: ""
+					Tooltip: Whether to log debug statements from this mod to client.log. Useful for modders.
 				}
 			}
 

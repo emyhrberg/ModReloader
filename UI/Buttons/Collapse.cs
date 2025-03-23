@@ -53,19 +53,37 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            CollapseEverything();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+            if (mainState != null)
+            {
+                mainState.AreButtonsShowing = !mainState.AreButtonsShowing;
+                UpdateButtonVisibility();
+                UpdateCollapseImage();
+            }
         }
 
-        public void CollapseEverything()
+        public void SetCollapsed(bool isCollapsed)
         {
-            UpdateButtonVisibility();
-            UpdateCollapseImage();
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+
+            if (mainState != null)
+            {
+                mainState.AreButtonsShowing = !isCollapsed;
+                UpdateButtonVisibility();
+                UpdateCollapseImage();
+            }
         }
 
         private void UpdateButtonVisibility()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys.mainState.AreButtonsShowing = !sys.mainState.AreButtonsShowing;
+            if (sys == null)
+            {
+                Log.Info("Collapse: MainSystem is null");
+                return;
+            }
 
             foreach (BaseButton btn in sys.mainState.AllButtons)
             {
@@ -76,12 +94,11 @@ namespace SquidTestingMod.UI.Buttons
                 }
 
                 // force MP button to disable when expanded
-                if (btn is ReloadMPButton mpBtn)
-                {
-                    mpBtn.Active = false;
-                    mpBtn.ButtonText.Active = false;
-                }
-
+                // if (btn is ReloadMPButton mpBtn)
+                // {
+                //     mpBtn.Active = false;
+                //     mpBtn.ButtonText.Active = false;
+                // }
             }
         }
 
