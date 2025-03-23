@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Terraria;
@@ -83,21 +84,11 @@ namespace SquidTestingMod.PacketHandlers
                     {
                         var logger = LogManager.GetLogger("SQUID");
 
-                        logger.Info("Clearing modsDirCache");
-
-                        var cache = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-
-                        if (cache is IDictionary dictionary)
-                        {
-                            dictionary.Clear(); // Clears the dictionary without needing LocalMod type
-                            Console.WriteLine("Cache cleared successfully.");
-                        }
-
                         bool o = orig();
 
                         object loadMods = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface").GetField("loadMods", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
 
-                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client"]);
+                        typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
 
 
                         using (var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut))
@@ -113,6 +104,21 @@ namespace SquidTestingMod.PacketHandlers
 
                         using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
                         pipeClientafterRebuild.Connect();
+                        using BinaryReader reader = new BinaryReader(pipeClientafterRebuild);
+                        int number = reader.ReadByte();
+                        logger.Info($"Number from hash: {number}");
+
+                        /*
+                        logger.Info("Clearing modsDirCache");
+
+                        var cache = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+
+                        if (cache is IDictionary dictionary)
+                        {
+                            dictionary.Clear(); // Clears the dictionary without needing LocalMod type
+                            Console.WriteLine("Cache cleared successfully.");
+                        }
+                        */
 
                         logger.Info("Loading mods");
 

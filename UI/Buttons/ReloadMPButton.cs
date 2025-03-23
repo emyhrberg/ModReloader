@@ -5,6 +5,8 @@ using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO.Pipelines;
+using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +14,8 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
+using System.Collections;
+using System.Reflection;
 
 namespace SquidTestingMod.UI.Buttons
 {
@@ -47,18 +51,72 @@ namespace SquidTestingMod.UI.Buttons
             bool altClick = Main.keyState.IsKeyDown(Keys.LeftAlt);
             if (altClick)
             {
-                Active = false;
-                ButtonText.Active = false;
+                ReloadUtilities.PrepareClient(ClientModes.MPMain);
 
-                // set MP active
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                foreach (var btn in sys?.mainState?.AllButtons)
+                if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
-                    if (btn is ReloadSPButton spBtn)
+                    await ReloadUtilities.ExitAndKillServer();
+
+                    int clientCount = Main.player.Where((p) => p.active).Count() - 1;
+                    List<NamedPipeServerStream> clients = new List<NamedPipeServerStream>();
+                    List<Task<string?>> clientResponses = new List<Task<string?>>();
+
+                    Log.Info($"Waiting for {clientCount} clients...");
+
+                    // Wait for conecting all clients
+                    for (int i = 0; i < clientCount; i++)
                     {
-                        spBtn.Active = true;
-                        spBtn.ButtonText.Active = true;
+                        var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeName, PipeDirection.InOut, clientCount);
+                        GC.SuppressFinalize(pipeServer);
+                        await pipeServer.WaitForConnectionAsync();
+                        clients.Add(pipeServer);
+                        Log.Info($"Client {i + 1} connected!");
                     }
+
+                    foreach (var client in clients)
+                    {
+                        clientResponses.Add(ReloadUtilities.ReadPipeMessage(client));
+                    }
+
+                    await Task.WhenAll(clientResponses);
+
+                    foreach (var client in clients)
+                    {
+                        client.Close();
+                        client.Dispose();
+                    }
+
+                    ReloadUtilities.ReloadMod();
+
+                    var logger = LogManager.GetLogger("SQUID");
+
+                    logger.Info("Mod Reloaded");
+                    // After building - reload all other clients
+                    List<NamedPipeServerStream> clientsAfterRebuild = new List<NamedPipeServerStream>();
+
+                    logger.Info($"Waiting for {clientCount} clients...");
+
+                    for (int i = 0; i < clientCount; i++)
+                    {
+                        var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut, clientCount);
+                        GC.SuppressFinalize(pipeServer);
+                        pipeServer.WaitForConnection();
+                        clientsAfterRebuild.Add(pipeServer);
+                        logger.Info($"Client {i + 1} connected after building!");
+                    }
+
+                    foreach (var client in clientsAfterRebuild)
+                    {
+                        client.Close();
+                        client.Dispose();
+                    }
+
+
+                }
+                else if (Main.netMode == NetmodeID.SinglePlayer)
+                {
+                    await ReloadUtilities.ExitWorldOrServer();
+                    ReloadUtilities.ReloadMod();
                 }
                 return;
             }
@@ -106,7 +164,6 @@ namespace SquidTestingMod.UI.Buttons
                     logger.Info("Mod Builded");
                     // After building - reload all other clients
                     List<NamedPipeServerStream> clientsAfterRebuild = new List<NamedPipeServerStream>();
-
                     logger.Info($"Waiting for {clientCount} clients...");
 
                     for (int i = 0; i < clientCount; i++)
@@ -117,6 +174,66 @@ namespace SquidTestingMod.UI.Buttons
                         clientsAfterRebuild.Add(pipeServer);
                         logger.Info($"Client {i + 1} connected after building!");
                     }
+
+
+                    
+                    var modOrganizerType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
+                    var findModsMethod = modOrganizerType.GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static);
+
+                    if (findModsMethod != null)
+                    {
+                        var localMods = findModsMethod.Invoke(null, new object[] { true });
+
+                        if (localMods is IEnumerable modsEnumerable)
+                        {
+                            var targetMod = modsEnumerable.Cast<object>()
+                                .FirstOrDefault(mod =>
+                                {
+                                    Type modType = mod.GetType();
+                                    var nameProperty = modType.GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
+                                    return nameProperty?.GetValue(mod)?.ToString() == "SquidTestingMod";
+                                });
+
+                            if (targetMod != null)
+                            {
+                                // Get `modFile` field from `LocalMod`
+                                Type localModType = targetMod.GetType();
+                                var modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
+                                var modFileInstance = modFileField?.GetValue(targetMod);
+
+                                if (modFileInstance != null)
+                                {
+                                    // Get `Hash` property from `TmodFile`
+                                    Type tmodFileType = modFileInstance.GetType();
+                                    var hashProperty = tmodFileType.GetProperty("Hash", BindingFlags.Public | BindingFlags.Instance);
+                                    var hashValue = hashProperty?.GetValue(modFileInstance) as byte[];
+
+                                    if (hashValue != null)
+                                    {
+                                        logger.Info("Hash: " + BitConverter.ToString(hashValue));
+                                        foreach (var client in clientsAfterRebuild)
+                                        {
+                                            using BinaryWriter writer = new BinaryWriter(client);
+                                            writer.Write(hashValue[0]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        logger.Info("Hash property not found or is null.");
+                                    }
+                                }
+                                else
+                                {
+                                    logger.Info("modFile is null.");
+                                }
+                            }
+                            else
+                            {
+                                logger.Info("Mod not found.");
+                            }
+                        }
+                    }
+
 
                     foreach (var client in clientsAfterRebuild)
                     {
