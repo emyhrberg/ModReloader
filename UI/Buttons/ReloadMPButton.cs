@@ -161,7 +161,7 @@ namespace SquidTestingMod.UI.Buttons
 
                 int worldIdToLoad = ClientDataHandler.WorldID;
 
-                ReloadUtilities.BuildAndReloadMod(() =>
+                ReloadUtilities.BuildAndReloadMods(() =>
                 {
                     //Init logger
                     var logger = LogManager.GetLogger("SQUID");
