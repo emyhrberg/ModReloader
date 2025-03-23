@@ -80,7 +80,9 @@ namespace SquidTestingMod.PacketHandlers
 
                 var modName = Conf.ModToReload;
 
-                var hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
+                Hook hookForUnload = null;
+
+                hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
                     {
                         var logger = LogManager.GetLogger("SQUID");
 
@@ -104,11 +106,11 @@ namespace SquidTestingMod.PacketHandlers
 
                         using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
                         pipeClientafterRebuild.Connect();
+                        /*
                         using BinaryReader reader = new BinaryReader(pipeClientafterRebuild);
                         int number = reader.ReadByte();
                         logger.Info($"Number from hash: {number}");
-
-                        /*
+                        */
                         logger.Info("Clearing modsDirCache");
 
                         var cache = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
@@ -118,9 +120,10 @@ namespace SquidTestingMod.PacketHandlers
                             dictionary.Clear(); // Clears the dictionary without needing LocalMod type
                             Console.WriteLine("Cache cleared successfully.");
                         }
-                        */
 
                         logger.Info("Loading mods");
+
+                        hookForUnload?.Dispose();
 
                         return o;
                     });

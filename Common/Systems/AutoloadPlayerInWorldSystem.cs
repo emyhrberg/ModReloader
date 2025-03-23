@@ -41,7 +41,7 @@ namespace SquidTestingMod.Common.Systems
                     onSuccessfulLoad += EnterSingleplayerWorld;
                 }else if (ClientDataHandler.ClientMode == ClientModes.MPMain)
                 {
-                    onSuccessfulLoad += StartServerAndEnterMultiplayerWorld;
+                    onSuccessfulLoad += EnterLocalServer;
                 }else if (ClientDataHandler.ClientMode == ClientModes.MPMinor)
                 {
                     onSuccessfulLoad += EnterLocalServer;
