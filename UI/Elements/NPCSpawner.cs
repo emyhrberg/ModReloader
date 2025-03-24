@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
@@ -213,5 +214,27 @@ namespace SquidTestingMod.UI.Elements
         }
 
         #endregion
+
+        // mod icon drawing
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            // draw icon hovering
+            foreach (FilterModsButton modsButton in modSortButtons)
+            {
+                if (modsButton is FilterModsButton filterModsButton)
+                {
+                    var icon = filterModsButton.updatedTex;
+                    if (icon != null && filterModsButton.IsMouseHovering)
+                    {
+                        Vector2 mousePos = new(Main.mouseX, Main.mouseY - icon.Height);
+
+                        spriteBatch.Draw(icon, mousePos, null, Color.White, 0f, Vector2.Zero, scale: 1f,
+                        SpriteEffects.None, 0f);
+                    }
+                }
+            }
+        }
     }
 }
