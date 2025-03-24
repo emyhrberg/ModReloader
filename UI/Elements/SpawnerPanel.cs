@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Common.Configs;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
@@ -16,10 +18,6 @@ namespace SquidTestingMod.UI.Elements
     /// </summary>
     public abstract class SpawnerPanel : DraggablePanel
     {
-        // Panel size
-        private const int W = 400 + padding; // Width of the panel
-        private const int H = 400; // Height of the panel
-
         // UI Elements
         protected CustomGrid ItemsGrid;
         protected UIScrollbar Scrollbar;
@@ -36,8 +34,8 @@ namespace SquidTestingMod.UI.Elements
         public SpawnerPanel(string header) : base(header)
         {
             // Set the panel properties
-            Width.Set(W, 0f);
-            Height.Set(H, 0f);
+            Width.Set(Conf.PanelWidth, 0f);
+            Height.Set(Conf.PanelHeight, 0f);
             HAlign = 0.0f;
             VAlign = 1.0f;
             Top.Set(-70, 0f);
@@ -64,7 +62,8 @@ namespace SquidTestingMod.UI.Elements
             Scrollbar = new UIScrollbar()
             {
                 HAlign = 1f,
-                Height = { Pixels = H - 130 - 10 }, // -10 because of scrollbarPadding=5 on top and bottom
+                Height = { Pixels = Conf.PanelHeight - 130 - 10 }, // -10 because of scrollbarPadding=5 on top and bottom
+                MaxHeight = { Pixels = 700 },
                 Width = { Pixels = 20 },
                 Top = { Pixels = -padding + 30 + padding + 35 + padding + 5 },
                 Left = { Pixels = 0f },
@@ -72,7 +71,8 @@ namespace SquidTestingMod.UI.Elements
 
             ItemsGrid = new CustomGrid()
             {
-                Height = { Pixels = H - 130 },
+                MaxHeight = { Pixels = 700 },
+                Height = { Pixels = Conf.PanelHeight - 130 },
                 Width = { Percent = 1f, Pixels = -20 },
                 ListPadding = 0f, // distance between items
                 Top = { Pixels = -padding + 30 + padding + 35 + padding },
@@ -93,7 +93,7 @@ namespace SquidTestingMod.UI.Elements
                 float maxHeight = 180f;
 
                 // Clamp max height
-                if (newHeight > H || newHeight < maxHeight)
+                if (newHeight > Conf.PanelHeight + 60f || newHeight < maxHeight)
                 {
                     return;
                 }
@@ -103,7 +103,7 @@ namespace SquidTestingMod.UI.Elements
                 // newHeight = 200f;
 
 
-                // Set new heights
+                // Resize: Set new heights!
                 Height.Set(newHeight, 0f);
                 ItemsGrid.Height.Set(newHeight - 140, 0f);
                 Scrollbar.Height.Set(newHeight - 140 - 10, 0f);
@@ -141,6 +141,7 @@ namespace SquidTestingMod.UI.Elements
             IsDragging = false;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
 
+
             base.LeftMouseDown(evt);
         }
 
@@ -160,6 +161,16 @@ namespace SquidTestingMod.UI.Elements
             if (!Active)
                 return;
 
+            // height
+            float panelH = Conf.PanelHeight;
+
+            //Height.Set(panelH, 0);
+            //ItemsGrid.Height.Set(panelH - 130, 0);
+            //Scrollbar.Height.Set(panelH - 140, 0);
+
+            // width
+            Width.Set(Conf.PanelWidth, 0);
+
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
@@ -171,6 +182,16 @@ namespace SquidTestingMod.UI.Elements
             {
                 dragging = false;  // Prevent panel dragging while resizing
                 IsDragging = false;
+                return;
+            }
+
+            // If we have buttons to the left, move the panel to the right
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (Conf.ButtonsPosition == "left" && sys.mainState.AreButtonsShowing)
+            {
+                Left.Set(sys.mainState.ButtonSize, 0f);
+                // Log.SlowInfo("Moving panel to the right");
+                Recalculate();
                 return;
             }
 

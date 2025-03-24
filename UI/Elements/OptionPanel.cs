@@ -31,7 +31,7 @@ namespace SquidTestingMod.UI.Elements
         {
             // panel settings
             BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
-            Height.Set(400, 0f);
+            Height.Set(Conf.PanelHeight, 0f);
             Top.Set(-70, 0f);
             Left.Set(-20, 0f);
 

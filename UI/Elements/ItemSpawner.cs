@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Helpers;
@@ -41,7 +42,7 @@ namespace SquidTestingMod.UI.Elements
         private List<(FilterButton button, ItemFilter filter)> filterButtons = new();
 
         // Mod sorting fields
-        private List<ModSortButton> modSortButtons = new();
+        public List<FilterModsButton> modSortButtons = new();
         private string currentModFilter = "";
 
         // Call this when user selects a particular mod (e.g., from a ModSortButton).
@@ -61,6 +62,7 @@ namespace SquidTestingMod.UI.Elements
             AddFilterButton(Ass.FilterAccessories, "Filter Accessories", ItemFilter.Accessories, 100);
             AddFilterButton(Ass.FilterPotion, "Filter Potions", ItemFilter.Potions, 125);
             AddFilterButton(Ass.FilterPlaceables, "Filter Placeables", ItemFilter.Placeables, 150);
+            AddFilterButton(Ass.FilterMisc, "Filter Misc", ItemFilter.Misc, 175);
 
             // Activate the correct buttons for filters and sorts
             foreach (var (btn, flt) in filterButtons)
@@ -75,7 +77,7 @@ namespace SquidTestingMod.UI.Elements
         private void AddModSortButtons()
         {
             // Add "All Mods" button first:
-            ModSortButton allMods = new(
+            FilterModsButton allMods = new(
                 texture: Ass.FilterAll,
                 hoverText: "All Mods",
                 internalModName: null,
@@ -100,7 +102,7 @@ namespace SquidTestingMod.UI.Elements
             Log.Info("mods count: " + mods.Count());
             foreach (Mod mod in mods)
             {
-                ModSortButton modSortButton = new(
+                FilterModsButton modSortButton = new(
                     texture: defaultIcon,
                     hoverText: mod.DisplayNameClean,
                     internalModName: mod.Name,
@@ -218,6 +220,13 @@ namespace SquidTestingMod.UI.Elements
                         ItemFilter.Accessories => item.accessory,
                         ItemFilter.Potions => item.consumable && item.buffType > 0 || item.potion,
                         ItemFilter.Placeables => item.createTile >= TileID.Dirt || item.createWall >= 0,
+                        ItemFilter.Misc => !((item.damage > 0) ||
+                          (item.defense > 0 && (item.legSlot > 0 || item.bodySlot > 0 || item.headSlot > 0)) ||
+                          item.vanity ||
+                          item.accessory ||
+                          (item.consumable && (item.buffType > 0 || item.potion)) ||
+                          item.createTile >= TileID.Dirt || item.createWall >= 0
+                       ),
                         _ => false
                     };
                 }).ToList();
@@ -232,6 +241,27 @@ namespace SquidTestingMod.UI.Elements
                     ItemCountText.SetText($"{ItemsGrid.Count} Items in {Math.Round(s.Elapsed.TotalSeconds, 3)} seconds");
                 });
             });
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            // draw icon hovering
+            foreach (FilterModsButton modsButton in modSortButtons)
+            {
+                if (modsButton is FilterModsButton filterModsButton)
+                {
+                    var icon = filterModsButton.updatedTex;
+                    if (icon != null && filterModsButton.IsMouseHovering)
+                    {
+                        Vector2 mousePos = new(Main.mouseX, Main.mouseY - icon.Height);
+
+                        spriteBatch.Draw(icon, mousePos, null, Color.White, 0f, Vector2.Zero, scale: 1f,
+                        SpriteEffects.None, 0f);
+                    }
+                }
+            }
         }
     }
 }

@@ -112,6 +112,8 @@ namespace SquidTestingMod.UI.Elements
                 Main.playerInventory = false;
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
                 sys?.mainState?.collapse?.SetCollapsed(true);
+                sys.mainState.AreButtonsShowing = false;
+                sys.mainState.collapse.UpdateCollapseImage();
             }
             catch (Exception ex)
             {

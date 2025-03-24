@@ -4,6 +4,7 @@ using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
@@ -58,7 +59,10 @@ namespace SquidTestingMod.UI.Elements
 
                 // Draw tooltip text if hovering.
                 if (IsMouseHovering)
-                    Main.hoverItemName = HoverText;
+                {
+                    UICommon.TooltipMouseText(HoverText);
+                }
+                // Main.hoverItemName = HoverText;
             }
 
         }

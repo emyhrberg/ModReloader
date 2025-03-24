@@ -59,6 +59,7 @@ namespace SquidTestingMod.Helpers
         public static Asset<Texture2D> FilterPotion;
         public static Asset<Texture2D> FilterPlaceables;
         public static Asset<Texture2D> FilterTown;
+        public static Asset<Texture2D> FilterMisc;
         public static Asset<Texture2D> FilterMob;
         public static Asset<Texture2D> SortID;
         public static Asset<Texture2D> SortValue;

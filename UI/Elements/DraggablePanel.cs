@@ -29,6 +29,9 @@ namespace SquidTestingMod.UI.Elements
         protected const float DragThreshold = 3f; // very low threshold for dragging
         protected Vector2 mouseDownPos;
 
+        // Size
+        protected static float PANEL_WIDTH = 350f;
+
         #region Constructor
         public DraggablePanel(string header)
         {
@@ -39,8 +42,8 @@ namespace SquidTestingMod.UI.Elements
 
             // Set some default panel properties 
             // Children will override this hopefully :)
-            Width.Set(350, 0f);
-            Height.Set(530, 0f);
+            Width.Set(PANEL_WIDTH, 0f);
+            Height.Set(Conf.PanelHeight, 0f);
             HAlign = 1.0f; // right aligned
             VAlign = 1.0f; // bottom aligned
             BackgroundColor = darkBlue;

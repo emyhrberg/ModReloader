@@ -26,22 +26,29 @@ namespace SquidTestingMod.Common.Configs
 
         [Header("UI")]
 
-        [DrawTicks]
         [OptionStrings(["left", "bottom"])]
         [DefaultValue("bottom")]
         public string ButtonsPosition;
 
-        [DrawTicks]
         [Range(50f, 80f)]
         [Increment(5f)]
         [DefaultValue(60)]
         public float ButtonSize = 60;
 
-        [DrawTicks]
         [Range(0.4f, 1.0f)]
         [Increment(0.1f)]
         [DefaultValue(0.9f)]
         public float TextSize = 0.9f;
+
+        [Range(300, 700f)]
+        [Increment(50f)]
+        [DefaultValue(550f)]
+        public float PanelWidth = 400f;
+
+        [Range(300, 700f)]
+        [Increment(50f)]
+        [DefaultValue(500f)]
+        public float PanelHeight = 600;
 
         [DefaultValue(false)]
         public bool HideCollapseButton = false;
@@ -140,6 +147,8 @@ namespace SquidTestingMod.Common.Configs
         public static string ButtonsPosition => C.ButtonsPosition;
         public static bool HideCollapseButton => C.HideCollapseButton;
         public static bool DraggablePanels => C.DraggablePanels;
+        public static float PanelWidth => C.PanelWidth;
+        public static float PanelHeight => C.PanelHeight;
 
         // Game
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;

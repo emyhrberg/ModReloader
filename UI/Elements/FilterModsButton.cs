@@ -5,6 +5,7 @@ using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
@@ -12,7 +13,7 @@ namespace SquidTestingMod.UI.Elements
     /// <summary>
     /// A button that can be clicked to sort items in the ItemSpawner and NPCSpawner panels.
     /// </summary>
-    public class ModSortButton : UIImageButton
+    public class FilterModsButton : UIImageButton
     {
         // Variables
         private readonly Asset<Texture2D> icon;
@@ -23,7 +24,7 @@ namespace SquidTestingMod.UI.Elements
         public Texture2D givenTexture;
         public Texture2D updatedTex;
 
-        public ModSortButton(Asset<Texture2D> texture, string hoverText, string internalModName, float left) : base(texture)
+        public FilterModsButton(Asset<Texture2D> texture, string hoverText, string internalModName, float left) : base(texture)
         {
             this.givenTexture = texture.Value;
             this.internalModName = internalModName;
@@ -82,7 +83,12 @@ namespace SquidTestingMod.UI.Elements
 
                 // Draw tooltip text if hovering.
                 if (IsMouseHovering)
-                    Main.hoverItemName = HoverText;
+                {
+                    UICommon.TooltipMouseText(HoverText);
+                    // Vector2 mousePos = new(Main.mouseX, Main.mouseY);
+                    // spriteBatch.Draw(updatedTex, mousePos, Color.White);
+                }
+                // Main.hoverItemName = HoverText;
             }
         }
     }

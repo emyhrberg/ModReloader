@@ -97,6 +97,16 @@ Mods: {
 					Label: Log To Chat
 					Tooltip: ""
 				}
+
+				PanelWidth: {
+					Label: Panel Width
+					Tooltip: ""
+				}
+
+				PanelHeight: {
+					Label: Panel Height
+					Tooltip: ""
+				}
 			}
 
 			NPCSpawnerConfig: {
