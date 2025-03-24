@@ -42,7 +42,7 @@ namespace SquidTestingMod.UI.Elements
             toggleAllEnabledMods.SetState(State.Enabled);
             AddPadding();
 
-            AddHeader("Disabled Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
+            AddHeader("All Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
             ConstructDisabledMods();
             toggleAllDisabledMods = AddOption("Toggle All", leftClick: ToggleAllDisabledMods, hover: "Toggle all disabled mods on or off");
             AddPadding();
@@ -65,7 +65,7 @@ namespace SquidTestingMod.UI.Elements
                 {
                     string modName = mod.ToString();
                     // check if mod already exists in enabledmods.
-                    Log.Info("enabled mods: " + string.Join(", ", modElements.Select(modElement => modElement.internalName)));
+                    // Log.Info("enabled mods: " + string.Join(", ", modElements.Select(modElement => modElement.internalName)));
 
                     if (modElements.Any(modElement => modElement.internalName == modName))
                     {
@@ -87,7 +87,6 @@ namespace SquidTestingMod.UI.Elements
                         modName: modName,
                         internalModName: modName,
                         icon: disabledIcon);
-                    // icon: null); // pass null to disable
 
 
                     modElement.SetState(State.Disabled);
@@ -105,19 +104,18 @@ namespace SquidTestingMod.UI.Elements
 
         private Texture2D GetDisabledIcon(object TmodFile)
         {
-            // Get the icon for disabled mods
             try
             {
-                // Retrieve the HasFile method to check for "icon.png".
+                // Check if the file exists
                 MethodInfo hasFileMethod = TmodFile.GetType().GetMethod("HasFile", BindingFlags.Public | BindingFlags.Instance);
-                bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, ["icon.png"]);
+                bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, new object[] { "icon.png" });
                 if (!hasIcon)
                 {
                     Log.SlowInfo("The TmodFile does not have an icon.");
                     return null;
                 }
 
-                // Retrieve the Open
+                // Retrieve the Open method (no parameters).
                 MethodInfo openMethod = TmodFile.GetType().GetMethod("Open", BindingFlags.Public | BindingFlags.Instance);
 
                 // Retrieve the GetStream method that takes a string and a bool.
@@ -125,29 +123,19 @@ namespace SquidTestingMod.UI.Elements
                     "GetStream",
                     BindingFlags.Public | BindingFlags.Instance,
                     null,
-                    [typeof(string), typeof(bool)], // string and bool parameters
+                    [typeof(string), typeof(bool)],
                     null
                 );
 
-                // Open the mod file to ensure proper access and disposal.
-                IDisposable openResult = openMethod.Invoke(TmodFile, null) as IDisposable;
-                if (openResult != null)
-                {
-                    using (openResult)
-                    {
-                        // Get the stream for "icon.png" from the mod file.
-                        Stream s = (Stream)getStreamMethod.Invoke(TmodFile, ["icon.png", true]);
+                // Use a nested using block so both the open result and the stream are disposed.
+                using var openResult = openMethod.Invoke(TmodFile, []) as IDisposable;
 
-                        // Create an untracked asset
-                        Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(s, ".png", AssetRequestMode.ImmediateLoad);
-                        Log.SlowInfo("Successfully loaded icon from TmodFile.");
-                        return iconTexture.Value;
-                    }
-                }
-                else
-                {
-                    Log.SlowInfo("The result of 'Open' does not implement IDisposable.");
-                }
+                // Get the stream for "icon.png". Note we pass both parameters.
+                using Stream s = (Stream)getStreamMethod.Invoke(TmodFile, ["icon.png", true]);
+
+                Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(s, ".png", AssetRequestMode.ImmediateLoad);
+                Log.SlowInfo("Successfully loaded icon from TmodFile.");
+                return iconTexture.Value;
             }
             catch (Exception ex)
             {
@@ -155,7 +143,6 @@ namespace SquidTestingMod.UI.Elements
             }
             return null;
         }
-
 
         private void ToggleAllDisabledMods()
         {
@@ -204,7 +191,9 @@ namespace SquidTestingMod.UI.Elements
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
             foreach (Mod mod in mods)
             {
-                ModElement modElement = new(mod.DisplayNameClean, mod.Name);
+                // you could change this to send the "clean name"
+                // this is where we set the text of the mod element
+                ModElement modElement = new(mod.Name, mod.Name);
                 uiList.Add(modElement);
                 modElements.Add(modElement);
                 AddPadding(3);

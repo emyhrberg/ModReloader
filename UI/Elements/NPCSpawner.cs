@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SquidTestingMod.Common.Configs;
@@ -27,6 +28,66 @@ namespace SquidTestingMod.UI.Elements
         private NPCFilter currentFilter = NPCFilter.All;
         private List<(FilterButton button, NPCFilter filter)> filterButtons = new();
 
+        // Mod sorting fields
+        public List<FilterModsButton> modSortButtons = new();
+        private string currentModFilter = "";
+
+        // Call this when user selects a particular mod (e.g., from a ModSortButton).
+        private void FilterByMod(string modName)
+        {
+            currentModFilter = modName; // or set to "" to disable mod filtering
+            FilterItems();
+        }
+
+        private void AddModSortButtons()
+        {
+            // Add "All Mods" button first:
+            FilterModsButton allMods = new(
+                texture: Ass.FilterAll,
+                hoverText: "All Mods",
+                internalModName: null,
+                left: 0
+            );
+            allMods.OnLeftClick += (evt, ele) =>
+            {
+                // Use empty filter for all mods.
+                FilterByMod("");
+                // Set only the All Mods button active.
+                foreach (var btn in modSortButtons)
+                    btn.Active = btn == allMods;
+                allMods.Active = true;
+            };
+            Append(allMods);
+            modSortButtons.Add(allMods);
+
+            // Add other ModSortButtons:
+            Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+            var mods = ModLoader.Mods.Skip(1); // ignore the built in Modloader mod
+            float left = 25;
+            Log.Info("mods count: " + mods.Count());
+            foreach (Mod mod in mods)
+            {
+                FilterModsButton modSortButton = new(
+                    texture: defaultIcon,
+                    hoverText: mod.DisplayNameClean,
+                    internalModName: mod.Name,
+                    left: left
+                );
+                modSortButton.OnLeftClick += (evt, ele) =>
+                {
+                    // When clicking a mod button, use its DisplayNameClean as the filter.
+                    FilterByMod(mod.Name);
+                    // Update active state for all buttons
+                    foreach (var btn in modSortButtons)
+                        btn.Active = (btn == modSortButton);
+                    modSortButton.Active = true;
+                };
+                Append(modSortButton);
+                modSortButtons.Add(modSortButton);
+                left += 25f;
+            }
+        }
+
         public NPCSpawner() : base(header: "NPC Spawner")
         {
             // Add filter buttons
@@ -40,6 +101,8 @@ namespace SquidTestingMod.UI.Elements
             // Set default filter to All
             foreach (var (btn, flt) in filterButtons)
                 btn.Active = flt == currentFilter;
+
+            AddModSortButtons();
         }
 
         private FilterButton AddFilterButton(Asset<Texture2D> texture, string hoverText, NPCFilter filter, float left)
@@ -116,6 +179,17 @@ namespace SquidTestingMod.UI.Elements
                 // First, check the search text.
                 if (!npc.FullName.Contains(searchText, StringComparison.CurrentCultureIgnoreCase))
                     continue;
+
+                // 2) Mod-based filter
+                if (!string.IsNullOrEmpty(currentModFilter))
+                {
+                    if (npc.ModNPC == null || npc.ModNPC.Mod == null)
+                        continue;
+
+                    Mod mod = ModLoader.GetMod(npc.ModNPC.Mod.Name);
+                    if (mod == null || mod.Name != currentModFilter)
+                        continue;
+                }
 
                 // Then, check against the selected filter.
                 bool passesFilter = currentFilter switch

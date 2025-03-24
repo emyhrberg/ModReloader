@@ -48,10 +48,25 @@ namespace SquidTestingMod.UI.Elements
             // mod name
             if (modName.Length > 20)
                 modName = string.Concat(modName.AsSpan(0, 20), "...");
-            OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName);
-            modNameText.Left.Set(30, 0);
-            modNameText.VAlign = 0.5f;
-            Append(modNameText);
+
+            // if icon is not null, it means the mod is not loaded.
+            // this is because we send the icon in the constructor for unloaded mods.
+            // so we should not allow the user to click on it.
+            // so we send no hover option
+            if (icon == null)
+            {
+                OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName);
+                modNameText.Left.Set(30, 0);
+                modNameText.VAlign = 0.5f;
+                Append(modNameText);
+            }
+            else
+            {
+                OptionTitleText modNameText = new(text: modName, internalModName: internalModName);
+                modNameText.Left.Set(30, 0);
+                modNameText.VAlign = 0.5f;
+                Append(modNameText);
+            }
 
             // enabled text
             enabledText = new(text: "Enabled", internalModName: internalModName);

@@ -99,7 +99,6 @@ namespace SquidTestingMod.UI.Elements
             Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
             var mods = ModLoader.Mods.Skip(1); // ignore the built in Modloader mod
             float left = 25;
-            Log.Info("mods count: " + mods.Count());
             foreach (Mod mod in mods)
             {
                 FilterModsButton modSortButton = new(
@@ -120,7 +119,6 @@ namespace SquidTestingMod.UI.Elements
                 Append(modSortButton);
                 modSortButtons.Add(modSortButton);
                 left += 25f;
-                Log.Info("ItemSpawner: Added: " + mod.Name);
             }
         }
 

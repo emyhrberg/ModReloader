@@ -38,6 +38,12 @@ namespace SquidTestingMod.UI.Elements
                 return;
             }
 
+            // if hover is empty, the button is disabled.
+            if (string.IsNullOrEmpty(hover))
+            {
+                return;
+            }
+
             base.LeftClick(evt);
 
             leftClick?.Invoke();
