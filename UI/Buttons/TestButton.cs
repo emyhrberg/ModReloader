@@ -41,6 +41,7 @@ namespace SquidTestingMod.UI.Buttons
         public async override void LeftClick(UIMouseEvent evt)
         {
             Main.NewText("TestButton LeftClick. Count: " + count++);
+
             // Perform actions on leftclick here
             /*
             if (Conf.ClearClientLogOnReload)

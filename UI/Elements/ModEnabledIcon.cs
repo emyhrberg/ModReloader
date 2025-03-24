@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework.Graphics;
 using SquidTestingMod.Helpers;
 using Terraria.GameContent.UI.Elements;
@@ -9,12 +10,14 @@ namespace SquidTestingMod.UI.Elements
     {
         private string internalModName;
         public Texture2D updatedTex;
+        private bool hasIcon;
 
         public bool IsHovered => IsMouseHovering;
 
-        public ModEnabledIcon(Texture2D tex, string internalModName) : base(tex)
+        public ModEnabledIcon(Texture2D tex, string internalModName = "", bool hasIcon=true) : base(tex)
         {
             this.internalModName = internalModName;
+            this.hasIcon = hasIcon;
 
             float size = 25f;
             MaxHeight.Set(size, 0f);
@@ -29,9 +32,22 @@ namespace SquidTestingMod.UI.Elements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!hasIcon)
+            {
+                //base.Draw(spriteBatch);
+                return;
+            }
+
             string path = $"{internalModName}/icon";
 
-            updatedTex = ModContent.Request<Texture2D>(path).Value;
+            try
+            {
+                updatedTex = ModContent.Request<Texture2D>(path).Value;
+            }
+            catch (Exception e)
+            {
+                Log.Warn("Failed to get updatedTex:" + e);
+            }
 
             if (updatedTex != null)
             {

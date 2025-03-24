@@ -57,7 +57,7 @@ namespace SquidTestingMod.UI
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
             // Add buttons
-            // AddButton<TestButton>(Ass.CollapseUp, "Testing", "Temporary button used for testing", textSize: TextSize);
+            AddButton<TestButton>(Ass.CollapseUp, "Testing", "Temporary button used for testing", textSize: TextSize);
             AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client", textSize: TextSize);
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
             AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Oversee all things in the world: NPCs, time, spawn rate, etc", textSize: TextSize);

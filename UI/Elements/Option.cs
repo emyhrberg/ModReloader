@@ -39,9 +39,6 @@ namespace SquidTestingMod.UI.Elements
             Left.Set(5, 0);
 
             // mod icon
-            // string path = $"{internalName}/icon";
-            // Texture2D temp = ModContent.Request<Texture2D>(path);
-
             // passing a temp icon because above doesnt work
             // maybe because path its not loaded yet.
             Texture2D temp = TextureAssets.MagicPixel.Value;

@@ -16,7 +16,7 @@ namespace SquidTestingMod.UI.Elements
         public string internalName;
         private ModEnabledText enabledText;
         public ModEnabledIcon modIcon;
-        private State state = State.Enabled;
+        private State state = State.Enabled; // enabled by default
 
         public State GetState() => state;
 
@@ -26,7 +26,7 @@ namespace SquidTestingMod.UI.Elements
             enabledText.SetTextState(state);
         }
 
-        public ModElement(string modName, string internalModName)
+        public ModElement(string modName, string internalModName = "", bool hasIcon=true)
         {
             this.modName = modName;
             this.internalName = internalModName;
@@ -37,14 +37,12 @@ namespace SquidTestingMod.UI.Elements
             Left.Set(5, 0);
 
             // mod icon
-            // string path = $"{internalName}/icon";
-            // Asset<Texture2D> ass = ModContent.Request<Texture2D>(path);
 
             // passing a temp icon because above doesnt work
             // maybe because path its not loaded yet.
             Texture2D temp = TextureAssets.MagicPixel.Value;
 
-            modIcon = new(temp, internalModName);
+            modIcon = new(temp, internalModName, hasIcon);
             Append(modIcon);
 
             // mod name
