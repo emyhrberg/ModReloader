@@ -154,7 +154,7 @@ namespace SquidTestingMod.UI.Elements
             {
                 if (!ContentSamples.ItemsByType.ContainsKey(i))
                 {
-                    Log.Warn($"Item ID {i} not found in ContentSamples.ItemsByType");
+                    // Log.Warn($"Item ID {i} not found in ContentSamples.ItemsByType");
                     continue;
                 }
 
@@ -165,7 +165,7 @@ namespace SquidTestingMod.UI.Elements
                 // check if air or invalid item
                 if (item.type == ItemID.None || item.type == ItemID.Count)
                 {
-                    Log.Warn($"Item ID {i} is invalid");
+                    // Log.Warn($"Item ID {i} is invalid");
                     continue;
                 }
 

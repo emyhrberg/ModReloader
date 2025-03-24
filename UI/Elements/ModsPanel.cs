@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
@@ -22,7 +25,7 @@ namespace SquidTestingMod.UI.Elements
         private Option toggleAllEnabledMods;
 
         // disabled mods
-        private List<ModElement> disabledMods = [];
+        public List<ModElement> disabledMods = [];
         private Option toggleAllDisabledMods;
 
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
@@ -39,7 +42,7 @@ namespace SquidTestingMod.UI.Elements
             toggleAllEnabledMods.SetState(State.Enabled);
             AddPadding();
 
-            AddHeader("Disabled Mods");
+            AddHeader("Disabled Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
             ConstructDisabledMods();
             toggleAllDisabledMods = AddOption("Toggle All", leftClick: ToggleAllDisabledMods, hover: "Toggle all disabled mods on or off");
             AddPadding();
@@ -61,12 +64,32 @@ namespace SquidTestingMod.UI.Elements
                 foreach (var mod in workshopMods)
                 {
                     string modName = mod.ToString();
+                    // check if mod already exists in enabledmods.
+                    Log.Info("enabled mods: " + string.Join(", ", modElements.Select(modElement => modElement.internalName)));
 
-                    // if it doesnt exist in enabled mods, add it
-                    if (modElements.Any(modElement => modElement.modName == modName))
+                    if (modElements.Any(modElement => modElement.internalName == modName))
+                    {
+                        Log.Info("Mod already exists in enabled mods: " + modName);
                         continue;
+                    }
 
-                    ModElement modElement = new(modName: modName, internalModName: modName, hasIcon: false);
+                    // "mod" is of type LocalMod 
+                    // We want to pass the LocalMod's TmodFile to ModElement.
+                    Type localModType = assembly.GetType("Terraria.ModLoader.Core.LocalMod");
+
+                    FieldInfo modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
+                    object tmod = modFileField.GetValue(mod);
+
+
+                    Texture2D disabledIcon = GetDisabledIcon(tmod);
+
+                    ModElement modElement = new(
+                        modName: modName,
+                        internalModName: modName,
+                        icon: disabledIcon);
+                    // icon: null); // pass null to disable
+
+
                     modElement.SetState(State.Disabled);
                     uiList.Add(modElement);
                     disabledMods.Add(modElement);
@@ -77,17 +100,60 @@ namespace SquidTestingMod.UI.Elements
             {
                 Log.Warn("An error occurred while retrieving workshop mods." + ex);
             }
-
-            // Add them to the UIList
-            // foreach (string modPath in GetModSourcesPaths())
-            // {
-            //     ModElement modElement = new(modPath);
-            //     modElement.SetState(State.Disabled);
-            //     modElements.Add(modElement);
-            //     uiList.Add(modElement);
-            //     AddPadding(3);
-            // }
             AddPadding(3);
+        }
+
+        private Texture2D GetDisabledIcon(object TmodFile)
+        {
+            // Get the icon for disabled mods
+            try
+            {
+                // Retrieve the HasFile method to check for "icon.png".
+                MethodInfo hasFileMethod = TmodFile.GetType().GetMethod("HasFile", BindingFlags.Public | BindingFlags.Instance);
+                bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, ["icon.png"]);
+                if (!hasIcon)
+                {
+                    Log.SlowInfo("The TmodFile does not have an icon.");
+                    return null;
+                }
+
+                // Retrieve the Open
+                MethodInfo openMethod = TmodFile.GetType().GetMethod("Open", BindingFlags.Public | BindingFlags.Instance);
+
+                // Retrieve the GetStream method that takes a string and a bool.
+                MethodInfo getStreamMethod = TmodFile.GetType().GetMethod(
+                    "GetStream",
+                    BindingFlags.Public | BindingFlags.Instance,
+                    null,
+                    [typeof(string), typeof(bool)], // string and bool parameters
+                    null
+                );
+
+                // Open the mod file to ensure proper access and disposal.
+                IDisposable openResult = openMethod.Invoke(TmodFile, null) as IDisposable;
+                if (openResult != null)
+                {
+                    using (openResult)
+                    {
+                        // Get the stream for "icon.png" from the mod file.
+                        Stream s = (Stream)getStreamMethod.Invoke(TmodFile, ["icon.png", true]);
+
+                        // Create an untracked asset
+                        Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(s, ".png", AssetRequestMode.ImmediateLoad);
+                        Log.SlowInfo("Successfully loaded icon from TmodFile.");
+                        return iconTexture.Value;
+                    }
+                }
+                else
+                {
+                    Log.SlowInfo("The result of 'Open' does not implement IDisposable.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.SlowInfo("Error while retrieving icon from TmodFile via reflection: " + ex);
+            }
+            return null;
         }
 
 

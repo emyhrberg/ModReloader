@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +9,9 @@ using MonoMod.RuntimeDetour.HookGen;
 using SquidTestingMod.CustomReload;
 using SquidTestingMod.Helpers;
 using SquidTestingMod.PacketHandlers;
+using SquidTestingMod.UI;
 using SquidTestingMod.UI.Buttons;
+using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,7 +29,7 @@ namespace SquidTestingMod
 
         public override void Load()
         {
-            
+
             if (Main.netMode != NetmodeID.Server)
                 ClientDataHandler.ReadData();
             /*
@@ -57,6 +60,17 @@ namespace SquidTestingMod
 
         public override void Unload()
         {
+            // LOL! Close stream for disablked icons.
+            // MainSystem sys = ModContent.GetInstance<MainSystem>();
+            // // Get disabled mods list.
+
+            // List<ModElement> disabledMods = sys.mainState.modsPanel.disabledMods;
+            // Log.Info("unloading disabled mods count: " + disabledMods.Count);
+            // foreach (ModElement mod in disabledMods)
+            // {
+            //     mod.modIcon.openResult?.Dispose();
+            // }
+
             if (Main.netMode != NetmodeID.Server)
                 ClientDataHandler.WriteData();
         }

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
+using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -35,6 +36,9 @@ namespace SquidTestingMod.Helpers
         /// </summary>
         public static void SlowInfo(string message)
         {
+            Config c = ModContent.GetInstance<Config>();
+            if (c != null && Conf.LogToLogFile == false) return;
+
             if (Main.GameUpdateCount % 60 * 5 == 0)
             {
                 ModInstance.Logger.Info(message);
@@ -43,6 +47,9 @@ namespace SquidTestingMod.Helpers
 
         public static void Info(string message, [CallerFilePath] string callerFilePath = "")
         {
+            Config c = ModContent.GetInstance<Config>();
+            if (c != null && Conf.LogToLogFile == false) return;
+
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
             var instance = ModInstance;
@@ -55,6 +62,9 @@ namespace SquidTestingMod.Helpers
 
         public static void Warn(string message)
         {
+            Config c = ModContent.GetInstance<Config>();
+            if (c != null && Conf.LogToLogFile == false) return;
+
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null
@@ -64,6 +74,9 @@ namespace SquidTestingMod.Helpers
 
         public static void Error(string message)
         {
+            Config c = ModContent.GetInstance<Config>();
+            if (c != null && Conf.LogToLogFile == false) return;
+
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null

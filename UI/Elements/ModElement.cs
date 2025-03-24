@@ -26,7 +26,7 @@ namespace SquidTestingMod.UI.Elements
             enabledText.SetTextState(state);
         }
 
-        public ModElement(string modName, string internalModName = "", bool hasIcon=true)
+        public ModElement(string modName, string internalModName = "", Texture2D icon = null)
         {
             this.modName = modName;
             this.internalName = internalModName;
@@ -42,7 +42,7 @@ namespace SquidTestingMod.UI.Elements
             // maybe because path its not loaded yet.
             Texture2D temp = TextureAssets.MagicPixel.Value;
 
-            modIcon = new(temp, internalModName, hasIcon);
+            modIcon = new(temp, internalModName, icon: icon);
             Append(modIcon);
 
             // mod name

@@ -10,14 +10,14 @@ namespace SquidTestingMod.UI.Elements
     {
         private string internalModName;
         public Texture2D updatedTex;
-        private bool hasIcon;
-
         public bool IsHovered => IsMouseHovering;
 
-        public ModEnabledIcon(Texture2D tex, string internalModName = "", bool hasIcon=true) : base(tex)
+        private Texture2D icon;
+
+        public ModEnabledIcon(Texture2D tex, string internalModName = "", Texture2D icon = null) : base(tex)
         {
+            this.icon = icon;
             this.internalModName = internalModName;
-            this.hasIcon = hasIcon;
 
             float size = 25f;
             MaxHeight.Set(size, 0f);
@@ -32,12 +32,15 @@ namespace SquidTestingMod.UI.Elements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (!hasIcon)
+            // Draw disabled icons v2.
+            if (icon != null)
             {
-                //base.Draw(spriteBatch);
+                updatedTex = icon;
+                DrawHelper.DrawProperScale(spriteBatch, this, updatedTex);
                 return;
             }
 
+            // Draw enabled icons.
             string path = $"{internalModName}/icon";
 
             try
@@ -46,7 +49,7 @@ namespace SquidTestingMod.UI.Elements
             }
             catch (Exception e)
             {
-                Log.Warn("Failed to get updatedTex:" + e);
+                Log.SlowInfo("Failed to get updatedTex:" + e);
             }
 
             if (updatedTex != null)
