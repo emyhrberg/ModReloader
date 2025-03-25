@@ -25,8 +25,8 @@ namespace SquidTestingMod.UI.Elements
         private Option toggleAllEnabledMods;
 
         // disabled mods
-        public List<ModElement> disabledMods = [];
-        private Option toggleAllDisabledMods;
+        public List<ModElement> allMods = [];
+        private Option toggleAllAllMods;
 
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
@@ -43,13 +43,23 @@ namespace SquidTestingMod.UI.Elements
             AddPadding();
 
             AddHeader("All Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
-            ConstructDisabledMods();
-            toggleAllDisabledMods = AddOption("Toggle All", leftClick: ToggleAllDisabledMods, hover: "Toggle all disabled mods on or off");
+            ConstructAllMods();
+            toggleAllAllMods = AddOption("Toggle All", leftClick: ToggleAllAllMods, hover: "Toggle all disabled mods on or off");
             AddPadding();
             AddPadding(3f);
+
+
+            // Reflection from
+            // ModOrganizer::internal static LocalMod[] FindMods()
+            Assembly assembly = typeof(ModLoader).Assembly;
+            Type ModOrganizer = assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
+            MethodInfo FindMods = ModOrganizer.GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static);
+            var mods = (IReadOnlyList<object>)FindMods.Invoke(null, [false]);
+            Log.Info("mod count: " + mods.Count);
+            Log.Info("mod names: " + string.Join(", ", mods.Select(mod => mod.ToString())));
         }
 
-        private void ConstructDisabledMods()
+        private void ConstructAllMods()
         {
             // Get all mods the user has installed via reflection
             // ModOrganizer.FindAllMods
@@ -63,13 +73,17 @@ namespace SquidTestingMod.UI.Elements
 
                 foreach (var mod in workshopMods)
                 {
-                    string modName = mod.ToString();
+                    // Get the clean name using reflection for the LocalMod mod.
+                    FieldInfo displayNameField = mod.GetType().GetField("DisplayNameClean", BindingFlags.Public | BindingFlags.Instance);
+                    string cleanName = (string)displayNameField.GetValue(mod);
+
+                    string internalName = mod.ToString();
                     // check if mod already exists in enabledmods.
                     // Log.Info("enabled mods: " + string.Join(", ", modElements.Select(modElement => modElement.internalName)));
 
-                    if (modElements.Any(modElement => modElement.internalName == modName))
+                    if (modElements.Any(modElement => modElement.internalName == internalName))
                     {
-                        Log.Info("Mod already exists in enabled mods: " + modName);
+                        Log.Info("Mod already exists in enabled mods: " + internalName);
                         continue;
                     }
 
@@ -81,17 +95,18 @@ namespace SquidTestingMod.UI.Elements
                     object tmod = modFileField.GetValue(mod);
 
 
-                    Texture2D disabledIcon = GetDisabledIcon(tmod);
+                    Texture2D modIcon = GetModIconFromAllMods(tmod);
 
                     ModElement modElement = new(
-                        modName: modName,
-                        internalModName: modName,
-                        icon: disabledIcon);
+                        modName: cleanName,
+                        internalModName: internalName,
+                        icon: modIcon
+                        );
 
 
                     modElement.SetState(State.Disabled);
                     uiList.Add(modElement);
-                    disabledMods.Add(modElement);
+                    allMods.Add(modElement);
                     AddPadding(3);
                 }
             }
@@ -102,13 +117,13 @@ namespace SquidTestingMod.UI.Elements
             AddPadding(3);
         }
 
-        private Texture2D GetDisabledIcon(object TmodFile)
+        private Texture2D GetModIconFromAllMods(object TmodFile)
         {
             try
             {
                 // Check if the file exists
                 MethodInfo hasFileMethod = TmodFile.GetType().GetMethod("HasFile", BindingFlags.Public | BindingFlags.Instance);
-                bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, new object[] { "icon.png" });
+                bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, ["icon.png"]);
                 if (!hasIcon)
                 {
                     Log.SlowInfo("The TmodFile does not have an icon.");
@@ -144,14 +159,14 @@ namespace SquidTestingMod.UI.Elements
             return null;
         }
 
-        private void ToggleAllDisabledMods()
+        private void ToggleAllAllMods()
         {
             // Determine the new state based on whether all mods are currently enabled
-            bool anyDisabled = disabledMods.Any(modElement => modElement.GetState() == State.Disabled);
+            bool anyDisabled = allMods.Any(modElement => modElement.GetState() == State.Disabled);
             State newState = anyDisabled ? State.Enabled : State.Disabled;
 
             // Set the state for all mod elements
-            foreach (ModElement modElement in disabledMods)
+            foreach (ModElement modElement in allMods)
             {
                 modElement.SetState(newState);
                 string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
@@ -162,7 +177,7 @@ namespace SquidTestingMod.UI.Elements
             }
 
             // Update the "Toggle All" option's state
-            toggleAllDisabledMods.SetState(newState);
+            toggleAllAllMods.SetState(newState);
         }
 
         private void ToggleAllEnabledMods()
@@ -193,7 +208,7 @@ namespace SquidTestingMod.UI.Elements
             {
                 // you could change this to send the "clean name"
                 // this is where we set the text of the mod element
-                ModElement modElement = new(mod.Name, mod.Name);
+                ModElement modElement = new(mod.DisplayNameClean, mod.Name);
                 uiList.Add(modElement);
                 modElements.Add(modElement);
                 AddPadding(3);
@@ -205,11 +220,43 @@ namespace SquidTestingMod.UI.Elements
             // Create a new ModSourcesElement : PanelElement for each mod in modsources.
             foreach (string modPath in GetModSourcesPaths())
             {
-                ModSourcesElement modSourcesElement = new(modPath);
+                string cleanName = GetModSourcesCleanName(modPath);
+                Log.Info("cleanName: " + cleanName + " modPath: " + modPath);
+
+                ModSourcesElement modSourcesElement = new(modPath: modPath, cleanName: cleanName);
                 modSourcesElements.Add(modSourcesElement);
                 uiList.Add(modSourcesElement);
                 AddPadding(3);
             }
+        }
+
+        private string GetModSourcesCleanName(string modFolder)
+        {
+            // Get the assembly and the ModCompile type.
+            Assembly assembly = typeof(ModLoader).Assembly;
+            Type modCompileType = assembly.GetType("Terraria.ModLoader.Core.ModCompile");
+
+            // Get the non-public nested type "ConsoleBuildStatus".
+            Type consoleBuildStatusType = modCompileType.GetNestedType("ConsoleBuildStatus", BindingFlags.NonPublic);
+            // Create an instance of ConsoleBuildStatus.
+            object consoleBuildStatusInstance = Activator.CreateInstance(consoleBuildStatusType, nonPublic: true);
+
+            // Create an instance of ModCompile using the constructor that takes an IBuildStatus.
+            object modCompileInstance = Activator.CreateInstance(
+                modCompileType,
+                BindingFlags.Public | BindingFlags.Instance,
+                null,
+                new object[] { consoleBuildStatusInstance },
+                null);
+
+            // Retrieve the private instance method ReadBuildInfo.
+            MethodInfo readBuildInfoMethod = modCompileType.GetMethod("ReadBuildInfo", BindingFlags.NonPublic | BindingFlags.Instance);
+            // Invoke the method on the instance.
+            object buildingMod = readBuildInfoMethod.Invoke(modCompileInstance, [modFolder]);
+
+            // Since DisplayNameClean is a field, use GetField instead of GetProperty.
+            FieldInfo displayNameField = buildingMod.GetType().GetField("DisplayNameClean", BindingFlags.Public | BindingFlags.Instance);
+            return (string)displayNameField?.GetValue(buildingMod);
         }
 
         private List<string> GetModSourcesPaths()

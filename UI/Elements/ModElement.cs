@@ -55,6 +55,7 @@ namespace SquidTestingMod.UI.Elements
             // so we send no hover option
             if (icon == null)
             {
+                // "Enabled Mods"
                 OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
@@ -62,7 +63,8 @@ namespace SquidTestingMod.UI.Elements
             }
             else
             {
-                OptionTitleText modNameText = new(text: modName, internalModName: internalModName);
+                // "All Mods"
+                OptionTitleText modNameText = new(text: modName, internalModName: internalModName, hover: $"{internalModName}");
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);

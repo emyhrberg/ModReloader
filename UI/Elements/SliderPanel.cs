@@ -1,9 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Helpers;
 using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {

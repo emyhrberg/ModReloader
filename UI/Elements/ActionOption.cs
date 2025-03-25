@@ -29,7 +29,7 @@ namespace SquidTestingMod.UI.Elements
             rightClick?.Invoke();
         }
 
-        public ActionOption(Action leftClick, string text, string hover, Action rightClick = null)
+        public ActionOption(Action leftClick, string text, string hover, Action rightClick = null, float textSize = 0.45f)
         {
             //Size and position
             int panelPadding = 12;
@@ -44,7 +44,7 @@ namespace SquidTestingMod.UI.Elements
             this.rightClick = rightClick;
 
             // Create the UIText. Default color = Gray
-            textElement = new UIText(text: text, textScale: 1.0f, large: false);
+            textElement = new UIText(text: text, textScale: textSize, large: true);
             textElement.HAlign = 0.5f; // Center horizontally
             textElement.VAlign = 0.5f; // Center vertically
             textElement.TextColor = Color.Gray;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -43,6 +44,7 @@ namespace SquidTestingMod.UI
                     "SquidTestingMod: MainSystem",
                     () =>
                     {
+                        Log.SlowInfo($"Menu Mode: {Main.menuMode}, ");
                         // actual drawing of all UI elements
                         // dont mess with this
                         userInterface?.Draw(Main.spriteBatch, new GameTime());

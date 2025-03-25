@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using log4net;
 using log4net.Core;
@@ -11,6 +12,7 @@ namespace SquidTestingMod.UI.Elements
     public class LogPanel : OptionPanel
     {
         private bool log = true;
+        private SliderPanel logLevelSlider;
 
         public LogPanel() : base(title: "Log", scrollbarEnabled: true)
         {
@@ -21,14 +23,25 @@ namespace SquidTestingMod.UI.Elements
             AddPadding(3);
 
             ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log");
+            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log", textSize: 0.5f);
             uiList.Add(openClient);
             uiList.Add(clearClient);
             AddPadding(3);
 
-            Option log = AddOption("All Client Logging", ToggleClientLogging, "Enable or disable all logging to client.log");
+            logLevelSlider = AddSlider(
+                title: "Log Level: All",
+                min: 0,
+                max: 5,
+                defaultValue: 5,
+                onValueChanged: SetLogLevel,
+                increment: 1,
+                textSize: 0.8f,
+                hover: "Set the log level for the client.log file"
+            );
+
+            Option log = AddOption("Log", ToggleClientLogging, "Enable or disable all logging to client.log");
             log.SetState(Option.State.Enabled);
-            Option clearOnReload = AddOption("Clear On Reload", ClearClientOnReload, "Clear the client.log file when reloading");
+            Option clearOnReload = AddOption("Clear Log On Reload", ClearClientOnReload, "Clear the client.log file when reloading");
             clearOnReload.SetState(Conf.C.ClearClientLogOnReload ? Option.State.Enabled : Option.State.Disabled);
             AddPadding();
 
@@ -40,7 +53,41 @@ namespace SquidTestingMod.UI.Elements
             AddPadding();
         }
 
-        private Logger GetLogger()
+        [Flags]
+        public enum LogLevel
+        {
+            Off = 0,
+            Error = 1,
+            Warn = 2,
+            Info = 3,
+            Debug = 4,
+            All = 5
+        }
+
+        private void SetLogLevel(float value)
+        {
+            Logger logger = GetLogger();
+            if (logger == null)
+                return;
+
+            // Convert value from 0-5 to LogLevel enum
+            LogLevel level = (LogLevel)value;
+
+            logger.Level = level switch
+            {
+                LogLevel.Error => Level.Error,
+                LogLevel.Warn => Level.Warn,
+                LogLevel.Info => Level.Info,
+                LogLevel.Debug => Level.Debug,
+                LogLevel.All => Level.All,
+                _ => Level.Off
+            };
+
+            // Update slider text
+            logLevelSlider.UpdateText($"Log Level: {level.ToString()}");
+        }
+
+        private static Logger GetLogger()
         {
             PropertyInfo tmlProp = typeof(Logging).GetProperty("tML", BindingFlags.Static | BindingFlags.NonPublic);
             if (tmlProp == null)

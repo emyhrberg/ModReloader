@@ -12,8 +12,30 @@ using Terraria.ModLoader;
 
 namespace SquidTestingMod.Helpers
 {
+    // public class Timer : ModSystem
+    // {
+    //     int time = 0;
+    //     int ONE_SECOND = 1;
+    //     int ONE_MINUTE = 60;
+    // }
+
+
+    /// <summary>
+    /// Factory class for creating TimeSpans.
+    /// </summary>
+    public static class TimeSpanFactory
+    {
+        public static TimeSpan FromSeconds(double seconds)
+        {
+            return TimeSpan.FromSeconds(seconds);
+        }
+    }
+
     public static class Log
     {
+        // Log a message once every 5 second
+        private static DateTime lastLogTime = DateTime.UtcNow;
+
         private static Mod ModInstance
         {
             // try catch get
@@ -32,16 +54,19 @@ namespace SquidTestingMod.Helpers
         }
 
         /// <summary>
-        /// Log a message once every second
+        /// Log a message once every 5 second
         /// </summary>
         public static void SlowInfo(string message)
         {
             Config c = ModContent.GetInstance<Config>();
             if (c != null && Conf.LogToLogFile == false) return;
 
-            if (Main.GameUpdateCount % 60 * 5 == 0)
+            // Use TimeSpanFactory to create a 5-second interval.
+            TimeSpan interval = TimeSpanFactory.FromSeconds(5);
+            if (DateTime.UtcNow - lastLogTime >= interval)
             {
                 ModInstance.Logger.Info(message);
+                lastLogTime = DateTime.UtcNow;
             }
         }
 

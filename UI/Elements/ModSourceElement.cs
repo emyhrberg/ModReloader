@@ -27,7 +27,7 @@ namespace SquidTestingMod.UI.Elements
         public ModCheckbox checkbox;
         public ModSourcesIcon modIcon;
 
-        public ModSourcesElement(string modPath)
+        public ModSourcesElement(string modPath, string cleanName = "")
         {
             // size and position
             Width.Set(-35f, 1f);
@@ -41,12 +41,12 @@ namespace SquidTestingMod.UI.Elements
                 // Defer texture creation to the main thread:
                 Main.QueueMainThreadAction(() =>
                 {
-                    using (var stream = File.OpenRead(iconPath))
-                    {
-                        Texture2D texture = Texture2D.FromStream(Main.graphics.GraphicsDevice, stream);
-                        modIcon = new(texture);
-                        Append(modIcon);
-                    }
+                    using var stream = File.OpenRead(iconPath);
+                    Texture2D texture = Texture2D.FromStream(
+                        graphicsDevice: Main.graphics.GraphicsDevice,
+                        stream: stream);
+                    modIcon = new(texture);
+                    Append(modIcon);
                 });
             }
             else
@@ -63,7 +63,8 @@ namespace SquidTestingMod.UI.Elements
             }
 
             // mod name
-            modSourcePathString = Path.GetFileName(modPath);
+            // modSourcePathString = Path.GetFileName(modPath);
+            modSourcePathString = cleanName;
             if (modSourcePathString.Length > 20)
                 modSourcePathString = string.Concat(modSourcePathString.AsSpan(0, 20), "...");
             OptionTitleText modNameText = new(text: modSourcePathString, hover: $"Open {modSourcePathString} config", internalModName: modSourcePathString);
@@ -108,10 +109,6 @@ namespace SquidTestingMod.UI.Elements
             ModProjectIcon projectIcon = new(Ass.ModOpenProject.Value, modPath, "Open .csproj");
             projectIcon.Left.Set(def, 1f);
             Append(projectIcon);
-        }
-
-        public override void LeftClick(UIMouseEvent evt)
-        {
         }
     }
 }
