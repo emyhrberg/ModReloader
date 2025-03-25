@@ -94,7 +94,6 @@ namespace SquidTestingMod.UI.Elements
                     FieldInfo modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
                     object tmod = modFileField.GetValue(mod);
 
-
                     Texture2D modIcon = GetModIconFromAllMods(tmod);
 
                     ModElement modElement = new(

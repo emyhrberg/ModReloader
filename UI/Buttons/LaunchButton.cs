@@ -21,17 +21,6 @@ namespace SquidTestingMod.UI.Buttons
         {
             try
             {
-                string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\start-tModLoader.bat";
-
-                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error opening tmodloader: " + ex.Message);
-            }
-
-            try
-            {
                 string steamPath = Log.GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {

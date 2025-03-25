@@ -23,7 +23,7 @@ namespace SquidTestingMod.UI
         public PlayerPanel playerPanel;
         public LogPanel logPanel;
         public ModsPanel modsPanel;
-        public UiPanel uiPanel;
+        public UIElementPanel uiPanel;
         public WorldPanel worldPanel;
         public List<DraggablePanel> LeftSidePanels = [];
         public List<DraggablePanel> RightSidePanels = [];
@@ -64,7 +64,7 @@ namespace SquidTestingMod.UI
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game", textSize: TextSize);
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game", textSize: TextSize);
             AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
-            AddButton<UIButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
+            AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
@@ -83,7 +83,7 @@ namespace SquidTestingMod.UI
             playerPanel = AddPanel<PlayerPanel>("right");
             logPanel = AddPanel<LogPanel>("right");
             modsPanel = AddPanel<ModsPanel>("right");
-            uiPanel = AddPanel<UiPanel>("right");
+            uiPanel = AddPanel<UIElementPanel>("right");
             worldPanel = AddPanel<WorldPanel>("right");
         }
 

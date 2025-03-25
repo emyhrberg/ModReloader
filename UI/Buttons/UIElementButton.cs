@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Buttons
 {
-    public class UIButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class UIElementButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
         // Sprite size
         private float _scale = 1.3f;

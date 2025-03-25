@@ -93,7 +93,7 @@ namespace SquidTestingMod.Common.Systems
 
             // Update text
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            UiPanel uiPanel = sys.mainState.uiPanel;
+            UIElementPanel uiPanel = sys.mainState.uiPanel;
 
             foreach (var uiElement in uiPanel.dynamicOptions.Values)
             {

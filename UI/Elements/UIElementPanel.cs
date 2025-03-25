@@ -8,12 +8,12 @@ using Terraria.UI;
 
 namespace SquidTestingMod.UI.Elements
 {
-    public class UiPanel : OptionPanel
+    public class UIElementPanel : OptionPanel
     {
         private UIElementSystem elementSystem;
         private UIElementState elementState;
 
-        public UiPanel() : base(title: "UI", scrollbarEnabled: true)
+        public UIElementPanel() : base(title: "UI", scrollbarEnabled: true)
         {
             elementSystem = ModContent.GetInstance<UIElementSystem>();
             elementState = elementSystem.debugState;
