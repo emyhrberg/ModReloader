@@ -75,8 +75,6 @@ namespace EliteTestingMod.PacketHandlers
 
                 await ReloadUtilities.ExitWorldOrServer();
 
-                var modName = Conf.ModToReload;
-
                 Hook hookForUnload = null;
 
                 hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
