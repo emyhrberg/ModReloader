@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Common.Players;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Players;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
-using static SquidTestingMod.UI.Elements.Option;
+using static ErkysModdingUtilities.UI.Elements.Option;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     /// <summary>
     /// A panel containing options to modify player behavior like God, Noclip, etc.

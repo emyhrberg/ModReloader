@@ -1,8 +1,8 @@
-using SquidTestingMod.Helpers;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     public class EnemySpawnSystem : GlobalNPC
     {
@@ -49,9 +49,10 @@ namespace SquidTestingMod.Common.Systems
                 {
                     if (npc.active && npc.life > 0 && npc.CanBeChasedBy()) // Ensures it's a valid enemy
                     {
-                        NPC.HitInfo hit = npc.CalculateHitInfo(npc.lifeMax, -npc.direction, false, 0f);
-                        hit.InstantKill = true;
-                        npc.active = false;
+                        npc.StrikeInstantKill();
+                        // NPC.HitInfo hit = npc.CalculateHitInfo(npc.lifeMax, -npc.direction, false, 0f);
+                        // hit.InstantKill = true;
+                        // npc.active = false;
                         // Log.Info("butcher " + npc.FullName);
                     }
                 }

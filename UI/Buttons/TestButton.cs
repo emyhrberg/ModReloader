@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.CustomReload;
+using ErkysModdingUtilities.Helpers;
 using log4net;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.CustomReload;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     public class TestButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

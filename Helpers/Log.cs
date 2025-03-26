@@ -4,22 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using ErkysModdingUtilities.Common.Configs;
 using log4net;
 using log4net.Appender;
-using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Helpers
+namespace ErkysModdingUtilities.Helpers
 {
-    // public class Timer : ModSystem
-    // {
-    //     int time = 0;
-    //     int ONE_SECOND = 1;
-    //     int ONE_MINUTE = 60;
-    // }
-
-
     /// <summary>
     /// Factory class for creating TimeSpans.
     /// </summary>
@@ -43,7 +35,7 @@ namespace SquidTestingMod.Helpers
             {
                 try
                 {
-                    return ModLoader.GetMod("SquidTestingMod");
+                    return ModLoader.GetMod("ErkysModdingUtilities");
                 }
                 catch (Exception ex)
                 {

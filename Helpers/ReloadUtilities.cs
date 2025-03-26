@@ -4,18 +4,18 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.PacketHandlers;
 using MonoMod.RuntimeDetour;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.PacketHandlers;
 using Terraria;
 
-namespace SquidTestingMod.Helpers
+namespace ErkysModdingUtilities.Helpers
 {
     //All functions, related to reload
     internal class ReloadUtilities
     {
-        public const string pipeName = "SquidTestingModPipe";
-        public const string pipeNameAfterRebuild = "SquidTestingModPipeAfterRebuild";
+        public const string pipeName = "ErkysModdingUtilitiesPipe";
+        public const string pipeNameAfterRebuild = "ErkysModdingUtilitiesPipeAfterRebuild";
 
         //public static NamedPipeServerStream Pipe {  get; set; }\
 

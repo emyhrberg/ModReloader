@@ -6,7 +6,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class ActionOption : UIElement
     {
@@ -29,7 +29,7 @@ namespace SquidTestingMod.UI.Elements
             rightClick?.Invoke();
         }
 
-        public ActionOption(Action leftClick, string text, string hover, Action rightClick = null, float textSize = 0.45f)
+        public ActionOption(Action leftClick, string text, string hover, Action rightClick = null, float textSize = 0.4f)
         {
             //Size and position
             int panelPadding = 12;

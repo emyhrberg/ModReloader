@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     public class TrackingSystem : ModSystem
     {

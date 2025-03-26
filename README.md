@@ -1,4 +1,4 @@
-# SquidTestingMod
+# ErkysModdingUtilities
 
 <!-- PROJECT LOGO -->
 <br />
@@ -7,9 +7,9 @@
     <img src="icon_workshop.png" alt="Logo" width="150">
   </a>
 
-  <h3 align="center">SquidTestingMod</h3>
+  <h3 align="center">ErkysModdingUtilities</h3>
 
-  SquidTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
+ErkysModdingUtilities is the ultimate Terraria testing tool for modders and players who want full control.
 
   <p align="center">
     <a href="<strong> [View Demo](##Demo) »</strong></a>
@@ -24,7 +24,6 @@
 ## Demo
 
 https://github.com/user-attachments/assets/fcc0d4d5-ca01-4e02-a60f-5f5d5074b4d4
-
 
 ## Description
 

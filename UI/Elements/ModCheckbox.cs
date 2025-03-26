@@ -1,17 +1,17 @@
 using System;
 using System.Linq;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
+using ErkysModdingUtilities.UI.Buttons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Buttons;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class ModCheckbox : UIImage
     {

@@ -1,25 +1,24 @@
 using System;
 using System.Reflection;
 using System.Windows.Forms;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
-    public class ErrorSystem : ModSystem
+    public class MainMenuErrorPopup : ModSystem
     {
         private Hook OnInitializeHook;
         private CopyButton copyButton;
-        private bool hasCopied = false;
 
         public override void Load()
         {
@@ -92,9 +91,10 @@ namespace SquidTestingMod.Common.Systems
             {
                 this.errorMessage = errorMessage;
 
+                // Bottom right position. There are 3 other buttons.
                 Width.Set(-10, 0.5f);
                 Height.Set(50, 0f);
-                Top.Set(-108 + 50 + 10, 1f);
+                Top.Set(-108 + 50 + 5, 1f);
                 HAlign = 1.0f;
             }
 

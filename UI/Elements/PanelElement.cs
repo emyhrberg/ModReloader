@@ -1,14 +1,14 @@
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     /// <summary>
     /// Superclass for options inside player, debug, world panel

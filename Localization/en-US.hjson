@@ -1,5 +1,5 @@
 Mods: {
-	SquidTestingMod: {
+	ErkysModdingUtilities: {
 		Configs: {
 			Config: {
 				DisplayName: Config
@@ -11,6 +11,7 @@ Mods: {
 					Game: Game
 					UI: UI
 					Logging: Logging
+					KeepGameRunning: Keep Game Running Header
 				}
 
 				NPCSpawnLocation: {
@@ -58,11 +59,6 @@ Mods: {
 					Tooltip: Set position of the NPC spawner
 				}
 
-				HideCollapseButton: {
-					Label: Hide Collapse Button
-					Tooltip: Only show collapse button when inventory is open
-				}
-
 				ButtonsPosition: {
 					Label: Buttons Position
 					Tooltip: All buttons will stick to this side of the screen
@@ -76,11 +72,6 @@ Mods: {
 				ButtonSize: {
 					Tooltip: ""
 					Label: Button Size
-				}
-
-				TextSize: {
-					Tooltip: ""
-					Label: Text Size
 				}
 
 				Logging: {
@@ -105,6 +96,21 @@ Mods: {
 
 				PanelHeight: {
 					Label: Panel Height
+					Tooltip: ""
+				}
+
+				TextSize: {
+					Tooltip: ""
+					Label: Text Size
+				}
+
+				KeepRunning: {
+					Label: Keep Running
+					Tooltip: ""
+				}
+
+				AlwaysShowTextOnTop: {
+					Label: Always Show Text On Top
 					Tooltip: ""
 				}
 			}

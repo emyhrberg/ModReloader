@@ -8,18 +8,18 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Helpers;
 using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoMod.RuntimeDetour;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     public class ReloadMPButton : BaseButton
     {
@@ -35,16 +35,16 @@ namespace SquidTestingMod.UI.Buttons
         public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : base(spritesheet, buttonText, hoverText, textSize)
         {
             // deactived by default since the SP button is active
-            // if (Main.netMode == NetmodeID.SinglePlayer)
-            // {
-            // Active = false;
-            // ButtonText.Active = false;
-            // }
-            // else if (Main.netMode == NetmodeID.MultiplayerClient)
-            // {
-            // Active = true;
-            // ButtonText.Active = true;
-            // }
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                Active = false;
+                ButtonText.Active = false;
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                Active = true;
+                ButtonText.Active = true;
+            }
         }
 
         public async override void LeftClick(UIMouseEvent evt)
@@ -207,7 +207,7 @@ namespace SquidTestingMod.UI.Buttons
                                     {
                                         Type modType = mod.GetType();
                                         var nameProperty = modType.GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
-                                        return nameProperty?.GetValue(mod)?.ToString() == "SquidTestingMod";
+                                        return nameProperty?.GetValue(mod)?.ToString() == "ErkysModdingUtilities";
                                     });
 
                                 if (targetMod != null)
@@ -347,23 +347,23 @@ namespace SquidTestingMod.UI.Buttons
                 ReloadUtilities.BuildAndReloadMod();
             }
         }
-        // public override void RightClick(UIMouseEvent evt)
-        // {
-        //     // If right click, toggle the mode and return
-        //     Active = false;
-        //     ButtonText.Active = false;
+        public override void RightClick(UIMouseEvent evt)
+        {
+            // If right click, toggle the mode and return
+            Active = false;
+            ButtonText.Active = false;
 
-        //     // set MP active
-        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
-        //     foreach (var btn in sys?.mainState?.AllButtons)
-        //     {
-        //         if (btn is ReloadSPButton spBtn)
-        //         {
-        //             spBtn.Active = true;
-        //             spBtn.ButtonText.Active = true;
-        //         }
-        //     }
-        //     return;
-        // }
+            // set MP active
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            foreach (var btn in sys?.mainState?.AllButtons)
+            {
+                if (btn is ReloadSPButton spBtn)
+                {
+                    spBtn.Active = true;
+                    spBtn.ButtonText.Active = true;
+                }
+            }
+            return;
+        }
     }
 }

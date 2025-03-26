@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
     public class UIElementSystem : ModSystem
@@ -33,7 +33,7 @@ namespace SquidTestingMod.Common.Systems
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "SquidTestingMod: DrawUISystem",
+                    "ErkysModdingUtilities: DrawUISystem",
                     () =>
                     {
                         ui?.Draw(Main.spriteBatch, new GameTime());

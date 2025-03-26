@@ -1,9 +1,9 @@
-﻿using SquidTestingMod.Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Reflection;
+using ErkysModdingUtilities.Helpers;
 
-namespace SquidTestingMod.CustomReload
+namespace ErkysModdingUtilities.CustomReload
 {
 
     //Backup of an property, saving it initial state and allowing to restore initial state

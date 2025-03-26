@@ -4,7 +4,7 @@ using System.Reflection;
 using MonoMod.RuntimeDetour;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.CustomHooks
+namespace ErkysModdingUtilities.CustomHooks
 {
     internal class On_ModLoader
     {

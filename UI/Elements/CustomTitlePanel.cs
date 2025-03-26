@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class CustomTitlePanel : UIPanel
     {

@@ -1,8 +1,8 @@
 using System;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     // A minimal NPCSlot that displays an NPC in a shop-style slot.
     public class CustomNPCSlot : UIElement

@@ -1,8 +1,8 @@
-using SquidTestingMod.Helpers;
+using ErkysModdingUtilities.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Players
+namespace ErkysModdingUtilities.Common.Players
 {
     public class KillAndGodAura : GlobalNPC
     {

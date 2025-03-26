@@ -1,9 +1,22 @@
-SquidTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
+Erkys Modding Utilities is the ultimate Terraria testing and debugging tool for modders and players who want full control.
 
-🔹 Spawn anything instantly – items, NPCs, bosses, and more!
-🔹 Enable God Mode – take no damage, move fast, and break limits.
-🔹 Teleport anywhere – right-click to instantly move across the map.
-🔹 Reload mods without restarting – quickly test changes.
-🔹 See hitboxes – visualize players, NPCs, projectiles, and UI with cool effects.
+Features:
+🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
+🔹 Toggle mods in-world - enable or disable any mod in-game effortlessly.
+🔹 UI Playground - Dive deep into your interface and fine-tune every element.
+🔹 Customizable Log Files - Clear, edit, and adjust log levels to suit your debugging needs.
+🔹 Powerful Player Options: Activate God Mode, Noclip, Kill Aura, Mine Aura, Build Faster, and much more!
+🔹 Instant Spawning – summon all items in the game, NPCs, bosses, and more!
+🔹 World Customization: Modify game settings like time, spawn rate, and much more with ease.
+🔹 Teleport Anywhere – instantly move across the map.
+🔹 Hitbox Tracker – track players, NPCs, projectiles with arrows and hitboxes.
+🔹 Keep Game Running - keeps the game running when out of focus.
+And of course, the entire mod, its UI, and every single feature can be toggled in its menu and customized in the config.
+
+UI Playground Demo:
+
+Reload Demo:
+
+Copy Exception Demo:
 
 Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀

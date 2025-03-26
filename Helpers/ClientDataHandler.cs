@@ -10,7 +10,7 @@ using System.Threading;
 using Terraria;
 using Terraria.WorldBuilding;
 
-namespace SquidTestingMod.Helpers
+namespace ErkysModdingUtilities.Helpers
 {
 
 
@@ -35,9 +35,9 @@ namespace SquidTestingMod.Helpers
         {
             try
             {
-                string path = Path.Combine(Main.SavePath, "SquidTestingMod");
+                string path = Path.Combine(Main.SavePath, "ErkysModdingUtilities");
                 Directory.CreateDirectory(path); // Ensure the directory exists
-                path = Path.Combine(path, "SquidTestingMod.json");
+                path = Path.Combine(path, "ErkysModdingUtilities.json");
                 Log.Info("Found save path: " + path);
                 return path;
             }

@@ -1,16 +1,16 @@
 using System;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     // Instead of inheriting the vanilla behavior we override the drawing and click behavior.
     public class CustomItemSlot : UIItemSlot

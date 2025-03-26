@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     /// <summary>
     /// The base class for the main buttons that are displayed.
@@ -70,9 +70,6 @@ namespace SquidTestingMod.UI.Buttons
         /// </summary>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            if (Conf.HideCollapseButton && !Main.playerInventory)
-                return;
-
             if (!Active || Button == null || Button.Value == null)
                 return;
 
@@ -167,9 +164,6 @@ namespace SquidTestingMod.UI.Buttons
         // Disable item use on click
         public override void Update(GameTime gameTime)
         {
-            if (Conf.HideCollapseButton && !Main.playerInventory)
-                return;
-
             // base update
             base.Update(gameTime);
 

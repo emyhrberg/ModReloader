@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Common.Systems;
-using SquidTestingMod.UI;
-using SquidTestingMod.UI.Elements;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Common.Systems;
+using ErkysModdingUtilities.UI;
+using ErkysModdingUtilities.UI.Elements;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Players
+namespace ErkysModdingUtilities.Common.Players
 {
     public class PlayerCheatManager : ModPlayer
     {
@@ -63,6 +63,7 @@ namespace SquidTestingMod.Common.Players
             Noclip = false;
             MineAura = false;
             KillAura = false;
+            TeleportWithRightClick = false;
             SpawnRateMultiplier.Multiplier = 0f;
 
             // Update the enabled texts all enabled except mine aura and noclip

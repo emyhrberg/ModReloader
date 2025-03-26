@@ -1,13 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     public class LaunchButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
@@ -21,21 +22,34 @@ namespace SquidTestingMod.UI.Buttons
         {
             try
             {
-                string steamPath = Log.GetSteamPath();
-                if (string.IsNullOrEmpty(steamPath))
-                {
-                    Main.NewText("Steam path is null or empty.");
-                    Log.Error("Steam path is null or empty.");
-                    return;
-                }
+                string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\start-tModLoader.bat";
 
-                string file = Path.Combine(steamPath, "tModLoader-Logs", "client.log");
                 Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
-                Main.NewText("Error opening client.log: " + ex.Message);
-                Log.Error("Error opening client.log: " + ex.Message);
+                Log.Error("Error opening tmodloader: " + ex.Message);
+            }
+
+            try
+            {
+                string steamPath = Log.GetSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    if (Conf.LogToChat) Main.NewText("Steam path is null or empty.");
+                    Log.Error("Steam path is null or empty.");
+                    return;
+                }
+
+                string file = Path.Combine(steamPath, "start-tModLoader.bat");
+                if (Conf.LogToChat)
+                    Main.NewText("Opening another client...");
+            }
+            catch (Exception ex)
+            {
+                if (Conf.LogToChat)
+                    Main.NewText("Error opening another client: " + ex.Message);
+                Log.Error("Error opening another client: " + ex.Message);
             }
         }
     }

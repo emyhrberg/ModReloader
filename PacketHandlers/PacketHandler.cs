@@ -2,7 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace SquidTestingMod.PacketHandlers
+namespace ErkysModdingUtilities.PacketHandlers
 {
     //Taken from https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
     internal abstract class PacketHandler
@@ -15,7 +15,7 @@ namespace SquidTestingMod.PacketHandlers
         }
         protected ModPacket GetPacket(byte packetType, int fromWho)
         {
-            var p = ModContent.GetInstance<SquidTestingMod>().GetPacket();
+            var p = ModContent.GetInstance<ErkysModdingUtilities>().GetPacket();
             p.Write(HandlerType);
             p.Write(packetType);
             return p;

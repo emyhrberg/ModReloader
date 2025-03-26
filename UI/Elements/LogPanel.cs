@@ -1,13 +1,13 @@
 using System;
 using System.Reflection;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class LogPanel : OptionPanel
     {

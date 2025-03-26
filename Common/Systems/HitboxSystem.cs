@@ -8,7 +8,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     public class HitboxSystem : ModSystem
     {

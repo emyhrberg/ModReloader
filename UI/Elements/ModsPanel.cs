@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
-using static SquidTestingMod.UI.Elements.Option;
+using static ErkysModdingUtilities.UI.Elements.Option;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     /// <summary>
     /// A panel to display the contents of client.log.
@@ -55,8 +55,6 @@ namespace SquidTestingMod.UI.Elements
             Type ModOrganizer = assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
             MethodInfo FindMods = ModOrganizer.GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static);
             var mods = (IReadOnlyList<object>)FindMods.Invoke(null, [false]);
-            Log.Info("mod count: " + mods.Count);
-            Log.Info("mod names: " + string.Join(", ", mods.Select(mod => mod.ToString())));
         }
 
         private void ConstructAllMods()
@@ -220,7 +218,6 @@ namespace SquidTestingMod.UI.Elements
             foreach (string modPath in GetModSourcesPaths())
             {
                 string cleanName = GetModSourcesCleanName(modPath);
-                Log.Info("cleanName: " + cleanName + " modPath: " + modPath);
 
                 ModSourcesElement modSourcesElement = new(modPath: modPath, cleanName: cleanName);
                 modSourcesElements.Add(modSourcesElement);

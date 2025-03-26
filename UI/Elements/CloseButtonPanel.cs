@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class CloseButtonPanel : UIPanel
     {

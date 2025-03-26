@@ -1,16 +1,16 @@
 using System.Linq;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
@@ -45,23 +45,23 @@ namespace SquidTestingMod.UI.Buttons
             ReloadUtilities.BuildAndReloadMods();
         }
 
-        // public override void RightClick(UIMouseEvent evt)
-        // {
-        //     // If right click, toggle the mode and return
-        //     Active = false;
-        //     ButtonText.Active = false;
+        public override void RightClick(UIMouseEvent evt)
+        {
+            // If right click, toggle the mode and return
+            Active = false;
+            ButtonText.Active = false;
 
-        //     // set MP active
-        //     MainSystem sys = ModContent.GetInstance<MainSystem>();
-        //     foreach (var btn in sys?.mainState?.AllButtons)
-        //     {
-        //         if (btn is ReloadMPButton spBtn)
-        //         {
-        //             spBtn.Active = true;
-        //             spBtn.ButtonText.Active = true;
-        //         }
-        //     }
-        //     return;
-        // }
+            // set MP active
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            foreach (var btn in sys?.mainState?.AllButtons)
+            {
+                if (btn is ReloadMPButton spBtn)
+                {
+                    spBtn.Active = true;
+                    spBtn.ButtonText.Active = true;
+                }
+            }
+            return;
+        }
     }
 }

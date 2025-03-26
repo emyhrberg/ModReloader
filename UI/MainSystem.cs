@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace ErkysModdingUtilities.UI
 {
     [Autoload(Side = ModSide.Client)]
     public class MainSystem : ModSystem
@@ -41,10 +41,9 @@ namespace SquidTestingMod.UI
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "SquidTestingMod: MainSystem",
+                    "ErkysModdingUtilities: MainSystem",
                     () =>
                     {
-                        Log.SlowInfo($"Menu Mode: {Main.menuMode}, ");
                         // actual drawing of all UI elements
                         // dont mess with this
                         userInterface?.Draw(Main.spriteBatch, new GameTime());

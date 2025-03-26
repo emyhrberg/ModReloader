@@ -1,15 +1,15 @@
-﻿using MonoMod.RuntimeDetour;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.CustomReload
+namespace ErkysModdingUtilities.CustomReload
 {
     internal static class TMLData
     {
@@ -31,7 +31,7 @@ namespace SquidTestingMod.CustomReload
             CloudsCountBackup = new PropertyBackup(typeof(CloudLoader), "CloudCount", fstatic);
             CloudsDictBackup = new ObjectBackup(typeof(CloudLoader), "clouds", fstatic);
             EventBackup = new ObjectBackup(TypeCashing_type, "OnClear", fstatic);
-        } 
+        }
 
         public static void Restore()
         {
@@ -81,7 +81,7 @@ namespace SquidTestingMod.CustomReload
             GetDiferenceOfOldAndNewEvent(EventBackup).DynamicInvoke();
             EventBackup.Restore();
         }
-        
+
         public static Delegate GetDiferenceOfOldAndNewEvent(ObjectBackup eventBackup)
         {
             return Delegate.Remove((Delegate)eventBackup.ClonedValue, (Delegate)eventBackup.FieldValue);

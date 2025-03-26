@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
+using ErkysModdingUtilities.UI.Buttons;
+using ErkysModdingUtilities.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using SquidTestingMod.UI.Buttons;
-using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI
+namespace ErkysModdingUtilities.UI
 {
     public class MainState : UIState
     {
@@ -53,21 +53,21 @@ namespace SquidTestingMod.UI
                 TextSize = Conf.TextSize;
 
             // Set offset for first button position relative to center
-            offset = -ButtonSize * 5;
+            offset = -ButtonSize * 4;
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
             // Add buttons
-            AddButton<TestButton>(Ass.CollapseUp, "Testing", "Temporary button used for testing", textSize: TextSize);
             AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client", textSize: TextSize);
-            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
-            AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Oversee all things in the world: NPCs, time, spawn rate, etc", textSize: TextSize);
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game", textSize: TextSize);
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game", textSize: TextSize);
+            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", textSize: TextSize);
+            AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Oversee all things in the world: NPCs, time, spawn rate, etc", textSize: TextSize);
             AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", textSize: TextSize);
             AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", textSize: TextSize);
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
+            offset -= ButtonSize;
             reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
 
             // Mods button

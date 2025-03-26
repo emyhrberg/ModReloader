@@ -6,13 +6,13 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Common.Configs;
 using log4net;
 using log4net.Appender;
-using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Helpers
+namespace ErkysModdingUtilities.Helpers
 {
     //Class basically for universal helping functions
     internal class Utilities

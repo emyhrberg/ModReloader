@@ -1,4 +1,4 @@
-displayName = SquidTestingMod
+displayName = ErkysModdingUtilities
 author = Erky
 version = 0.1
 side = both

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.UI;
 
-namespace SquidTestingMod.Helpers
+namespace ErkysModdingUtilities.Helpers
 {
     public static class DrawHelper
     {

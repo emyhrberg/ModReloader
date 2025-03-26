@@ -2,9 +2,9 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using static SquidTestingMod.UI.Elements.Option;
+using static ErkysModdingUtilities.UI.Elements.Option;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     // Contains:
     // Icon image

@@ -1,6 +1,6 @@
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public enum SliderUsageLevel
     {

@@ -1,11 +1,11 @@
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Players
+namespace ErkysModdingUtilities.Common.Players
 {
     public class BuildAnywhere : ModPlayer
     {

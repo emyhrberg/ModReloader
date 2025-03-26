@@ -1,15 +1,15 @@
 using System.Linq;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     public class ModsButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {
@@ -29,9 +29,6 @@ namespace SquidTestingMod.UI.Buttons
         /// <param name="spriteBatch"></param>
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
-            if (Conf.HideCollapseButton && !Main.playerInventory)
-                return;
-
             if (!Active || Button == null || Button.Value == null)
                 return;
 

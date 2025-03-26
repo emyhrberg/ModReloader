@@ -1,8 +1,8 @@
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Helpers;
 using Terraria.GameContent.UI.Elements;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class OptionIcon : UIImage
     {

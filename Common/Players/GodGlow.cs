@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Common.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Common.Players;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     public class GodGlow : ModPlayer
     {

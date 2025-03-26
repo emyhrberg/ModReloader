@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace SquidTestingMod.Helpers
+namespace ErkysModdingUtilities.Helpers
 {
     public static class ModsToReload
     {

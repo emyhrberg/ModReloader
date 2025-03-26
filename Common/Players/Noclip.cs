@@ -1,12 +1,12 @@
+using ErkysModdingUtilities.Common.Configs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SquidTestingMod.Common.Configs;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Players
+namespace ErkysModdingUtilities.Common.Players
 {
     /// <summary>
     /// Allows the player to move through blocks and fly around the world.

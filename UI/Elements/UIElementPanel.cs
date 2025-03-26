@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using ErkysModdingUtilities.Common.Systems;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class UIElementPanel : OptionPanel
     {

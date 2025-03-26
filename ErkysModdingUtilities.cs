@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using ErkysModdingUtilities.CustomReload;
+using ErkysModdingUtilities.Helpers;
+using ErkysModdingUtilities.PacketHandlers;
+using ErkysModdingUtilities.UI;
+using ErkysModdingUtilities.UI.Buttons;
+using ErkysModdingUtilities.UI.Elements;
 using log4net;
 using MonoMod.RuntimeDetour;
 using MonoMod.RuntimeDetour.HookGen;
-using SquidTestingMod.CustomReload;
-using SquidTestingMod.Helpers;
-using SquidTestingMod.PacketHandlers;
-using SquidTestingMod.UI;
-using SquidTestingMod.UI.Buttons;
-using SquidTestingMod.UI.Elements;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod
+namespace ErkysModdingUtilities
 {
     // Use both sides currently (it is default if none is set), but can be changed to client only if needed
     [Autoload(Side = ModSide.Client)]
-    public class SquidTestingMod : Mod
+    public class ErkysModdingUtilities : Mod
     {
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {

@@ -3,7 +3,7 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Players
+namespace ErkysModdingUtilities.Common.Players
 {
     public class KillAura : ModPlayer
     {

@@ -2,7 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace SquidTestingMod.PacketHandlers
+namespace ErkysModdingUtilities.PacketHandlers
 {
     internal class ModNetHandler
     {

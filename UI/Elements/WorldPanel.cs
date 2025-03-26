@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Common.Players;
+using ErkysModdingUtilities.Common.Systems;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Common.Players;
-using SquidTestingMod.Common.Systems;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.ID;
-using static SquidTestingMod.UI.Elements.Option;
+using Terraria.ModLoader;
+using static ErkysModdingUtilities.UI.Elements.Option;
 
-namespace SquidTestingMod.UI.Elements
+namespace ErkysModdingUtilities.UI.Elements
 {
     public class WorldPanel : OptionPanel
     {
@@ -37,11 +39,17 @@ namespace SquidTestingMod.UI.Elements
             uiList.Add(timeOption);
             AddPadding(3f);
 
+            float spawnRate = 1f;
+            if (Conf.EnterWorldSuperMode)
+            {
+                spawnRate = 0f;
+            }
+
             spawnRateSlider = new(
                 title: "Spawn Rate",
                 min: 0,
                 max: 30,
-                defaultValue: SpawnRateMultiplier.Multiplier,
+                defaultValue: spawnRate,
                 onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
                 increment: 1,
                 hover: "Set the spawn rate multiplier",
@@ -307,60 +315,68 @@ namespace SquidTestingMod.UI.Elements
         {
             base.Update(gameTime);
 
-            // Update the hover text town npc slider
-            // If 0 town NPCs, show the default "Set the number of town NPCs" text
-            // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
-            var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
-            if (townNPCs.Count > 0)
+            // Update spawn rate slider hover text to say the spawn rate and the max spawns
+            // every half second ish scuffed
+            if (Main.GameUpdateCount % 30 == 0)
             {
-                var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
-                var formattedNames = string.Join("\n", npcNames
-                    .Select((name, index) => (name, index))
-                    .GroupBy(x => x.index / 5)
-                    .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
+                // Update the hover text for the spawn rate slider
+                spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateHook.StoredSpawnRate} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateHook.StoredMaxSpawns} (max number of enemies in the world)";
 
-                // Remove the trailing comma from the last row
-                if (formattedNames.EndsWith(","))
+                // Update the hover text town npc slider
+                // If 0 town NPCs, show the default "Set the number of town NPCs" text
+                // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
+                var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
+                if (townNPCs.Count > 0)
                 {
-                    formattedNames = formattedNames.TrimEnd(',');
+                    var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
+                    var formattedNames = string.Join("\n", npcNames
+                        .Select((name, index) => (name, index))
+                        .GroupBy(x => x.index / 5)
+                        .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
+
+                    // Remove the trailing comma from the last row
+                    if (formattedNames.EndsWith(","))
+                    {
+                        formattedNames = formattedNames.TrimEnd(',');
+                    }
+
+                    townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
+                }
+                else
+                {
+                    townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
                 }
 
-                townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
-            }
-            else
-            {
-                townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
-            }
+                // Update the town NPC count
+                if (!CustomSliderBase.IsAnySliderLocked)
+                {
+                    // Slider is not being used, update the max value
+                    townNpcSlider.UpdateSliderMax(GetTownNpcCount());
+                }
+                else
+                {
+                    // Slider is being used, update the current value
+                    townNpcSlider.SetValue(GetTownNpcCount());
+                    //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+                    // disable mouse input
+                    Main.LocalPlayer.mouseInterface = true;
+                }
 
-            // Update the town NPC count
-            if (!CustomSliderBase.IsAnySliderLocked)
-            {
-                // Slider is not being used, update the max value
-                townNpcSlider.UpdateSliderMax(GetTownNpcCount());
-            }
-            else
-            {
-                // Slider is being used, update the current value
-                townNpcSlider.SetValue(GetTownNpcCount());
-                //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
-                // disable mouse input
-                Main.LocalPlayer.mouseInterface = true;
-            }
+                // Update the time
+                if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
+                {
+                    // Normal game time progression logic
+                    timeOption.SetValue(GetCurrentTimeNormalized());
+                }
+                else
+                {
+                    // Reset the flag after slider use (prevents conflicts)
+                    timeSliderActive = false;
+                }
 
-            // Update the time
-            if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
-            {
-                // Normal game time progression logic
-                timeOption.SetValue(GetCurrentTimeNormalized());
+                // Update the UI display
+                timeOption.UpdateText("Time: " + CalcIngameTime());
             }
-            else
-            {
-                // Reset the flag after slider use (prevents conflicts)
-                timeSliderActive = false;
-            }
-
-            // Update the UI display
-            timeOption.UpdateText("Time: " + CalcIngameTime());
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using log4net;
-using MonoMod.RuntimeDetour;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,10 +7,14 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
+using log4net;
+using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace SquidTestingMod.PacketHandlers
+namespace ErkysModdingUtilities.PacketHandlers
 {
     internal class RefreshServerPacketHandler : PacketHandler
     {

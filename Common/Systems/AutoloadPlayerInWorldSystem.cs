@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     /// <summary>
     /// This system will automatically load a player and world every time AFTER all the mods have been reloaded.
@@ -23,12 +24,6 @@ namespace SquidTestingMod.Common.Systems
     {
         public override void OnModLoad()
         {
-            //if (Main.netMode == NetmodeID.MultiplayerClient)
-            //{
-            //    Mod.Logger.Info("AutoloadSingleplayerSystem is disabled in multiplayer.");
-            //    return;
-            //}
-
             // Get the OnSuccessfulLoad field using reflection
             FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -39,10 +34,12 @@ namespace SquidTestingMod.Common.Systems
                 if (ClientDataHandler.ClientMode == ClientModes.SinglePlayer)
                 {
                     onSuccessfulLoad += EnterSingleplayerWorld;
-                }else if (ClientDataHandler.ClientMode == ClientModes.MPMain)
+                }
+                else if (ClientDataHandler.ClientMode == ClientModes.MPMain)
                 {
                     onSuccessfulLoad += EnterLocalServer;
-                }else if (ClientDataHandler.ClientMode == ClientModes.MPMinor)
+                }
+                else if (ClientDataHandler.ClientMode == ClientModes.MPMinor)
                 {
                     onSuccessfulLoad += EnterLocalServer;
                 }
@@ -77,7 +74,7 @@ namespace SquidTestingMod.Common.Systems
             var world = Main.WorldList[ClientDataHandler.WorldID];
 
             StartGameWithPair(player, world);
-            
+
             // Reset Mode status (maybe should be moved to Exit World hook but naaaah)
             ClientDataHandler.ClientMode = ClientModes.FreshClient;
         }
@@ -109,10 +106,17 @@ namespace SquidTestingMod.Common.Systems
                 // Getting Player and World from ClientDataHandler
                 var world = Main.WorldList[ClientDataHandler.WorldID];
 
-                string fileNameStartProcess = @"C:\Program Files (x86)\Steam\steamapps\common\tModLoader\start-tModLoaderServer.bat";
+                string steamPath = Log.GetSteamPath();
+                string startServerFileName = Path.Combine(steamPath, "start-tModLoaderServer.bat");
+                if (!File.Exists(startServerFileName))
+                {
+                    if (Conf.LogToChat) Main.NewText("Failed to find start-tModLoaderServer.bat file.");
+                    Mod.Logger.Error("Failed to find start-tModLoaderServer.bat file.");
+                    return;
+                }
 
                 // create a process
-                ProcessStartInfo process = new(fileNameStartProcess)
+                ProcessStartInfo process = new(startServerFileName)
                 {
                     UseShellExecute = true,
                     Arguments = $"-nosteam -world {world.Path}"
@@ -125,7 +129,8 @@ namespace SquidTestingMod.Common.Systems
             catch (Exception e)
             {
                 // log it
-                Mod.Logger.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
+                if (Conf.LogToChat) Main.NewText("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
+                Log.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
                 return;
             }
         }

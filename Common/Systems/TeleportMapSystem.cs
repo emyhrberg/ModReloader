@@ -1,12 +1,12 @@
 using System;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace SquidTestingMod.Common.Systems
+namespace ErkysModdingUtilities.Common.Systems
 {
     public class TeleportMapSystem : ModSystem
     {

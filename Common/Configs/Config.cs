@@ -1,22 +1,21 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
+using ErkysModdingUtilities.Helpers;
+using ErkysModdingUtilities.UI;
 using Microsoft.Xna.Framework;
-using SquidTestingMod.Helpers;
-using SquidTestingMod.UI;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace SquidTestingMod.Common.Configs
+namespace ErkysModdingUtilities.Common.Configs
 {
     public class Config : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Reload")]
-        [DefaultValue("SquidTestingMod")]
-        public string ModToReload = "SquidTestingMod";
+        [DefaultValue("ErkysModdingUtilities")]
+        public string ModToReload = "ErkysModdingUtilities";
 
         [DefaultValue(false)]
         public bool SaveWorldOnReload = false;
@@ -51,9 +50,6 @@ namespace SquidTestingMod.Common.Configs
         public float PanelHeight = 600;
 
         [DefaultValue(false)]
-        public bool HideCollapseButton = false;
-
-        [DefaultValue(false)]
         public bool DraggablePanels = false;
 
         [Header("Game")]
@@ -66,6 +62,13 @@ namespace SquidTestingMod.Common.Configs
 
         [DefaultValue(true)]
         public bool LogToChat = true;
+
+        [Header("KeepGameRunning")]
+        [DefaultValue(true)]
+        public bool KeepRunning = true;
+
+        [DefaultValue(true)]
+        public bool AlwaysShowTextOnTop = true;
 
         [Header("NPCSpawner")]
 
@@ -89,7 +92,6 @@ namespace SquidTestingMod.Common.Configs
                 Log.Info("MainState is null in Config.OnChanged()");
                 return;
             }
-            Log.Info("Collapse left before: " + mainState.collapse.Left.Pixels);
 
             // Delete all buttons and re-add them
             mainState.AllButtons.Clear();
@@ -97,9 +99,6 @@ namespace SquidTestingMod.Common.Configs
             mainState.AddEverything();
             mainState.collapse.UpdateCollapseImage();
             Log.Info("Config.OnChanged() ran successfully");
-
-            Log.Info("Collapse left after: " + mainState.collapse.Left.Pixels);
-
         }
     }
 
@@ -145,7 +144,6 @@ namespace SquidTestingMod.Common.Configs
         public static float TextSize => C.TextSize;
         public static float ButtonSize => C.ButtonSize;
         public static string ButtonsPosition => C.ButtonsPosition;
-        public static bool HideCollapseButton => C.HideCollapseButton;
         public static bool DraggablePanels => C.DraggablePanels;
         public static float PanelWidth => C.PanelWidth;
         public static float PanelHeight => C.PanelHeight;
@@ -153,6 +151,10 @@ namespace SquidTestingMod.Common.Configs
         // Game
         public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
+
+        // Keep Game Running
+        public static bool KeepRunning => C.KeepRunning;
+        public static bool AlwaysShowTextOnTop => C.AlwaysShowTextOnTop;
 
         // Logging
         public static bool LogToLogFile => C.LogToLogFile;

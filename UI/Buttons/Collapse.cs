@@ -1,15 +1,15 @@
+using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SquidTestingMod.Common.Configs;
-using SquidTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace SquidTestingMod.UI.Buttons
+namespace ErkysModdingUtilities.UI.Buttons
 {
     public class Collapse : UIImage
     {
@@ -81,24 +81,20 @@ namespace SquidTestingMod.UI.Buttons
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (sys == null)
             {
-                Log.Info("Collapse: MainSystem is null");
+                Log.Info("MainSystem is null");
                 return;
             }
 
             foreach (BaseButton btn in sys.mainState.AllButtons)
             {
                 btn.Active = sys.mainState.AreButtonsShowing;
-                if (btn.ButtonText != null)
-                {
-                    // btn.ButtonText.Active = sys.mainState.AreButtonsShowing;
-                }
 
                 // force MP button to disable when expanded
-                // if (btn is ReloadMPButton mpBtn)
-                // {
-                //     mpBtn.Active = false;
-                //     mpBtn.ButtonText.Active = false;
-                // }
+                if (btn is ReloadMPButton mpBtn)
+                {
+                    mpBtn.Active = false;
+                    mpBtn.ButtonText.Active = false;
+                }
             }
         }
 
@@ -142,9 +138,6 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void Update(GameTime gameTime)
         {
-            if (Conf.HideCollapseButton && !Main.playerInventory)
-                return;
-
             // disable item use on click
             if (ContainsPoint(Main.MouseScreen))
             {
@@ -154,9 +147,6 @@ namespace SquidTestingMod.UI.Buttons
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Conf.HideCollapseButton && !Main.playerInventory)
-                return;
-
             base.Draw(spriteBatch);
         }
     }
