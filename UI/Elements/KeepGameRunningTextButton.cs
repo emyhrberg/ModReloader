@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
@@ -50,11 +51,13 @@ namespace ModHelper.UI.Elements
             {
                 SetText("Keep Game Running: ON");
                 if (Conf.LogToChat) Main.NewText("Game will keep running when unfocused", Color.Green);
+                Log.Info("Keep Game Running: ON");
             }
             else
             {
                 SetText("Keep Game Running: OFF");
                 if (Conf.LogToChat) Main.NewText("Game will pause when unfocused", new Color(226, 57, 39));
+                Log.Info("Keep Game Running: OFF");
             }
         }
 

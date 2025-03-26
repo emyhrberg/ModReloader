@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
@@ -126,11 +127,15 @@ namespace ModHelper.UI.Elements
             // save
             AddHeader("Save");
 
-            var savePlayerCurrentOption = new ActionOption(savePlayer, "Player", "Save the current player by overwriting the save file\nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
+            string playerPath = Main.ActivePlayerFileData.Path;
+            string playerName = Path.GetFileName(playerPath);
+            var savePlayerCurrentOption = new ActionOption(savePlayer, "Player", $"Save the current player as {playerName} \nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
             uiList.Add(savePlayerCurrentOption);
             AddPadding(3f);
 
-            var saveWorldOption = new ActionOption(saveWorld, "World", "Save the current world by overwriting the save file\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
+            string worldPath = Main.ActiveWorldFileData.Path;
+            string worldName = Path.GetFileName(worldPath);
+            var saveWorldOption = new ActionOption(saveWorld, "World", $"Save the current world as {worldName}\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
             uiList.Add(saveWorldOption);
             AddPadding(3f);
             AddPadding();
