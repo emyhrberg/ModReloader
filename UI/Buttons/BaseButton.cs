@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -146,7 +147,9 @@ namespace ErkysModdingUtilities.UI.Buttons
                         {
                             string stateName = currentState.GetType().Name;
                             if (stateName.Contains("Config"))
+                            {
                                 return false;
+                            }
                         }
                     }
                 }

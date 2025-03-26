@@ -56,7 +56,7 @@ namespace ErkysModdingUtilities.UI.Elements
             if (icon == null)
             {
                 // "Enabled Mods"
-                OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName);
+                OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName, canClick: true);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
@@ -64,7 +64,7 @@ namespace ErkysModdingUtilities.UI.Elements
             else
             {
                 // "All Mods"
-                OptionTitleText modNameText = new(text: modName, internalModName: internalModName, hover: $"{internalModName}");
+                OptionTitleText modNameText = new(text: modName, internalModName: internalModName, hover: $"{internalModName}", canClick: false);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);

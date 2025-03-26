@@ -31,10 +31,10 @@ namespace ErkysModdingUtilities.Common.Configs
 
         [Range(50f, 80f)]
         [Increment(5f)]
-        [DefaultValue(60)]
-        public float ButtonSize = 60;
+        [DefaultValue(70)]
+        public float ButtonSize = 70;
 
-        [Range(0.4f, 1.0f)]
+        [Range(0.4f, 1.1f)]
         [Increment(0.1f)]
         [DefaultValue(0.9f)]
         public float TextSize = 0.9f;
@@ -56,19 +56,18 @@ namespace ErkysModdingUtilities.Common.Configs
         [DefaultValue(false)]
         public bool EnterWorldSuperMode = false;
 
+        [DefaultValue(true)]
+        public bool KeepRunning = true;
+
+        [DefaultValue(true)]
+        public bool AlwaysShowTextOnTop = true;
+
         [Header("Logging")]
         [DefaultValue(true)]
         public bool LogToLogFile = true;
 
         [DefaultValue(true)]
         public bool LogToChat = true;
-
-        [Header("KeepGameRunning")]
-        [DefaultValue(true)]
-        public bool KeepRunning = true;
-
-        [DefaultValue(true)]
-        public bool AlwaysShowTextOnTop = true;
 
         [Header("NPCSpawner")]
 

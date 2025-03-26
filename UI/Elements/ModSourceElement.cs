@@ -23,7 +23,7 @@ namespace ErkysModdingUtilities.UI.Elements
     // A .csproj icon which opens the project in Visual Studio
     public class ModSourcesElement : UIPanel
     {
-        public string modSourcePathString;
+        public string cleanModName;
         public ModCheckbox checkbox;
         public ModSourcesIcon modIcon;
 
@@ -62,12 +62,14 @@ namespace ErkysModdingUtilities.UI.Elements
                 });
             }
 
+            string internalNameFolderName = Path.GetFileName(modPath);
+
             // mod name
             // modSourcePathString = Path.GetFileName(modPath);
-            modSourcePathString = cleanName;
-            if (modSourcePathString.Length > 20)
-                modSourcePathString = string.Concat(modSourcePathString.AsSpan(0, 20), "...");
-            OptionTitleText modNameText = new(text: modSourcePathString, hover: $"Open {modSourcePathString} config", internalModName: modSourcePathString);
+            cleanModName = cleanName;
+            if (cleanModName.Length > 20)
+                cleanModName = string.Concat(cleanModName.AsSpan(0, 20), "...");
+            OptionTitleText modNameText = new(text: cleanModName, hover: internalNameFolderName, internalModName: cleanModName, canClick: false);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);
@@ -77,26 +79,26 @@ namespace ErkysModdingUtilities.UI.Elements
             float dist = 27f;
 
             // checkbox icon
-            checkbox = new(Ass.ModUncheck.Value, modSourcePathString, $"Click to make {modSourcePathString} the mod to reload");
+            checkbox = new(Ass.ModUncheck.Value, cleanModName, $"Click to make {cleanModName} the mod to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
 
             // if this is the current mod, add checkmark
-            bool isCurrentModToReload = Conf.ModToReload == modSourcePathString;
+            bool isCurrentModToReload = Conf.ModToReload == cleanModName;
             if (isCurrentModToReload)
             {
                 checkbox.SetCheckState(true);
 
                 // add initial mod
-                if (!ModsToReload.modsToReload.Contains(modSourcePathString))
+                if (!ModsToReload.modsToReload.Contains(cleanModName))
                 {
-                    ModsToReload.modsToReload.Add(modSourcePathString);
+                    ModsToReload.modsToReload.Add(cleanModName);
                 }
             }
 
 
             // reload icon
-            ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, modSourcePathString, "Reload " + modSourcePathString);
+            ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, cleanModName, "Reload " + cleanModName);
             modReloadIcon.Left.Set(def - dist * 2, 1f);
             Append(modReloadIcon);
 

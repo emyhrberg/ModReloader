@@ -11,7 +11,7 @@ Mods: {
 					Game: Game
 					UI: UI
 					Logging: Logging
-					KeepGameRunning: Keep Game Running Header
+					KeepGameRunning: Keep Game Running
 				}
 
 				NPCSpawnLocation: {
@@ -106,12 +106,12 @@ Mods: {
 
 				KeepRunning: {
 					Label: Keep Running
-					Tooltip: ""
+					Tooltip: Even when the game window is out of focus or alt tabbed, the game will keep updating
 				}
 
 				AlwaysShowTextOnTop: {
 					Label: Always Show Text On Top
-					Tooltip: ""
+					Tooltip: Toggles a visual button on the top of the screen where you can set whether to keep the game running on or off when out of focus.
 				}
 			}
 

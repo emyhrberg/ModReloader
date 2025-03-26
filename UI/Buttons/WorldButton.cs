@@ -45,5 +45,15 @@ namespace ErkysModdingUtilities.UI.Buttons
             else
                 worldPanel.SetActive(true);
         }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            base.RightClick(evt);
+
+            // Save the player and world
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            sys?.mainState?.worldPanel?.savePlayer();
+            sys?.mainState?.worldPanel?.saveWorld();
+        }
     }
 }

@@ -46,15 +46,15 @@ namespace ErkysModdingUtilities.Helpers
         }
 
         /// <summary>
-        /// Log a message once every 5 second
+        /// Log a message once every 3 second
         /// </summary>
-        public static void SlowInfo(string message)
+        public static void SlowInfo(string message, int seconds = 3)
         {
             Config c = ModContent.GetInstance<Config>();
             if (c != null && Conf.LogToLogFile == false) return;
 
-            // Use TimeSpanFactory to create a 5-second interval.
-            TimeSpan interval = TimeSpanFactory.FromSeconds(5);
+            // Use TimeSpanFactory to create a 3-second interval.
+            TimeSpan interval = TimeSpanFactory.FromSeconds(seconds);
             if (DateTime.UtcNow - lastLogTime >= interval)
             {
                 ModInstance.Logger.Info(message);

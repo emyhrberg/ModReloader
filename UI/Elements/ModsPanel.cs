@@ -219,6 +219,11 @@ namespace ErkysModdingUtilities.UI.Elements
             {
                 string cleanName = GetModSourcesCleanName(modPath);
 
+                // cut to max 20 chars
+                if (cleanName.Length > 20)
+                    cleanName = string.Concat(cleanName.AsSpan(0, 20), "...");
+                // string cleanName = Path.GetFileName(modPath);
+
                 ModSourcesElement modSourcesElement = new(modPath: modPath, cleanName: cleanName);
                 modSourcesElements.Add(modSourcesElement);
                 uiList.Add(modSourcesElement);
@@ -242,7 +247,7 @@ namespace ErkysModdingUtilities.UI.Elements
                 modCompileType,
                 BindingFlags.Public | BindingFlags.Instance,
                 null,
-                new object[] { consoleBuildStatusInstance },
+                [consoleBuildStatusInstance],
                 null);
 
             // Retrieve the private instance method ReadBuildInfo.

@@ -19,13 +19,14 @@ namespace ErkysModdingUtilities.UI.Elements
         public string hover = "";
         private Action leftClick;
         private string internalModName = "";
-
         private bool isConfigOpen = false;
+        private bool canClick;
 
-        public OptionTitleText(string text, string hover = "", Action leftClick = null, float textSize = 1f, string internalModName = "") : base(text, textSize)
+        public OptionTitleText(string text, string hover = "", Action leftClick = null, float textSize = 1f, string internalModName = "", bool canClick = true) : base(text, textSize)
         {
             this.hover = hover;
             this.internalModName = internalModName;
+            this.canClick = canClick;
             //Left.Set(30, 0);
             Left.Set(0, 0);
             VAlign = 0.5f;
@@ -34,16 +35,15 @@ namespace ErkysModdingUtilities.UI.Elements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            if (string.IsNullOrEmpty(internalModName))
-            {
+            if (!canClick)
                 return;
-            }
+
+            if (string.IsNullOrEmpty(internalModName))
+                return;
 
             // if hover is empty, the button is disabled.
             if (string.IsNullOrEmpty(hover))
-            {
                 return;
-            }
 
             base.LeftClick(evt);
 
@@ -108,7 +108,7 @@ namespace ErkysModdingUtilities.UI.Elements
                 // Open the mod config UI.
                 Main.InGameUI.SetState(modConfigInstance as UIState);
                 Main.menuMode = 10024;
-                if (Conf.LogToChat) Main.NewText("Opening config for " + modName, Color.Yellow);
+                if (Conf.LogToChat) Main.NewText("Opening config for " + modName, Color.Green);
 
                 // Hover text update
                 hover = $"Close {internalModName} config";
@@ -126,6 +126,81 @@ namespace ErkysModdingUtilities.UI.Elements
             {
                 if (Conf.LogToChat) Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
                 return;
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            // Only check for manual closure if we think config is still open
+            if (isConfigOpen)
+            {
+                bool configClosed = false;
+
+                // Check if Main.menuMode has changed from the config mode
+                if (Main.menuMode != 10024)
+                {
+                    configClosed = true;
+                }
+                // Double-check with the actual UI state
+                else if (Main.InGameUI != null)
+                {
+                    try
+                    {
+                        var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
+                        if (currentStateProp != null)
+                        {
+                            var currentState = currentStateProp.GetValue(Main.InGameUI);
+
+                            // If UI state is null or not a config UI
+                            if (currentState == null)
+                            {
+                                configClosed = true;
+                            }
+                            else
+                            {
+                                // Get the type of the mod config UI for comparison
+                                Assembly assembly = typeof(Main).Assembly;
+                                Type interfaceType = assembly.GetType("Terraria.ModLoader.UI.Interface");
+                                var modConfigField = interfaceType?.GetField("modConfig", BindingFlags.Static | BindingFlags.NonPublic);
+
+                                if (modConfigField != null)
+                                {
+                                    var modConfigInstance = modConfigField.GetValue(null);
+
+                                    // If current state is not the mod config UI
+                                    if (modConfigInstance != null && currentState.GetType() != modConfigInstance.GetType())
+                                    {
+                                        configClosed = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error checking UI state in Update: " + ex.Message);
+                    }
+                }
+
+                // If we detected the config was closed manually
+                if (configClosed)
+                {
+                    hover = $"Open {internalModName} config";
+                    isConfigOpen = false;
+
+                    // Restore hotbar state since user manually closed config
+                    MainSystem sys = ModContent.GetInstance<MainSystem>();
+                    if (sys?.mainState != null)
+                    {
+                        sys.mainState.AreButtonsShowing = true;
+                        sys.mainState.collapse?.SetCollapsed(false);
+                        sys.mainState.collapse?.UpdateCollapseImage();
+                    }
+
+                    Log.SlowInfo($"Detected manual config closure for {internalModName}", seconds: 1);
+                }
             }
         }
 

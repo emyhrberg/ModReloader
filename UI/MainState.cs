@@ -85,6 +85,13 @@ namespace ErkysModdingUtilities.UI
             modsPanel = AddPanel<ModsPanel>("right");
             uiPanel = AddPanel<UIElementPanel>("right");
             worldPanel = AddPanel<WorldPanel>("right");
+
+            if (Conf.AlwaysShowTextOnTop)
+            {
+                string onOff = Conf.KeepRunning ? "ON" : "OFF";
+                KeepGameRunningTextButton topText = new("Keep Game Running: " + onOff);
+                Append(topText);
+            }
         }
 
         private T AddPanel<T>(string side) where T : DraggablePanel, new()

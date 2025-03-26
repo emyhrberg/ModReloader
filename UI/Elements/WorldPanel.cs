@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.Common.Systems;
@@ -119,7 +120,61 @@ namespace ErkysModdingUtilities.UI.Elements
                 AddPadding(3f);
             }
             AddPadding();
+
+            // save
+            AddHeader("Save");
+
+            var savePlayerCurrentOption = new ActionOption(savePlayer, "Player", "Save the current player by overwriting the save file\nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
+            uiList.Add(savePlayerCurrentOption);
+            AddPadding(3f);
+
+            var saveWorldOption = new ActionOption(saveWorld, "World", "Save the current world by overwriting the save file\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
+            uiList.Add(saveWorldOption);
+            AddPadding(3f);
+            AddPadding();
         }
+
+        // Here is the end of the constructor
+
+        #region Open Folder
+        private void OpenFolder(string path)
+        {
+            // go up one directory
+            path = System.IO.Path.GetDirectoryName(path);
+            Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
+        }
+
+        #endregion
+
+        #region Save
+        // To use :
+        // Main.ActiveWorldFileData.SaveWorld()?
+        // Main.ActivePlayerFileData.SavePlayer()?
+        // PlayerFileData.Path
+
+        public void savePlayer()
+        {
+            // SAVE!
+            WorldGen.saveToonWhilePlaying();
+
+            // Write to chat that we saved the player to a path
+            string filePath = Main.ActivePlayerFileData.Path;
+            Main.NewText("Player saved to: " + filePath);
+        }
+
+        public void saveWorld()
+        {
+            // SAVE!
+            WorldGen.saveAndPlay();
+
+            // Write to chat that we saved the world to a path
+            string filePath = Main.ActiveWorldFileData.Path;
+            Main.NewText("World saved to: " + filePath);
+        }
+
+        #endregion
+
+        #region Methods
 
         private void ToggleAllTracking()
         {
@@ -375,4 +430,5 @@ namespace ErkysModdingUtilities.UI.Elements
             }
         }
     }
+    #endregion
 }

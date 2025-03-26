@@ -57,7 +57,7 @@ namespace ErkysModdingUtilities.UI.Elements
 
             foreach (var mod in modsPanel.modSourcesElements)
             {
-                if (mod.modSourcePathString == modSourcePathString)
+                if (mod.cleanModName == modSourcePathString)
                 {
                     // set checkbox
                     mod.checkbox.ToggleCheckState();

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ErkysModdingUtilities.Helpers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
@@ -30,15 +31,15 @@ namespace ErkysModdingUtilities.UI.Elements
             Append(text);
         }
 
-        // public override void MouseOver(UIMouseEvent evt)
-        // {
-        //     BorderColor = Color.Yellow;
-        // }
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            BorderColor = Color.Yellow;
+        }
 
-        // public override void MouseOut(UIMouseEvent evt)
-        // {
-        //     BorderColor = Color.Black;
-        // }
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            BorderColor = Color.Black;
+        }
 
         public override void LeftClick(UIMouseEvent evt)
         {

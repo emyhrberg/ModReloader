@@ -22,7 +22,7 @@ namespace ErkysModdingUtilities.UI.Elements
                 hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
 
             ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log", textSize: 0.5f);
+            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log");
             AddPadding(10);
             uiList.Add(openClient);
             AddPadding(10);
