@@ -1,10 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.UI;
 using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -15,14 +15,20 @@ namespace EliteTestingMod.Common.Systems
 {
     public class UIElementState : UIState
     {
+        #region So many variables
+
         // Flag to enable/disable UI debug drawing
         public bool showAll = false;
         public bool DrawSizeOfElement = false;
         public bool DrawNameOfElement = false;
 
+        // New dictionaries to cache offsets by UIElement.
+        private Dictionary<UIElement, Vector2> sizeOffsets = [];
+        private Dictionary<UIElement, Vector2> typeOffsets = [];
+
         // Elements
-        public List<UIElement> elements = new();
-        private Dictionary<UIElement, bool> elementToggles = new();
+        public List<UIElement> elements = [];
+        private readonly Dictionary<UIElement, bool> elementToggles = [];
 
         // Outline color
         private Color outlineColor = Color.White;
@@ -30,8 +36,50 @@ namespace EliteTestingMod.Common.Systems
         private bool randomOutlineColor = false;
         public void ToggleRandomOutlineColor() => randomOutlineColor = !randomOutlineColor;
 
-        // the random offset in X and Y
-        private int Random => Main.rand.Next(-20, 20);
+        // Thickness
+        private int thickness = 1;
+        public void SetThickness(int value) => thickness = value;
+
+        // Settings
+        private List<Color> rainbowColors;
+        private float opacity = 0.1f;
+
+        // Size text
+        private float SizeXOffset = 0;
+        private float SizeYOffset = 0;
+        private float SizeTextSize = 0.5f;
+        public void SetSizeXOffset(float value) => SizeXOffset = value;
+        public void SetSizeYOffset(float value) => SizeYOffset = value;
+        public void SetSizeTextSize(float value) => SizeTextSize = value;
+
+        // Type text
+        private float TypeXOffset = 0;
+        private float TypeYOffset = 0;
+        private float TypeTextSize = 0.5f;
+        public void SetTypeXOffset(float value) => TypeXOffset = value;
+        public void SetTypeYOffset(float value) => TypeYOffset = value;
+        public void SetTypeTextSize(float value) => TypeTextSize = value;
+
+        // Toggle stuff
+        public void ToggleShowSize() => DrawSizeOfElement = !DrawSizeOfElement;
+        public void ToggleShowType() => DrawNameOfElement = !DrawNameOfElement;
+
+        public void ResetSizeOffset() => sizeOffsets.Clear();
+        public void ResetTypeOffset() => typeOffsets.Clear();
+
+        // Misc
+        public void SetOpacity(float value) => opacity = value;
+        public void RandomizeRainbowColors() => rainbowColors = rainbowColors.OrderBy(_ => Main.rand.Next()).ToList();
+        private static int Random => Main.rand.Next(-20, 20); // the random offset in X and Y
+
+        #endregion
+
+        #region Constructor
+        public UIElementState()
+        {
+            GenerateRainbowColors(count: 20);
+        }
+        #endregion
 
         // Randomize offset
         public void RandomizeSizeOffset()
@@ -50,16 +98,7 @@ namespace EliteTestingMod.Common.Systems
                 typeOffsets[elem] = new Vector2(Random, Random);
             }
         }
-        public void ResetSizeOffset() => sizeOffsets.Clear();
-        public void ResetTypeOffset() => typeOffsets.Clear();
 
-        // Thickness
-        private int thickness = 1;
-        public void SetThickness(int value) => thickness = value;
-
-        // Toggle stuff
-        public void ToggleShowSize() => DrawSizeOfElement = !DrawSizeOfElement;
-        public void ToggleShowType() => DrawNameOfElement = !DrawNameOfElement;
         public void ToggleElement(string typeName)
         {
             UIElement firstMatch = elements.Find(e => e.GetType().Name == typeName);
@@ -116,26 +155,6 @@ namespace EliteTestingMod.Common.Systems
             }
         }
 
-        // Settings
-        private List<Color> rainbowColors;
-        private float opacity = 0.1f;
-
-        // Text settings
-        private float SizeXOffset = 0;
-        private float SizeYOffset = 0;
-        private float SizeTextSize = 0.5f;
-
-        public UIElementState()
-        {
-            GenerateRainbowColors(count: 20);
-        }
-
-        public void SetSizeXOffset(float value) => SizeXOffset = value;
-        public void SetSizeYOffset(float value) => SizeYOffset = value;
-        public void SetOpacity(float value) => opacity = value;
-        public void RandomizeRainbowColors() => rainbowColors = rainbowColors.OrderBy(_ => Main.rand.Next()).ToList();
-        public void SetSizeTextSize(float value) => SizeTextSize = value;
-
         public void DrawHitbox(UIElement element, SpriteBatch spriteBatch)
         {
             Rectangle hitbox = element.GetOuterDimensions().ToRectangle();
@@ -161,7 +180,7 @@ namespace EliteTestingMod.Common.Systems
         public void DrawElementType(SpriteBatch spriteBatch, UIElement element, Point position)
         {
             string typeText = element.GetType().Name;
-            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(typeText) * SizeTextSize;
+            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(typeText) * TypeTextSize;
             Vector2 textPosition = new Vector2(position.X, position.Y) - new Vector2(0, textSize.Y);
 
             // Use the cached offset if one exists
@@ -171,18 +190,31 @@ namespace EliteTestingMod.Common.Systems
             }
             else
             {
-                textPosition += new Vector2(SizeXOffset, SizeYOffset);
+                textPosition += new Vector2(TypeXOffset, TypeYOffset);
             }
 
-            ChatManager.DrawColorCodedStringWithShadow(
+            Utils.DrawBorderStringFourWay(
                 spriteBatch,
                 FontAssets.MouseText.Value,
                 typeText,
-                textPosition,
+                textPosition.X,
+                textPosition.Y,
                 Color.White,
-                0f,
-                Vector2.Zero,
-                new Vector2(SizeTextSize));
+                Color.Black,
+                new Vector2(TypeTextSize),
+                TypeTextSize);
+
+            // ChatManager.DrawColorCodedStringWithShadow(
+            //     spriteBatch: spriteBatch,
+            //     font: FontAssets.MouseText.Value,
+            //     text: typeText,
+            //     position: textPosition,
+            //     baseColor: Color.White,
+            //     rotation: 0f,
+            //     origin: Vector2.Zero,
+            //     baseScale: new Vector2(TypeTextSize),
+            //     maxWidth: -1,
+            //     spread: 2f);
         }
 
         public void DrawElementSize(SpriteBatch spriteBatch, UIElement element, Point position)
@@ -205,15 +237,26 @@ namespace EliteTestingMod.Common.Systems
                 textPosition += new Vector2(SizeXOffset, SizeYOffset);
             }
 
-            ChatManager.DrawColorCodedStringWithShadow(
+            Utils.DrawBorderStringFourWay(
                 spriteBatch,
                 FontAssets.MouseText.Value,
-                sizeText,
-                textPosition,
+                text: sizeText,
+                textPosition.X,
+                textPosition.Y,
                 Color.White,
-                0f,
-                Vector2.Zero,
-                new Vector2(SizeTextSize));
+                Color.Black,
+                new Vector2(SizeTextSize),
+                SizeTextSize);
+
+            // ChatManager.DrawColorCodedStringWithShadow(
+            //     spriteBatch,
+            //     FontAssets.MouseText.Value,
+            //     sizeText,
+            //     textPosition,
+            //     Color.White,
+            //     0f,
+            //     Vector2.Zero,
+            //     new Vector2(SizeTextSize));
         }
 
         private void DrawOutline(SpriteBatch spriteBatch, Rectangle hitbox, Color? rainbowColor = null)
@@ -244,10 +287,6 @@ namespace EliteTestingMod.Common.Systems
             }
         }
 
-        // New dictionaries to cache offsets by UIElement.
-        private Dictionary<UIElement, Vector2> sizeOffsets = new();
-        private Dictionary<UIElement, Vector2> typeOffsets = new();
-
         public void UIElement_Draw(On_UIElement.orig_Draw orig, UIElement self, SpriteBatch spriteBatch)
         {
             orig(self, spriteBatch); // Normal UI behavior
@@ -272,7 +311,7 @@ namespace EliteTestingMod.Common.Systems
             if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900)
                 return;
 
-            // NEW: Check if this *type* is toggled OFF
+            // Check if this *type* is toggled OFF
             if (elementToggles.ContainsKey(self) && elementToggles[self])
                 return;
 

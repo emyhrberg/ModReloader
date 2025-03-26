@@ -1,7 +1,7 @@
+using System.Collections.Generic;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -28,6 +28,19 @@ namespace EliteTestingMod.UI.Elements
 
         // Store item slots
         protected List<CustomItemSlot> allItemSlots = [];
+
+        public override bool SetActive(bool active)
+        {
+            if (active)
+            {
+                // Reset panel position
+                HAlign = 0f; // right aligned
+                VAlign = 1.0f; // bottom aligned
+            }
+
+            Active = active;
+            return Active;
+        }
 
         public SpawnerPanel(string header) : base(header)
         {

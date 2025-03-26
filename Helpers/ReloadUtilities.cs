@@ -72,6 +72,13 @@ namespace EliteTestingMod.Helpers
 
         public static void BuildAndReloadMods(Action actionAfterBuild = null)
         {
+            // 0. Check if we should reload mods
+            if (Conf.C.Reload == false)
+            {
+                Log.Warn("Config.Reload is false, skipping mod reload.");
+                return;
+            }
+
             // 1. Getting Assembly
             Assembly tModLoaderAssembly = typeof(Main).Assembly;
 

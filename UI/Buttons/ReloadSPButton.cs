@@ -23,11 +23,19 @@ namespace EliteTestingMod.UI.Buttons
         {
             if (!Conf.Reload)
             {
-                WorldGen.SaveAndQuit();
-                Main.menuMode = 0;
+                if (Conf.LogToChat) Main.NewText("Reload is disabled, toggle it in config.");
+                Log.Warn("Reload is disabled");
+                // WorldGen.SaveAndQuit();
+                // Main.menuMode = 0;
                 return;
             }
 
+            if (ModsToReload.modsToReload.Count == 0)
+            {
+                if (Conf.LogToChat) Main.NewText("No mods to reload, add some in Mods.");
+                Log.Warn("No mods to reload");
+                return;
+            }
 
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
@@ -46,12 +54,16 @@ namespace EliteTestingMod.UI.Buttons
                 await ReloadUtilities.ExitAndKillServer();
             }
 
-            // 3 Reload
+            // 4 Reload
             ReloadUtilities.BuildAndReloadMods();
         }
 
         public override void RightClick(UIMouseEvent evt)
         {
+            // If we are in multiplayer, we cant right click
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
             // If right click, toggle the mode and return
             Active = false;
             ButtonText.Active = false;

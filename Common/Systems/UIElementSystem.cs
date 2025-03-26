@@ -1,5 +1,5 @@
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -33,13 +33,15 @@ namespace EliteTestingMod.Common.Systems
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "EliteTestingMod: DrawUISystem",
-                    () =>
+                    name: "EliteTestingMod: UIElementSystem",
+
+                    drawMethod: delegate
                     {
                         ui?.Draw(Main.spriteBatch, new GameTime());
                         return true;
                     },
-                    InterfaceScaleType.UI));
+
+                    scaleType: InterfaceScaleType.UI));
             }
         }
     }

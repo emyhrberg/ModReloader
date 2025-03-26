@@ -60,6 +60,11 @@ namespace EliteTestingMod.UI.Elements
 
         public override void RightClick(UIMouseEvent evt)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             base.RightClick(evt);
 
             Active = false;

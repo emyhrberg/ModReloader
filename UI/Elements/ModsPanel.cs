@@ -29,7 +29,7 @@ namespace EliteTestingMod.UI.Elements
 
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
-            Active = true; // uncomment to show the panel by default
+            // Active = true; // uncomment to show the panel by default
             AddPadding(5);
             AddHeader("Mod Sources", GoToModSources, "Click to exit world and go to mod sources");
             ConstructModSourcesList();

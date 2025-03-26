@@ -146,7 +146,18 @@ namespace EliteTestingMod.UI.Elements
         // also see update() for more visibility toggling
         // we modify both update() and draw() when active is false
         public bool GetActive() => Active;
-        public bool SetActive(bool active) => Active = active;
+        public virtual bool SetActive(bool active)
+        {
+            if (active)
+            {
+                // Reset panel position
+                HAlign = 1.0f; // right aligned
+                VAlign = 1.0f; // bottom aligned
+            }
+
+            Active = active;
+            return Active;
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {

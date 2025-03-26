@@ -1,13 +1,13 @@
-﻿using EliteTestingMod.Common.Configs;
+﻿using System;
+using System.Collections.Generic;
+using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using EliteTestingMod.UI.Buttons;
 using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Collections.Generic;
-using Terraria.ID;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -67,6 +67,11 @@ namespace EliteTestingMod.UI
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
+                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
+            }
+            else if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                offset -= ButtonSize;
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
             }
 

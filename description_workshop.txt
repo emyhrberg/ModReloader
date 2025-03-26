@@ -1,4 +1,4 @@
-Erkys Modding Utilities is the ultimate Terraria testing and debugging tool for modders and players who want full control.
+Elite Testing Mod is the ultimate Terraria testing and debugging tool for modders and players who want full control.
 
 Features:
 🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
@@ -10,13 +10,21 @@ Features:
 🔹 World Customization: Modify game settings like time, spawn rate, and much more with ease.
 🔹 Teleport Anywhere – instantly move across the map.
 🔹 Hitbox Tracker – track players, NPCs, projectiles with arrows and hitboxes.
-🔹 Keep Game Running - keeps the game running when out of focus.
+🔹 Keep Game Running - keeps the game running when out of focus if desired.
+🔹 Multiplayer And Server Reload: Restart and re-joins in multiplayer to test multiple clients.
 And of course, the entire mod, its UI, and every single feature can be toggled in its menu and customized in the config.
 
 UI Playground Demo:
+https://i.imgur.com/2aswesl.mp4
 
 Reload Demo:
+https://i.imgur.com/M7iq5FQ.mp4
 
-Copy Exception Demo:
+Steps For Multiplayer And Server Reload:
+1. Right click the green reload button to toggle and show the red reload button.
+2. Click the red reload button to start a server and join it.
+3. Launch a second client.
+4. Join the world with the second client.
+5. Click the red reload button to quickly reload the server and clients.
 
 Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀

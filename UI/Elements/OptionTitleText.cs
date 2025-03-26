@@ -38,6 +38,8 @@ namespace EliteTestingMod.UI.Elements
             if (!canClick)
                 return;
 
+            leftClick?.Invoke();
+
             if (string.IsNullOrEmpty(internalModName))
                 return;
 
@@ -47,7 +49,6 @@ namespace EliteTestingMod.UI.Elements
 
             base.LeftClick(evt);
 
-            leftClick?.Invoke();
 
             if (isConfigOpen)
             {

@@ -69,7 +69,7 @@ namespace EliteTestingMod.UI.Elements
                     if (mod.checkbox.isChecked)
                     {
                         // Update config
-                        Conf.C.ModToReload = modSourcePathString;
+                        Conf.C.LatestModToReload = modSourcePathString;
                         Conf.ForceSaveConfig(Conf.C);
 
                         // only add if it doesnt already exist
@@ -82,20 +82,15 @@ namespace EliteTestingMod.UI.Elements
                     else
                     {
                         ModsToReload.modsToReload.Remove(modSourcePathString);
-                        Log.Info("removed mod to reload: " + modSourcePathString);
-
-                        Log.Info("unchecked mod: " + modSourcePathString);
-                        Conf.C.ModToReload = "";
+                        Conf.C.LatestModToReload = "";
                         Conf.ForceSaveConfig(Conf.C);
-
-                        Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload) + "count: " + ModsToReload.modsToReload.Count);
 
                         // unchecked.
                         // update config if modstoreload only has one entry
                         if (ModsToReload.modsToReload.Count == 1)
                         {
-                            Conf.C.ModToReload = ModsToReload.modsToReload.FirstOrDefault();
-                            Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
+                            Conf.C.LatestModToReload = ModsToReload.modsToReload.FirstOrDefault();
+                            Log.Info("Setting single mod to reload to: " + Conf.C.LatestModToReload);
                             Conf.ForceSaveConfig(Conf.C);
                         }
                     }

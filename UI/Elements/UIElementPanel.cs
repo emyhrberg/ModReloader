@@ -1,7 +1,7 @@
-using EliteTestingMod.Common.Systems;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using EliteTestingMod.Common.Systems;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -121,7 +121,7 @@ namespace EliteTestingMod.UI.Elements
                 min: -100,
                 max: 100,
                 defaultValue: 0,
-                onValueChanged: elementState.SetSizeXOffset,
+                onValueChanged: elementState.SetTypeXOffset,
                 hover: "Set the X offset of the type text",
                 increment: 1
             );
@@ -131,7 +131,7 @@ namespace EliteTestingMod.UI.Elements
                 min: -100,
                 max: 100,
                 defaultValue: 0,
-                onValueChanged: elementState.SetSizeYOffset,
+                onValueChanged: elementState.SetTypeYOffset,
                 hover: "Set the Y offset of the type text",
                 increment: 1
             );
@@ -141,7 +141,7 @@ namespace EliteTestingMod.UI.Elements
                 min: 0.1f,
                 max: 2f,
                 defaultValue: 0.5f,
-                onValueChanged: elementState.SetSizeTextSize,
+                onValueChanged: elementState.SetTypeTextSize,
                 hover: "Set the text size of the type text",
                 increment: 0.1f
             );

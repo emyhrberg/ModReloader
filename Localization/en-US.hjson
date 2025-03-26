@@ -142,6 +142,11 @@ Mods: {
 					Label: Spawn Offset
 					Tooltip: ""
 				}
+
+				LatestModToReload: {
+					Tooltip: ""
+					Label: Latest Mod To Reload
+				}
 			}
 
 			NPCSpawnerConfig: {

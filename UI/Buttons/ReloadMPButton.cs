@@ -1,9 +1,3 @@
-using EliteTestingMod.Helpers;
-using log4net;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoMod.RuntimeDetour;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,6 +5,12 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using EliteTestingMod.Helpers;
+using log4net;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MonoMod.RuntimeDetour;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -346,6 +346,10 @@ namespace EliteTestingMod.UI.Buttons
         }
         public override void RightClick(UIMouseEvent evt)
         {
+            // If we are in multiplayer, we cant right click
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
             // If right click, toggle the mode and return
             Active = false;
             ButtonText.Active = false;

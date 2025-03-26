@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Common.Systems;
 using EliteTestingMod.UI;
 using EliteTestingMod.UI.Elements;
-using System;
-using System.Collections.Generic;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.Common.Players
@@ -29,13 +29,13 @@ namespace EliteTestingMod.Common.Players
         public static List<Cheat> Cheats =
         [
             new Cheat("God", "Makes you immortal", () => God, v => God = v),
-            new Cheat("Noclip", "Fly through blocks (use shift+ctrl to go faster)", () => Noclip, v => Noclip = v),
             new Cheat("Light", "Light up your surroundings", () => LightMode, v => LightMode = v),
-            new Cheat("Kill Aura", "Insta-kill touching enemies", () => KillAura, v => KillAura = v),
-            new Cheat("Mine Aura", "Mine tiles around you", () => MineAura, v => MineAura = v),
             new Cheat("Build Anywhere", "Place blocks in mid-air", () => BuildAnywhere, v => BuildAnywhere = v),
             new Cheat("Build Faster", "Place and mine faster", () => BuildFaster, v => BuildFaster = v),
-            new Cheat("Teleport With Right Click", "Right click to teleport to your mouse position", () => TeleportWithRightClick, v => TeleportWithRightClick = v)
+            new Cheat("Noclip", "Fly through blocks (use shift+space to go faster)", () => Noclip, v => Noclip = v),
+            new Cheat("Teleport With Right Click", "Right click to teleport to your mouse position", () => TeleportWithRightClick, v => TeleportWithRightClick = v),
+            new Cheat("Kill Aura", "Insta-kill touching enemies", () => KillAura, v => KillAura = v),
+            new Cheat("Mine Aura", "Mine tiles around you", () => MineAura, v => MineAura = v),
         ];
 
         // Called by “Toggle All”
@@ -70,7 +70,7 @@ namespace EliteTestingMod.Common.Players
             PlayerPanel p = sys.mainState.playerPanel;
             foreach (Option o in p.cheatOptions)
             {
-                if (o.text == "Mine Aura" || o.text == "Noclip" || o.text == "Kill Aura")
+                if (o.text == "Mine Aura" || o.text == "Noclip" || o.text == "Kill Aura" || o.text == "Teleport With Right Click")
                 {
                     o.SetState(Option.State.Disabled);
                 }

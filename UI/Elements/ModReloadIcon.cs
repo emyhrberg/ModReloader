@@ -32,12 +32,19 @@ namespace EliteTestingMod.UI.Elements
 
         public async override void LeftClick(UIMouseEvent evt)
         {
+            if (!Conf.Reload)
+            {
+                if (Conf.LogToChat) Main.NewText("Reload is disabled, toggle it in config.");
+                Log.Warn("Reload is disabled");
+                return;
+            }
+
             base.LeftClick(evt);
 
             // Pre-step:
             // Set config to reload this mod
             ModsToReload.modsToReload.Clear();
-            Conf.C.ModToReload = internalModName;
+            Conf.C.LatestModToReload = internalModName;
             Conf.ForceSaveConfig(Conf.C);
 
             if (!ModsToReload.modsToReload.Contains(internalModName))

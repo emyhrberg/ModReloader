@@ -1,9 +1,9 @@
-﻿using EliteTestingMod.Helpers;
-using EliteTestingMod.UI;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reflection;
+using EliteTestingMod.Helpers;
+using EliteTestingMod.UI;
+using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -19,7 +19,7 @@ namespace EliteTestingMod.Common.Configs
         public bool Reload = true;
 
         [DefaultValue("EliteTestingMod")]
-        public string ModToReload = "EliteTestingMod";
+        public string LatestModToReload = "EliteTestingMod";
 
         [DefaultValue(false)]
         public bool SaveWorldOnReload = false;
@@ -139,7 +139,7 @@ namespace EliteTestingMod.Common.Configs
 
         // Reload header
         public static bool Reload => C.Reload;
-        public static string ModToReload => C.ModToReload;
+        public static string ModToReload => C.LatestModToReload;
         public static bool SaveWorldOnReload => C.SaveWorldOnReload;
         public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
 

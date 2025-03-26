@@ -88,6 +88,13 @@ namespace EliteTestingMod.UI.Buttons
             foreach (BaseButton btn in sys.mainState.AllButtons)
             {
                 btn.Active = sys.mainState.AreButtonsShowing;
+
+                // force MP button to disable when expanded if in SP
+                if (Main.netMode == NetmodeID.SinglePlayer && btn is ReloadMPButton spBtn)
+                {
+                    spBtn.Active = false;
+                    spBtn.ButtonText.Active = false;
+                }
             }
         }
 

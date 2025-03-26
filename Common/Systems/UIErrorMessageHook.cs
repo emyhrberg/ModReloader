@@ -1,9 +1,9 @@
+using System;
+using System.Reflection;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
-using System;
-using System.Reflection;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -76,6 +76,7 @@ namespace EliteTestingMod.Common.Systems
 
             // Add a custom copy button next to all the others
             copyButton = new("Copy To Clipboard", 0.7f, true, errorMessage);
+            copyButton.Top.Set(-108 + 50 + 5, 1f);
             copyButton.WithFadedMouseOver(); // add yellow hover effect
             area.Append(copyButton);
 
@@ -110,7 +111,6 @@ namespace EliteTestingMod.Common.Systems
                 // Bottom right position. There are 3 other buttons.
                 Width.Set(-10, 0.5f);
                 Height.Set(50, 0f);
-                Top.Set(-108 + 50 + 5, 1f);
                 HAlign = 1.0f;
             }
 

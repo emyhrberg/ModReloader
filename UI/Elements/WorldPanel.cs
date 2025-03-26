@@ -1,10 +1,10 @@
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Common.Systems;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Common.Systems;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using static EliteTestingMod.UI.Elements.Option;
@@ -23,18 +23,18 @@ namespace EliteTestingMod.UI.Elements
         {
             AddPadding(5);
             AddHeader("World");
-            timeOption = new(
+
+            timeOption = AddSlider(
                 title: "Time",
                 min: 0f,
                 max: 1f,
                 defaultValue: GetCurrentTimeNormalized(),
                 onValueChanged: UpdateInGameTime,
                 increment: 1800f / 86400f,
-                hover: "Click and drag to change time",
-                textSize: 0.9f
+                hover: "Click to freeze/unfreeze time",
+                textSize: 0.9f,
+                onClickText: ToggleFreezeTime
             );
-            uiList.Add(timeOption);
-            AddPadding(3f);
 
             float spawnRate = 1f;
             if (Conf.EnterWorldSuperMode)
@@ -175,6 +175,11 @@ namespace EliteTestingMod.UI.Elements
         #endregion
 
         #region Methods
+
+        private void ToggleFreezeTime()
+        {
+            Main.NewText("Time is now " + (Main.GlobalTimerPaused ? "frozen" : "unfrozen"));
+        }
 
         private void ToggleAllTracking()
         {

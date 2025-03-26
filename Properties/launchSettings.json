@@ -3,7 +3,7 @@
     "Terraria": {
       "commandName": "Executable",
       "executablePath": "$(DotNetName)",
-      "commandLineArgs": "$(tMLPath)\r\n-skipselect \"Alpha:AlphaWorld\"",
+      "commandLineArgs": "$(tMLPath)\r\n-skipselect ",
       "workingDirectory": "$(tMLSteamPath)"
     },
     "TerrariaServer": {

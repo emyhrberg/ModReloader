@@ -1,7 +1,7 @@
-Erkys Modding Utilities is the ultimate Terraria testing and debugging tool for modders and players who want full control.
+Elite Testing Mod is the ultimate Terraria testing and debugging tool for modders and players who want full control.
 
 Features:
-🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
+🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart the game.
 🔹 Toggle mods in-world - enable or disable any mod in-game effortlessly.
 🔹 UI Playground - Dive deep into your interface and fine-tune every element.
 🔹 Customizable Log Files - Clear, edit, and adjust log levels to suit your debugging needs.
@@ -10,7 +10,7 @@ Features:
 🔹 World Customization: Modify game settings like time, spawn rate, and much more with ease.
 🔹 Teleport Anywhere – instantly move across the map.
 🔹 Hitbox Tracker – track players, NPCs, projectiles with arrows and hitboxes.
-🔹 Keep Game Running - keeps the game running when out of focus.
+🔹 Keep Game Running - keeps the game running when out of focus if desired.
 And of course, the entire mod, its UI, and every single feature can be toggled in its menu and customized in the config.
 
 Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀

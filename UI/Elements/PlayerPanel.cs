@@ -1,8 +1,8 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Common.Players;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using static EliteTestingMod.UI.Elements.Option;
@@ -21,8 +21,6 @@ namespace EliteTestingMod.UI.Elements
         {
             AddPadding(5);
             AddHeader("Player", hover: "Modify player abilities");
-
-            toggleAll = AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
 
             // Automatically create an option for each cheat
             foreach (var cheat in PlayerCheatManager.Cheats)
@@ -44,7 +42,9 @@ namespace EliteTestingMod.UI.Elements
                 hover: "Mine all tiles around you when moving (not MP-supported)",
                 textSize: 0.9f
             );
+            toggleAll = AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
             AddPadding();
+
 
             AddHeader("Actions");
             AddPadding(5);

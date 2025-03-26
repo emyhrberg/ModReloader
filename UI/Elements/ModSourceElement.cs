@@ -1,11 +1,13 @@
 using System;
 using System.IO;
+using System.Linq;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
 
 namespace EliteTestingMod.UI.Elements
 {
@@ -64,12 +66,31 @@ namespace EliteTestingMod.UI.Elements
 
             string internalNameFolderName = Path.GetFileName(modPath);
 
+            // check if the mod is enabled, we supply a "open config" option.
+            bool isModEnabled = false;
+
+            foreach (var mod in ModLoader.Mods.Skip(1))
+            {
+                if (mod.Name == internalNameFolderName)
+                {
+                    isModEnabled = true;
+                    break;
+                }
+            }
+
             // mod name
             // modSourcePathString = Path.GetFileName(modPath);
             cleanModName = cleanName;
             if (cleanModName.Length > 20)
                 cleanModName = string.Concat(cleanModName.AsSpan(0, 20), "...");
-            OptionTitleText modNameText = new(text: cleanModName, hover: internalNameFolderName, internalModName: cleanModName, canClick: false);
+
+            string hoverText = internalNameFolderName;
+            if (isModEnabled)
+            {
+                hoverText = $"Open {internalNameFolderName} config";
+            }
+
+            OptionTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, canClick: isModEnabled);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);

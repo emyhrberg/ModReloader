@@ -1,4 +1,5 @@
 using System;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
@@ -78,12 +79,12 @@ namespace EliteTestingMod.UI.Elements
             TextScale = textSize;
             Title = title;
             HoverText = hover;
-            optionTitle = new OptionTitleText(text: Title, hover: HoverText, textSize: TextScale);
+            optionTitle = new OptionTitleText(text: Title, hover: HoverText, textSize: TextScale, leftClick: onClickText);
             optionTitle.VAlign = 0.5f;
             optionTitle.TextColor = Color.White;
             // textElement.Left.Set(30, 0);
             optionTitle.Left.Set(0, 0);
-            optionTitle.OnLeftClick += (evt, element) => onClickText?.Invoke();
+
             Append(optionTitle);
         }
 

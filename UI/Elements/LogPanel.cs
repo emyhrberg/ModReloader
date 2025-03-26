@@ -1,10 +1,13 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.UI.Elements
@@ -14,16 +17,45 @@ namespace EliteTestingMod.UI.Elements
         public LogPanel() : base(title: "Log", scrollbarEnabled: true)
         {
             AddPadding(5);
-            AddHeader(title: "Log Path",
+            AddHeader(title: "Log",
                 onLeftClick: Log.OpenLogFolder,
                 hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
 
-            ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
-            ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log");
+            ActionOption openClient = new(Log.OpenClientLog, "Open Log", "Click to open client.log");
             AddPadding(5);
             uiList.Add(openClient);
             AddPadding(5);
+
+            ActionOption clearClient = new(Log.ClearClientLog, "Clear Log", "Clear the client.log file");
             uiList.Add(clearClient);
+            AddPadding(5);
+
+            ActionOption clearAndReload = new(
+                leftClick: async () =>
+                {
+                    ClearClientOnReload();
+                    // 1 Clear logs if needed
+                    if (Conf.ClearClientLogOnReload)
+                        Log.ClearClientLog();
+
+                    // 2 Prepare client data
+                    ReloadUtilities.PrepareClient(ClientModes.SinglePlayer);
+
+                    // 3 Exit server or world
+                    if (Main.netMode == NetmodeID.SinglePlayer)
+                    {
+                        await ReloadUtilities.ExitWorldOrServer();
+                    }
+                    else if (Main.netMode == NetmodeID.MultiplayerClient)
+                    {
+                        await ReloadUtilities.ExitAndKillServer();
+                    }
+
+                    // 4 Reload
+                    ReloadUtilities.BuildAndReloadMods();
+
+                }, "Clear And Reload", "Clear and reload the selected mods");
+            uiList.Add(clearAndReload);
             AddPadding(5);
             AddPadding();
 
@@ -38,7 +70,7 @@ namespace EliteTestingMod.UI.Elements
             AddHeader(title: "Log Level", hover: "Set the log level for each logger (0-5): Off, Error, Warn, Info, Debug, All");
 
             // add all sliders for all loggers
-            foreach (var log in LogManager.GetCurrentLoggers())
+            foreach (var log in LogManager.GetCurrentLoggers().OrderBy(l => l.Logger.Name))
             {
                 AddSlider(
                     title: log.Logger.Name,
@@ -52,7 +84,6 @@ namespace EliteTestingMod.UI.Elements
                     valueFormatter: (value) => ((LogLevel)value).ToString()
                 );
             }
-
         }
 
         [Flags]
@@ -83,9 +114,6 @@ namespace EliteTestingMod.UI.Elements
                 LogLevel.All => Level.All,
                 _ => Level.Off
             };
-
-            // Update slider text
-            // logLevelSlider.UpdateText($"Log Level: {level}");
         }
 
         private static Logger GetLogger(string loggerName = "tML")

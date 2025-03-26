@@ -29,7 +29,7 @@ namespace EliteTestingMod.Common.Players
                 {
                     modifier += 3f;
                 }
-                if (Main.keyState.IsKeyDown(Keys.LeftControl) || Main.keyState.IsKeyDown(Keys.RightControl))
+                if (Main.keyState.IsKeyDown(Keys.Space) || Main.keyState.IsKeyDown(Keys.Space))
                 {
                     modifier += 8f;
                 }
