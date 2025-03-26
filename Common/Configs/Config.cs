@@ -14,6 +14,10 @@ namespace EliteTestingMod.Common.Configs
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Reload")]
+
+        [DefaultValue(true)]
+        public bool Reload = true;
+
         [DefaultValue("EliteTestingMod")]
         public string ModToReload = "EliteTestingMod";
 
@@ -27,7 +31,7 @@ namespace EliteTestingMod.Common.Configs
 
         [OptionStrings(["left", "bottom"])]
         [DefaultValue("bottom")]
-        public string ButtonsPosition;
+        public string ButtonPosition;
 
         [Range(50f, 80f)]
         [Increment(5f)]
@@ -57,10 +61,10 @@ namespace EliteTestingMod.Common.Configs
         public bool EnterWorldSuperMode = false;
 
         [DefaultValue(true)]
-        public bool KeepRunning = true;
+        public bool GameKeepRunning = true;
 
         [DefaultValue(true)]
-        public bool AlwaysShowTextOnTop = true;
+        public bool ShowGameKeepRunningText = true;
 
         [Header("Logging")]
         [DefaultValue(true)]
@@ -71,8 +75,10 @@ namespace EliteTestingMod.Common.Configs
 
         [Header("NPCSpawner")]
 
-        [DefaultValue(null)]
-        public NPCSpawnerConfig NPCSpawner = new();
+        [Range(-500f, 500f)]
+        [Increment(100f)]
+        [DefaultValue(typeof(Vector2), "0, 0")]
+        public Vector2 SpawnOffset = new Vector2(0, 0);
 
         public override void OnChanged()
         {
@@ -96,16 +102,8 @@ namespace EliteTestingMod.Common.Configs
             // expand so we can see the changes
             mainState.collapse.SetCollapsed(false);
 
-            Log.Info("Config.OnChanged() ran successfully3333");
+            Log.Info("Config.OnChanged() ran successfully");
         }
-    }
-
-    public class NPCSpawnerConfig
-    {
-        [Range(-500f, 500f)]
-        [Increment(100f)]
-        [DefaultValue(typeof(Vector2), "0, 0")]
-        public Vector2 SpawnOffset = new Vector2(0, 0);
     }
 
     internal static class Conf
@@ -134,6 +132,7 @@ namespace EliteTestingMod.Common.Configs
         public static Config C => ModContent.GetInstance<Config>();
 
         // Reload header
+        public static bool Reload => C.Reload;
         public static string ModToReload => C.ModToReload;
         public static bool SaveWorldOnReload => C.SaveWorldOnReload;
         public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
@@ -141,18 +140,16 @@ namespace EliteTestingMod.Common.Configs
         // UI
         public static float TextSize => C.ButtonTextSize;
         public static float ButtonSize => C.ButtonSize;
-        public static string ButtonsPosition => C.ButtonsPosition;
+        public static string ButtonsPosition => C.ButtonPosition;
         public static bool DraggablePanels => C.DraggablePanels;
         public static float PanelWidth => C.PanelWidth;
         public static float PanelHeight => C.PanelHeight;
 
         // Game
-        public static Vector2 NPCSpawnLocation => C.NPCSpawner.SpawnOffset;
+        public static Vector2 NPCSpawnLocation => C.SpawnOffset;
         public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
-
-        // Keep Game Running
-        public static bool KeepRunning => C.KeepRunning;
-        public static bool AlwaysShowTextOnTop => C.AlwaysShowTextOnTop;
+        public static bool KeepRunning => C.GameKeepRunning;
+        public static bool AlwaysShowTextOnTop => C.ShowGameKeepRunningText;
 
         // Logging
         public static bool LogToLogFile => C.LogToLogFile;

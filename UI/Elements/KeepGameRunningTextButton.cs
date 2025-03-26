@@ -64,7 +64,7 @@ namespace EliteTestingMod.UI.Elements
 
             Active = false;
 
-            Conf.C.AlwaysShowTextOnTop = false;
+            Conf.C.ShowGameKeepRunningText = false;
             Conf.ForceSaveConfig(Conf.C);
 
             if (Conf.LogToChat) Main.NewText("Hiding the 'Keep Game Running' text. Open config to toggle show again.", Color.Green);

@@ -10,11 +10,11 @@ using Terraria;
 
 namespace EliteTestingMod.Helpers
 {
-
-
     public class ClientDataJson
     {
-        public int ProccesID { get; set; }
+        // This is needed to serialize enums as strings
+        public int ProcessID { get; set; }
+
         // This is needed to serialize enums as strings
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ClientModes ClientMode { get; set; }
@@ -51,8 +51,6 @@ namespace EliteTestingMod.Helpers
             if (Main.dedServ)
                 return;
 
-
-
             string path = GetFolderPath();
             if (path == null)
                 return;
@@ -66,13 +64,13 @@ namespace EliteTestingMod.Helpers
                 // Use the strongly typed class:
                 var data = new ClientDataJson
                 {
-                    ProccesID = Utilities.ProccesId,
+                    ProcessID = Utilities.ProccesId,
                     ClientMode = ClientMode,
                     PlayerID = PlayerID,
                     WorldID = WorldID
                 };
 
-                var existingData = listJson.FirstOrDefault(d => d.ProccesID == Utilities.ProccesId);
+                var existingData = listJson.FirstOrDefault(d => d.ProcessID == Utilities.ProccesId);
 
                 if (existingData != null)
                 {
@@ -86,7 +84,6 @@ namespace EliteTestingMod.Helpers
                     // Add a new entry
                     listJson.Add(data);
                 }
-
 
                 var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
                 string jsonString = JsonSerializer.Serialize(listJson, jsonOptions);
@@ -108,7 +105,7 @@ namespace EliteTestingMod.Helpers
             var listJson = GetListFromJson();
             foreach (var data in listJson)
             {
-                if (data.ProccesID == Utilities.ProccesId)
+                if (data.ProcessID == Utilities.ProccesId)
                 {
                     ClientMode = data.ClientMode;
                     PlayerID = data.PlayerID;

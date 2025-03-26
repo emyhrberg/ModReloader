@@ -1,7 +1,6 @@
 using System;
 using System.Reflection;
 using EliteTestingMod.Helpers;
-using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -17,8 +16,12 @@ namespace EliteTestingMod.Common.Systems
 
         public override void Load()
         {
+            // Get the method Terraria.ModLoader.GlobalNPC
+            // Assembly a = typeof(Main).Assembly;
+            // Type GlobalNPC = a.GetType("Terraria.ModLoader.GlobalNPC");
+            // MethodInfo editSpawnRateMethod = GlobalNPC.GetMethod("EditSpawnRate", BindingFlags.Public | BindingFlags.Instance);
 
-            // Get the method
+
             MethodInfo editSpawnRateMethod = typeof(EnemySpawnSystem).GetMethod("EditSpawnRate", BindingFlags.Public | BindingFlags.Instance);
 
             if (editSpawnRateMethod != null)

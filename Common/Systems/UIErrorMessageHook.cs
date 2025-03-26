@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using EliteTestingMod.Helpers;
@@ -22,8 +23,6 @@ namespace EliteTestingMod.Common.Systems
 
         public override void Load()
         {
-            Log.Info("Attempting to hook UIErrorMessage methods...");
-
             // Get the UIErrorMessage type
             Type UIErrorMessage = typeof(Main).Assembly.GetType("Terraria.ModLoader.UI.UIErrorMessage");
 
@@ -65,10 +64,30 @@ namespace EliteTestingMod.Common.Systems
             FieldInfo areaField = self.GetType().GetField("area", BindingFlags.NonPublic | BindingFlags.Instance);
             UIElement area = (UIElement)areaField.GetValue(self);
 
+            // Check if we have "webHelpButton" in the bottom right spot.
+            // If so, we must move our button or have it fade out.
+            bool webHelpButtonExists = false;
+
+            foreach (var child in area.Children)
+            {
+                if (child is UITextPanel<string> textPanel && textPanel.Text == "Open Web Help")
+                {
+                    Log.Info("Found Web Help button. Moving our button.");
+                    webHelpButtonExists = true;
+                    break;
+                }
+            }
+
             // Add a custom copy button next to all the others
             copyButton = new("Copy To Clipboard", 0.7f, true, errorMessage);
             copyButton.WithFadedMouseOver(); // add yellow hover effect
             area.Append(copyButton);
+
+            if (webHelpButtonExists)
+            {
+                // Move our button up
+                copyButton.Top.Set(-108 - 50, 1f);
+            }
         }
 
         private string GetErrorMessage(UIState self)
@@ -86,6 +105,7 @@ namespace EliteTestingMod.Common.Systems
         {
             private string errorMessage;
             private bool hasCopied = false;
+            DateTime copyTime;
 
             public CopyButton(string text, float textScale, bool large, string errorMessage) : base(text, textScale, large)
             {
@@ -105,6 +125,9 @@ namespace EliteTestingMod.Common.Systems
                 ReLogic.OS.Platform.Get<IClipboard>().Value = errorMessage;
                 Log.Info("Copied error message to clipboard.");
                 hasCopied = true;
+
+                // Start the timer
+                copyTime = DateTime.Now;
             }
 
             public override void Draw(SpriteBatch spriteBatch)
@@ -119,6 +142,14 @@ namespace EliteTestingMod.Common.Systems
                     else
                     {
                         UICommon.TooltipMouseText("Copied!");
+
+                        // If it's been 3 seconds, reset the button
+                        TimeSpan interval = TimeSpan.FromSeconds(3);
+                        bool has3SecondsPassed = DateTime.Now - copyTime >= interval;
+                        if (has3SecondsPassed)
+                        {
+                            hasCopied = false;
+                        }
                     }
                 }
             }

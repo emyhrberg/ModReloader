@@ -135,6 +135,9 @@ namespace EliteTestingMod.Helpers
                     return;
                 }
 
+                // Maybe better Alternative:
+                // string folder = Logging.LogPath;
+
                 string folder = Path.Combine(GetSteamPath(), "tModLoader-Logs");
                 Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
             }

@@ -1,6 +1,11 @@
 using System.IO;
+using System.Linq;
 using EliteTestingMod.Helpers;
 using EliteTestingMod.PacketHandlers;
+using log4net;
+using log4net.Appender;
+using log4net.Layout;
+using log4net.Repository.Hierarchy;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -18,6 +23,27 @@ namespace EliteTestingMod
 
         public override void Load()
         {
+            // Tweak tML's existing file appender layout at the earliest possible time
+
+            var hierarchy = (Hierarchy)LogManager.GetRepository();
+            var fileAppender = hierarchy.GetAppenders()
+                                        .OfType<FileAppender>()
+                                        .FirstOrDefault(a => a.Name == "FileAppender");
+            if (fileAppender != null)
+            {
+                var layout = new PatternLayout
+                {
+                    ConversionPattern = "[%date{yyyy-MM-dd HH:mm:ss.fff}] [%thread/%level] [%logger]: %message%newline"
+                };
+                layout.ActivateOptions();
+
+                fileAppender.Layout = layout;
+                fileAppender.ActivateOptions();
+            }
+
+            // Now the file appender is using your new format from the start
+            Log.Info("EliteTestingMod loaded");
+
 
             if (Main.netMode != NetmodeID.Server)
                 ClientDataHandler.ReadData();

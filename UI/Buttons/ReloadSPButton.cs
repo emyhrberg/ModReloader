@@ -24,6 +24,14 @@ namespace EliteTestingMod.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
+            if (!Conf.Reload)
+            {
+                WorldGen.SaveAndQuit();
+                Main.menuMode = 0;
+                return;
+            }
+
+
             // 1 Clear logs if needed
             if (Conf.ClearClientLogOnReload)
                 Log.ClearClientLog();

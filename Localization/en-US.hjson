@@ -112,6 +112,36 @@ Mods: {
 					Label: Always Show Text On Top
 					Tooltip: Toggles a visual button on the top of the screen where you can set whether to keep the game running on or off when out of focus.
 				}
+
+				ButtonTextSize: {
+					Label: Button Text Size
+					Tooltip: ""
+				}
+
+				Reload: {
+					Label: Reload
+					Tooltip: ""
+				}
+
+				ButtonPosition: {
+					Label: Button Position
+					Tooltip: ""
+				}
+
+				GameKeepRunning: {
+					Label: Game Keep Running
+					Tooltip: ""
+				}
+
+				ShowGameKeepRunningText: {
+					Label: Show Game Keep Running Text
+					Tooltip: ""
+				}
+
+				SpawnOffset: {
+					Label: Spawn Offset
+					Tooltip: ""
+				}
 			}
 
 			NPCSpawnerConfig: {

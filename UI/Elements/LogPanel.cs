@@ -11,9 +11,6 @@ namespace EliteTestingMod.UI.Elements
 {
     public class LogPanel : OptionPanel
     {
-        private bool log = true;
-        private SliderPanel logLevelSlider;
-
         public LogPanel() : base(title: "Log", scrollbarEnabled: true)
         {
             AddPadding(5);
@@ -28,22 +25,6 @@ namespace EliteTestingMod.UI.Elements
             AddPadding(5);
             uiList.Add(clearClient);
             AddPadding(5);
-
-            logLevelSlider = AddSlider(
-                title: "Log Level: All",
-                min: 0,
-                max: 5,
-                defaultValue: 5,
-                onValueChanged: SetLogLevel,
-                increment: 1,
-                textSize: 0.8f,
-                hover: "Set the log level for the client.log file"
-            );
-
-            Option log = AddOption("Log", ToggleClientLogging, "Enable or disable all logging to client.log");
-            log.SetState(Option.State.Enabled);
-            Option clearOnReload = AddOption("Clear Log On Reload", ClearClientOnReload, "Clear the client.log file when reloading");
-            clearOnReload.SetState(Conf.C.ClearClientLogOnReload ? Option.State.Enabled : Option.State.Disabled);
             AddPadding();
 
             AddHeader(title: "Game Path",
@@ -53,6 +34,24 @@ namespace EliteTestingMod.UI.Elements
             AddPadding(5);
             uiList.Add(openEnabled);
             AddPadding();
+
+            AddHeader(title: "Log Level", hover: "Set the log level for each logger (0-5): Off, Error, Warn, Info, Debug, All");
+
+            // add all sliders for all loggers
+            foreach (var log in LogManager.GetCurrentLoggers())
+            {
+                AddSlider(
+                    title: log.Logger.Name,
+                    min: 0,
+                    max: 5,
+                    defaultValue: 5,
+                    onValueChanged: (value) => SetLogLevel(value, log.Logger as Logger),
+                    increment: 1,
+                    textSize: 0.8f,
+                    hover: $"Set the log level for {log.Logger.Name}"
+                );
+            }
+
         }
 
         [Flags]
@@ -66,9 +65,8 @@ namespace EliteTestingMod.UI.Elements
             All = 5
         }
 
-        private void SetLogLevel(float value)
+        private void SetLogLevel(float value, Logger logger)
         {
-            Logger logger = GetLogger();
             if (logger == null)
                 return;
 
@@ -86,12 +84,12 @@ namespace EliteTestingMod.UI.Elements
             };
 
             // Update slider text
-            logLevelSlider.UpdateText($"Log Level: {level.ToString()}");
+            // logLevelSlider.UpdateText($"Log Level: {level}");
         }
 
-        private static Logger GetLogger()
+        private static Logger GetLogger(string loggerName = "tML")
         {
-            PropertyInfo tmlProp = typeof(Logging).GetProperty("tML", BindingFlags.Static | BindingFlags.NonPublic);
+            PropertyInfo tmlProp = typeof(Logging).GetProperty(loggerName, BindingFlags.Static | BindingFlags.NonPublic);
             if (tmlProp == null)
                 return null;
 
@@ -106,26 +104,6 @@ namespace EliteTestingMod.UI.Elements
         {
             Conf.C.ClearClientLogOnReload = !Conf.C.ClearClientLogOnReload;
             Conf.ForceSaveConfig(Conf.C);
-        }
-
-        private void ToggleClientLogging()
-        {
-            Logger logger = GetLogger();
-            if (logger == null)
-                return;
-
-            log = !log;
-
-            if (log)
-            {
-                logger.Level = Level.All;
-                logger.Repository.Threshold = Level.All;
-            }
-            else
-            {
-                logger.Level = Level.Off;
-                logger.Repository.Threshold = Level.Off;
-            }
         }
     }
 }
