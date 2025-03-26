@@ -1,9 +1,6 @@
-using System.Linq;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ID;

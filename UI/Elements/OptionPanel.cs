@@ -1,10 +1,9 @@
-using System;
-using System.Linq;
 using EliteTestingMod.Common.Configs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Linq;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 

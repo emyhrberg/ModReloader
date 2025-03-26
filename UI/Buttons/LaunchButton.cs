@@ -1,10 +1,10 @@
-using System;
-using System.Diagnostics;
-using System.IO;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Diagnostics;
+using System.IO;
 using Terraria;
 using Terraria.UI;
 

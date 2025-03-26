@@ -1,7 +1,4 @@
-using EliteTestingMod.Common.Configs;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.Common.Players

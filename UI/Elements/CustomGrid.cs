@@ -1,8 +1,7 @@
-using System;
-using System.Collections.Generic;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.GameInput;

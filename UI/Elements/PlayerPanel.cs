@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Common.Players;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using static EliteTestingMod.UI.Elements.Option;

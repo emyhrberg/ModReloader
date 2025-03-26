@@ -1,6 +1,6 @@
-using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Reflection;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.Helpers

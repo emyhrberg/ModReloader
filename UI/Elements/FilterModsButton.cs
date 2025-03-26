@@ -2,11 +2,9 @@ using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
-using Terraria.UI;
 
 namespace EliteTestingMod.UI.Elements
 {

@@ -1,5 +1,4 @@
 using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

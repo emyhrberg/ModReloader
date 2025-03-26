@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using EliteTestingMod.Common.Systems;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;

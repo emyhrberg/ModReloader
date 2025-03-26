@@ -1,6 +1,6 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria.GameContent.UI.Elements;
 
 namespace EliteTestingMod.UI.Elements

@@ -1,8 +1,8 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ReLogic.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;

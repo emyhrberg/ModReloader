@@ -1,12 +1,12 @@
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.PacketHandlers;
+using MonoMod.RuntimeDetour;
 using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.PacketHandlers;
-using MonoMod.RuntimeDetour;
 using Terraria;
 
 namespace EliteTestingMod.Helpers

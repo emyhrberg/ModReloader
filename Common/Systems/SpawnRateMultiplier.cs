@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using EliteTestingMod.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;

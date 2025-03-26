@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using Terraria;
-using Terraria.GameContent.UI.States;
-using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 

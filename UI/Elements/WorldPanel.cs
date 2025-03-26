@@ -1,10 +1,10 @@
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Common.Systems;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Common.Systems;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using static EliteTestingMod.UI.Elements.Option;

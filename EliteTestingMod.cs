@@ -1,11 +1,6 @@
-using System.IO;
-using System.Linq;
 using EliteTestingMod.Helpers;
 using EliteTestingMod.PacketHandlers;
-using log4net;
-using log4net.Appender;
-using log4net.Layout;
-using log4net.Repository.Hierarchy;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

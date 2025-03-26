@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EliteTestingMod.Common.Configs;
+﻿using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using EliteTestingMod.UI.Buttons;
 using EliteTestingMod.UI.Elements;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria;
-using Terraria.ID;
+using System;
+using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.UI;
 

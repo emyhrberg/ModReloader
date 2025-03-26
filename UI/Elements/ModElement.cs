@@ -1,5 +1,5 @@
-using System;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using static EliteTestingMod.UI.Elements.Option;

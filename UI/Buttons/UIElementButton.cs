@@ -1,8 +1,7 @@
-using System.Linq;
-using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Common.Systems;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Linq;
 using Terraria.ModLoader;
 using Terraria.UI;
 

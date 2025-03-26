@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Common.Systems;
 using EliteTestingMod.UI;
 using EliteTestingMod.UI.Elements;
+using System;
+using System.Collections.Generic;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.Common.Players

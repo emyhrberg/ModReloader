@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.IO;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace EliteTestingMod.UI.Elements
 {

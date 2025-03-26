@@ -1,8 +1,5 @@
-using EliteTestingMod.Common.Configs;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 

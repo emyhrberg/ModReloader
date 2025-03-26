@@ -1,12 +1,12 @@
+using EliteTestingMod.Common.Configs;
+using log4net;
+using log4net.Appender;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using EliteTestingMod.Common.Configs;
-using log4net;
-using log4net.Appender;
 using Terraria;
 using Terraria.ModLoader;
 

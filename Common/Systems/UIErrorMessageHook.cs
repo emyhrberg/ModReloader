@@ -1,13 +1,9 @@
-using System;
-using System.Linq;
-using System.Reflection;
-using System.Windows.Forms;
 using EliteTestingMod.Helpers;
-using Microsoft.CodeAnalysis;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
+using System;
+using System.Reflection;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;

@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using EliteTestingMod.Helpers;
+﻿using EliteTestingMod.Helpers;
 using EliteTestingMod.UI;
 using Microsoft.Xna.Framework;
+using System;
+using System.ComponentModel;
+using System.Reflection;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 

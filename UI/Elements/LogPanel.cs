@@ -1,10 +1,10 @@
-using System;
-using System.Reflection;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
+using System;
+using System.Reflection;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.UI.Elements

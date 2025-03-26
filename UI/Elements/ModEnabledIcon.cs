@@ -1,6 +1,6 @@
-using System;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 

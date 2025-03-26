@@ -1,7 +1,7 @@
-﻿using System;
+﻿using EliteTestingMod.Helpers;
+using System;
 using System.Collections;
 using System.Reflection;
-using EliteTestingMod.Helpers;
 
 namespace EliteTestingMod.CustomReload
 {

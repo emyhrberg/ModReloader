@@ -1,6 +1,6 @@
-using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Linq;
 using Terraria.ModLoader;
 using Terraria.UI;
 

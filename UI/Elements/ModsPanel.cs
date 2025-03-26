@@ -1,12 +1,11 @@
+using EliteTestingMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EliteTestingMod.Helpers;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using static EliteTestingMod.UI.Elements.Option;

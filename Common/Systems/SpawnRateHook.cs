@@ -1,6 +1,5 @@
-using System;
-using System.Reflection;
 using EliteTestingMod.Helpers;
+using System.Reflection;
 using Terraria;
 using Terraria.ModLoader;
 
