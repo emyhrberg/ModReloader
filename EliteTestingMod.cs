@@ -25,23 +25,22 @@ namespace EliteTestingMod
         {
             // Tweak tML's existing file appender layout at the earliest possible time
 
-            var hierarchy = (Hierarchy)LogManager.GetRepository();
-            var fileAppender = hierarchy.GetAppenders()
-                                        .OfType<FileAppender>()
-                                        .FirstOrDefault(a => a.Name == "FileAppender");
-            if (fileAppender != null)
-            {
-                var layout = new PatternLayout
-                {
-                    ConversionPattern = "[%date{yyyy-MM-dd HH:mm:ss.fff}] [%thread/%level] [%logger]: %message%newline"
-                };
-                layout.ActivateOptions();
+            // var hierarchy = (Hierarchy)LogManager.GetRepository();
+            // var fileAppender = hierarchy.GetAppenders()
+            //                             .OfType<FileAppender>()
+            //                             .FirstOrDefault(a => a.Name == "FileAppender");
+            // if (fileAppender != null)
+            // {
+            //     var layout = new PatternLayout
+            //     {
+            //         ConversionPattern = "[%date{yyyy-MM-dd HH:mm:ss.fff}] [%thread/%level] [%logger]: %message%newline"
+            //     };
+            //     layout.ActivateOptions();
 
-                fileAppender.Layout = layout;
-                fileAppender.ActivateOptions();
-            }
+            //     fileAppender.Layout = layout;
+            //     fileAppender.ActivateOptions();
+            // }
 
-            // Now the file appender is using your new format from the start
             Log.Info("EliteTestingMod loaded");
 
 
