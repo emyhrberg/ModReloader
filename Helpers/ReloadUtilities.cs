@@ -136,6 +136,8 @@ namespace ModHelper.Helpers
                 });
             });
 
+            Log.Info("Starting to build mods..." + string.Join(", ", modPaths));
+
             // 6. Creating a task
             Main.menuMode = 10003;
             Task.Run(() =>

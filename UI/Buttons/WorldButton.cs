@@ -52,8 +52,8 @@ namespace ModHelper.UI.Buttons
 
             // Save the player and world
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys?.mainState?.worldPanel?.savePlayer();
-            sys?.mainState?.worldPanel?.saveWorld();
+            //sys?.mainState?.worldPanel?.savePlayer();
+            //sys?.mainState?.worldPanel?.saveWorld();
         }
     }
 }

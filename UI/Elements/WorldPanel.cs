@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using ModHelper.Common.Configs;
+using ModHelper.Common.Players;
 using ModHelper.Common.Systems;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ID;
 using static ModHelper.UI.Elements.Option;
@@ -20,41 +20,33 @@ namespace ModHelper.UI.Elements
         public SliderPanel spawnRateSlider;
         public SliderPanel rainSlider;
 
-        #region Constructor
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
             AddPadding(5);
             AddHeader("World");
-
-            timeOption = AddSlider(
+            timeOption = new(
                 title: "Time",
                 min: 0f,
                 max: 1f,
                 defaultValue: GetCurrentTimeNormalized(),
                 onValueChanged: UpdateInGameTime,
                 increment: 1800f / 86400f,
-                hover: "Click to freeze time",
-                textSize: 0.9f,
-                leftClickText: ToggleFreezeTime
+                hover: "Click and drag to change time",
+                textSize: 0.9f
             );
-
-            float spawnRate = 1f;
-            if (Conf.EnterWorldSuperMode)
-            {
-                spawnRate = 0f;
-            }
+            uiList.Add(timeOption);
+            AddPadding(3f);
 
             spawnRateSlider = new(
                 title: "Spawn Rate",
                 min: 0,
                 max: 30,
-                defaultValue: spawnRate,
+                defaultValue: SpawnRateMultiplier.Multiplier,
                 onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
                 increment: 1,
                 hover: "Set the spawn rate multiplier",
-                textSize: 0.9f,
-                leftClickText: () => SpawnRateMultiplier.Multiplier = 0f,
-                rightClickText: () => SpawnRateMultiplier.Multiplier = 1f
+                leftClickText: () => SpawnRateMultiplier.Multiplier = 0,
+                textSize: 0.9f
             );
             uiList.Add(spawnRateSlider);
             AddPadding(3f);
@@ -123,73 +115,7 @@ namespace ModHelper.UI.Elements
                 AddPadding(3f);
             }
             AddPadding();
-
-            // save
-            AddHeader("Save");
-
-            string playerPath = Main.ActivePlayerFileData.Path;
-            string playerName = Path.GetFileName(playerPath);
-            var savePlayerCurrentOption = new ActionOption(savePlayer, "Player", $"Save the current player as {playerName} \nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
-            uiList.Add(savePlayerCurrentOption);
-            AddPadding(3f);
-
-            string worldPath = Main.ActiveWorldFileData.Path;
-            string worldName = Path.GetFileName(worldPath);
-            var saveWorldOption = new ActionOption(saveWorld, "World", $"Save the current world as {worldName}\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
-            uiList.Add(saveWorldOption);
-            AddPadding(3f);
-            AddPadding();
         }
-        #endregion // Here is the end of the constructor
-
-        #region Open Folder
-        private void OpenFolder(string path)
-        {
-            // go up one directory
-            path = System.IO.Path.GetDirectoryName(path);
-            Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
-        }
-
-        #endregion
-
-        #region Save
-        // To use :
-        // Main.ActiveWorldFileData.SaveWorld()?
-        // Main.ActivePlayerFileData.SavePlayer()?
-        // PlayerFileData.Path
-
-        public void savePlayer()
-        {
-            // SAVE!
-            WorldGen.saveToonWhilePlaying();
-
-            // Write to chat that we saved the player to a path
-            string filePath = Main.ActivePlayerFileData.Path;
-            Main.NewText("Player saved to: " + filePath);
-        }
-
-        public void saveWorld()
-        {
-            // SAVE!
-            WorldGen.saveAndPlay();
-
-            // Write to chat that we saved the world to a path
-            string filePath = Main.ActiveWorldFileData.Path;
-            Main.NewText("World saved to: " + filePath);
-        }
-
-        #endregion
-
-        #region Methods
-
-        #region Freeze Time
-        private void ToggleFreezeTime()
-        {
-            FreezeTimeManager.FreezeTime = !FreezeTimeManager.FreezeTime;
-            if (Conf.LogToChat) Main.NewText("Time is now " + (FreezeTimeManager.FreezeTime ? "frozen" : "unfrozen"));
-            timeOption.optionTitle.hover = FreezeTimeManager.FreezeTime ? "Click to unfreeze time" : "Click to freeze time";
-        }
-        #endregion
 
         private void ToggleAllTracking()
         {
@@ -352,7 +278,7 @@ namespace ModHelper.UI.Elements
             // Convert slider value to in-game time (0 to 86400 ticks)
             double totalTicks = normalizedValue * 86400.0;
 
-            // Determine if it's day or night and adjust Main.time
+            // Determine if it's day or night and adjust `Main.time`
             if (totalTicks < 54000.0) // Daytime threshold (0 to 53999)
             {
                 Main.dayTime = true;
@@ -370,7 +296,7 @@ namespace ModHelper.UI.Elements
             // Log the new time to the console
             // Log.Info($"Slider adjusted: Normalized = {normalizedValue}, In-Game Time = {formattedTime}");
 
-            // Sync in multiplayer
+            // Sync in multiplayer (if needed)
             // if (Main.netMode == NetmodeID.Server)
             // {
             //     NetMessage.SendData(MessageID.WorldData);
@@ -381,69 +307,60 @@ namespace ModHelper.UI.Elements
         {
             base.Update(gameTime);
 
-            // Update spawn rate slider hover text to say the spawn rate and the max spawns
-            // every half second ish scuffed
-            if (Main.GameUpdateCount % 30 == 0)
+            // Update the hover text town npc slider
+            // If 0 town NPCs, show the default "Set the number of town NPCs" text
+            // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
+            var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
+            if (townNPCs.Count > 0)
             {
-                // Update the hover text for the spawn rate slider
-                spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateHook.StoredSpawnRate} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateHook.StoredMaxSpawns} (max number of enemies in the world)";
+                var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
+                var formattedNames = string.Join("\n", npcNames
+                    .Select((name, index) => (name, index))
+                    .GroupBy(x => x.index / 5)
+                    .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
 
-                // Update the hover text town npc slider
-                // If 0 town NPCs, show the default "Set the number of town NPCs" text
-                // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
-                var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
-                if (townNPCs.Count > 0)
+                // Remove the trailing comma from the last row
+                if (formattedNames.EndsWith(","))
                 {
-                    var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
-                    var formattedNames = string.Join("\n", npcNames
-                        .Select((name, index) => (name, index))
-                        .GroupBy(x => x.index / 5)
-                        .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
-
-                    // Remove the trailing comma from the last row
-                    if (formattedNames.EndsWith(","))
-                    {
-                        formattedNames = formattedNames.TrimEnd(',');
-                    }
-
-                    townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
-                }
-                else
-                {
-                    townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
+                    formattedNames = formattedNames.TrimEnd(',');
                 }
 
-                // Update the town NPC count
-                if (!CustomSliderBase.IsAnySliderLocked)
-                {
-                    // Slider is not being used, update the max value
-                    townNpcSlider.UpdateSliderMax(GetTownNpcCount());
-                }
-                else
-                {
-                    // Slider is being used, update the current value
-                    townNpcSlider.SetValue(GetTownNpcCount());
-                    //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
-                    // disable mouse input
-                    Main.LocalPlayer.mouseInterface = true;
-                }
-
-                // Update the time
-                if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
-                {
-                    // Normal game time progression logic
-                    timeOption.SetValue(GetCurrentTimeNormalized());
-                }
-                else
-                {
-                    // Reset the flag after slider use (prevents conflicts)
-                    timeSliderActive = false;
-                }
-
-                // Update the UI display
-                timeOption.UpdateText("Time: " + CalcIngameTime());
+                townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
             }
+            else
+            {
+                townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
+            }
+
+            // Update the town NPC count
+            if (!CustomSliderBase.IsAnySliderLocked)
+            {
+                // Slider is not being used, update the max value
+                townNpcSlider.UpdateSliderMax(GetTownNpcCount());
+            }
+            else
+            {
+                // Slider is being used, update the current value
+                townNpcSlider.SetValue(GetTownNpcCount());
+                //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+                // disable mouse input
+                Main.LocalPlayer.mouseInterface = true;
+            }
+
+            // Update the time
+            if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
+            {
+                // Normal game time progression logic
+                timeOption.SetValue(GetCurrentTimeNormalized());
+            }
+            else
+            {
+                // Reset the flag after slider use (prevents conflicts)
+                timeSliderActive = false;
+            }
+
+            // Update the UI display
+            timeOption.UpdateText("Time: " + CalcIngameTime());
         }
     }
-    #endregion
 }
