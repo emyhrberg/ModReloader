@@ -1,10 +1,10 @@
+using System;
+using System.Reflection;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
-using System;
-using System.Reflection;
 using Terraria.ModLoader;
 
 namespace EliteTestingMod.UI.Elements
@@ -48,7 +48,8 @@ namespace EliteTestingMod.UI.Elements
                     onValueChanged: (value) => SetLogLevel(value, log.Logger as Logger),
                     increment: 1,
                     textSize: 0.8f,
-                    hover: $"Set the log level for {log.Logger.Name}"
+                    hover: $"Set the log level for {log.Logger.Name}",
+                    valueFormatter: (value) => ((LogLevel)value).ToString()
                 );
             }
 

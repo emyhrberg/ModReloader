@@ -1,6 +1,6 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria.GameContent.UI.Elements;
 
 namespace EliteTestingMod.UI.Elements
@@ -20,6 +20,7 @@ namespace EliteTestingMod.UI.Elements
         public float normalizedValue;
         private float? snapIncrement;
         public Action<float> _onValueChanged;
+        private Func<float, string> _valueFormatter; // formats the value to string
 
         public void UpdateSliderMax(float newMax) => Max = newMax;
 
@@ -33,7 +34,8 @@ namespace EliteTestingMod.UI.Elements
             float? increment = null,
             float textSize = 1f,
             string hover = "",
-            Action onClickText = null
+            Action onClickText = null,
+            Func<float, string> valueFormatter = null
             )
         {
             // Size
@@ -47,6 +49,7 @@ namespace EliteTestingMod.UI.Elements
             _onValueChanged = onValueChanged;
             snapIncrement = increment;
             normalizedValue = MathHelper.Clamp((defaultValue - Min) / (max - Min), 0f, 1f);
+            _valueFormatter = valueFormatter;
 
             Slider = new CustomSlider(
                 () => normalizedValue,
@@ -99,6 +102,13 @@ namespace EliteTestingMod.UI.Elements
             base.Draw(spriteBatch);
 
             float realValue = MathHelper.Lerp(Min, Max, normalizedValue);
+
+            // Check first if we have a custom formatter
+            if (_valueFormatter != null)
+            {
+                optionTitle.SetText($"{Title}: {_valueFormatter(realValue)}");
+                return;
+            }
 
             if (snapIncrement.HasValue && snapIncrement.Value > 0)
             {

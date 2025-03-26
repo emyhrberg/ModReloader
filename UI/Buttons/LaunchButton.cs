@@ -1,10 +1,10 @@
+using System;
+using System.Diagnostics;
+using System.IO;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Diagnostics;
-using System.IO;
 using Terraria;
 using Terraria.UI;
 
@@ -20,34 +20,52 @@ namespace EliteTestingMod.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            bool openLocalFileSuccess = false;
+
             try
             {
                 string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\start-tModLoader.bat";
+                if (File.Exists(file))
+                {
+                    if (Conf.LogToChat) Main.NewText("Opening tmodloader...");
+                    openLocalFileSuccess = true;
+                    Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                }
+                else
+                {
+                    if (Conf.LogToChat) Main.NewText("tmodloader not found in C drive. Retrying...");
+                    Log.Error("tmodloader not found in C drive. Retrying...");
+                    return;
+                }
 
-                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
                 Log.Error("Error opening tmodloader: " + ex.Message);
             }
 
-            try
+            if (!openLocalFileSuccess)
             {
-                string steamPath = Log.GetSteamPath();
-                if (string.IsNullOrEmpty(steamPath))
+                try
                 {
-                    if (Conf.LogToChat) Main.NewText("Steam path is null or empty.");
-                    Log.Error("Steam path is null or empty.");
-                    return;
-                }
+                    string steamPath = Log.GetSteamPath();
+                    if (string.IsNullOrEmpty(steamPath))
+                    {
+                        if (Conf.LogToChat) Main.NewText("Steam path is null or empty.");
+                        Log.Error("Steam path is null or empty.");
+                        return;
+                    }
 
-                string file = Path.Combine(steamPath, "start-tModLoader.bat");
-                if (Conf.LogToChat) Main.NewText("Opening another client...");
-            }
-            catch (Exception ex)
-            {
-                if (Conf.LogToChat) Main.NewText("Error opening another client: " + ex.Message);
-                Log.Error("Error opening another client: " + ex.Message);
+                    string file = Path.Combine(steamPath, "start-tModLoader.bat");
+                    if (Conf.LogToChat) Main.NewText("Opening another client...");
+
+                    Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    if (Conf.LogToChat) Main.NewText("Error opening another client: " + ex.Message);
+                    Log.Error("Error opening another client: " + ex.Message);
+                }
             }
         }
     }
