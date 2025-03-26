@@ -1,4 +1,4 @@
-Elite Testing Mod is the ultimate Terraria testing and debugging tool for modders and players who want full control.
+Mod Helper offers plenty of testing and debugging features for modders and players who want full control.
 
 Features:
 🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.

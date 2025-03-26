@@ -45,13 +45,13 @@ namespace ModHelper.Common.Configs
 
         [Range(300, 700f)]
         [Increment(50f)]
-        [DefaultValue(550f)]
+        [DefaultValue(400)]
         public float PanelWidth = 400f;
 
         [Range(300, 700f)]
         [Increment(50f)]
         [DefaultValue(500f)]
-        public float PanelHeight = 600;
+        public float PanelHeight = 500;
 
         [DefaultValue(false)]
         public bool DraggablePanels = false;

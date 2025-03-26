@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -146,24 +147,25 @@ namespace ModHelper.UI.Elements
         // also see update() for more visibility toggling
         // we modify both update() and draw() when active is false
         public bool GetActive() => Active;
-        public virtual bool SetActive(bool active)
-        {
-            if (active)
-            {
-                // Reset panel position
-                HAlign = 1.0f; // right aligned
-                VAlign = 1.0f; // bottom aligned
-            }
-
-            Active = active;
-            return Active;
-        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (!Active)
                 return;
             base.Draw(spriteBatch);
+        }
+        #endregion
+
+        #region Reset position
+        // When we click on a button, we toggle the active state of the panel.
+        // This method is called to reset the position of the panel when it is toggled (when the panel is shown again).
+        public virtual bool SetActive(bool active)
+        {
+            /// Implemented in child classes
+            /// <see cref="SpawnerPanel"/> 
+            /// <see cref="OptionPanel"/> 
+            Log.Info($"{(active ? "Open" : "Close")} {Header} panel");
+            return Active = active;
         }
         #endregion
     }

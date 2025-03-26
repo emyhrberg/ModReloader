@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -177,5 +178,23 @@ namespace ModHelper.UI.Elements
                 }
             }
         }
+
+        #region Reset position
+        // When we click on a button, we toggle the active state of the panel.
+        // This method is called to reset the position of the panel when it is toggled (when the panel is shown again).
+        public override bool SetActive(bool active)
+        {
+            if (active)
+            {
+                // Reset panel position
+                Top.Set(-70, 0f);
+                Left.Set(-20, 0f);
+                Recalculate();
+            }
+
+            Active = active;
+            return Active;
+        }
+        #endregion
     }
 }

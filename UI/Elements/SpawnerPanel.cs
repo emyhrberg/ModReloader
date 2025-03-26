@@ -29,19 +29,6 @@ namespace ModHelper.UI.Elements
         // Store item slots
         protected List<CustomItemSlot> allItemSlots = [];
 
-        public override bool SetActive(bool active)
-        {
-            if (active)
-            {
-                // Reset panel position
-                HAlign = 0f; // right aligned
-                VAlign = 1.0f; // bottom aligned
-            }
-
-            Active = active;
-            return Active;
-        }
-
         public SpawnerPanel(string header) : base(header)
         {
             // Set the panel properties
@@ -242,6 +229,24 @@ namespace ModHelper.UI.Elements
             if (IsDragging)
                 return;
             base.LeftClick(evt);
+        }
+        #endregion
+
+        #region Reset position
+        // When we click on a button, we toggle the active state of the panel.
+        // This method is called to reset the position of the panel when it is toggled (when the panel is shown)
+        public override bool SetActive(bool active)
+        {
+            if (active)
+            {
+                // Reset panel position
+                Left.Set(20, 0f);
+                Top.Set(-70, 0f);
+                Recalculate();
+            }
+
+            Active = active;
+            return Active;
         }
         #endregion
     }

@@ -48,16 +48,23 @@ namespace ModHelper.Helpers
         /// <summary>
         /// Log a message once every 3 second
         /// </summary>
-        public static void SlowInfo(string message, int seconds = 3)
+        public static void SlowInfo(string message, int seconds = 3, [CallerFilePath] string callerFilePath = "")
         {
             Config c = ModContent.GetInstance<Config>();
             if (c != null && Conf.LogToLogFile == false) return;
+
+            // Extract the class name from the caller's file path.
+            string className = Path.GetFileNameWithoutExtension(callerFilePath);
+            var instance = ModInstance;
+            if (instance == null || instance.Logger == null)
+                return; // Skip logging if the mod is unloading or null
 
             // Use TimeSpanFactory to create a 3-second interval.
             TimeSpan interval = TimeSpanFactory.FromSeconds(seconds);
             if (DateTime.UtcNow - lastLogTime >= interval)
             {
-                ModInstance.Logger.Info(message);
+                // Prepend the class name to the log message.
+                instance.Logger.Info($"[{className}] {message}");
                 lastLogTime = DateTime.UtcNow;
             }
         }
