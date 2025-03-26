@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Common.Systems;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Common.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using static ErkysModdingUtilities.UI.Elements.Option;
+using static EliteTestingMod.UI.Elements.Option;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class WorldPanel : OptionPanel
     {

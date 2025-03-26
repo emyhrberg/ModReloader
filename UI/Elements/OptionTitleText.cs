@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,7 +12,7 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class OptionTitleText : UIText
     {
@@ -137,6 +137,8 @@ namespace ErkysModdingUtilities.UI.Elements
             if (isConfigOpen)
             {
                 bool configClosed = false;
+
+                Log.SlowInfo("MenuMode: " + Main.menuMode, seconds: 1);
 
                 // Check if Main.menuMode has changed from the config mode
                 if (Main.menuMode != 10024)

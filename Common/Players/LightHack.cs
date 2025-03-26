@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Players
+namespace EliteTestingMod.Common.Players
 {
     public class PlayerLightHack : GlobalWall
     {

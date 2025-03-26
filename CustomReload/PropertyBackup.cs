@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Reflection;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 
-namespace ErkysModdingUtilities.CustomReload
+namespace EliteTestingMod.CustomReload
 {
 
     //Backup of an property, saving it initial state and allowing to restore initial state

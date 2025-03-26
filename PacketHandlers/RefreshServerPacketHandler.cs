@@ -4,14 +4,14 @@ using System.IO;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Threading.Tasks;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
 using log4net;
 using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace ErkysModdingUtilities.PacketHandlers
+namespace EliteTestingMod.PacketHandlers
 {
     internal class RefreshServerPacketHandler : PacketHandler
     {

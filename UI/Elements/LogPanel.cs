@@ -1,13 +1,13 @@
 using System;
 using System.Reflection;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class LogPanel : OptionPanel
     {

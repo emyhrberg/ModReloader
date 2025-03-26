@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using ErkysModdingUtilities.Common.Systems;
+using EliteTestingMod.Common.Systems;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class UIElementPanel : OptionPanel
     {

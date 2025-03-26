@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -12,7 +12,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     /// <summary>
     /// NPC Spawner Panel – now structured to match the Item Spawner Panel in size, proportions, and behavior.

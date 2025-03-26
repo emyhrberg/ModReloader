@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -11,7 +11,7 @@ using Terraria.ID;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class ModReloadIcon : UIImage
     {

@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     public class HitboxSystem : ModSystem
     {

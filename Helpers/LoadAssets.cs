@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Helpers
+namespace EliteTestingMod.Helpers
 {
     /// <summary>
     /// To add a new asset, simply add a new field like:
@@ -91,7 +91,7 @@ namespace ErkysModdingUtilities.Helpers
         private static Asset<Texture2D> RequestAsset(string path)
         {
             // string modName = typeof(Assets).Namespace;
-            string modName = "ErkysModdingUtilities"; // Use this, in case above line doesnt work
+            string modName = "EliteTestingMod"; // Use this, in case above line doesnt work
             return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }

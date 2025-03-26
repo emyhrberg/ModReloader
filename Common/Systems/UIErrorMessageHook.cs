@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using System.Windows.Forms;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     public class MainMenuErrorPopup : ModSystem
     {

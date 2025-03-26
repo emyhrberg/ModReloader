@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using ErkysModdingUtilities.Common.Configs;
+using EliteTestingMod.Common.Configs;
 using log4net;
 using log4net.Appender;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Helpers
+namespace EliteTestingMod.Helpers
 {
     /// <summary>
     /// Factory class for creating TimeSpans.
@@ -35,7 +35,7 @@ namespace ErkysModdingUtilities.Helpers
             {
                 try
                 {
-                    return ModLoader.GetMod("ErkysModdingUtilities");
+                    return ModLoader.GetMod("EliteTestingMod");
                 }
                 catch (Exception ex)
                 {

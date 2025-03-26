@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using ErkysModdingUtilities.Common.Configs;
+using EliteTestingMod.Common.Configs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -8,7 +8,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     /// <summary>
     /// A parent panel

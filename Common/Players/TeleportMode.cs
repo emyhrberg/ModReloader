@@ -1,10 +1,10 @@
-using ErkysModdingUtilities.Common.Configs;
+using EliteTestingMod.Common.Configs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Players
+namespace EliteTestingMod.Common.Players
 {
     public class TeleportMode : ModPlayer
     {

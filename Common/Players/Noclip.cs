@@ -1,4 +1,4 @@
-using ErkysModdingUtilities.Common.Configs;
+using EliteTestingMod.Common.Configs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Players
+namespace EliteTestingMod.Common.Players
 {
     /// <summary>
     /// Allows the player to move through blocks and fly around the world.

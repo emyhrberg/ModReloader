@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Common.Players;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Common.Players;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using static ErkysModdingUtilities.UI.Elements.Option;
+using static EliteTestingMod.UI.Elements.Option;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     /// <summary>
     /// A panel containing options to modify player behavior like God, Noclip, etc.

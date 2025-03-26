@@ -1,11 +1,11 @@
 using System.Linq;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Buttons
+namespace EliteTestingMod.UI.Buttons
 {
     public class LogButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

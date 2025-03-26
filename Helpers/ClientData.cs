@@ -1,4 +1,4 @@
-﻿namespace ErkysModdingUtilities.Helpers
+﻿namespace EliteTestingMod.Helpers
 {
     internal class ClientData
     {

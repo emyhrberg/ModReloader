@@ -1,10 +1,10 @@
-using ErkysModdingUtilities.UI.Elements;
+using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Buttons
+namespace EliteTestingMod.UI.Buttons
 {
     public class NPCButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

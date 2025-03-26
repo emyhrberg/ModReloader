@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class CustomTitlePanel : UIPanel
     {

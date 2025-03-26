@@ -1,15 +1,15 @@
 using System.IO;
-using ErkysModdingUtilities.Helpers;
-using ErkysModdingUtilities.PacketHandlers;
+using EliteTestingMod.Helpers;
+using EliteTestingMod.PacketHandlers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities
+namespace EliteTestingMod
 {
     // Use both sides currently (it is default if none is set), but can be changed to client only if needed
     [Autoload(Side = ModSide.Client)]
-    public class ErkysModdingUtilities : Mod
+    public class EliteTestingMod : Mod
     {
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {

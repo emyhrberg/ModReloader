@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using Terraria;
 
-namespace ErkysModdingUtilities.Helpers
+namespace EliteTestingMod.Helpers
 {
 
 
@@ -33,9 +33,9 @@ namespace ErkysModdingUtilities.Helpers
         {
             try
             {
-                string path = Path.Combine(Main.SavePath, "ErkysModdingUtilities");
+                string path = Path.Combine(Main.SavePath, "EliteTestingMod");
                 Directory.CreateDirectory(path); // Ensure the directory exists
-                path = Path.Combine(path, "ErkysModdingUtilities.json");
+                path = Path.Combine(path, "EliteTestingMod.json");
                 Log.Info("Found save path: " + path);
                 return path;
             }

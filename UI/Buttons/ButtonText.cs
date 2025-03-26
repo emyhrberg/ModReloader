@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.UI.Buttons
+namespace EliteTestingMod.UI.Buttons
 {
     public class ButtonText : UIText
     {

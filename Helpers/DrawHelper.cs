@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.Helpers
+namespace EliteTestingMod.Helpers
 {
     public static class DrawHelper
     {

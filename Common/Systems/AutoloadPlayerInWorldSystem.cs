@@ -5,15 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.States;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     /// <summary>
     /// This system will automatically load a player and world every time AFTER all the mods have been reloaded.

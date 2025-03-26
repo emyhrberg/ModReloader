@@ -1,4 +1,4 @@
-displayName = ErkysModdingUtilities
+displayName = EliteTestingMod
 author = Erky
 version = 0.1
 side = both

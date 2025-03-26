@@ -1,10 +1,10 @@
 using System;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class ModEnabledIcon : UIImage
     {

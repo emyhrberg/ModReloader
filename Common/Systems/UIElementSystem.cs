@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
     public class UIElementSystem : ModSystem
@@ -33,7 +33,7 @@ namespace ErkysModdingUtilities.Common.Systems
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "ErkysModdingUtilities: DrawUISystem",
+                    "EliteTestingMod: DrawUISystem",
                     () =>
                     {
                         ui?.Draw(Main.spriteBatch, new GameTime());

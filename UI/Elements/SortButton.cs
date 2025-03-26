@@ -1,4 +1,4 @@
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     /// <summary>
     /// A button that can be clicked to sort items in the ItemSpawner and NPCSpawner panels.

@@ -1,6 +1,6 @@
 using System.Linq;
-using ErkysModdingUtilities.Common.Systems;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Common.Systems;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -8,7 +8,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Buttons
+namespace EliteTestingMod.UI.Buttons
 {
     public class PlayerButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

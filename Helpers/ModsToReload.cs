@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ErkysModdingUtilities.Helpers
+namespace EliteTestingMod.Helpers
 {
     public static class ModsToReload
     {

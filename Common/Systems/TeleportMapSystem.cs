@@ -1,12 +1,12 @@
 using System;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     public class TeleportMapSystem : ModSystem
     {

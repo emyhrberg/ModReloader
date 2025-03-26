@@ -1,11 +1,11 @@
 using System;
 using System.Reflection;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     public class SpawnRateHook : ModSystem
     {

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI
+namespace EliteTestingMod.UI
 {
     [Autoload(Side = ModSide.Client)]
     public class MainSystem : ModSystem
@@ -41,7 +41,7 @@ namespace ErkysModdingUtilities.UI
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "ErkysModdingUtilities: MainSystem",
+                    "EliteTestingMod: MainSystem",
                     () =>
                     {
                         // actual drawing of all UI elements

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using ErkysModdingUtilities.Helpers;
-using ErkysModdingUtilities.UI;
+using EliteTestingMod.Helpers;
+using EliteTestingMod.UI;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace ErkysModdingUtilities.Common.Configs
+namespace EliteTestingMod.Common.Configs
 {
     public class Config : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Reload")]
-        [DefaultValue("ErkysModdingUtilities")]
-        public string ModToReload = "ErkysModdingUtilities";
+        [DefaultValue("EliteTestingMod")]
+        public string ModToReload = "EliteTestingMod";
 
         [DefaultValue(false)]
         public bool SaveWorldOnReload = false;

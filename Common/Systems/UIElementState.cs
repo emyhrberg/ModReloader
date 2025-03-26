@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.UI;
-using ErkysModdingUtilities.UI.Elements;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.UI;
+using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     public class UIElementState : UIState
     {

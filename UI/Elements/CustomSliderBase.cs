@@ -1,6 +1,6 @@
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public enum SliderUsageLevel
     {

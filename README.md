@@ -1,4 +1,4 @@
-# ErkysModdingUtilities
+# EliteTestingMod
 
 <!-- PROJECT LOGO -->
 <br />
@@ -7,9 +7,9 @@
     <img src="icon_workshop.png" alt="Logo" width="150">
   </a>
 
-  <h3 align="center">ErkysModdingUtilities</h3>
+  <h3 align="center">EliteTestingMod</h3>
 
-ErkysModdingUtilities is the ultimate Terraria testing tool for modders and players who want full control.
+EliteTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
 
   <p align="center">
     <a href="<strong> [View Demo](##Demo) »</strong></a>

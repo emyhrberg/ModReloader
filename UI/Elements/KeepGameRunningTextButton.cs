@@ -1,5 +1,5 @@
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Common.Systems;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Common.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -7,7 +7,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Elements
+namespace EliteTestingMod.UI.Elements
 {
     public class KeepGameRunningTextButton : UIText
     {

@@ -7,7 +7,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Players
+namespace EliteTestingMod.Common.Players
 {
     public class GodGlow : ModPlayer
     {

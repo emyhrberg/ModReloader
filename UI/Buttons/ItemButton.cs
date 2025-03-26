@@ -1,6 +1,6 @@
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
-using ErkysModdingUtilities.UI.Elements;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
+using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Buttons
+namespace EliteTestingMod.UI.Buttons
 {
     public class ItemButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

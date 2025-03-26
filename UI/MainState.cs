@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Helpers;
-using ErkysModdingUtilities.UI.Buttons;
-using ErkysModdingUtilities.UI.Elements;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Helpers;
+using EliteTestingMod.UI.Buttons;
+using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -13,7 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI
+namespace EliteTestingMod.UI
 {
     public class MainState : UIState
     {

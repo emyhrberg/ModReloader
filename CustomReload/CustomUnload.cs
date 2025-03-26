@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ErkysModdingUtilities.CustomReload
+namespace EliteTestingMod.CustomReload
 {
     internal static class CustomUnload
     {

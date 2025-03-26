@@ -9,7 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.CustomReload
+namespace EliteTestingMod.CustomReload
 {
     internal static class TMLData
     {

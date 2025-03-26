@@ -8,7 +8,7 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using ErkysModdingUtilities.Helpers;
+using EliteTestingMod.Helpers;
 using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -19,7 +19,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ErkysModdingUtilities.UI.Buttons
+namespace EliteTestingMod.UI.Buttons
 {
     public class ReloadMPButton : BaseButton
     {
@@ -207,7 +207,7 @@ namespace ErkysModdingUtilities.UI.Buttons
                                     {
                                         Type modType = mod.GetType();
                                         var nameProperty = modType.GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
-                                        return nameProperty?.GetValue(mod)?.ToString() == "ErkysModdingUtilities";
+                                        return nameProperty?.GetValue(mod)?.ToString() == "EliteTestingMod";
                                     });
 
                                 if (targetMod != null)

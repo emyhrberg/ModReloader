@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Common.Systems;
-using ErkysModdingUtilities.UI;
-using ErkysModdingUtilities.UI.Elements;
+using EliteTestingMod.Common.Configs;
+using EliteTestingMod.Common.Systems;
+using EliteTestingMod.UI;
+using EliteTestingMod.UI.Elements;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Players
+namespace EliteTestingMod.Common.Players
 {
     public class PlayerCheatManager : ModPlayer
     {

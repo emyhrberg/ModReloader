@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using ErkysModdingUtilities.Common.Configs;
+using EliteTestingMod.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace EliteTestingMod.Common.Systems
 {
     public class EnemySpawnSystem : GlobalNPC
     {
