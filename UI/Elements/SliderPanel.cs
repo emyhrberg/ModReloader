@@ -35,7 +35,8 @@ namespace EliteTestingMod.UI.Elements
             float? increment = null,
             float textSize = 1f,
             string hover = "",
-            Action onClickText = null,
+            Action leftClickText = null,
+            Action rightClickText = null,
             Func<float, string> valueFormatter = null
             )
         {
@@ -79,7 +80,7 @@ namespace EliteTestingMod.UI.Elements
             TextScale = textSize;
             Title = title;
             HoverText = hover;
-            optionTitle = new OptionTitleText(text: Title, hover: HoverText, textSize: TextScale, leftClick: onClickText);
+            optionTitle = new OptionTitleText(text: Title, hover: HoverText, textSize: TextScale, leftClick: leftClickText, rightClick: rightClickText);
             optionTitle.VAlign = 0.5f;
             optionTitle.TextColor = Color.White;
             // textElement.Left.Set(30, 0);

@@ -147,6 +147,11 @@ Mods: {
 					Tooltip: ""
 					Label: Latest Mod To Reload
 				}
+
+				GodGlow: {
+					Label: God Glow
+					Tooltip: ""
+				}
 			}
 
 			NPCSpawnerConfig: {

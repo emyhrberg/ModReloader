@@ -138,11 +138,56 @@ namespace EliteTestingMod.Helpers
 
             // 6. Creating a task
             Main.menuMode = 10003;
-            Task.Run(() => (Task)buildModMethod.Invoke(buildModInstance, [(object mc) => {
-                foreach (var modPath in modPaths) {
-                    mcBuildModFolder.Invoke(mc, [modPath]);
+            Task.Run(() =>
+            {
+                if (buildModMethod == null)
+                {
+                    Log.Error("buildModMethod is null. Cannot proceed with building mods.");
+                    return Task.CompletedTask;
                 }
-            }, true]));
+                if (buildModInstance == null)
+                {
+                    Log.Error("buildModInstance is null. Cannot proceed with building mods.");
+                    return Task.CompletedTask;
+                }
+                if (modPaths == null || !modPaths.Any())
+                {
+                    Log.Error("No modPaths found. Cannot proceed with building mods.");
+                    return Task.CompletedTask;
+                }
+
+                try
+                {
+                    return (Task)buildModMethod.Invoke(buildModInstance,
+                    [
+                        (Action<object>) (mc =>
+                        {
+                            foreach (var modPath in modPaths)
+                            {
+                                if (string.IsNullOrWhiteSpace(modPath))
+                                {
+                                    Log.Error("Encountered empty or null modPath. Skipping.");
+                                    continue;
+                                }
+                                try
+                                {
+                                    mcBuildModFolder.Invoke(mc, [modPath]);
+                                }
+                                catch (Exception buildEx)
+                                {
+                                    Log.Error($"Failed to build mod at '{modPath}': {buildEx.Message}");
+                                }
+                            }
+                        }),
+                        true
+                    ]);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Failed to invoke buildModMethod: {ex.Message}");
+                    return Task.CompletedTask;
+                }
+            });
         }
 
         //string can be replaced with json if needed

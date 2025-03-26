@@ -71,9 +71,9 @@ namespace EliteTestingMod.UI.Elements
             if (scrollbarEnabled) Append(scrollbar);
         }
 
-        protected SliderPanel AddSlider(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1f, string hover = "", Action onClickText = null, Func<float, string> valueFormatter = null)
+        protected SliderPanel AddSlider(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1f, string hover = "", Action leftClickText = null, Action rightClickText = null, Func<float, string> valueFormatter = null)
         {
-            SliderPanel sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover, onClickText, valueFormatter);
+            SliderPanel sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover, leftClickText, rightClickText, valueFormatter);
             uiList.Add(sliderPanel);
             AddPadding(3);
             return sliderPanel;

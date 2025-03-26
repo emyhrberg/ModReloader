@@ -59,7 +59,6 @@ namespace EliteTestingMod.UI.Elements
         private void ConstructAllMods()
         {
             // Get all mods the user has installed via reflection
-            // ModOrganizer.FindAllMods
             try
             {
                 Assembly assembly = typeof(ModLoader).Assembly;
@@ -68,21 +67,29 @@ namespace EliteTestingMod.UI.Elements
 
                 var workshopMods = (IReadOnlyList<object>)findWorkshopModsMethod.Invoke(null, null);
 
-                foreach (var mod in workshopMods)
+                // Sort workshop mods by clean name
+                var sortedMods = workshopMods.ToList();
+                sortedMods.Sort((a, b) =>
+                {
+                    // Get clean names for comparison
+                    string nameA = GetCleanName(a);
+                    string nameB = GetCleanName(b);
+                    return string.Compare(nameA, nameB, StringComparison.OrdinalIgnoreCase);
+                });
+
+                Log.Info("Found " + sortedMods.Count + " workshop mods.");
+                foreach (var mod in sortedMods)
                 {
                     // Get the clean name using reflection for the LocalMod mod.
-                    FieldInfo displayNameField = mod.GetType().GetField("DisplayNameClean", BindingFlags.Public | BindingFlags.Instance);
-                    string cleanName = (string)displayNameField.GetValue(mod);
-
+                    string cleanName = GetCleanName(mod);
                     string internalName = mod.ToString();
-                    // check if mod already exists in enabledmods.
-                    // Log.Info("enabled mods: " + string.Join(", ", modElements.Select(modElement => modElement.internalName)));
 
                     if (modElements.Any(modElement => modElement.internalName == internalName))
                     {
-                        Log.Info("Mod already exists in enabled mods: " + internalName);
                         continue;
                     }
+
+                    // Log.Info("InternalName: " + internalName + " CleanName: " + cleanName);
 
                     // "mod" is of type LocalMod 
                     // We want to pass the LocalMod's TmodFile to ModElement.
@@ -99,7 +106,6 @@ namespace EliteTestingMod.UI.Elements
                         icon: modIcon
                         );
 
-
                     modElement.SetState(State.Disabled);
                     uiList.Add(modElement);
                     allMods.Add(modElement);
@@ -111,6 +117,13 @@ namespace EliteTestingMod.UI.Elements
                 Log.Warn("An error occurred while retrieving workshop mods." + ex);
             }
             AddPadding(3);
+        }
+
+        // Helper method to get clean name from a mod object
+        private static string GetCleanName(object mod)
+        {
+            FieldInfo displayNameField = mod.GetType().GetField("DisplayNameClean", BindingFlags.Public | BindingFlags.Instance);
+            return (string)displayNameField.GetValue(mod);
         }
 
         private Texture2D GetModIconFromAllMods(object TmodFile)

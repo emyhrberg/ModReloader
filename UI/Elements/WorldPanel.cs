@@ -19,6 +19,7 @@ namespace EliteTestingMod.UI.Elements
         public SliderPanel spawnRateSlider;
         public SliderPanel rainSlider;
 
+        #region Constructor
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
             AddPadding(5);
@@ -31,9 +32,9 @@ namespace EliteTestingMod.UI.Elements
                 defaultValue: GetCurrentTimeNormalized(),
                 onValueChanged: UpdateInGameTime,
                 increment: 1800f / 86400f,
-                hover: "Click to freeze/unfreeze time",
+                hover: "Click to freeze time",
                 textSize: 0.9f,
-                onClickText: ToggleFreezeTime
+                leftClickText: ToggleFreezeTime
             );
 
             float spawnRate = 1f;
@@ -50,8 +51,9 @@ namespace EliteTestingMod.UI.Elements
                 onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
                 increment: 1,
                 hover: "Set the spawn rate multiplier",
-                onClickText: () => SpawnRateMultiplier.Multiplier = 0,
-                textSize: 0.9f
+                textSize: 0.9f,
+                leftClickText: () => SpawnRateMultiplier.Multiplier = 0f,
+                rightClickText: () => SpawnRateMultiplier.Multiplier = 1f
             );
             uiList.Add(spawnRateSlider);
             AddPadding(3f);
@@ -133,8 +135,7 @@ namespace EliteTestingMod.UI.Elements
             AddPadding(3f);
             AddPadding();
         }
-
-        // Here is the end of the constructor
+        #endregion // Here is the end of the constructor
 
         #region Open Folder
         private void OpenFolder(string path)
@@ -176,10 +177,14 @@ namespace EliteTestingMod.UI.Elements
 
         #region Methods
 
+        #region Freeze Time
         private void ToggleFreezeTime()
         {
-            Main.NewText("Time is now " + (Main.GlobalTimerPaused ? "frozen" : "unfrozen"));
+            FreezeTimeManager.FreezeTime = !FreezeTimeManager.FreezeTime;
+            if (Conf.LogToChat) Main.NewText("Time is now " + (FreezeTimeManager.FreezeTime ? "frozen" : "unfrozen"));
+            timeOption.optionTitle.hover = FreezeTimeManager.FreezeTime ? "Click to unfreeze time" : "Click to freeze time";
         }
+        #endregion
 
         private void ToggleAllTracking()
         {

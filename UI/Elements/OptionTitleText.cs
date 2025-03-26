@@ -18,11 +18,12 @@ namespace EliteTestingMod.UI.Elements
     {
         public string hover = "";
         private Action leftClick;
+        private Action rightClick;
         private string internalModName = "";
         private bool isConfigOpen = false;
         private bool canClick;
 
-        public OptionTitleText(string text, string hover = "", Action leftClick = null, float textSize = 1f, string internalModName = "", bool canClick = true) : base(text, textSize)
+        public OptionTitleText(string text, string hover = "", Action leftClick = null, Action rightClick = null, float textSize = 1f, string internalModName = "", bool canClick = true) : base(text, textSize)
         {
             this.hover = hover;
             this.internalModName = internalModName;
@@ -31,6 +32,13 @@ namespace EliteTestingMod.UI.Elements
             Left.Set(0, 0);
             VAlign = 0.5f;
             this.leftClick = leftClick;
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            base.RightClick(evt);
+
+            rightClick?.Invoke();
         }
 
         public override void LeftClick(UIMouseEvent evt)
