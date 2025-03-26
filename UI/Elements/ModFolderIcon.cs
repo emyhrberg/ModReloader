@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,7 +36,7 @@ namespace ErkysModdingUtilities.UI.Elements
         {
             base.LeftClick(evt);
 
-            Main.NewText("Opening mod folder: " + modPath);
+            if (Conf.LogToChat) Main.NewText("Opening mod folder: " + modPath);
 
             try
             {

@@ -1,4 +1,3 @@
-using ErkysModdingUtilities.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 

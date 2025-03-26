@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using ErkysModdingUtilities.Common.Configs;
-using log4net;
-using log4net.Appender;
+﻿using System.Diagnostics;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace ErkysModdingUtilities.Helpers
 {

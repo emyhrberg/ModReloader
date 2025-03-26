@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using ErkysModdingUtilities.Common.Configs;
@@ -28,10 +25,10 @@ namespace ErkysModdingUtilities.PacketHandlers
         {
             switch (reader.ReadByte())
             {
-                case (KillingServer):
+                case KillingServer:
                     ReceiveKillingServer(reader, fromWho);
                     break;
-                case (RefreshClients):
+                case RefreshClients:
                     ReceiveRefreshClients(reader, fromWho);
                     break;
             }

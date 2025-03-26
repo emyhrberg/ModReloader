@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ErkysModdingUtilities.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -58,7 +59,7 @@ namespace ErkysModdingUtilities.Common.Systems
                 }
                 if (!didPrint)
                 {
-                    Main.NewText("All hostile NPCs butchered!", 255, 50, 50);
+                    if (Conf.LogToChat) Main.NewText("All hostile NPCs butchered!", 255, 50, 50);
                     didPrint = true;
                 }
             }

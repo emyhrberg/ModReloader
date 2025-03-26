@@ -118,19 +118,19 @@ namespace ErkysModdingUtilities.Helpers
                 // Reactivate the appender so that logging resumes.
                 appender.ActivateOptions();
             }
-            Main.NewText("Client.log cleared.");
+            if (Conf.LogToChat) Main.NewText("Client.log cleared.");
         }
 
         public static void OpenLogFolder()
         {
-            Main.NewText("Opening log folder...");
+            if (Conf.LogToChat) Main.NewText("Opening log folder...");
 
             try
             {
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    Main.NewText("Steam path not found.");
+                    if (Conf.LogToChat) Main.NewText("Steam path not found.");
                     Error("Steam path not found.");
                     return;
                 }
@@ -140,7 +140,7 @@ namespace ErkysModdingUtilities.Helpers
             }
             catch (Exception ex)
             {
-                Main.NewText("Error opening log folder: " + ex.Message);
+                if (Conf.LogToChat) Main.NewText("Error opening log folder: " + ex.Message);
                 Error("Error opening log folder: " + ex.Message);
             }
         }
@@ -155,14 +155,14 @@ namespace ErkysModdingUtilities.Helpers
 
         public static void OpenClientLog()
         {
-            Main.NewText("Opening client.log...");
+            if (Conf.LogToChat) Main.NewText("Opening client.log...");
 
             try
             {
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    Main.NewText("Steam path is null or empty.");
+                    if (Conf.LogToChat) Main.NewText("Steam path is null or empty.");
                     Log.Error("Steam path is null or empty.");
                     return;
                 }
@@ -172,14 +172,14 @@ namespace ErkysModdingUtilities.Helpers
             }
             catch (Exception ex)
             {
-                Main.NewText("Error opening client.log: " + ex.Message);
+                if (Conf.LogToChat) Main.NewText("Error opening client.log: " + ex.Message);
                 Log.Error("Error opening client.log: " + ex.Message);
             }
         }
 
         public static void OpenEnabledJson()
         {
-            Main.NewText("Opening enabled.json...");
+            if (Conf.LogToChat) Main.NewText("Opening enabled.json...");
 
             // Get the path to the enabled.json file in $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
             try
@@ -195,7 +195,7 @@ namespace ErkysModdingUtilities.Helpers
 
         public static void OpenEnabledJsonFolder()
         {
-            Main.NewText("Opening enabled.json folder...");
+            if (Conf.LogToChat) Main.NewText("Opening enabled.json folder...");
 
             try
             {

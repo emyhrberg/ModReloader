@@ -42,25 +42,44 @@ namespace ErkysModdingUtilities.UI.Elements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            var mainState = ModContent.GetInstance<MainSystem>()?.mainState;
-            if (mainState == null)
-                return;
-
-            // Create AllPanels list containing LeftSide and RightSidePanels
-            List<DraggablePanel> AllPanels = new();
-            AllPanels.AddRange(mainState.LeftSidePanels);
-            AllPanels.AddRange(mainState.RightSidePanels);
-
-            // Use AllPanels to find the panel that is our parent.
-            foreach (var p in AllPanels)
+            // Find the parent DraggablePanel containing this close button
+            UIElement current = Parent;
+            while (current != null && !(current is DraggablePanel))
             {
-                if (p != null && p.GetActive())
-                {
-                    p.SetActive(false);
-                    // Log.Info("CloseButtonPanel: Deactivated panel with name: " + p.GetType().Name);
-                    break;
-                }
+                current = current.Parent;
+            }
+
+            // If we found the parent panel, deactivate it
+            if (current is DraggablePanel panel && panel.GetActive())
+            {
+                Log.Info("CloseButtonPanel: Deactivated panel with name: " + panel.GetType().Name);
+                panel.SetActive(false);
+                // Log.Info("CloseButtonPanel: Deactivated panel with name: " + panel.GetType().Name);
             }
         }
+
+        // public override void LeftClick(UIMouseEvent evt)
+        // {
+
+        // var mainState = ModContent.GetInstance<MainSystem>()?.mainState;
+        // if (mainState == null)
+        //     return;
+
+        // // Create AllPanels list containing LeftSide and RightSidePanels
+        // List<DraggablePanel> AllPanels = new();
+        // AllPanels.AddRange(mainState.LeftSidePanels);
+        // AllPanels.AddRange(mainState.RightSidePanels);
+
+        // // Use AllPanels to find the panel that is our parent.
+        // foreach (var p in AllPanels)
+        // {
+        //     if (p != null && p.GetActive())
+        //     {
+        //         p.SetActive(false);
+        //         // Log.Info("CloseButtonPanel: Deactivated panel with name: " + p.GetType().Name);
+        //         break;
+        //     }
+        // }
+        // }
     }
 }

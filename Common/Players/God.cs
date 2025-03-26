@@ -41,12 +41,6 @@ namespace ErkysModdingUtilities.Common.Players
                     if (buffID <= 0)
                         continue;
 
-                    // Log buff info
-                    // Main.NewText($"Buff ID: {buffID}, Name: {Lang.GetBuffName(buffID)}, isDebuff: {isDebuff}", Color.Yellow);
-                    // Log.Info("Buff ID: " + buffID + ", Name: " + Lang.GetBuffName(buffID) + ", isDebuff: " + isDebuff);
-
-                    // Remove debuffs if they are not in the NurseCannotRemoveDebuff exclusion list.
-                    // Nurse exclusion list includes e.g werewolf, cozy fire, heart lantern, etc.
                     if (isDebuff && !BuffID.Sets.NurseCannotRemoveDebuff[buffID])
                     {
                         Player.DelBuff(i);

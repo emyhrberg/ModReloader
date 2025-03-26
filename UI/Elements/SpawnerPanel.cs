@@ -86,8 +86,6 @@ namespace ErkysModdingUtilities.UI.Elements
             resizeButton = new(Ass.Resize);
             resizeButton.OnDragY += offsetY =>
             {
-                // Log.Info($"[BEFORE] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
-
                 float oldHeight = Height.Pixels;
                 float newHeight = oldHeight + offsetY;
                 float maxHeight = 180f;
@@ -115,8 +113,6 @@ namespace ErkysModdingUtilities.UI.Elements
                 // Scrollbar.Top.Pixels -= topOffset;
 
                 Recalculate();
-
-                // Log.Info($"[AFTER] height: {Height.Pixels}, Top: {Top.Pixels}, V Align: {VAlign}");
             };
 
             // Add all content in the panel

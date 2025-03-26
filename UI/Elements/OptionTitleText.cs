@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -51,7 +52,7 @@ namespace ErkysModdingUtilities.UI.Elements
             if (isConfigOpen)
             {
                 hover = $"Open {internalModName} config";
-                Main.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
+                if (Conf.LogToChat) Main.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
                 Main.menuMode = 0;
                 Main.InGameUI.SetState(null);
                 isConfigOpen = false;
@@ -79,14 +80,14 @@ namespace ErkysModdingUtilities.UI.Elements
                 Mod modInstance = ModLoader.GetMod(modName);
                 if (modInstance == null)
                 {
-                    Main.NewText($"Mod '{modName}' not found.", Color.Red);
+                    if (Conf.LogToChat) Main.NewText($"Mod '{modName}' not found.", Color.Red);
                     return;
                 }
 
                 // Check if there are any configs for this mod.
                 if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
                 {
-                    Main.NewText("No config available for mod: " + modName, Color.Yellow);
+                    if (Conf.LogToChat) Main.NewText("No config available for mod: " + modName, Color.Yellow);
                     return;
                 }
 
@@ -107,7 +108,7 @@ namespace ErkysModdingUtilities.UI.Elements
                 // Open the mod config UI.
                 Main.InGameUI.SetState(modConfigInstance as UIState);
                 Main.menuMode = 10024;
-                Main.NewText("Opening config for " + modName, Color.Yellow);
+                if (Conf.LogToChat) Main.NewText("Opening config for " + modName, Color.Yellow);
 
                 // Hover text update
                 hover = $"Close {internalModName} config";
@@ -123,7 +124,7 @@ namespace ErkysModdingUtilities.UI.Elements
             }
             catch (Exception ex)
             {
-                Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
+                if (Conf.LogToChat) Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
                 return;
             }
         }

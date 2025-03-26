@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -39,7 +40,7 @@ namespace ErkysModdingUtilities.UI.Elements
             try
             {
                 string modName = Path.GetFileName(modPath);
-                Main.NewText("Opening mod project: " + modPath);
+                if (Conf.LogToChat) Main.NewText("Opening mod project: " + modPath);
                 string csprojFile = Path.Combine(modPath + "/" + modName + ".csproj");
                 Process.Start(new ProcessStartInfo($@"{csprojFile}") { UseShellExecute = true });
             }

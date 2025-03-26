@@ -20,13 +20,14 @@ namespace ErkysModdingUtilities.UI.Elements
             AddHeader(title: "Log Path",
                 onLeftClick: Log.OpenLogFolder,
                 hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
-            AddPadding(3);
 
             ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
             ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log", textSize: 0.5f);
+            AddPadding(10);
             uiList.Add(openClient);
+            AddPadding(10);
             uiList.Add(clearClient);
-            AddPadding(3);
+            AddPadding(5);
 
             logLevelSlider = AddSlider(
                 title: "Log Level: All",

@@ -1,17 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using ErkysModdingUtilities.CustomReload;
 using ErkysModdingUtilities.Helpers;
 using ErkysModdingUtilities.PacketHandlers;
-using ErkysModdingUtilities.UI;
-using ErkysModdingUtilities.UI.Buttons;
-using ErkysModdingUtilities.UI.Elements;
-using log4net;
-using MonoMod.RuntimeDetour;
-using MonoMod.RuntimeDetour.HookGen;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -87,11 +87,6 @@ namespace ErkysModdingUtilities.Common.Configs
                 return;
             }
             MainState mainState = sys.mainState;
-            if (mainState == null)
-            {
-                Log.Info("MainState is null in Config.OnChanged()");
-                return;
-            }
 
             // Delete all buttons and re-add them
             mainState.AllButtons.Clear();

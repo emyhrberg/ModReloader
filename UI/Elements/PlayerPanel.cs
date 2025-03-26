@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.Common.Players;
 using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
@@ -76,7 +77,7 @@ namespace ErkysModdingUtilities.UI.Elements
                 }
 
                 Main.refreshMap = true;
-                Main.NewText("Map fully revealed!", 255, 255, 255);
+                if (Conf.LogToChat) Main.NewText("Map fully revealed!", 255, 255, 255);
             });
         }
 
@@ -91,7 +92,7 @@ namespace ErkysModdingUtilities.UI.Elements
                     item.TurnToAir(false);
                 }
             }
-            Main.NewText("Inventory cleared", byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            if (Conf.LogToChat) Main.NewText("Inventory cleared", byte.MaxValue, byte.MaxValue, byte.MaxValue);
         }
 
         private void ToggleAll()

@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Common.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -9,7 +7,7 @@ using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace ErkysModdingUtilities.Common.Systems
+namespace ErkysModdingUtilities.Common.Players
 {
     public class GodGlow : ModPlayer
     {

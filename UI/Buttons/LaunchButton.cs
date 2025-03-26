@@ -42,13 +42,11 @@ namespace ErkysModdingUtilities.UI.Buttons
                 }
 
                 string file = Path.Combine(steamPath, "start-tModLoader.bat");
-                if (Conf.LogToChat)
-                    Main.NewText("Opening another client...");
+                if (Conf.LogToChat) Main.NewText("Opening another client...");
             }
             catch (Exception ex)
             {
-                if (Conf.LogToChat)
-                    Main.NewText("Error opening another client: " + ex.Message);
+                if (Conf.LogToChat) Main.NewText("Error opening another client: " + ex.Message);
                 Log.Error("Error opening another client: " + ex.Message);
             }
         }

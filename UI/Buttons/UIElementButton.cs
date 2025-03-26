@@ -1,5 +1,6 @@
 using System.Linq;
 using ErkysModdingUtilities.Common.Configs;
+using ErkysModdingUtilities.Common.Systems;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
@@ -40,6 +41,16 @@ namespace ErkysModdingUtilities.UI.Buttons
                 uiPanel.SetActive(false);
             else
                 uiPanel.SetActive(true);
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            base.RightClick(evt);
+
+            // Toggle all elements
+            UIElementSystem elementSystem = ModContent.GetInstance<UIElementSystem>();
+            UIElementState elementState = elementSystem.debugState;
+            elementState.ToggleShowAll();
         }
     }
 }

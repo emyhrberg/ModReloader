@@ -8,8 +8,6 @@
 
 	</PropertyGroup>
 	<ItemGroup>
-	  <Folder Include="Old\NewFolder1\" />
-	  <Folder Include="Old\NewFolder\NewFolder\" />
 	</ItemGroup>
 
 	<!-- References -->

@@ -1,4 +1,5 @@
 using System.Linq;
+using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
@@ -37,6 +38,12 @@ namespace ErkysModdingUtilities.UI.Buttons
                 debugPanel.SetActive(false);
             else
                 debugPanel.SetActive(true);
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            // Open client log instantly
+            Log.OpenClientLog();
         }
     }
 }

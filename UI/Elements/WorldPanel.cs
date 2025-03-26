@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ErkysModdingUtilities.Common.Configs;
-using ErkysModdingUtilities.Common.Players;
 using ErkysModdingUtilities.Common.Systems;
-using ErkysModdingUtilities.Helpers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 using static ErkysModdingUtilities.UI.Elements.Option;
 
 namespace ErkysModdingUtilities.UI.Elements
@@ -286,7 +282,7 @@ namespace ErkysModdingUtilities.UI.Elements
             // Convert slider value to in-game time (0 to 86400 ticks)
             double totalTicks = normalizedValue * 86400.0;
 
-            // Determine if it's day or night and adjust `Main.time`
+            // Determine if it's day or night and adjust Main.time
             if (totalTicks < 54000.0) // Daytime threshold (0 to 53999)
             {
                 Main.dayTime = true;
@@ -304,7 +300,7 @@ namespace ErkysModdingUtilities.UI.Elements
             // Log the new time to the console
             // Log.Info($"Slider adjusted: Normalized = {normalizedValue}, In-Game Time = {formattedTime}");
 
-            // Sync in multiplayer (if needed)
+            // Sync in multiplayer
             // if (Main.netMode == NetmodeID.Server)
             // {
             //     NetMessage.SendData(MessageID.WorldData);

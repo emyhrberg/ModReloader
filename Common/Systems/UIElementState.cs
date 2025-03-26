@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ErkysModdingUtilities.Common.Configs;
 using ErkysModdingUtilities.UI;
 using ErkysModdingUtilities.UI.Elements;
 using Microsoft.Xna.Framework;
@@ -84,12 +85,17 @@ namespace ErkysModdingUtilities.Common.Systems
         {
             showAll = !showAll;
             if (showAll)
-                foreach (var elem in elements)
-                    elementToggles[elem] = false;
-            else
+            {
+                if (Conf.LogToChat) Main.NewText("Showing all UI elements.", Color.Green);
                 foreach (var elem in elements)
                     elementToggles[elem] = true;
-
+            }
+            else
+            {
+                if (Conf.LogToChat) Main.NewText("Hiding all UI elements.", new Color(226, 57, 39));
+                foreach (var elem in elements)
+                    elementToggles[elem] = true;
+            }
 
             // Update text
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -283,68 +289,5 @@ namespace ErkysModdingUtilities.Common.Systems
 
             DrawHitbox(self, spriteBatch);
         }
-
-        // public void PrintDimensionsForType(string typeName)
-        // {
-        //     var matches = elements.Where(e => e.GetType().Name == typeName).ToList();
-        //     Main.NewText($"UIElements: {typeName} [total UIElements: {matches.Count}]", Color.Green);
-        //     for (int i = 0; i < matches.Count; i++)
-        //     {
-        //         var elem = matches[i];
-        //         var outer = elem.GetOuterDimensions();
-        //         var inner = elem.GetInnerDimensions();
-
-        //         // Round dimensions to 2 decimal places
-        //         float outerWidth = (float)Math.Round(outer.Width, 2);
-        //         float outerHeight = (float)Math.Round(outer.Height, 2);
-        //         float innerWidth = (float)Math.Round(inner.Width, 2);
-        //         float innerHeight = (float)Math.Round(inner.Height, 2);
-
-        //         // If outer width matches inner width and outer height matches inner height, only print one size
-        //         if (outerWidth == innerWidth && outerHeight == innerHeight)
-        //         {
-        //             Main.NewText($"{i + 1}. {typeName}: {outerWidth}x{outerHeight}", Color.White);
-        //         }
-        //         else
-        //         {
-        //             Main.NewText($"{i + 1}. {typeName}: Inner: {innerWidth}x{innerHeight}, Outer: {outerWidth}x{outerHeight}", Color.White);
-        //         }
-        //     }
-        // }
-
-        // public void PrintAllUIElements()
-        // {
-        //     Main.NewText($"UIElements: (Name), Width x Height [total UIElements: {elements.Count}]", Color.Green);
-
-        //     // Track which names have already been shown
-        //     HashSet<string> shownNames = new();
-
-        //     // Sort elements by name
-        //     elements.Sort((a, b) => string.Compare(a.GetType().Name, b.GetType().Name, StringComparison.Ordinal));
-
-        //     int count = 1;
-        //     for (int i = 0; i < elements.Count; i++)
-        //     {
-        //         var element = elements[i];
-        //         string elementName = element.GetType().Name;
-
-        //         if (!shownNames.Add(elementName))
-        //             continue; // Skip if we've already shown this name
-
-        //         string elementText = $"{count}. ({elementName})";
-        //         if (element.GetInnerDimensions().Width == element.GetOuterDimensions().Width
-        //             && element.GetInnerDimensions().Height == element.GetOuterDimensions().Height)
-        //         {
-        //             elementText += $", {element.GetInnerDimensions().Width}x{element.GetInnerDimensions().Height}";
-        //         }
-        //         else
-        //         {
-        //             elementText += $", Inner: {element.GetInnerDimensions().Width}x{element.GetInnerDimensions().Height}, Outer: {element.GetOuterDimensions().Width}x{element.GetOuterDimensions().Height}";
-        //         }
-
-        //         Main.NewText(elementText, Color.White);
-        //         count++;
-        //     }
-        // }
     }
 }
