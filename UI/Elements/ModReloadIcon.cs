@@ -40,8 +40,10 @@ namespace EliteTestingMod.UI.Elements
 
             // Pre-step:
             // Set config to reload this mod
+            ModsToReload.modsToReload.Clear();
             Conf.C.ModToReload = modName;
             Conf.ForceSaveConfig(Conf.C);
+            ModsToReload.modsToReload.Add(modName);
 
             // 1 Clear client log
             if (Conf.ClearClientLogOnReload)
@@ -61,7 +63,7 @@ namespace EliteTestingMod.UI.Elements
             }
 
             // 3 Reload
-            ReloadUtilities.BuildAndReloadMod();
+            ReloadUtilities.BuildAndReloadMods();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
