@@ -34,7 +34,7 @@ namespace EliteTestingMod.UI.Buttons
             Width.Set(37, 0);
             Height.Set(15, 0);
             Left.Set(-20, 0); // CUSTOM CUSTOM CUSTOM -20!
-            Top.Set(-buttonSize, 0); // Start at normal position for Expanded state
+            Top.Set(-buttonSize * 2, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
             VAlign = 1f;
@@ -146,6 +146,21 @@ namespace EliteTestingMod.UI.Buttons
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            MainState mainState = sys?.mainState;
+            float buttonSize = mainState?.ButtonSize ?? 0;
+            if (sys != null && mainState.AreButtonsShowing)
+            {
+                if (Conf.ButtonsPosition == "bottom")
+                {
+                    Top.Set(-buttonSize, 0);
+                }
+                else if (Conf.ButtonsPosition == "left")
+                {
+                    Left.Set(buttonSize, 0);
+                }
+            }
+
             base.Draw(spriteBatch);
         }
     }

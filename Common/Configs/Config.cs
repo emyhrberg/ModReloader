@@ -34,10 +34,10 @@ namespace EliteTestingMod.Common.Configs
         [DefaultValue(70)]
         public float ButtonSize = 70;
 
-        [Range(0.4f, 1.1f)]
+        [Range(0.7f, 1.1f)]
         [Increment(0.1f)]
         [DefaultValue(0.9f)]
-        public float TextSize = 0.9f;
+        public float ButtonTextSize = 0.9f;
 
         [Range(300, 700f)]
         [Increment(50f)]
@@ -88,11 +88,15 @@ namespace EliteTestingMod.Common.Configs
             MainState mainState = sys.mainState;
 
             // Delete all buttons and re-add them
+            mainState.AreButtonsShowing = true;
             mainState.AllButtons.Clear();
             mainState.RemoveAllChildren();
             mainState.AddEverything();
-            mainState.collapse.UpdateCollapseImage();
-            Log.Info("Config.OnChanged() ran successfully");
+
+            // expand so we can see the changes
+            mainState.collapse.SetCollapsed(false);
+
+            Log.Info("Config.OnChanged() ran successfully3333");
         }
     }
 
@@ -135,7 +139,7 @@ namespace EliteTestingMod.Common.Configs
         public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
 
         // UI
-        public static float TextSize => C.TextSize;
+        public static float TextSize => C.ButtonTextSize;
         public static float ButtonSize => C.ButtonSize;
         public static string ButtonsPosition => C.ButtonsPosition;
         public static bool DraggablePanels => C.DraggablePanels;

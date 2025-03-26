@@ -11,7 +11,6 @@ Mods: {
 					Game: Game
 					UI: UI
 					Logging: Logging
-					KeepGameRunning: Keep Game Running
 				}
 
 				NPCSpawnLocation: {
@@ -81,32 +80,32 @@ Mods: {
 
 				LogToLogFile: {
 					Label: Log To Log File
-					Tooltip: ""
+					Tooltip: Whether to log debug and info and error messages to the client.log file
 				}
 
 				LogToChat: {
 					Label: Log To Chat
-					Tooltip: ""
+					Tooltip: Whether to log debug messages to the chat
 				}
 
 				PanelWidth: {
-					Label: Panel Width
-					Tooltip: ""
+					Label: Spawner Panel Width
+					Tooltip: Adjust the width of the item and NPC spawner panels
 				}
 
 				PanelHeight: {
 					Label: Panel Height
-					Tooltip: ""
+					Tooltip: Adjust the height of all panels
 				}
 
 				TextSize: {
-					Tooltip: ""
+					Tooltip: Adjust the size of the text on the buttons on the hotbar
 					Label: Text Size
 				}
 
 				KeepRunning: {
 					Label: Keep Running
-					Tooltip: Even when the game window is out of focus or alt tabbed, the game will keep updating
+					Tooltip: When the game window is out of focus or alt tabbed, the game will keep updating
 				}
 
 				AlwaysShowTextOnTop: {

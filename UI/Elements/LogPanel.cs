@@ -23,9 +23,9 @@ namespace EliteTestingMod.UI.Elements
 
             ActionOption clearClient = new(Log.ClearClientLog, "Clear client.log", "Clear the client.log file");
             ActionOption openClient = new(Log.OpenClientLog, "Open client.log", "Click to open client.log");
-            AddPadding(10);
+            AddPadding(5);
             uiList.Add(openClient);
-            AddPadding(10);
+            AddPadding(5);
             uiList.Add(clearClient);
             AddPadding(5);
 
@@ -50,6 +50,7 @@ namespace EliteTestingMod.UI.Elements
                 onLeftClick: Log.OpenEnabledJsonFolder,
                 hover: "Click to open the folder at Documents/My Games/Terraria/ModLoader");
             ActionOption openEnabled = new(Log.OpenEnabledJson, "Open enabled.json", "This is a json file that shows a list of all your currently enabled mods", Log.OpenEnabledJsonFolder);
+            AddPadding(5);
             uiList.Add(openEnabled);
             AddPadding();
         }

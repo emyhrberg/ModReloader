@@ -48,8 +48,12 @@ namespace EliteTestingMod.UI.Elements
             AddPadding();
 
             AddHeader("Actions");
+            AddPadding(5);
+
             ActionOption clear = new(ClearInventory, "Clear Inventory", "Clears your inventory except favorited items");
             uiList.Add(clear);
+            AddPadding(5);
+
             ActionOption reveal = new(revealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
             uiList.Add(reveal);
         }

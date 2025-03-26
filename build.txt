@@ -2,5 +2,5 @@ displayName = EliteTestingMod
 author = Erky
 version = 0.1
 side = both
-hideCode = true
-buildIgnore = Assets\Old*, icon_workshop.psd
+hideCode = false
+buildIgnore = Assets\Old*, icon.psd
