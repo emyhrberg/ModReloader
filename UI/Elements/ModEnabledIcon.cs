@@ -1,10 +1,10 @@
-using EliteTestingMod.Helpers;
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class ModEnabledIcon : UIImage
     {

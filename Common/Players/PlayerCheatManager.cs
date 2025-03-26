@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Common.Systems;
-using EliteTestingMod.UI;
-using EliteTestingMod.UI.Elements;
+using ModHelper.Common.Configs;
+using ModHelper.Common.Systems;
+using ModHelper.UI;
+using ModHelper.UI.Elements;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Players
+namespace ModHelper.Common.Players
 {
     public class PlayerCheatManager : ModPlayer
     {

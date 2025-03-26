@@ -1,5 +1,5 @@
 ﻿using System.IO;
-namespace EliteTestingMod.PacketHandlers
+namespace ModHelper.PacketHandlers
 {
     internal class ModNetHandler
     {

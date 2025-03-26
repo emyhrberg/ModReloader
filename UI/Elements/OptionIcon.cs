@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class OptionIcon : UIImage
     {

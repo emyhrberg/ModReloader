@@ -3,7 +3,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Players
+namespace ModHelper.Common.Players
 {
     public class God : ModPlayer
     {

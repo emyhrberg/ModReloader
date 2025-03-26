@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
-using static EliteTestingMod.UI.Elements.Option;
+using static ModHelper.UI.Elements.Option;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     /// <summary>
     /// A panel to display the contents of client.log.

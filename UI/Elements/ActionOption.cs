@@ -1,12 +1,12 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class ActionOption : UIElement
     {

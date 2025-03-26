@@ -1,16 +1,16 @@
-using EliteTestingMod.Helpers;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Reflection;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Buttons
+namespace ModHelper.UI.Buttons
 {
     /// <summary>
     /// The base class for the main buttons that are displayed.

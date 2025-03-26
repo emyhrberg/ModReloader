@@ -1,5 +1,5 @@
 Mods: {
-	EliteTestingMod: {
+	ModHelper: {
 		Configs: {
 			Config: {
 				DisplayName: Config

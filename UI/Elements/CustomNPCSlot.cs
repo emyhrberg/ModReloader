@@ -1,8 +1,8 @@
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     // A minimal NPCSlot that displays an NPC in a shop-style slot.
     public class CustomNPCSlot : UIElement

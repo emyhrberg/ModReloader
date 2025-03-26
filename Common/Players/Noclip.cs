@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.GameInput;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Players
+namespace ModHelper.Common.Players
 {
     /// <summary>
     /// Allows the player to move through blocks and fly around the world.

@@ -1,13 +1,13 @@
-using EliteTestingMod.Helpers;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using ReLogic.Content;
-using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Buttons
+namespace ModHelper.UI.Buttons
 {
     public class ModsButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

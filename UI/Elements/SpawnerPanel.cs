@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     /// <summary>
     /// A base class for panels for item and NPC spawner.

@@ -2,9 +2,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
-using static EliteTestingMod.UI.Elements.Option;
+using static ModHelper.UI.Elements.Option;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class OptionEnabledText : UIText
     {

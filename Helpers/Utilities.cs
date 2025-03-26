@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Terraria;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     //Class basically for universal helping functions
     internal class Utilities

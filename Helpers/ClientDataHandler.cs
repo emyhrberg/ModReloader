@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using Terraria;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     public class ClientDataJson
     {
@@ -33,9 +33,9 @@ namespace EliteTestingMod.Helpers
         {
             try
             {
-                string path = Path.Combine(Main.SavePath, "EliteTestingMod");
+                string path = Path.Combine(Main.SavePath, "ModHelper");
                 Directory.CreateDirectory(path); // Ensure the directory exists
-                path = Path.Combine(path, "EliteTestingMod.json");
+                path = Path.Combine(path, "ModHelper.json");
                 Log.Info("Found save path: " + path);
                 return path;
             }

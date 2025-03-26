@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
 using Terraria;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public class MainMenuErrorPopup : ModSystem
     {

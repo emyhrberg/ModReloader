@@ -1,13 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
-using EliteTestingMod.Helpers;
-using EliteTestingMod.UI;
 using Microsoft.Xna.Framework;
+using ModHelper.Helpers;
+using ModHelper.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
-namespace EliteTestingMod.Common.Configs
+namespace ModHelper.Common.Configs
 {
     public class Config : ModConfig
     {
@@ -18,8 +18,8 @@ namespace EliteTestingMod.Common.Configs
         [DefaultValue(true)]
         public bool Reload = true;
 
-        [DefaultValue("EliteTestingMod")]
-        public string LatestModToReload = "EliteTestingMod";
+        [DefaultValue("ModHelper")]
+        public string LatestModToReload = "ModHelper";
 
         [DefaultValue(false)]
         public bool SaveWorldOnReload = false;

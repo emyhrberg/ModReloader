@@ -1,13 +1,13 @@
-using EliteTestingMod.Helpers;
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using ReLogic.Content;
-using System;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class ResizeButton : UIImageButton
     {

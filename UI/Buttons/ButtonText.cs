@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.UI.Buttons
+namespace ModHelper.UI.Buttons
 {
     public class ButtonText : UIText
     {

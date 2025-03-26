@@ -5,10 +5,10 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using EliteTestingMod.Helpers;
 using log4net;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using ModHelper.Helpers;
 using MonoMod.RuntimeDetour;
 using ReLogic.Content;
 using Terraria;
@@ -16,7 +16,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Buttons
+namespace ModHelper.UI.Buttons
 {
     public class ReloadMPButton : BaseButton
     {
@@ -204,7 +204,7 @@ namespace EliteTestingMod.UI.Buttons
                                     {
                                         Type modType = mod.GetType();
                                         var nameProperty = modType.GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
-                                        return nameProperty?.GetValue(mod)?.ToString() == "EliteTestingMod";
+                                        return nameProperty?.GetValue(mod)?.ToString() == "ModHelper";
                                     });
 
                                 if (targetMod != null)

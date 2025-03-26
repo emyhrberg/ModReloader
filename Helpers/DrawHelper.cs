@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.UI;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     public static class DrawHelper
     {

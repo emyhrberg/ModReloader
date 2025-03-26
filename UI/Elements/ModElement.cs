@@ -2,9 +2,9 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using static EliteTestingMod.UI.Elements.Option;
+using static ModHelper.UI.Elements.Option;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     // Contains:
     // Icon image

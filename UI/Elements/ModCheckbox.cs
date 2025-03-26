@@ -1,16 +1,16 @@
 using System.IO;
 using System.Linq;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
-using EliteTestingMod.UI.Buttons;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
+using ModHelper.UI.Buttons;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class ModCheckbox : UIImage
     {

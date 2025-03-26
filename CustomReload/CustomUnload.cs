@@ -1,4 +1,4 @@
-﻿namespace EliteTestingMod.CustomReload
+﻿namespace ModHelper.CustomReload
 {
     internal static class CustomUnload
     {

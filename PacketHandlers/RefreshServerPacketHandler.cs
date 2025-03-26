@@ -1,17 +1,17 @@
-﻿using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
-using log4net;
-using MonoMod.RuntimeDetour;
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 using System.IO.Pipes;
 using System.Reflection;
 using System.Threading.Tasks;
+using log4net;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
+using MonoMod.RuntimeDetour;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace EliteTestingMod.PacketHandlers
+namespace ModHelper.PacketHandlers
 {
     internal class RefreshServerPacketHandler : PacketHandler
     {

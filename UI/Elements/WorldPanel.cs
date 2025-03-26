@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Common.Systems;
 using Microsoft.Xna.Framework;
+using ModHelper.Common.Configs;
+using ModHelper.Common.Systems;
 using Terraria;
 using Terraria.ID;
-using static EliteTestingMod.UI.Elements.Option;
+using static ModHelper.UI.Elements.Option;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class WorldPanel : OptionPanel
     {

@@ -1,11 +1,11 @@
-﻿using EliteTestingMod.Helpers;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI
+namespace ModHelper.UI
 {
     [Autoload(Side = ModSide.Client)]
     public class MainSystem : ModSystem
@@ -32,7 +32,7 @@ namespace EliteTestingMod.UI
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    "EliteTestingMod: MainSystem",
+                    "ModHelper: MainSystem",
                     () =>
                     {
                         // actual drawing of all UI elements

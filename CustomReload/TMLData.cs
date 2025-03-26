@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.CustomReload
+namespace ModHelper.CustomReload
 {
     internal static class TMLData
     {

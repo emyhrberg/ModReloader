@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
     public class UIElementSystem : ModSystem
@@ -33,7 +33,7 @@ namespace EliteTestingMod.Common.Systems
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    name: "EliteTestingMod: UIElementSystem",
+                    name: "ModHelper: UIElementSystem",
 
                     drawMethod: delegate
                     {

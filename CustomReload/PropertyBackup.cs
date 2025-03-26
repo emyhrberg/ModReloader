@@ -1,9 +1,9 @@
-﻿using EliteTestingMod.Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Reflection;
+using ModHelper.Helpers;
 
-namespace EliteTestingMod.CustomReload
+namespace ModHelper.CustomReload
 {
 
     //Backup of an property, saving it initial state and allowing to restore initial state

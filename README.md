@@ -1,4 +1,4 @@
-# EliteTestingMod
+# ModHelper
 
 <!-- PROJECT LOGO -->
 <br />
@@ -7,9 +7,9 @@
     <img src="icon_workshop.png" alt="Logo" width="150">
   </a>
 
-  <h3 align="center">EliteTestingMod</h3>
+  <h3 align="center">ModHelper</h3>
 
-EliteTestingMod is the ultimate Terraria testing tool for modders and players who want full control.
+ModHelper is the ultimate Terraria testing tool for modders and players who want full control.
 
   <p align="center">
     <a href="<strong> [View Demo](##Demo) »</strong></a>

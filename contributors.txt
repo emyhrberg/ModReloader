@@ -1,5 +1,4 @@
-I want to give a special thanks to the tModLoader Discord server, aswell as to the following people for helping make this mod, without you it would't have been possible:
-🔹 Cotlim       for amazing work on reload
-🔹 nog          for god glow
-🔹 RDS          for playtesting
-🔹 jopojelly    for UIGrid and more
+I want to give my biggest thanks to the tModLoader Discord server, aswell as a special thank you to the following people for helping make this mod, without you it would't have been possible:
+🔹 Cotlim
+🔹 RDS
+🔹 nog

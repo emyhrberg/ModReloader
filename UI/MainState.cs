@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
-using EliteTestingMod.UI.Buttons;
-using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
+using ModHelper.UI.Buttons;
+using ModHelper.UI.Elements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI
+namespace ModHelper.UI
 {
     public class MainState : UIState
     {

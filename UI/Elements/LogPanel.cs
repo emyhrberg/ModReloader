@@ -1,16 +1,16 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     public class LogPanel : OptionPanel
     {

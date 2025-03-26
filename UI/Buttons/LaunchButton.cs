@@ -1,14 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Buttons
+namespace ModHelper.UI.Buttons
 {
     public class LaunchButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

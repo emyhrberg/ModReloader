@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Common.Players;
 using Microsoft.Xna.Framework;
+using ModHelper.Common.Configs;
+using ModHelper.Common.Players;
 using Terraria;
 using Terraria.ID;
-using static EliteTestingMod.UI.Elements.Option;
+using static ModHelper.UI.Elements.Option;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     /// <summary>
     /// A panel containing options to modify player behavior like God, Noclip, etc.

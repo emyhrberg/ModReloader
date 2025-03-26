@@ -1,16 +1,16 @@
-using EliteTestingMod.Common.Configs;
-using log4net;
-using log4net.Appender;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using log4net;
+using log4net.Appender;
+using ModHelper.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     /// <summary>
     /// Factory class for creating TimeSpans.
@@ -35,7 +35,7 @@ namespace EliteTestingMod.Helpers
             {
                 try
                 {
-                    return ModLoader.GetMod("EliteTestingMod");
+                    return ModLoader.GetMod("ModHelper");
                 }
                 catch (Exception ex)
                 {

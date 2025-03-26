@@ -1,15 +1,15 @@
-using EliteTestingMod.Helpers;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
+using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public class TrackingSystem : ModSystem
     {

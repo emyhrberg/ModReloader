@@ -1,15 +1,15 @@
 using System;
 using System.IO;
 using System.Linq;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.UI.Elements
+namespace ModHelper.UI.Elements
 {
     // Contains:
     // Icon image

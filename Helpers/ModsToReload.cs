@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     public static class ModsToReload
     {

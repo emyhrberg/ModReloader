@@ -1,4 +1,4 @@
-﻿namespace EliteTestingMod.Helpers
+﻿namespace ModHelper.Helpers
 {
     public enum ClientModes
     {

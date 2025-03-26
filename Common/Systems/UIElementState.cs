@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.UI;
-using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
+using ModHelper.UI;
+using ModHelper.UI.Elements;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public class UIElementState : UIState
     {

@@ -1,9 +1,9 @@
-using EliteTestingMod.Helpers;
 using System.Reflection;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public class SpawnRateHook : ModSystem
     {

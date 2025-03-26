@@ -1,6 +1,6 @@
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public static class FreezeTimeManager
     {

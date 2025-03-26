@@ -4,18 +4,18 @@ using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.PacketHandlers;
+using ModHelper.Common.Configs;
+using ModHelper.PacketHandlers;
 using MonoMod.RuntimeDetour;
 using Terraria;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     //All functions, related to reload
     internal class ReloadUtilities
     {
-        public const string pipeName = "EliteTestingModPipe";
-        public const string pipeNameAfterRebuild = "EliteTestingModPipeAfterRebuild";
+        public const string pipeName = "ModHelperPipe";
+        public const string pipeNameAfterRebuild = "ModHelperPipeAfterRebuild";
 
         //public static NamedPipeServerStream Pipe {  get; set; }\
 

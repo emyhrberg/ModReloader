@@ -1,15 +1,15 @@
-using EliteTestingMod.Common.Configs;
-using EliteTestingMod.Helpers;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Reflection;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.IO;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     /// <summary>
     /// This system will automatically load a player and world every time AFTER all the mods have been reloaded.

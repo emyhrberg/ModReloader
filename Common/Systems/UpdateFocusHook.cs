@@ -1,10 +1,10 @@
+using System;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using System;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public class KeepGameRunning : ModSystem
     {

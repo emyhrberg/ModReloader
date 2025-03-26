@@ -1,9 +1,9 @@
+using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.Reflection;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Helpers
+namespace ModHelper.Helpers
 {
     /// <summary>
     /// To add a new asset, simply add a new field like:
@@ -91,7 +91,7 @@ namespace EliteTestingMod.Helpers
         private static Asset<Texture2D> RequestAsset(string path)
         {
             // string modName = typeof(Assets).Namespace;
-            string modName = "EliteTestingMod"; // Use this, in case above line doesnt work
+            string modName = "ModHelper"; // Use this, in case above line doesnt work
             return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }

@@ -7,7 +7,7 @@
 // using log4net.Layout;
 // using log4net.Repository.Hierarchy;
 
-// namespace EliteTestingMod.Helpers
+// namespace ModHelper.Helpers
 // {
 //     public static class LogHelper
 //     {

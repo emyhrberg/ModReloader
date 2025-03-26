@@ -1,10 +1,10 @@
-using EliteTestingMod.UI.Elements;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.UI.Elements;
 using ReLogic.Content;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace EliteTestingMod.UI.Buttons
+namespace ModHelper.UI.Buttons
 {
     public class NPCButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
     {

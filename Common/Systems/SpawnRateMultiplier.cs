@@ -1,8 +1,8 @@
-using EliteTestingMod.Common.Configs;
+using ModHelper.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace EliteTestingMod.Common.Systems
+namespace ModHelper.Common.Systems
 {
     public class EnemySpawnSystem : GlobalNPC
     {
