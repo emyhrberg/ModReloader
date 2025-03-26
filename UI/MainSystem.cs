@@ -13,17 +13,8 @@ namespace EliteTestingMod.UI
         public UserInterface userInterface;
         public MainState mainState;
 
-        public override void Load()
-        {
-            userInterface = new UserInterface();
-            mainState = new MainState();
-            userInterface.SetState(mainState);
-        }
-
         public override void PostSetupContent()
         {
-            base.PostSetupContent();
-
             userInterface = new UserInterface();
             mainState = new MainState();
             userInterface.SetState(mainState);

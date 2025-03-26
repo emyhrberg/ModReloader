@@ -88,7 +88,7 @@ namespace EliteTestingMod.Common.Systems
             {
                 if (Conf.LogToChat) Main.NewText("Showing all UI elements.", Color.Green);
                 foreach (var elem in elements)
-                    elementToggles[elem] = true;
+                    elementToggles[elem] = false;
             }
             else
             {
