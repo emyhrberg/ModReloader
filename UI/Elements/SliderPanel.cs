@@ -96,7 +96,9 @@ namespace ModHelper.UI.Elements
                 Max = Min + 1f; // Ensure a valid range
             }
 
-            normalizedValue = MathHelper.Clamp(value, 0f, 1f);
+            // Normalize the input value based on Min and Max range
+            float normalizedInputValue = (value - Min) / (Max - Min);
+            normalizedValue = MathHelper.Clamp(normalizedInputValue, 0f, 1f);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

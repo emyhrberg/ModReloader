@@ -18,11 +18,11 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool Reload = true;
 
-        [DefaultValue("ModHelper")]
-        public string LatestModToReload = "ModHelper";
+        [DefaultValue("")]
+        public string LatestModToReload = "";
 
-        [DefaultValue(false)]
-        public bool SaveWorldOnReload = false;
+        [DefaultValue(true)]
+        public bool SaveWorldOnReload = true;
 
         [DefaultValue(false)]
         public bool ClearClientLogOnReload = false;

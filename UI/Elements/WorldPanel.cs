@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using ModHelper.Common.Players;
+using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using static ModHelper.UI.Elements.Option;
 
@@ -14,27 +16,63 @@ namespace ModHelper.UI.Elements
 {
     public class WorldPanel : OptionPanel
     {
-        private SliderPanel timeOption;
+        // Time and sliders
         private bool timeSliderActive = false;
+        private SliderPanel timeSlider;
         private SliderPanel townNpcSlider;
         public SliderPanel spawnRateSlider;
         public SliderPanel rainSlider;
+        public SliderPanel windSlider;
 
+        // Tracking & Hitboxes
+        private Option toggleAllTracking;
+        public List<Option> trackingOptions = [];
+        private Option toggleAllHitboxes;
+        public List<Option> hitboxOptions = [];
+
+        // Actions on slider texts:
+        // Clickable spawn rates are: 0, 1, 10, 30
+        // Clickable rain rates are: 0, 0.1, 0.5, 1
+        // Click on Town NPC does nothing
+        private List<float> spawnRates = [0, 1, 2, 5, 10, 30];
+        private List<float> windRates = [-1.2f, -0.6f, 0, 0.6f, 1.2f];
+        private List<float> rainRates = [0, 0.1f, 0.2f, 0.6f, 1];
+        private float currentSpawnRate = 1;
+        private float currentRainRate = 0f;
+        private float currentWindRate = 0f;
+        private Dictionary<float, string> rainStrings = new()
+        {
+            {0, "No Rain"},
+            {0.1f, "Light Rain"},
+            {0.2f, "Rain"},
+            {0.3f, "Rain"},
+            {0.4f, "Rain"},
+            {0.5f, "Rain"},
+            {0.6f, "Heavy Rain"},
+            {0.7f, "Heavy Rain"},
+            {0.8f, "Heavy Rain"},
+            {0.9f, "Heavy Rain"},
+            {1, "Storm"}
+        };
+
+        #region Constructor
         public WorldPanel() : base(title: "World", scrollbarEnabled: true)
         {
             AddPadding(5);
             AddHeader("World");
-            timeOption = new(
+            timeSlider = new(
                 title: "Time",
                 min: 0f,
                 max: 1f,
                 defaultValue: GetCurrentTimeNormalized(),
                 onValueChanged: UpdateInGameTime,
                 increment: 1800f / 86400f,
-                hover: "Click and drag to change time",
-                textSize: 0.9f
+                hover: "Click to freeze time",
+                textSize: 0.9f,
+                leftClickText: ToggleFreezeTime,
+                rightClickText: () => Main.NewText("No right click action")
             );
-            uiList.Add(timeOption);
+            uiList.Add(timeSlider);
             AddPadding(3f);
 
             spawnRateSlider = new(
@@ -45,8 +83,21 @@ namespace ModHelper.UI.Elements
                 onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
                 increment: 1,
                 hover: "Set the spawn rate multiplier",
-                leftClickText: () => SpawnRateMultiplier.Multiplier = 0,
-                textSize: 0.9f
+                textSize: 0.9f,
+                leftClickText: () =>
+                {
+                    currentSpawnRate = spawnRates[(spawnRates.IndexOf(currentSpawnRate) + 1) % spawnRates.Count];
+                    SpawnRateMultiplier.Multiplier = currentSpawnRate;
+                    spawnRateSlider.SetValue(currentSpawnRate); // set normalized value 0 to 1
+                    // set normalized value 0 to 1
+                    if (Conf.LogToChat) Main.NewText("Spawn rate set to " + currentSpawnRate);
+                },
+                rightClickText: () =>
+                {
+                    currentSpawnRate = spawnRates[(spawnRates.IndexOf(currentSpawnRate) + spawnRates.Count - 1) % spawnRates.Count];
+                    SpawnRateMultiplier.Multiplier = currentSpawnRate;
+                    spawnRateSlider.SetValue(currentSpawnRate);
+                }
             );
             uiList.Add(spawnRateSlider);
             AddPadding(3f);
@@ -55,13 +106,91 @@ namespace ModHelper.UI.Elements
                 title: "Rain",
                 min: 0,
                 max: 1,
-                defaultValue: Main.raining ? 1 : 0,
+                defaultValue: Main.maxRaining,
                 onValueChanged: UpdateRainSlider,
                 increment: 0.1f,
-                hover: "Set rain and cloud intensity",
-                textSize: 0.9f
+                hover: "Set rain intensity",
+                textSize: 0.9f,
+                valueFormatter: value =>
+                {
+                    // round value to nearest 0.1
+                    value = (float)Math.Round(value, 1);
+                    return rainStrings[value];
+                },
+                leftClickText: () =>
+                {
+                    currentRainRate = rainRates[(rainRates.IndexOf(currentRainRate) + 1) % rainRates.Count];
+                    // round to nearest 0.1
+                    currentRainRate = (float)Math.Round(currentRainRate, 1);
+
+                    // Main.rainTime = 3600; // Set a reasonable duration for rain
+                    Main.maxRaining = currentRainRate;
+                    Main.cloudAlpha = currentRainRate;
+                    rainSlider.SetValue(currentRainRate);
+                    if (Conf.LogToChat) Main.NewText("Rain set to " + rainStrings[currentRainRate]);
+                },
+                rightClickText: () =>
+                {
+                    currentRainRate = rainRates[(rainRates.IndexOf(currentRainRate) + rainRates.Count - 1) % rainRates.Count];
+
+                    // round to nearest 0.1
+                    // Main.rainTime = 3600; // Set a reasonable duration for rain
+                    Main.maxRaining = currentRainRate;
+                    Main.cloudAlpha = currentRainRate;
+                    rainSlider.SetValue(currentRainRate);
+                }
             );
             uiList.Add(rainSlider);
+            AddPadding(3f);
+
+
+            windSlider = new(
+                title: "Wind",
+                min: -1.2f, // -1.2f is -60 mph
+                max: 1.2f,  // 1.2f is 60 mph
+                defaultValue: MathHelper.Clamp(Main.windSpeedCurrent, -1.2f, 1.2f),
+                onValueChanged: UpdateWindSlider,
+                increment: 0.05f, // This gives us ~24 increments across the range, good precision for mph
+                hover: "Set wind speed",
+                textSize: 0.9f,
+                leftClickText: () =>
+                {
+                    currentWindRate = windRates[(windRates.IndexOf(currentWindRate) + 1) % windRates.Count];
+                    Main.windSpeedCurrent = currentWindRate;
+                    Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
+                    windSlider.SetValue(currentWindRate);
+
+                    // prettify wind rate to -60 to 60 mph
+                    string direction = currentWindRate switch
+                    {
+                        < 0f => "E",
+                        > 0f => "W",
+                        _ => ""
+                    };
+
+                    if (Conf.LogToChat) Main.NewText($"Wind set to {Math.Abs(currentWindRate * 60):F0} mph {direction}");
+                },
+                rightClickText: () =>
+                {
+                    currentWindRate = windRates[(windRates.IndexOf(currentWindRate) + windRates.Count - 1) % windRates.Count];
+                    Main.windSpeedCurrent = currentWindRate;
+                    Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
+                    windSlider.SetValue(currentWindRate);
+                },
+                valueFormatter: value =>
+                {
+                    // -1.2 to 1.2 represents -60 to 60 mph
+                    string direction = value switch
+                    {
+                        < -0.1f => "E",
+                        > 0.1f => "W",
+                        _ => ""
+                    };
+                    return $"{Math.Abs(value * 50):F0} mph {direction}";
+                }
+            );
+
+            uiList.Add(windSlider);
             AddPadding(3f);
 
             // Town NPCs
@@ -115,8 +244,35 @@ namespace ModHelper.UI.Elements
                 AddPadding(3f);
             }
             AddPadding();
-        }
 
+            // save
+            AddHeader("Save");
+
+            string playerPath = Main.ActivePlayerFileData.Path;
+            string playerName = Path.GetFileName(playerPath);
+            var savePlayerCurrentOption = new ActionOption(savePlayer, "Player", $"Save the current player as {playerName} \nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
+            uiList.Add(savePlayerCurrentOption);
+            AddPadding(3f);
+
+            string worldPath = Main.ActiveWorldFileData.Path;
+            string worldName = Path.GetFileName(worldPath);
+            var saveWorldOption = new ActionOption(saveWorld, "World", $"Save the current world as {worldName}\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
+            uiList.Add(saveWorldOption);
+            AddPadding(3f);
+            AddPadding();
+        }
+        #endregion // end of constructor
+
+        #region Freeze Time
+        private void ToggleFreezeTime()
+        {
+            FreezeTimeManager.FreezeTime = !FreezeTimeManager.FreezeTime;
+            if (Conf.LogToChat) Main.NewText("Time is now " + (FreezeTimeManager.FreezeTime ? "frozen" : "unfrozen"));
+            timeSlider.optionTitle.hover = FreezeTimeManager.FreezeTime ? "Click to unfreeze time" : "Click to freeze time";
+        }
+        #endregion
+
+        #region Tracking
         private void ToggleAllTracking()
         {
             // Decide whether to enable or disable everything
@@ -149,13 +305,13 @@ namespace ModHelper.UI.Elements
             toggleAllHitboxes.SetState(newState);
         }
 
-        private Option toggleAllTracking;
-        public List<Option> trackingOptions = [];
-        private Option toggleAllHitboxes;
-        public List<Option> hitboxOptions = [];
+        #endregion
 
         private void UpdateRainSlider(float newValue)
         {
+            // Round to nearest 0.1
+            newValue = (float)Math.Round(newValue, 1);
+
             if (newValue == 0)
             {
                 // Stop rain completely
@@ -174,15 +330,21 @@ namespace ModHelper.UI.Elements
 
             // Set rain and cloud intensity based on slider value (0.01-1.0)
             Main.maxRaining = newValue;
-            Main.cloudAlpha = newValue / 2;
+            Main.cloudAlpha = newValue;
             // Main.rainTime = 3600; // Set a reasonable duration for rain
+        }
 
-            // Optional: Send network message if in multiplayer
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                // You'd need to implement network sync if in multiplayer
-                // NetMessage.SendData(MessageID.WorldData);
-            }
+        private void UpdateWindSlider(float newValue)
+        {
+            // newValue is already in our desired range of -60 to 60
+            // so we can directly set it to the current and target wind speeds
+            Log.SlowInfo($"Wind Slider: {newValue}");
+
+            Main.windSpeedCurrent = newValue;
+            Main.windSpeedTarget = newValue;
+
+            // Update our tracking variable to match
+            currentWindRate = newValue;
         }
 
         private void UpdateTownNpcSlider(float newValue)
@@ -200,10 +362,6 @@ namespace ModHelper.UI.Elements
                     activeTownNpcs[index].StrikeInstantKill();
                 }
             }
-
-            // this is preferable to having the code in update but idk how to make it work
-            // townNpcSlider.SetValue(GetTownNpcCount());
-            // townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
         }
 
         private int GetTownNpcCount() => Main.npc.Where(npc => npc.active && npc.townNPC).Count();
@@ -305,62 +463,126 @@ namespace ModHelper.UI.Elements
 
         public override void Update(GameTime gameTime)
         {
+            // log all the variables related to weather
+            Log.SlowInfo($"Main.raining: {Main.raining}, Main.maxRaining: {Main.maxRaining}, Main.cloudAlpha: {Main.cloudAlpha}, Main.windSpeedCurrent: {Main.windSpeedCurrent}, Main.windSpeedTarget: {Main.windSpeedTarget}");
+
             base.Update(gameTime);
 
-            // Update the hover text town npc slider
-            // If 0 town NPCs, show the default "Set the number of town NPCs" text
-            // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
-            var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
-            if (townNPCs.Count > 0)
+            // Update spawn rate slider hover text to say the spawn rate and the max spawns
+            // every half second ish scuffed
+            if (true)
+            // if (Main.GameUpdateCount % 30 == 0)
             {
-                var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
-                var formattedNames = string.Join("\n", npcNames
-                    .Select((name, index) => (name, index))
-                    .GroupBy(x => x.index / 5)
-                    .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
-
-                // Remove the trailing comma from the last row
-                if (formattedNames.EndsWith(","))
+                // Update wind slider text
+                if (!CustomSliderBase.IsAnySliderLocked)
                 {
-                    formattedNames = formattedNames.TrimEnd(',');
+                    // Clamp the wind speed to our desired range
+                    float clampedWindSpeed = MathHelper.Clamp(Main.windSpeedCurrent, -1.2f, 1.2f);
+                    windSlider.SetValue(clampedWindSpeed);
                 }
 
-                townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
-            }
-            else
-            {
-                townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
-            }
+                // Update the UI display for wind
+                string windDirection = Main.windSpeedCurrent switch
+                {
+                    < 0f => "E",
+                    > 0f => "W",
+                    _ => ""
+                };
+                // windSlider.UpdateText($"Wind: {Math.Abs(Main.windSpeedCurrent * 50):F0} mph {windDirection}");
 
-            // Update the town NPC count
-            if (!CustomSliderBase.IsAnySliderLocked)
-            {
-                // Slider is not being used, update the max value
-                townNpcSlider.UpdateSliderMax(GetTownNpcCount());
-            }
-            else
-            {
-                // Slider is being used, update the current value
-                townNpcSlider.SetValue(GetTownNpcCount());
-                //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
-                // disable mouse input
-                Main.LocalPlayer.mouseInterface = true;
-            }
+                // Update the hover text for the spawn rate slider
+                spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateHook.StoredSpawnRate} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateHook.StoredMaxSpawns} (max number of enemies in the world)";
 
-            // Update the time
-            if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
-            {
-                // Normal game time progression logic
-                timeOption.SetValue(GetCurrentTimeNormalized());
-            }
-            else
-            {
-                // Reset the flag after slider use (prevents conflicts)
-                timeSliderActive = false;
-            }
+                // Update the hover text town npc slider
+                // If 0 town NPCs, show the default "Set the number of town NPCs" text
+                // If more than 0 town NPCs, show the names of every town NPC sorted alphabetically and only typename.
+                var townNPCs = Main.npc.Where(npc => npc.active && npc.townNPC).ToList();
+                if (townNPCs.Count > 0)
+                {
+                    var npcNames = townNPCs.Select(npc => npc.TypeName).OrderBy(name => name).ToList();
+                    var formattedNames = string.Join("\n", npcNames
+                        .Select((name, index) => (name, index))
+                        .GroupBy(x => x.index / 5)
+                        .Select(group => string.Join(", ", group.Select(x => x.name)) + ","));
 
-            // Update the UI display
-            timeOption.UpdateText("Time: " + CalcIngameTime());
+                    // Remove the trailing comma from the last row
+                    if (formattedNames.EndsWith(","))
+                    {
+                        formattedNames = formattedNames.TrimEnd(',');
+                    }
+
+                    townNpcSlider.optionTitle.hover = "Town NPCs:\n" + formattedNames;
+                }
+                else
+                {
+                    townNpcSlider.optionTitle.hover = "Town NPCs:\nSet the number of town NPCs";
+                }
+
+                // Update the town NPC count
+                if (!CustomSliderBase.IsAnySliderLocked)
+                {
+                    // Slider is not being used, update the max value
+                    townNpcSlider.UpdateSliderMax(GetTownNpcCount());
+                }
+                else
+                {
+                    // Slider is being used, update the current value
+                    townNpcSlider.SetValue(GetTownNpcCount());
+                    //townNpcSlider.UpdateText("Town NPCs: " + GetTownNpcCount());
+                    // disable mouse input
+                    Main.LocalPlayer.mouseInterface = true;
+                }
+
+                // Update the time
+                if (!timeSliderActive && Main.GameUpdateCount % 60 == 0)
+                {
+                    // Normal game time progression logic
+                    timeSlider.SetValue(GetCurrentTimeNormalized());
+                }
+                else
+                {
+                    // Reset the flag after slider use (prevents conflicts)
+                    timeSliderActive = false;
+                }
+
+                // Update the UI display
+                timeSlider.UpdateText("Time: " + CalcIngameTime());
+            }
+        }
+
+        #region Save
+        // To use :
+        // Main.ActiveWorldFileData.SaveWorld()?
+        // Main.ActivePlayerFileData.SavePlayer()?
+        // PlayerFileData.Path
+
+        public void savePlayer()
+        {
+            // SAVE!
+            WorldGen.saveToonWhilePlaying();
+
+            // Write to chat that we saved the player to a path
+            string filePath = Main.ActivePlayerFileData.Path;
+            Main.NewText("Player saved to: " + filePath);
+        }
+
+        public void saveWorld()
+        {
+            // SAVE!
+            WorldGen.saveAndPlay();
+
+            // Write to chat that we saved the world to a path
+            string filePath = Main.ActiveWorldFileData.Path;
+            Main.NewText("World saved to: " + filePath);
+        }
+
+        #endregion
+
+        private void OpenFolder(string path)
+        {
+            // go up one directory
+            path = Path.GetDirectoryName(path);
+            Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
         }
     }
 }

@@ -32,6 +32,7 @@ namespace ModHelper.UI.Elements
             Left.Set(0, 0);
             VAlign = 0.5f;
             this.leftClick = leftClick;
+            this.rightClick = rightClick;
         }
 
         public override void RightClick(UIMouseEvent evt)

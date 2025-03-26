@@ -9,6 +9,7 @@ namespace ModHelper
 {
     // Use both sides currently (it is default if none is set), but can be changed to client only if needed
     // [Autoload(Side = ModSide.Client)]
+    // [Autoload(Side = ModSide.Both)]
     public class ModHelper : Mod
     {
         public override void HandlePacket(BinaryReader reader, int whoAmI)
@@ -35,8 +36,6 @@ namespace ModHelper
             //     fileAppender.Layout = layout;
             //     fileAppender.ActivateOptions();
             // }
-
-            Log.Info("EliteTestingMod loaded");
 
 
             if (Main.netMode != NetmodeID.Server)
