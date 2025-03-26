@@ -179,7 +179,7 @@ namespace EliteTestingMod.UI.Buttons
                         GC.SuppressFinalize(pipeServer);
                         pipeServer.WaitForConnection();
                         clientsAfterRebuild.Add(pipeServer);
-                        logger.Info($"Client {i + 1} connected after building!");
+                        logger.Info($"Client {i + 1} connected after building Yay!");
                     }
 
                     // Creating hook to unload 
@@ -344,7 +344,7 @@ namespace EliteTestingMod.UI.Buttons
                     return o;
                 });
 
-                ReloadUtilities.BuildAndReloadMods();
+                ReloadUtilities.BuildAndReloadMod();
             }
         }
         public override void RightClick(UIMouseEvent evt)
