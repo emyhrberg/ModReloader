@@ -1,5 +1,5 @@
-using Microsoft.Xna.Framework.Graphics;
 using System;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using static EliteTestingMod.UI.Elements.Option;
@@ -12,7 +12,7 @@ namespace EliteTestingMod.UI.Elements
     // Enabled text
     public class ModElement : UIPanel
     {
-        public string modName;
+        public string cleanModName;
         public string internalName;
         private ModEnabledText enabledText;
         public ModEnabledIcon modIcon;
@@ -26,9 +26,9 @@ namespace EliteTestingMod.UI.Elements
             enabledText.SetTextState(state);
         }
 
-        public ModElement(string modName, string internalModName = "", Texture2D icon = null)
+        public ModElement(string cleanModName, string internalModName = "", Texture2D icon = null)
         {
-            this.modName = modName;
+            this.cleanModName = cleanModName;
             this.internalName = internalModName;
 
             // size and position
@@ -46,8 +46,8 @@ namespace EliteTestingMod.UI.Elements
             Append(modIcon);
 
             // mod name
-            if (modName.Length > 20)
-                modName = string.Concat(modName.AsSpan(0, 20), "...");
+            if (cleanModName.Length > 20)
+                cleanModName = string.Concat(cleanModName.AsSpan(0, 20), "...");
 
             // if icon is not null, it means the mod is not loaded.
             // this is because we send the icon in the constructor for unloaded mods.
@@ -56,7 +56,7 @@ namespace EliteTestingMod.UI.Elements
             if (icon == null)
             {
                 // "Enabled Mods"
-                OptionTitleText modNameText = new(text: modName, hover: $"Open {modName} config", internalModName: internalModName, canClick: true);
+                OptionTitleText modNameText = new(text: cleanModName, hover: $"Open {internalModName} config", internalModName: internalModName, canClick: true);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
@@ -64,7 +64,7 @@ namespace EliteTestingMod.UI.Elements
             else
             {
                 // "All Mods"
-                OptionTitleText modNameText = new(text: modName, internalModName: internalModName, hover: $"{internalModName}", canClick: false);
+                OptionTitleText modNameText = new(text: cleanModName, internalModName: internalModName, hover: $"{internalModName}", canClick: false);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);

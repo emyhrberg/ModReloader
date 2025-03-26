@@ -1,9 +1,9 @@
+using System;
+using System.IO;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.IO;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 
@@ -20,6 +20,7 @@ namespace EliteTestingMod.UI.Elements
     public class ModSourcesElement : UIPanel
     {
         public string cleanModName;
+        public string modPath;
         public ModCheckbox checkbox;
         public ModSourcesIcon modIcon;
 
@@ -29,6 +30,9 @@ namespace EliteTestingMod.UI.Elements
             Width.Set(-35f, 1f);
             Height.Set(30, 0);
             Left.Set(5, 0);
+
+            // mod path
+            this.modPath = modPath;
 
             // mod icon
             string iconPath = Path.Combine(modPath, "icon.png");
@@ -75,26 +79,27 @@ namespace EliteTestingMod.UI.Elements
             float dist = 27f;
 
             // checkbox icon
-            checkbox = new(Ass.ModUncheck.Value, cleanModName, $"Click to make {cleanModName} the mod to reload");
+            checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Click to make {internalNameFolderName} the mod to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
 
             // if this is the current mod, add checkmark
-            bool isCurrentModToReload = Conf.ModToReload == cleanModName;
+            bool isCurrentModToReload = Conf.ModToReload == internalNameFolderName;
             if (isCurrentModToReload)
             {
                 checkbox.SetCheckState(true);
 
                 // add initial mod
-                if (!ModsToReload.modsToReload.Contains(cleanModName))
+                if (!ModsToReload.modsToReload.Contains(internalNameFolderName))
                 {
-                    ModsToReload.modsToReload.Add(cleanModName);
+                    Log.Info($"Added {internalNameFolderName} to modstoreload.");
+                    ModsToReload.modsToReload.Add(internalNameFolderName);
                 }
             }
 
 
             // reload icon
-            ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, cleanModName, "Reload " + cleanModName);
+            ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, internalNameFolderName, "Reload " + internalNameFolderName);
             modReloadIcon.Left.Set(def - dist * 2, 1f);
             Append(modReloadIcon);
 

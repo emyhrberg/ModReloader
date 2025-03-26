@@ -1,7 +1,10 @@
+using System.IO;
+using System.Linq;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using EliteTestingMod.UI.Buttons;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
@@ -53,7 +56,11 @@ namespace EliteTestingMod.UI.Elements
 
             foreach (var mod in modsPanel.modSourcesElements)
             {
-                if (mod.cleanModName == modSourcePathString)
+                string internalFolderNameFromMod = Path.GetFileName(mod.modPath);
+                // Log.Info("clicked on mod: " + modSourcePathString);
+                // Log.Info("checking mod: " + internalFolderNameFromMod);
+
+                if (internalFolderNameFromMod == modSourcePathString)
                 {
                     // set checkbox
                     mod.checkbox.ToggleCheckState();
@@ -69,11 +76,28 @@ namespace EliteTestingMod.UI.Elements
                         if (!ModsToReload.modsToReload.Contains(modSourcePathString))
                         {
                             ModsToReload.modsToReload.Add(modSourcePathString);
+                            Log.Info("added mod to reload: " + modSourcePathString);
                         }
                     }
                     else
                     {
                         ModsToReload.modsToReload.Remove(modSourcePathString);
+                        Log.Info("removed mod to reload: " + modSourcePathString);
+
+                        Log.Info("unchecked mod: " + modSourcePathString);
+                        Conf.C.ModToReload = "";
+                        Conf.ForceSaveConfig(Conf.C);
+
+                        Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload) + "count: " + ModsToReload.modsToReload.Count);
+
+                        // unchecked.
+                        // update config if modstoreload only has one entry
+                        if (ModsToReload.modsToReload.Count == 1)
+                        {
+                            Conf.C.ModToReload = ModsToReload.modsToReload.FirstOrDefault();
+                            Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
+                            Conf.ForceSaveConfig(Conf.C);
+                        }
                     }
 
                     // set hovertext in reloadSP
@@ -83,6 +107,7 @@ namespace EliteTestingMod.UI.Elements
                     mp.UpdateHoverText();
 
                     Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
+                    Main.NewText("Mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
                 }
                 // else
                 // {

@@ -1,10 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 using EliteTestingMod.Common.Configs;
 using EliteTestingMod.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -138,7 +138,7 @@ namespace EliteTestingMod.UI.Elements
             {
                 bool configClosed = false;
 
-                Log.SlowInfo("MenuMode: " + Main.menuMode, seconds: 1);
+                // Log.SlowInfo("MenuMode: " + Main.menuMode, seconds: 1);
 
                 // Check if Main.menuMode has changed from the config mode
                 if (Main.menuMode != 10024)

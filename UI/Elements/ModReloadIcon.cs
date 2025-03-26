@@ -13,13 +13,13 @@ namespace EliteTestingMod.UI.Elements
     {
         private Texture2D tex;
         private string hover;
-        private string modName;
+        private string internalModName;
 
         public ModReloadIcon(Texture2D texture, string modName, string hover = "") : base(texture)
         {
             tex = texture;
             this.hover = hover;
-            this.modName = modName;
+            this.internalModName = modName;
 
             // size and pos
             float size = 23f;
@@ -37,9 +37,14 @@ namespace EliteTestingMod.UI.Elements
             // Pre-step:
             // Set config to reload this mod
             ModsToReload.modsToReload.Clear();
-            Conf.C.ModToReload = modName;
+            Conf.C.ModToReload = internalModName;
             Conf.ForceSaveConfig(Conf.C);
-            ModsToReload.modsToReload.Add(modName);
+
+            if (!ModsToReload.modsToReload.Contains(internalModName))
+            {
+                Log.Info("Adding mod to reload: " + internalModName);
+                ModsToReload.modsToReload.Add(internalModName);
+            }
 
             // 1 Clear client log
             if (Conf.ClearClientLogOnReload)

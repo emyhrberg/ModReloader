@@ -1,11 +1,11 @@
-using EliteTestingMod.Helpers;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using EliteTestingMod.Helpers;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 using static EliteTestingMod.UI.Elements.Option;
@@ -94,7 +94,7 @@ namespace EliteTestingMod.UI.Elements
                     Texture2D modIcon = GetModIconFromAllMods(tmod);
 
                     ModElement modElement = new(
-                        modName: cleanName,
+                        cleanModName: cleanName,
                         internalModName: internalName,
                         icon: modIcon
                         );
