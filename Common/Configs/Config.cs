@@ -93,6 +93,12 @@ namespace EliteTestingMod.Common.Configs
             }
             MainState mainState = sys.mainState;
 
+            if (mainState == null)
+            {
+                Log.Info("MainState is null in Config.OnChanged()");
+                return;
+            }
+
             // Delete all buttons and re-add them
             mainState.AreButtonsShowing = true;
             mainState.AllButtons.Clear();

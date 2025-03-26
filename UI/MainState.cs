@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using Terraria.ID;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -63,8 +65,10 @@ namespace EliteTestingMod.UI
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
             reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
-            offset -= ButtonSize;
-            reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.ModToReload}", textSize: TextSize);
+            }
 
             // Mods button
             AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", textSize: TextSize);

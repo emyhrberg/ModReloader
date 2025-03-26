@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -87,13 +88,6 @@ namespace EliteTestingMod.UI.Buttons
             foreach (BaseButton btn in sys.mainState.AllButtons)
             {
                 btn.Active = sys.mainState.AreButtonsShowing;
-
-                // force MP button to disable when expanded
-                if (btn is ReloadMPButton mpBtn)
-                {
-                    mpBtn.Active = false;
-                    mpBtn.ButtonText.Active = false;
-                }
             }
         }
 

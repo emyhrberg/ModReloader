@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using EliteTestingMod.Helpers;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
@@ -12,7 +13,7 @@ namespace EliteTestingMod.UI
         public UserInterface userInterface;
         public MainState mainState;
 
-        public override void PostSetupContent()
+        public override void OnWorldLoad()
         {
             userInterface = new UserInterface();
             mainState = new MainState();
