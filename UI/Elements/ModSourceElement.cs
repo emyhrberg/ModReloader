@@ -90,7 +90,7 @@ namespace ModHelper.UI.Elements
                 hoverText = $"Open {internalNameFolderName} config";
             }
 
-            OptionTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, canClick: isModEnabled);
+            OptionTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, canClick: !isModEnabled);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);

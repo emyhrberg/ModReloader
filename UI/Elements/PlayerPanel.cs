@@ -5,7 +5,7 @@ using ModHelper.Common.Configs;
 using ModHelper.Common.Players;
 using Terraria;
 using Terraria.ID;
-using static ModHelper.UI.Elements.Option;
+using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {
@@ -14,8 +14,8 @@ namespace ModHelper.UI.Elements
     /// </summary>
     public class PlayerPanel : OptionPanel
     {
-        public List<Option> cheatOptions = new();
-        private Option toggleAll;
+        public List<OptionElement> cheatOptions = new();
+        private OptionElement toggleAll;
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
@@ -108,7 +108,7 @@ namespace ModHelper.UI.Elements
 
             // Update each option’s UI text
             State newState = newVal ? State.Enabled : State.Disabled;
-            foreach (Option option in cheatOptions)
+            foreach (OptionElement option in cheatOptions)
             {
                 option.SetState(newState);
             }

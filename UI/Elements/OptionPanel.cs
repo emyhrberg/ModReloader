@@ -80,9 +80,9 @@ namespace ModHelper.UI.Elements
             return sliderPanel;
         }
 
-        protected Option AddOption(string text, Action leftClick, string hover = "", Action rightClick = null, float padding = 3f)
+        protected OptionElement AddOption(string text, Action leftClick, string hover = "", Action rightClick = null, float padding = 3f)
         {
-            Option option = new(leftClick, text, hover, rightClick);
+            OptionElement option = new(leftClick, text, hover, rightClick);
             uiList.Add(option);
             AddPadding(padding);
             return option;

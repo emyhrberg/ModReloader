@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics.Shaders;
@@ -224,6 +225,11 @@ namespace ModHelper.Common.Players
 
         protected override void Draw(ref PlayerDrawSet _set)
         {
+            if (!Conf.C.GodGlow)
+            {
+                return;
+            }
+
             if (Main.LocalPlayer.whoAmI != _set.drawPlayer.whoAmI)
             {
                 return;
@@ -265,6 +271,11 @@ namespace ModHelper.Common.Players
 
         public override void SetStaticDefaults()
         {
+            if (!Conf.C.GodGlow)
+            {
+                return;
+            }
+
             if (!Main.dedServ)
             {
                 GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));

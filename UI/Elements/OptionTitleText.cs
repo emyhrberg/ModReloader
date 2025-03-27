@@ -21,13 +21,13 @@ namespace ModHelper.UI.Elements
         private Action rightClick;
         private string internalModName = "";
         private bool isConfigOpen = false;
-        private bool canClick;
+        private bool clickToOpenConfig;
 
-        public OptionTitleText(string text, string hover = "", Action leftClick = null, Action rightClick = null, float textSize = 1f, string internalModName = "", bool canClick = true) : base(text, textSize)
+        public OptionTitleText(string text, string hover = "", Action leftClick = null, Action rightClick = null, float textSize = 1f, string internalModName = "", bool canClick = false) : base(text, textSize)
         {
             this.hover = hover;
             this.internalModName = internalModName;
-            this.canClick = canClick;
+            this.clickToOpenConfig = canClick;
             //Left.Set(30, 0);
             Left.Set(0, 0);
             VAlign = 0.5f;
@@ -44,9 +44,6 @@ namespace ModHelper.UI.Elements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            if (!canClick)
-                return;
-
             leftClick?.Invoke();
 
             if (string.IsNullOrEmpty(internalModName))
@@ -58,84 +55,86 @@ namespace ModHelper.UI.Elements
 
             base.LeftClick(evt);
 
-
-            if (isConfigOpen)
+            if (clickToOpenConfig)
             {
-                hover = $"Open {internalModName} config";
-                if (Conf.LogToChat) Main.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
-                Main.menuMode = 0;
-                Main.InGameUI.SetState(null);
-                isConfigOpen = false;
-
-                // Expand the hotbar
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                if (sys != null)
+                if (isConfigOpen)
                 {
-                    sys.mainState.collapse.SetCollapsed(false);
-                }
+                    hover = $"Open {internalModName} config";
+                    if (Conf.LogToChat) Main.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
+                    Main.menuMode = 0;
+                    Main.InGameUI.SetState(null);
+                    isConfigOpen = false;
 
-                return;
-            }
+                    // Expand the hotbar
+                    MainSystem sys = ModContent.GetInstance<MainSystem>();
+                    if (sys != null)
+                    {
+                        sys.mainState.collapse.SetCollapsed(false);
+                    }
 
-            // Temp try to open config
-            try
-            {
-                // Use reflection to get the private ConfigManager.Configs property.
-                FieldInfo configsProp = typeof(ConfigManager).GetField("Configs", BindingFlags.Static | BindingFlags.NonPublic);
-                var configs = configsProp.GetValue(null) as IDictionary<Mod, List<ModConfig>>;
-
-                // Get the mod name from the modPath.
-                // string modName = Path.GetFileName(modPath);
-                string modName = internalModName;
-                Mod modInstance = ModLoader.GetMod(modName);
-                if (modInstance == null)
-                {
-                    if (Conf.LogToChat) Main.NewText($"Mod '{modName}' not found.", Color.Red);
                     return;
                 }
 
-                // Check if there are any configs for this mod.
-                if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
+                // Temp try to open config
+                try
                 {
-                    if (Conf.LogToChat) Main.NewText("No config available for mod: " + modName, Color.Yellow);
+                    // Use reflection to get the private ConfigManager.Configs property.
+                    FieldInfo configsProp = typeof(ConfigManager).GetField("Configs", BindingFlags.Static | BindingFlags.NonPublic);
+                    var configs = configsProp.GetValue(null) as IDictionary<Mod, List<ModConfig>>;
+
+                    // Get the mod name from the modPath.
+                    // string modName = Path.GetFileName(modPath);
+                    string modName = internalModName;
+                    Mod modInstance = ModLoader.GetMod(modName);
+                    if (modInstance == null)
+                    {
+                        if (Conf.LogToChat) Main.NewText($"Mod '{modName}' not found.", Color.Red);
+                        return;
+                    }
+
+                    // Check if there are any configs for this mod.
+                    if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
+                    {
+                        if (Conf.LogToChat) Main.NewText("No config available for mod: " + modName, Color.Yellow);
+                        return;
+                    }
+
+                    // Use the first available config.
+                    ModConfig config = modConfigs[0];
+
+                    // Open the config UI.
+                    // Use reflection to set the mod and config for the modConfig UI.
+                    Assembly assembly = typeof(Main).Assembly;
+                    Type interfaceType = assembly.GetType("Terraria.ModLoader.UI.Interface");
+                    var modConfigField = interfaceType.GetField("modConfig", BindingFlags.Static | BindingFlags.NonPublic);
+                    var modConfigInstance = modConfigField.GetValue(null);
+                    var setModMethod = modConfigInstance.GetType().GetMethod("SetMod", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                    // Invoke the SetMod method to set the mod and config for the modConfig UI.
+                    setModMethod.Invoke(modConfigInstance, [modInstance, config, false, null, null, true]);
+
+                    // Open the mod config UI.
+                    Main.InGameUI.SetState(modConfigInstance as UIState);
+                    Main.menuMode = 10024;
+                    if (Conf.LogToChat) Main.NewText("Opening config for " + modName, Color.Green);
+
+                    // Hover text update
+                    hover = $"Close {internalModName} config";
+
+                    // Collapse the hotbar
+                    isConfigOpen = true;
+
+                    Main.playerInventory = false;
+                    MainSystem sys = ModContent.GetInstance<MainSystem>();
+                    sys?.mainState?.collapse?.SetCollapsed(true);
+                    sys.mainState.AreButtonsShowing = false;
+                    sys.mainState.collapse.UpdateCollapseImage();
+                }
+                catch (Exception ex)
+                {
+                    if (Conf.LogToChat) Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
                     return;
                 }
-
-                // Use the first available config.
-                ModConfig config = modConfigs[0];
-
-                // Open the config UI.
-                // Use reflection to set the mod and config for the modConfig UI.
-                Assembly assembly = typeof(Main).Assembly;
-                Type interfaceType = assembly.GetType("Terraria.ModLoader.UI.Interface");
-                var modConfigField = interfaceType.GetField("modConfig", BindingFlags.Static | BindingFlags.NonPublic);
-                var modConfigInstance = modConfigField.GetValue(null);
-                var setModMethod = modConfigInstance.GetType().GetMethod("SetMod", BindingFlags.Instance | BindingFlags.NonPublic);
-
-                // Invoke the SetMod method to set the mod and config for the modConfig UI.
-                setModMethod.Invoke(modConfigInstance, [modInstance, config, false, null, null, true]);
-
-                // Open the mod config UI.
-                Main.InGameUI.SetState(modConfigInstance as UIState);
-                Main.menuMode = 10024;
-                if (Conf.LogToChat) Main.NewText("Opening config for " + modName, Color.Green);
-
-                // Hover text update
-                hover = $"Close {internalModName} config";
-
-                // Collapse the hotbar
-                isConfigOpen = true;
-
-                Main.playerInventory = false;
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-                sys?.mainState?.collapse?.SetCollapsed(true);
-                sys.mainState.AreButtonsShowing = false;
-                sys.mainState.collapse.UpdateCollapseImage();
-            }
-            catch (Exception ex)
-            {
-                if (Conf.LogToChat) Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
-                return;
             }
         }
 

@@ -36,6 +36,17 @@ namespace ModHelper.UI
         public ReloadSPButton reloadSPButton;
         public ReloadMPButton reloadMPButton;
 
+        private Dictionary<float, float> buttonTextSizes = new()
+        {
+            { 50f, 0.8f },
+            { 55f, 0.8f },
+            { 60f, 0.9f },
+            { 65f, 0.9f },
+            { 70f, 1f },
+            { 75f, 1f },
+            { 80f, 1.1f }
+        };
+
         // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState() => AddEverything();
 
@@ -47,8 +58,8 @@ namespace ModHelper.UI
                 ButtonSize = Conf.ButtonSize;
 
             // Set text size
-            if (c != null)
-                TextSize = Conf.TextSize;
+            if (buttonTextSizes.TryGetValue(ButtonSize, out float value))
+                TextSize = value;
 
             // Set offset for first button position relative to center
             offset = -ButtonSize * 4;

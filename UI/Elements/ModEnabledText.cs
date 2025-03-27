@@ -6,7 +6,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
-using static ModHelper.UI.Elements.Option;
+using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {

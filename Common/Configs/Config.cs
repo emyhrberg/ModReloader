@@ -29,8 +29,8 @@ namespace ModHelper.Common.Configs
 
         [Header("UI")]
 
-        [OptionStrings(["left", "bottom"])]
-        [DefaultValue("bottom")]
+        [OptionStrings(["Left", "Bottom"])]
+        [DefaultValue("Bottom")]
         public string ButtonPosition;
 
         [Range(50f, 80f)]
@@ -38,15 +38,10 @@ namespace ModHelper.Common.Configs
         [DefaultValue(70)]
         public float ButtonSize = 70;
 
-        [Range(0.7f, 1.1f)]
-        [Increment(0.1f)]
-        [DefaultValue(0.9f)]
-        public float ButtonTextSize = 0.9f;
-
         [Range(300, 700f)]
         [Increment(50f)]
-        [DefaultValue(400)]
-        public float PanelWidth = 400f;
+        [DefaultValue(460)]
+        public float PanelWidth = 460;
 
         [Range(300, 700f)]
         [Increment(50f)]
@@ -65,6 +60,9 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowGameKeepRunningText = true;
+
+        [DefaultValue(true)]
+        public bool GodGlow = true;
 
         [Header("Logging")]
         [DefaultValue(true)]
@@ -144,7 +142,6 @@ namespace ModHelper.Common.Configs
         public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
 
         // UI
-        public static float TextSize => C.ButtonTextSize;
         public static float ButtonSize => C.ButtonSize;
         public static string ButtonsPosition => C.ButtonPosition;
         public static bool DraggablePanels => C.DraggablePanels;

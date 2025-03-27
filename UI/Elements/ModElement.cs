@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
-using static ModHelper.UI.Elements.Option;
+using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {

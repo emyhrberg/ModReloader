@@ -10,7 +10,7 @@ using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
-using static ModHelper.UI.Elements.Option;
+using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {
@@ -25,10 +25,10 @@ namespace ModHelper.UI.Elements
         public SliderPanel windSlider;
 
         // Tracking & Hitboxes
-        private Option toggleAllTracking;
-        public List<Option> trackingOptions = [];
-        private Option toggleAllHitboxes;
-        public List<Option> hitboxOptions = [];
+        private OptionElement toggleAllTracking;
+        public List<OptionElement> trackingOptions = [];
+        private OptionElement toggleAllHitboxes;
+        public List<OptionElement> hitboxOptions = [];
 
         // Actions on slider texts:
         // Clickable spawn rates are: 0, 1, 10, 30
@@ -219,7 +219,7 @@ namespace ModHelper.UI.Elements
             toggleAllTracking = AddOption("Toggle All", ToggleAllTracking, "Toggle all tracking");
             foreach (var tracking in TrackingSystem.Trackings)
             {
-                var option = new Option(
+                var option = new OptionElement(
                     leftClick: tracking.Toggle,
                     text: tracking.Name,
                     hover: tracking.TooltipHoverText
@@ -234,7 +234,7 @@ namespace ModHelper.UI.Elements
             toggleAllHitboxes = AddOption("Toggle All", ToggleAllHitboxes, "Toggle all hitboxes");
             foreach (var hitbox in HitboxSystem.Hitboxes)
             {
-                var option = new Option(
+                var option = new OptionElement(
                     leftClick: hitbox.Toggle,
                     text: hitbox.Name,
                     hover: hitbox.HoverTooltipText
@@ -281,7 +281,7 @@ namespace ModHelper.UI.Elements
 
             // Update each option’s UI text
             State newState = newVal ? State.Enabled : State.Disabled;
-            foreach (Option option in trackingOptions)
+            foreach (OptionElement option in trackingOptions)
             {
                 option.SetState(newState);
             }
@@ -297,7 +297,7 @@ namespace ModHelper.UI.Elements
 
             // Update each option’s UI text
             State newState = newVal ? State.Enabled : State.Disabled;
-            foreach (Option option in hitboxOptions)
+            foreach (OptionElement option in hitboxOptions)
             {
                 option.SetState(newState);
             }
@@ -463,9 +463,6 @@ namespace ModHelper.UI.Elements
 
         public override void Update(GameTime gameTime)
         {
-            // log all the variables related to weather
-            Log.SlowInfo($"Main.raining: {Main.raining}, Main.maxRaining: {Main.maxRaining}, Main.cloudAlpha: {Main.cloudAlpha}, Main.windSpeedCurrent: {Main.windSpeedCurrent}, Main.windSpeedTarget: {Main.windSpeedTarget}");
-
             base.Update(gameTime);
 
             // Update spawn rate slider hover text to say the spawn rate and the max spawns
@@ -473,6 +470,14 @@ namespace ModHelper.UI.Elements
             if (true)
             // if (Main.GameUpdateCount % 30 == 0)
             {
+                // Update rain slider text
+                if (!CustomSliderBase.IsAnySliderLocked)
+                {
+                    // Clamp the rain rate to our desired range
+                    float clampedRainRate = MathHelper.Clamp(Main.maxRaining, 0f, 1f);
+                    rainSlider.SetValue(clampedRainRate);
+                }
+
                 // Update wind slider text
                 if (!CustomSliderBase.IsAnySliderLocked)
                 {
@@ -584,5 +589,18 @@ namespace ModHelper.UI.Elements
             path = Path.GetDirectoryName(path);
             Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
         }
+
+        #region Invasions
+        private void StartRandomInvasion()
+        {
+
+        }
+
+        private void StopInvasion()
+        {
+
+        }
+
+        #endregion
     }
 }

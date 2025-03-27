@@ -7,15 +7,10 @@ Mods: {
 				Headers: {
 					Reload: Reload
 					Misc: Misc
-					NPCSpawner: NPC Spawner
 					Game: Game
+					NPCSpawner: NPC Spawner
 					UI: UI
 					Logging: Logging
-				}
-
-				NPCSpawnLocation: {
-					Tooltip: Set the spawn position of NPCs when using NPC spawner
-					Label: NPC Spawn Location
 				}
 
 				ClearClientLogOnReload: {
@@ -27,20 +22,10 @@ Mods: {
 					Tooltip:
 						'''
 						Save the world when clicking reload. 
-						 Turn on to save items, world changes, etc. 
-						 Turn off for faster reload
+						- Turn on to save items, world changes, etc. 
+						- Turn off for faster reload
 						'''
 					Label: Save World On Reload
-				}
-
-				ModToReload: {
-					Tooltip: Enter the mod that you wish to reload
-					Label: Mod To Reload
-				}
-
-				DrawGodGlow: {
-					Label: Draw God Glow
-					Tooltip: Toggle the visual effect showing when god mode is enabled
 				}
 
 				EnterWorldSuperMode: {
@@ -53,29 +38,14 @@ Mods: {
 						'''
 				}
 
-				NPCSpawner: {
-					Label: NPC Spawner
-					Tooltip: Set position of the NPC spawner
-				}
-
-				ButtonsPosition: {
-					Label: Buttons Position
-					Tooltip: All buttons will stick to this side of the screen
-				}
-
 				DraggablePanels: {
 					Label: Draggable Panels
 					Tooltip: Makes all panels draggable
 				}
 
 				ButtonSize: {
-					Tooltip: ""
+					Tooltip: Set the size of the buttons in the hotbar
 					Label: Button Size
-				}
-
-				Logging: {
-					Label: Logging
-					Tooltip: Whether to log debug statements from this mod to client.log. Useful for modders.
 				}
 
 				LogToLogFile: {
@@ -89,7 +59,7 @@ Mods: {
 				}
 
 				PanelWidth: {
-					Label: Spawner Panel Width
+					Label: Panel Width
 					Tooltip: Adjust the width of the item and NPC spawner panels
 				}
 
@@ -98,68 +68,39 @@ Mods: {
 					Tooltip: Adjust the height of all panels
 				}
 
-				TextSize: {
-					Tooltip: Adjust the size of the text on the buttons on the hotbar
-					Label: Text Size
-				}
-
-				KeepRunning: {
-					Label: Keep Running
-					Tooltip: When the game window is out of focus or alt tabbed, the game will keep updating
-				}
-
-				AlwaysShowTextOnTop: {
-					Label: Always Show Text On Top
-					Tooltip: Toggles a visual button on the top of the screen where you can set whether to keep the game running on or off when out of focus.
-				}
-
-				ButtonTextSize: {
-					Label: Button Text Size
-					Tooltip: ""
-				}
-
 				Reload: {
 					Label: Reload
-					Tooltip: ""
+					Tooltip: Enable or disable the entire reload functionality
 				}
 
 				ButtonPosition: {
 					Label: Button Position
-					Tooltip: ""
+					Tooltip: All buttons will stick to this side of the screen
 				}
 
 				GameKeepRunning: {
 					Label: Game Keep Running
-					Tooltip: ""
+					Tooltip: When the game window is out of focus or alt tabbed, the game will keep updating
 				}
 
 				ShowGameKeepRunningText: {
 					Label: Show Game Keep Running Text
-					Tooltip: ""
+					Tooltip: Always show a text at the top of the screen displaying the game keep running status
 				}
 
 				SpawnOffset: {
 					Label: Spawn Offset
-					Tooltip: ""
+					Tooltip: Set the offset where the NPCs are to spawn when using the NPC spawner
 				}
 
 				LatestModToReload: {
-					Tooltip: ""
+					Tooltip: Set the default mod to reload. Useful for quickly reloading multiple times when testing.
 					Label: Latest Mod To Reload
 				}
 
 				GodGlow: {
 					Label: God Glow
-					Tooltip: ""
-				}
-			}
-
-			NPCSpawnerConfig: {
-				Tooltip: Set position of the NPC spawner
-
-				SpawnOffset: {
-					Label: Spawn Offset
-					Tooltip: The offset the NPC will spawn on relative to your position
+					Tooltip: Toggle the visual effect showing when god mode is enabled
 				}
 			}
 		}

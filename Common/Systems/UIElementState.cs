@@ -141,15 +141,15 @@ namespace ModHelper.Common.Systems
 
             foreach (var uiElement in uiPanel.dynamicOptions.Values)
             {
-                if (uiElement is Option o)
+                if (uiElement is OptionElement o)
                 {
                     if (showAll)
                     {
-                        o.SetState(Option.State.Enabled);
+                        o.SetState(OptionElement.State.Enabled);
                     }
                     else
                     {
-                        o.SetState(Option.State.Disabled);
+                        o.SetState(OptionElement.State.Disabled);
                     }
                 }
             }

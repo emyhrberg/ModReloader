@@ -8,7 +8,7 @@ using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
-using static ModHelper.UI.Elements.Option;
+using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {
@@ -21,12 +21,13 @@ namespace ModHelper.UI.Elements
 
         // enabled mods
         private List<ModElement> modElements = [];
-        private Option toggleAllEnabledMods;
+        private OptionElement toggleAllEnabledMods;
 
         // disabled mods
         public List<ModElement> allMods = [];
-        private Option toggleAllAllMods;
+        private OptionElement toggleAllAllMods;
 
+        #region Constructor
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
             // Active = true; // uncomment to show the panel by default
@@ -46,17 +47,90 @@ namespace ModHelper.UI.Elements
             toggleAllAllMods = AddOption("Toggle All", leftClick: ToggleAllAllMods, hover: "Toggle all disabled mods on or off");
             AddPadding();
             AddPadding(3f);
+        }
+        #endregion
 
+        #region Constructing mod lists
 
-            // Reflection from
-            // ModOrganizer::internal static LocalMod[] FindMods()
-            Assembly assembly = typeof(ModLoader).Assembly;
-            Type ModOrganizer = assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
-            MethodInfo FindMods = ModOrganizer.GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static);
-            var mods = (IReadOnlyList<object>)FindMods.Invoke(null, [false]);
+        private void ConstructEnabledModsList()
+        {
+            var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
+            foreach (Mod mod in mods)
+            {
+                // you could change this to send the "clean name"
+                // this is where we set the text of the mod element
+                ModElement modElement = new(mod.DisplayNameClean, mod.Name);
+                uiList.Add(modElement);
+                modElements.Add(modElement);
+                AddPadding(3);
+            }
+        }
+
+        private void ConstructModSourcesList()
+        {
+            // Get the entire list of mods of type LocalMod
+
+            // Create a new ModSourcesElement : PanelElement for each mod in modsources.
+            foreach (string modPath in GetModSourcesPaths())
+            {
+                string cleanName = GetModSourcesCleanName(modPath);
+
+                // cut to max 20 chars
+                if (cleanName.Length > 20)
+                    cleanName = string.Concat(cleanName.AsSpan(0, 20), "...");
+                // string cleanName = Path.GetFileName(modPath);
+
+                ModSourcesElement modSourcesElement = new(modPath: modPath, cleanName: cleanName);
+                modSourcesElements.Add(modSourcesElement);
+                uiList.Add(modSourcesElement);
+                AddPadding(3);
+            }
         }
 
         private void ConstructAllMods()
+        {
+            List<object> sortedMods = GetAllWorkshopMods();
+
+            // Get all mods the user has installed via reflection
+            foreach (var mod in sortedMods) // "mod" is of type LocalMod
+            {
+                // Get the clean name using reflection for the LocalMod mod.
+                string cleanName = GetCleanName(mod);
+                string internalName = mod.ToString();
+
+                // Skip mods that are already in the enabled mods list
+                // to avoid duplicates.
+                if (modElements.Any(modElement => modElement.internalName == internalName))
+                {
+                    continue;
+                }
+
+                // Log.Info("InternalName: " + internalName + " CleanName: " + cleanName);
+
+                // We want to pass the LocalMod's TmodFile to ModElement.
+                object tmod = getTmodFile(mod);
+
+                Texture2D modIcon = GetModIconFromAllMods(tmod);
+
+                ModElement modElement = new(
+                    cleanModName: cleanName,
+                    internalModName: internalName,
+                    icon: modIcon
+                    );
+
+                modElement.SetState(State.Disabled);
+                uiList.Add(modElement);
+                allMods.Add(modElement);
+                AddPadding(3);
+            }
+        }
+
+        #endregion
+
+        #region Helpers for getting mod lists
+        // Note: Lots of reflection is used here, so be careful with error handling.
+
+        private static List<object> GetAllWorkshopMods()
         {
             // Get all mods the user has installed via reflection
             try
@@ -78,45 +152,13 @@ namespace ModHelper.UI.Elements
                 });
 
                 Log.Info("Found " + sortedMods.Count + " workshop mods.");
-                foreach (var mod in sortedMods)
-                {
-                    // Get the clean name using reflection for the LocalMod mod.
-                    string cleanName = GetCleanName(mod);
-                    string internalName = mod.ToString();
-
-                    if (modElements.Any(modElement => modElement.internalName == internalName))
-                    {
-                        continue;
-                    }
-
-                    // Log.Info("InternalName: " + internalName + " CleanName: " + cleanName);
-
-                    // "mod" is of type LocalMod 
-                    // We want to pass the LocalMod's TmodFile to ModElement.
-                    Type localModType = assembly.GetType("Terraria.ModLoader.Core.LocalMod");
-
-                    FieldInfo modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
-                    object tmod = modFileField.GetValue(mod);
-
-                    Texture2D modIcon = GetModIconFromAllMods(tmod);
-
-                    ModElement modElement = new(
-                        cleanModName: cleanName,
-                        internalModName: internalName,
-                        icon: modIcon
-                        );
-
-                    modElement.SetState(State.Disabled);
-                    uiList.Add(modElement);
-                    allMods.Add(modElement);
-                    AddPadding(3);
-                }
+                return sortedMods;
             }
-            catch (Exception ex)
+            catch
             {
-                Log.Warn("An error occurred while retrieving workshop mods." + ex);
+                Log.Warn("An error occurred while retrieving workshop mods.");
             }
-            AddPadding(3);
+            return [];
         }
 
         // Helper method to get clean name from a mod object
@@ -158,89 +200,14 @@ namespace ModHelper.UI.Elements
                 using Stream s = (Stream)getStreamMethod.Invoke(TmodFile, ["icon.png", true]);
 
                 Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(s, ".png", AssetRequestMode.ImmediateLoad);
-                Log.SlowInfo("Successfully loaded icon from TmodFile.");
+                // Log.Info("Successfully loaded icon from TmodFile.");
                 return iconTexture.Value;
             }
             catch (Exception ex)
             {
-                Log.SlowInfo("Error while retrieving icon from TmodFile via reflection: " + ex);
+                Log.Info("Error while retrieving icon from TmodFile via reflection: " + ex);
             }
             return null;
-        }
-
-        private void ToggleAllAllMods()
-        {
-            // Determine the new state based on whether all mods are currently enabled
-            bool anyDisabled = allMods.Any(modElement => modElement.GetState() == State.Disabled);
-            State newState = anyDisabled ? State.Enabled : State.Disabled;
-
-            // Set the state for all mod elements
-            foreach (ModElement modElement in allMods)
-            {
-                modElement.SetState(newState);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
-
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
-            }
-
-            // Update the "Toggle All" option's state
-            toggleAllAllMods.SetState(newState);
-        }
-
-        private void ToggleAllEnabledMods()
-        {
-            // Determine the new state based on whether all mods are currently enabled
-            bool anyDisabled = modElements.Any(modElement => modElement.GetState() == State.Disabled);
-            State newState = anyDisabled ? State.Enabled : State.Disabled;
-
-            // Set the state for all mod elements
-            foreach (ModElement modElement in modElements)
-            {
-                modElement.SetState(newState);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
-
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
-            }
-
-            // Update the "Toggle All" option's state
-            toggleAllEnabledMods.SetState(newState);
-        }
-
-        private void ConstructEnabledModsList()
-        {
-            var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
-            foreach (Mod mod in mods)
-            {
-                // you could change this to send the "clean name"
-                // this is where we set the text of the mod element
-                ModElement modElement = new(mod.DisplayNameClean, mod.Name);
-                uiList.Add(modElement);
-                modElements.Add(modElement);
-                AddPadding(3);
-            }
-        }
-
-        private void ConstructModSourcesList()
-        {
-            // Create a new ModSourcesElement : PanelElement for each mod in modsources.
-            foreach (string modPath in GetModSourcesPaths())
-            {
-                string cleanName = GetModSourcesCleanName(modPath);
-
-                // cut to max 20 chars
-                if (cleanName.Length > 20)
-                    cleanName = string.Concat(cleanName.AsSpan(0, 20), "...");
-                // string cleanName = Path.GetFileName(modPath);
-
-                ModSourcesElement modSourcesElement = new(modPath: modPath, cleanName: cleanName);
-                modSourcesElements.Add(modSourcesElement);
-                uiList.Add(modSourcesElement);
-                AddPadding(3);
-            }
         }
 
         private string GetModSourcesCleanName(string modFolder)
@@ -291,6 +258,65 @@ namespace ModHelper.UI.Elements
             return strings;
         }
 
+        private object getTmodFile(object mod)
+        {
+            Assembly assembly = typeof(ModLoader).Assembly;
+            Type localModType = assembly.GetType("Terraria.ModLoader.Core.LocalMod");
+
+            FieldInfo modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
+            object tmod = modFileField.GetValue(mod);
+            return tmod;
+        }
+
+        #endregion
+
+        #region Toggle all methods
+
+        private void ToggleAllAllMods()
+        {
+            // Determine the new state based on whether all mods are currently enabled
+            bool anyDisabled = allMods.Any(modElement => modElement.GetState() == State.Disabled);
+            State newState = anyDisabled ? State.Enabled : State.Disabled;
+
+            // Set the state for all mod elements
+            foreach (ModElement modElement in allMods)
+            {
+                modElement.SetState(newState);
+                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+
+                // Use reflection to call SetModEnabled on internalModName
+                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
+            }
+
+            // Update the "Toggle All" option's state
+            toggleAllAllMods.SetState(newState);
+        }
+
+        private void ToggleAllEnabledMods()
+        {
+            // Determine the new state based on whether all mods are currently enabled
+            bool anyDisabled = modElements.Any(modElement => modElement.GetState() == State.Disabled);
+            State newState = anyDisabled ? State.Enabled : State.Disabled;
+
+            // Set the state for all mod elements
+            foreach (ModElement modElement in modElements)
+            {
+                modElement.SetState(newState);
+                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+
+                // Use reflection to call SetModEnabled on internalModName
+                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
+            }
+
+            // Update the "Toggle All" option's state
+            toggleAllEnabledMods.SetState(newState);
+        }
+
+        #endregion
+
+        #region Navigation methods
         private void GoToModSources()
         {
             WorldGen.JustQuit();
@@ -302,5 +328,6 @@ namespace ModHelper.UI.Elements
             WorldGen.JustQuit();
             Main.menuMode = 10000;
         }
+        #endregion
     }
 }

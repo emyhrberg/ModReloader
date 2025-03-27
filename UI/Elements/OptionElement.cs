@@ -12,7 +12,7 @@ namespace ModHelper.UI.Elements
     // Icon image
     // Mod name
     // Enabled text
-    public class Option : UIPanel
+    public class OptionElement : UIPanel
     {
         public string text;
         private OptionEnabledText enabledText;
@@ -28,7 +28,7 @@ namespace ModHelper.UI.Elements
         }
         private State state = State.Disabled;
 
-        public Option(Action leftClick, string text, string hover = "", Action rightClick = null)
+        public OptionElement(Action leftClick, string text, string hover = "", Action rightClick = null)
         {
             this.leftClick = leftClick;
             this.text = text;
@@ -41,7 +41,7 @@ namespace ModHelper.UI.Elements
             // mod icon
             // passing a temp icon because above doesnt work
             // maybe because path its not loaded yet.
-            Texture2D temp = TextureAssets.MagicPixel.Value;
+            // Texture2D temp = TextureAssets.MagicPixel.Value;
             Texture2D temp2 = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad).Value;
 
             optionIcon = new(temp2);

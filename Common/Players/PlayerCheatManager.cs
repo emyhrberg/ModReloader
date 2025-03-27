@@ -68,15 +68,15 @@ namespace ModHelper.Common.Players
             // Update the enabled texts all enabled except mine aura and noclip
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             PlayerPanel p = sys.mainState.playerPanel;
-            foreach (Option o in p.cheatOptions)
+            foreach (OptionElement o in p.cheatOptions)
             {
                 if (o.text == "Mine Aura" || o.text == "Noclip" || o.text == "Kill Aura" || o.text == "Teleport With Right Click")
                 {
-                    o.SetState(Option.State.Disabled);
+                    o.SetState(OptionElement.State.Disabled);
                 }
                 else
                 {
-                    o.SetState(Option.State.Enabled);
+                    o.SetState(OptionElement.State.Enabled);
                 }
             }
 
@@ -97,9 +97,9 @@ namespace ModHelper.Common.Players
 
             // Update the enabled texts all Disabled
             PlayerPanel p = sys.mainState.playerPanel;
-            foreach (Option o in p.cheatOptions)
+            foreach (OptionElement o in p.cheatOptions)
             {
-                o.SetState(Option.State.Disabled);
+                o.SetState(OptionElement.State.Disabled);
             }
 
             // Disable the config option
