@@ -31,21 +31,21 @@ namespace ModHelper.UI.Elements
             // this.leftClick = leftClick;
         }
 
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            Log.Info("Left click");
+        // public override void LeftClick(UIMouseEvent evt)
+        // {
+        //     Log.Info("Left click");
 
-            base.LeftClick(evt);
+        //     base.LeftClick(evt);
 
-            // toggle the state
-            SetTextState(state == State.Enabled ? State.Disabled : State.Enabled);
+        //     // toggle the state
+        //     SetTextState(state == State.Enabled ? State.Disabled : State.Enabled);
 
-            // set the mod state
-            bool enabled = state == State.Enabled;
+        //     // set the mod state
+        //     bool enabled = state == State.Enabled;
 
-            MethodInfo setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-            setModEnabled?.Invoke(null, [internalModName, enabled]);
-        }
+        //     MethodInfo setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+        //     setModEnabled?.Invoke(null, [internalModName, enabled]);
+        // }
 
         public void SetTextState(State state)
         {

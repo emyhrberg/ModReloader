@@ -96,14 +96,14 @@ namespace ModHelper.UI.Elements
         {
             // check if we also clicked the config, then we shouldnt execute the left click action.
             // this was wonky and worked but was laggy ??? evt.Target sucks ???
-            // if (icon == null && evt.Target is ModTitleText modTitleText && modTitleText.clickToOpenConfig)
-            // {
-            // return;
-            // }
+            if (icon == null && evt.Target is ModTitleText modTitleText && modTitleText.clickToOpenConfig)
+            {
+                return;
+            }
 
             base.LeftClick(evt);
 
-            Log.Info("LeftClick on text: " + internalName);
+            // Log.Info("LeftClick on text: " + internalName);
 
             // Update enabled text state first
             SetState(state == State.Enabled ? State.Disabled : State.Enabled);

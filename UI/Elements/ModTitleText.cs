@@ -43,7 +43,7 @@ namespace ModHelper.UI.Elements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            Log.Info("LeftClick on text: " + internalModName);
+            // Log.Info("LeftClick on text: " + internalModName);
             leftClick?.Invoke();
             base.LeftClick(evt);
 
