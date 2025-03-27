@@ -50,13 +50,13 @@ namespace ModHelper.UI.Elements
             if (KeepGameRunning.KeepRunning)
             {
                 SetText("Keep Game Running: ON");
-                if (Conf.LogToChat) Main.NewText("Game will keep running when unfocused", Color.Green);
+                if (Conf.LogToChat) Main.NewText("Keep Game Running: ON", Color.Green);
                 Log.Info("Keep Game Running: ON");
             }
             else
             {
                 SetText("Keep Game Running: OFF");
-                if (Conf.LogToChat) Main.NewText("Game will pause when unfocused", new Color(226, 57, 39));
+                if (Conf.LogToChat) Main.NewText("Keep Game Running: OFF", new Color(226, 57, 39));
                 Log.Info("Keep Game Running: OFF");
             }
         }

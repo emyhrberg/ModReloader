@@ -253,7 +253,7 @@ namespace ModHelper.UI.Elements
                     var icon = filterModsButton.updatedTex;
                     if (icon != null && filterModsButton.IsMouseHovering)
                     {
-                        Vector2 mousePos = new(Main.mouseX, Main.mouseY - icon.Height);
+                        Vector2 mousePos = new(Main.mouseX - icon.Width, Main.mouseY - icon.Height);
 
                         spriteBatch.Draw(icon, mousePos, null, Color.White, 0f, Vector2.Zero, scale: 1f,
                         SpriteEffects.None, 0f);

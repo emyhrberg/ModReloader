@@ -76,11 +76,12 @@ namespace ModHelper.UI.Elements
                         if (!ModsToReload.modsToReload.Contains(modSourcePathString))
                         {
                             ModsToReload.modsToReload.Add(modSourcePathString);
-                            Log.Info("added mod to reload: " + modSourcePathString);
+                            // Log.Info("added mod to reload: " + modSourcePathString);
                         }
                     }
                     else
                     {
+                        // Log.Info("removing mod to reload: " + modSourcePathString);
                         ModsToReload.modsToReload.Remove(modSourcePathString);
                         Conf.C.LatestModToReload = "";
                         Conf.ForceSaveConfig(Conf.C);

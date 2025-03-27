@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Players;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ID;
 using static ModHelper.UI.Elements.OptionElement;
@@ -15,7 +16,7 @@ namespace ModHelper.UI.Elements
     public class PlayerPanel : OptionPanel
     {
         public List<OptionElement> cheatOptions = new();
-        private OptionElement toggleAll;
+        private readonly OptionElement toggleAll;
 
         public PlayerPanel() : base(title: "Player", scrollbarEnabled: true)
         {
@@ -45,7 +46,6 @@ namespace ModHelper.UI.Elements
             toggleAll = AddOption("Toggle All", ToggleAll, "Toggle all player abilities on/off");
             AddPadding();
 
-
             AddHeader("Actions");
             AddPadding(5);
 
@@ -53,11 +53,11 @@ namespace ModHelper.UI.Elements
             uiList.Add(clear);
             AddPadding(5);
 
-            ActionOption reveal = new(revealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
+            ActionOption reveal = new(RevealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
             uiList.Add(reveal);
         }
 
-        private void revealMap()
+        private void RevealMap()
         {
             // Ensure it's only running on the client side
             if (Main.netMode == NetmodeID.Server)

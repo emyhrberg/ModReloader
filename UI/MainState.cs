@@ -147,7 +147,7 @@ namespace ModHelper.UI
             button.Left.Set(pixels: offset, precent: 0f);
 
             // custom left pos. override default
-            if (Conf.ButtonsPosition == "left")
+            if (Conf.ButtonsPosition == "Left")
             {
                 button.VAlign = 0.73f;
                 button.HAlign = 0f;

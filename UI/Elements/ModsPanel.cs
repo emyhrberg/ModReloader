@@ -33,11 +33,11 @@ namespace ModHelper.UI.Elements
             // Active = true; // uncomment to show the panel by default
             AddPadding(5);
             AddHeader("Mod Sources", GoToModSources, "Click to exit world and go to mod sources");
-            ConstructModSourcesList();
+            ConstructModSources();
             AddPadding();
 
             AddHeader("Enabled Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
-            ConstructEnabledModsList();
+            ConstructEnabledMods();
             toggleAllEnabledMods = AddOption("Toggle All", leftClick: ToggleAllEnabledMods, hover: "Toggle all enabled mods on or off");
             toggleAllEnabledMods.SetState(State.Enabled);
             AddPadding();
@@ -52,7 +52,27 @@ namespace ModHelper.UI.Elements
 
         #region Constructing mod lists
 
-        private void ConstructEnabledModsList()
+        private void ConstructModSources()
+        {
+            Log.Info("Constructing Mod Sources");
+            // Get all the mod sources paths
+            foreach (string fullModPath in GetModSourcesPaths())
+            {
+                // Get the clean name
+                string cleanName = GetModSourcesCleanName(fullModPath);
+
+                // Cut to max 20 chars
+                if (cleanName.Length > 20)
+                    cleanName = string.Concat(cleanName.AsSpan(0, 20), "...");
+
+                ModSourcesElement modSourcesElement = new(fullModPath: fullModPath, cleanName: cleanName);
+                modSourcesElements.Add(modSourcesElement);
+                uiList.Add(modSourcesElement);
+                AddPadding(3);
+            }
+        }
+
+        private void ConstructEnabledMods()
         {
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
             foreach (Mod mod in mods)
@@ -62,27 +82,6 @@ namespace ModHelper.UI.Elements
                 ModElement modElement = new(mod.DisplayNameClean, mod.Name);
                 uiList.Add(modElement);
                 modElements.Add(modElement);
-                AddPadding(3);
-            }
-        }
-
-        private void ConstructModSourcesList()
-        {
-            // Get the entire list of mods of type LocalMod
-
-            // Create a new ModSourcesElement : PanelElement for each mod in modsources.
-            foreach (string modPath in GetModSourcesPaths())
-            {
-                string cleanName = GetModSourcesCleanName(modPath);
-
-                // cut to max 20 chars
-                if (cleanName.Length > 20)
-                    cleanName = string.Concat(cleanName.AsSpan(0, 20), "...");
-                // string cleanName = Path.GetFileName(modPath);
-
-                ModSourcesElement modSourcesElement = new(modPath: modPath, cleanName: cleanName);
-                modSourcesElements.Add(modSourcesElement);
-                uiList.Add(modSourcesElement);
                 AddPadding(3);
             }
         }
@@ -107,7 +106,7 @@ namespace ModHelper.UI.Elements
 
                 // Log.Info("InternalName: " + internalName + " CleanName: " + cleanName);
 
-                // We want to pass the LocalMod's TmodFile to ModElement.
+                // We want to pass the LocalMod's TmodFile to GetModIconFromAllMods
                 object tmod = getTmodFile(mod);
 
                 Texture2D modIcon = GetModIconFromAllMods(tmod);
@@ -130,6 +129,7 @@ namespace ModHelper.UI.Elements
         #region Helpers for getting mod lists
         // Note: Lots of reflection is used here, so be careful with error handling.
 
+        // Helper method to get all workshop mods
         private static List<object> GetAllWorkshopMods()
         {
             // Get all mods the user has installed via reflection
@@ -177,7 +177,7 @@ namespace ModHelper.UI.Elements
                 bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, ["icon.png"]);
                 if (!hasIcon)
                 {
-                    Log.SlowInfo("The TmodFile does not have an icon.");
+                    Log.Warn("The TmodFile does not have an icon.");
                     return null;
                 }
 
@@ -266,6 +266,24 @@ namespace ModHelper.UI.Elements
             FieldInfo modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
             object tmod = modFileField.GetValue(mod);
             return tmod;
+        }
+
+        private object getLocalModName(object mod)
+        {
+            Type localModType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.LocalMod");
+
+            FieldInfo Name = localModType.GetField("Name", BindingFlags.Public | BindingFlags.Instance);
+            object name = Name.GetValue(mod);
+            return name;
+        }
+
+        private object getLastModified(object mod)
+        {
+            Type localModType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.LocalMod");
+
+            FieldInfo Name = localModType.GetField("lastModified", BindingFlags.Public | BindingFlags.Instance);
+            object lastModified = Name.GetValue(mod);
+            return lastModified;
         }
 
         #endregion

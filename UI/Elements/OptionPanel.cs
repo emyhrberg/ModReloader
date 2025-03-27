@@ -1,9 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
-using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -150,6 +150,9 @@ namespace ModHelper.UI.Elements
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
         }
 
+        // Build the last ago by every second, adding the time
+
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             // first draw everything in the panel
@@ -163,7 +166,7 @@ namespace ModHelper.UI.Elements
                     var icon = modElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.updatedTex != null)
                     {
-                        Vector2 mousePos = new(Main.mouseX, Main.mouseY);
+                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2);
                         spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
                     }
                 }
@@ -172,10 +175,65 @@ namespace ModHelper.UI.Elements
                     var icon = modSourcesElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.tex != null)
                     {
-                        Vector2 mousePos = new(Main.mouseX, Main.mouseY);
+                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2);
                         spriteBatch.Draw(icon.tex, mousePos, Color.White);
+
+                        // Determine the color based on the time ago
+                        TimeSpan timeAgo = DateTime.Now - icon.lastModified;
+                        Color timeColor = timeAgo.TotalSeconds < 60 ? new Color(5, 230, 55) :
+                                          timeAgo.TotalMinutes < 60 ? new Color(5, 230, 55) :
+                                          timeAgo.TotalHours < 24 ? Color.Orange :
+                                          Color.Red;
+
+                        string builtAgo = ConvertLastModifiedToTimeAgo(icon.lastModified);
+
+                        if (!string.IsNullOrEmpty(builtAgo))
+                        {
+                            Utils.DrawBorderString(
+                                spriteBatch,
+                                text: $"Built {builtAgo}",
+                                new Vector2(mousePos.X + icon.Width.Pixels, mousePos.Y - 10),
+                                timeColor,
+                                scale: 1.0f,
+                                0.5f,
+                                0.5f
+                            );
+                        }
                     }
                 }
+            }
+        }
+
+        private static string ConvertLastModifiedToTimeAgo(DateTime lastModified)
+        {
+            TimeSpan timeAgo = DateTime.Now - lastModified;
+            if (timeAgo.TotalSeconds < 60)
+            {
+                return $"{timeAgo.Seconds} seconds ago";
+            }
+            else if (timeAgo.TotalMinutes < 2)
+            {
+                return $"{timeAgo.Minutes} minute ago";
+            }
+            else if (timeAgo.TotalMinutes < 60)
+            {
+                return $"{timeAgo.Minutes} minutes ago";
+            }
+            else if (timeAgo.TotalHours < 2)
+            {
+                return $"{timeAgo.Hours} hour ago";
+            }
+            else if (timeAgo.TotalHours < 24)
+            {
+                return $"{timeAgo.Hours} hours ago";
+            }
+            else if (timeAgo.TotalDays < 2)
+            {
+                return $"{timeAgo.Days} day ago";
+            }
+            else
+            {
+                return $"{timeAgo.Days} days ago";
             }
         }
 

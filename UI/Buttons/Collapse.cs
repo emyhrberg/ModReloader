@@ -35,13 +35,13 @@ namespace ModHelper.UI.Buttons
             Width.Set(37, 0);
             Height.Set(15, 0);
             Left.Set(-20, 0); // CUSTOM CUSTOM CUSTOM -20!
-            Top.Set(-buttonSize * 2, 0); // Start at normal position for Expanded state
+            Top.Set(-buttonSize, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
             VAlign = 1f;
             HAlign = 0.5f;
 
-            if (Conf.ButtonsPosition == "left")
+            if (Conf.ButtonsPosition == "Left")
             {
                 HAlign = 0f;
                 VAlign = 0.8f;
@@ -107,7 +107,7 @@ namespace ModHelper.UI.Buttons
 
             if (mainState != null)
             {
-                if (Conf.ButtonsPosition == "bottom")
+                if (Conf.ButtonsPosition == "Bottom")
                 {
                     if (mainState.AreButtonsShowing)
                     {
@@ -120,7 +120,7 @@ namespace ModHelper.UI.Buttons
                         Top.Set(0, 0); // Collapsed
                     }
                 }
-                else if (Conf.ButtonsPosition == "left")
+                else if (Conf.ButtonsPosition == "Left")
                 {
                     if (mainState.AreButtonsShowing)
                     {
@@ -152,11 +152,11 @@ namespace ModHelper.UI.Buttons
             float buttonSize = mainState?.ButtonSize ?? 0;
             if (sys != null && mainState.AreButtonsShowing)
             {
-                if (Conf.ButtonsPosition == "bottom")
+                if (Conf.ButtonsPosition == "Bottom")
                 {
                     Top.Set(-buttonSize, 0);
                 }
-                else if (Conf.ButtonsPosition == "left")
+                else if (Conf.ButtonsPosition == "Left")
                 {
                     Left.Set(buttonSize, 0);
                 }

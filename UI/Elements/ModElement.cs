@@ -1,7 +1,12 @@
 using System;
+using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader;
+using Terraria.UI;
 using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
@@ -17,7 +22,13 @@ namespace ModHelper.UI.Elements
         private ModEnabledText enabledText;
         public ModEnabledIcon modIcon;
         private State state = State.Enabled; // enabled by default
+        private Texture2D icon;
 
+        // Actions
+        // private Action leftClick;
+        // private Action rightClick;
+
+        // State
         public State GetState() => state;
 
         public void SetState(State state)
@@ -26,10 +37,15 @@ namespace ModHelper.UI.Elements
             enabledText.SetTextState(state);
         }
 
-        public ModElement(string cleanModName, string internalModName = "", Texture2D icon = null)
+        // Constructor
+        public ModElement(string cleanModName, string internalModName = "", Texture2D icon = null, Action leftClick = null, Action rightClick = null)
         {
             this.cleanModName = cleanModName;
             this.internalName = internalModName;
+            this.icon = icon;
+
+            // this.leftClick = leftClick;
+            // this.rightClick = rightClick;
 
             // size and position
             Width.Set(-35f, 1f);
@@ -56,7 +72,7 @@ namespace ModHelper.UI.Elements
             if (icon == null)
             {
                 // "Enabled Mods"
-                OptionTitleText modNameText = new(text: cleanModName, hover: $"Open {internalModName} config", internalModName: internalModName, canClick: true);
+                ModTitleText modNameText = new(text: cleanModName, hover: $"Open {internalModName} config", internalModName: internalModName, clickToOpenConfig: true);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
@@ -64,15 +80,40 @@ namespace ModHelper.UI.Elements
             else
             {
                 // "All Mods"
-                OptionTitleText modNameText = new(text: cleanModName, internalModName: internalModName, hover: $"{internalModName}", canClick: false);
+                ModTitleText modNameText = new(text: cleanModName, internalModName: internalModName, hover: $"{internalModName}", clickToOpenConfig: false);
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
             }
 
-            // enabled text
-            enabledText = new(text: "Enabled", internalModName: internalModName);
+            // enabled text.
+            // if no icon, its an enabled mod, so we manually add the left click action.
+            enabledText = new ModEnabledText(text: "Enabled", internalModName: internalModName, leftClick: icon == null ? leftClick : null);
             Append(enabledText);
+        }
+
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            // check if we also clicked the config, then we shouldnt execute the left click action.
+            // this was wonky and worked but was laggy ??? evt.Target sucks ???
+            // if (icon == null && evt.Target is ModTitleText modTitleText && modTitleText.clickToOpenConfig)
+            // {
+            // return;
+            // }
+
+            base.LeftClick(evt);
+
+            Log.Info("LeftClick on text: " + internalName);
+
+            // Update enabled text state first
+            SetState(state == State.Enabled ? State.Disabled : State.Enabled);
+            enabledText.SetTextState(state);
+
+            // Use reflection to call SetModEnabled on internalModName
+            bool enabled = state == State.Enabled;
+
+            MethodInfo setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+            setModEnabled?.Invoke(null, [internalName, enabled]);
         }
     }
 }

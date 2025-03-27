@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,31 +15,36 @@ namespace ModHelper.UI.Elements
     {
         private State state;
         private Color red = new(226, 57, 39);
-        private string internalName;
+        private string internalModName;
+        // private Action leftClick;
 
-        public ModEnabledText(string text, string internalModName) : base(text)
+        public ModEnabledText(string text, string internalModName = "", Action leftClick = null) : base(text)
         {
-            this.internalName = internalModName;
             // text and size and position
             // enabledText.ShadowColor = new Color(226, 57, 39); // TODO change background color to this, shadowcolor is not it.
             float def = -65f;
             TextColor = Color.Green;
             VAlign = 0.5f;
             Left.Set(def, 1f);
+
+            this.internalModName = internalModName;
+            // this.leftClick = leftClick;
         }
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Toggle state
-            state = state == State.Enabled ? State.Disabled : State.Enabled;
-            this.SetTextState(state);
+            Log.Info("Left click");
+
+            base.LeftClick(evt);
+
+            // toggle the state
+            SetTextState(state == State.Enabled ? State.Disabled : State.Enabled);
+
+            // set the mod state
             bool enabled = state == State.Enabled;
 
-            Log.Info("Setting mod enabled: " + internalName + " to " + enabled);
-
-            // Use reflection to call SetModEnabled on internalModName
-            var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-            setModEnabled?.Invoke(null, [internalName, enabled]);
+            MethodInfo setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+            setModEnabled?.Invoke(null, [internalModName, enabled]);
         }
 
         public void SetTextState(State state)

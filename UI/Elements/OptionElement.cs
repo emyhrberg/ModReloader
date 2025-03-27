@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
@@ -73,9 +74,10 @@ namespace ModHelper.UI.Elements
         {
             base.LeftClick(evt);
 
-            state = state == State.Disabled ? State.Enabled : State.Disabled;
-            enabledText.SetTextState(state);
-            leftClick.Invoke();
+            SetState(state == State.Enabled ? State.Disabled : State.Enabled);
+
+            // Invoke the left click action
+            leftClick?.Invoke();
         }
     }
 }

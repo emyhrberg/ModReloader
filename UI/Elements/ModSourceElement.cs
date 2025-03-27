@@ -26,18 +26,21 @@ namespace ModHelper.UI.Elements
         public ModCheckbox checkbox;
         public ModSourcesIcon modIcon;
 
-        public ModSourcesElement(string modPath, string cleanName = "")
+        public ModSourcesElement(string fullModPath, string cleanName = "", string builtAgo = "")
         {
             // size and position
             Width.Set(-35f, 1f);
             Height.Set(30, 0);
             Left.Set(5, 0);
 
+            // last modified
+            DateTime lastModified = File.GetLastWriteTime(fullModPath);
+
             // mod path
-            this.modPath = modPath;
+            this.modPath = fullModPath;
 
             // mod icon
-            string iconPath = Path.Combine(modPath, "icon.png");
+            string iconPath = Path.Combine(fullModPath, "icon.png");
             if (File.Exists(iconPath))
             {
                 // Defer texture creation to the main thread:
@@ -47,24 +50,24 @@ namespace ModHelper.UI.Elements
                     Texture2D texture = Texture2D.FromStream(
                         graphicsDevice: Main.graphics.GraphicsDevice,
                         stream: stream);
-                    modIcon = new(texture);
+                    modIcon = new ModSourcesIcon(texture, lastModified: lastModified);
                     Append(modIcon);
                 });
             }
             else
             {
-                Log.Info("No icon found. Substituting default icon for " + modPath);
+                Log.Info("No icon found. Substituting default icon for " + fullModPath);
 
                 Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
 
                 Main.QueueMainThreadAction(() =>
                 {
-                    modIcon = new(defaultIcon.Value);
+                    modIcon = new ModSourcesIcon(defaultIcon.Value, lastModified: lastModified);
                     Append(modIcon);
                 });
             }
 
-            string internalNameFolderName = Path.GetFileName(modPath);
+            string internalNameFolderName = Path.GetFileName(fullModPath);
 
             // check if the mod is enabled, we supply a "open config" option.
             bool isModEnabled = false;
@@ -90,7 +93,7 @@ namespace ModHelper.UI.Elements
                 hoverText = $"Open {internalNameFolderName} config";
             }
 
-            OptionTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, canClick: !isModEnabled);
+            ModTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, clickToOpenConfig: isModEnabled);
             modNameText.Left.Set(30, 0);
             modNameText.VAlign = 0.5f;
             Append(modNameText);
@@ -100,7 +103,7 @@ namespace ModHelper.UI.Elements
             float dist = 27f;
 
             // checkbox icon
-            checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Click to make {internalNameFolderName} the mod to reload");
+            checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Click to add {internalNameFolderName} to the list of mods to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
 
@@ -113,7 +116,7 @@ namespace ModHelper.UI.Elements
                 // add initial mod
                 if (!ModsToReload.modsToReload.Contains(internalNameFolderName))
                 {
-                    Log.Info($"Added {internalNameFolderName} to modstoreload.");
+                    Log.Info($"Added {internalNameFolderName} to ModsToReload.");
                     ModsToReload.modsToReload.Add(internalNameFolderName);
                 }
             }
@@ -125,12 +128,12 @@ namespace ModHelper.UI.Elements
             Append(modReloadIcon);
 
             // folder icon
-            ModFolderIcon folderIcon = new(Ass.ModOpenFolder.Value, modPath, "Open Folder");
+            ModFolderIcon folderIcon = new(Ass.ModOpenFolder.Value, fullModPath, "Open Folder");
             folderIcon.Left.Set(def - dist * 1, 1f);
             Append(folderIcon);
 
             // cs proj icon
-            ModProjectIcon projectIcon = new(Ass.ModOpenProject.Value, modPath, "Open .csproj");
+            ModProjectIcon projectIcon = new(Ass.ModOpenProject.Value, fullModPath, "Open .csproj");
             projectIcon.Left.Set(def, 1f);
             Append(projectIcon);
         }

@@ -181,7 +181,7 @@ namespace ModHelper.UI.Elements
 
             // If we have buttons to the left, move the panel to the right
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (Conf.ButtonsPosition == "left" && sys.mainState.AreButtonsShowing)
+            if (Conf.ButtonsPosition == "Left" && sys.mainState.AreButtonsShowing)
             {
                 Left.Set(sys.mainState.ButtonSize, 0f);
                 // Log.SlowInfo("Moving panel to the right");
