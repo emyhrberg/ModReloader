@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
-    public class LogButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class LogButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set custom animation dimensions
         private float _scale = 0.5f;

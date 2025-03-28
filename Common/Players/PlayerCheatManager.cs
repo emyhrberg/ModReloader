@@ -25,6 +25,9 @@ namespace ModHelper.Common.Players
         public static bool BuildFaster = false;
         public static bool TeleportWithRightClick = false;
 
+        // Super mode state
+        public bool SuperMode = false;
+
         // Master list of cheats
         public static List<Cheat> Cheats =
         [
@@ -50,7 +53,7 @@ namespace ModHelper.Common.Players
             base.OnEnterWorld();
 
             // Toggle super mode
-            if (Conf.EnterWorldSuperMode)
+            if (Conf.C.EnterWorldSuperMode)
             {
                 EnableSupermode();
             }
@@ -58,6 +61,8 @@ namespace ModHelper.Common.Players
 
         public void EnableSupermode()
         {
+            SuperMode = true;
+
             SetAllCheats(true);
             Noclip = false;
             MineAura = false;
@@ -65,8 +70,12 @@ namespace ModHelper.Common.Players
             TeleportWithRightClick = false;
             SpawnRateMultiplier.Multiplier = 0f;
 
-            // Update the enabled texts all enabled except mine aura and noclip
+            // Update the spawn rate slider to 0
             MainSystem sys = ModContent.GetInstance<MainSystem>();
+            WorldPanel w = sys.mainState.worldPanel;
+            w.spawnRateSlider.SetValue(0f);
+
+            // Update the enabled texts all enabled except mine aura and noclip
             PlayerPanel p = sys.mainState.playerPanel;
             foreach (OptionElement o in p.cheatOptions)
             {
@@ -89,11 +98,18 @@ namespace ModHelper.Common.Players
 
         public void DisableSupermode()
         {
+            SuperMode = false;
+
             SetAllCheats(false);
             SpawnRateMultiplier.Multiplier = 1f;
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             // WorldPanel w = sys.mainState.worldPanel;
             // w.spawnRateSlider.SetValue(0f);
+
+            // Update the spawn rate slider to 0
+            WorldPanel w = sys.mainState.worldPanel;
+            w.spawnRateSlider.SetValue(1f);
+
 
             // Update the enabled texts all Disabled
             PlayerPanel p = sys.mainState.playerPanel;

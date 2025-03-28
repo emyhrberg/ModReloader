@@ -1,4 +1,6 @@
+using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -58,7 +60,7 @@ namespace ModHelper.Common.Systems
                 }
                 if (!didPrint)
                 {
-                    if (Conf.LogToChat) Main.NewText("All hostile NPCs butchered!", 255, 50, 50);
+                    ChatHelper.NewText("All hostile NPCs butchered!", new Color(226, 57, 39));
                     didPrint = true;
                 }
             }

@@ -1,8 +1,8 @@
-Mod Helper offers plenty of testing and debugging features for modders and players who want full control.
+Mod Helper is the ultimate tool for testing and debugging features for modders and players who want full control.
 
 Features:
 🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
-🔹 Toggle mods in-world - enable or disable any mod in-game effortlessly.
+🔹 Toggle mods in-game - enable or disable any mod in-game effortlessly.
 🔹 UI Playground - Dive deep into your interface and fine-tune every element.
 🔹 Customizable Log Files - Clear, edit, and adjust log levels to suit your debugging needs.
 🔹 Powerful Player Options: Activate God Mode, Noclip, Kill Aura, Mine Aura, Build Faster, and much more!

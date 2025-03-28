@@ -75,7 +75,7 @@ namespace ModHelper.Common.Systems
             }
 
             // Add a custom copy button next to all the others
-            copyButton = new("Copy To Clipboard", 0.7f, true, errorMessage);
+            copyButton = new("Copy to Clipboard", 0.7f, true, errorMessage);
             copyButton.Top.Set(-108 + 50 + 5, 1f);
             copyButton.WithFadedMouseOver(); // add yellow hover effect
             area.Append(copyButton);

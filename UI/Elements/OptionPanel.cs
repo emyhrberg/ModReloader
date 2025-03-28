@@ -31,7 +31,7 @@ namespace ModHelper.UI.Elements
         {
             // panel settings
             BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
-            Height.Set(Conf.PanelHeight, 0f);
+            Height.Set(Conf.C.PanelHeight, 0f);
             Top.Set(-70, 0f);
             Left.Set(-20, 0f);
 
@@ -88,6 +88,14 @@ namespace ModHelper.UI.Elements
             return option;
         }
 
+        protected ActionOption AddAction(Action leftClick, string text, string hover, Action rightClick = null, float textSize = 0.4f, float padding = 5f)
+        {
+            ActionOption actionOption = new(leftClick, text, hover, rightClick);
+            uiList.Add(actionOption);
+            AddPadding(padding);
+            return actionOption;
+        }
+
         protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "")
         {
             HeaderElement headerElement = new(title, hover);
@@ -116,7 +124,7 @@ namespace ModHelper.UI.Elements
 
             base.Update(gameTime);
 
-            if (Conf.DraggablePanels)
+            if (Conf.C.DraggablePanels)
             {
                 return;
             }

@@ -35,7 +35,7 @@ namespace ModHelper.Helpers
                 return Task.CompletedTask;
             }
 
-            if (Conf.SaveWorldOnReload)
+            if (Conf.C.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
 
@@ -56,7 +56,7 @@ namespace ModHelper.Helpers
         public static Task ExitAndKillServer()
         {
             // Sending packet to server to inform about reloading mod in multiplayer
-            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.SaveWorldOnReload);
+            ModNetHandler.RefreshServer.SendKillingServer(255, Main.myPlayer, Conf.C.SaveWorldOnReload);
 
             // idk if that needed for exiting server, but maybe we need to save player data idk
             var tcs = new TaskCompletionSource();

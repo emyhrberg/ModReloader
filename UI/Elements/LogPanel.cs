@@ -30,32 +30,7 @@ namespace ModHelper.UI.Elements
             uiList.Add(clearClient);
             AddPadding(5);
 
-            ActionOption clearAndReload = new(
-                leftClick: async () =>
-                {
-                    ClearClientOnReload();
-                    // 1 Clear logs if needed
-                    if (Conf.ClearClientLogOnReload)
-                        Log.ClearClientLog();
-
-                    // 2 Prepare client data
-                    ReloadUtilities.PrepareClient(ClientModes.SinglePlayer);
-
-                    // 3 Exit server or world
-                    if (Main.netMode == NetmodeID.SinglePlayer)
-                    {
-                        await ReloadUtilities.ExitWorldOrServer();
-                    }
-                    else if (Main.netMode == NetmodeID.MultiplayerClient)
-                    {
-                        await ReloadUtilities.ExitAndKillServer();
-                    }
-
-                    // 4 Reload
-                    ReloadUtilities.BuildAndReloadMods();
-
-                }, "Clear And Reload", "Clear and reload the selected mods");
-            uiList.Add(clearAndReload);
+            AddOption("Clear Log On Reload", () => ClearClientOnReload(), "When reloading mods, clears the entire client.log between reloads", padding: 3f);
             AddPadding(5);
             AddPadding();
 

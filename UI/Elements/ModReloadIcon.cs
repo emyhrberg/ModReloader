@@ -32,9 +32,9 @@ namespace ModHelper.UI.Elements
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            if (!Conf.Reload)
+            if (!Conf.C.Reload)
             {
-                if (Conf.LogToChat) Main.NewText("Reload is disabled, toggle it in config.");
+                ChatHelper.NewText("Reload is disabled, toggle it in config.");
                 Log.Warn("Reload is disabled");
                 return;
             }
@@ -54,7 +54,7 @@ namespace ModHelper.UI.Elements
             }
 
             // 1 Clear client log
-            if (Conf.ClearClientLogOnReload)
+            if (Conf.C.ClearClientLogOnReload)
                 Log.ClearClientLog();
 
             // 2 Prepare client data

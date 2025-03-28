@@ -50,13 +50,13 @@ namespace ModHelper.UI.Elements
             if (KeepGameRunning.KeepRunning)
             {
                 SetText("Keep Game Running: ON");
-                if (Conf.LogToChat) Main.NewText("Keep Game Running: ON", Color.Green);
+                ChatHelper.NewText("Keep Game Running: ON", Color.Green);
                 Log.Info("Keep Game Running: ON");
             }
             else
             {
                 SetText("Keep Game Running: OFF");
-                if (Conf.LogToChat) Main.NewText("Keep Game Running: OFF", new Color(226, 57, 39));
+                ChatHelper.NewText("Keep Game Running: OFF", new Color(226, 57, 39));
                 Log.Info("Keep Game Running: OFF");
             }
         }
@@ -75,7 +75,7 @@ namespace ModHelper.UI.Elements
             Conf.C.ShowGameKeepRunningText = false;
             Conf.ForceSaveConfig(Conf.C);
 
-            if (Conf.LogToChat) Main.NewText("Hiding the 'Keep Game Running' text. Open config to toggle show again.", Color.Green);
+            ChatHelper.NewText("Hiding the 'Keep Game Running' text. Open config to toggle show again.", Color.Green);
         }
 
         public override void Update(GameTime gameTime)

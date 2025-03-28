@@ -10,7 +10,7 @@ using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
-    public class LaunchButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class LaunchButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set the button icon size
         private float _scale = 0.45f;
@@ -27,13 +27,13 @@ namespace ModHelper.UI.Buttons
                 string file = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\tModLoader\\start-tModLoader.bat";
                 if (File.Exists(file))
                 {
-                    if (Conf.LogToChat) Main.NewText("Opening tmodloader...");
+                    ChatHelper.NewText("Opening tmodloader...");
                     openLocalFileSuccess = true;
                     Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
                 }
                 else
                 {
-                    if (Conf.LogToChat) Main.NewText("tmodloader not found in C drive. Retrying...");
+                    ChatHelper.NewText("tmodloader not found in C drive. Retrying...");
                     Log.Error("tmodloader not found in C drive. Retrying...");
                     return;
                 }
@@ -51,19 +51,19 @@ namespace ModHelper.UI.Buttons
                     string steamPath = Log.GetSteamPath();
                     if (string.IsNullOrEmpty(steamPath))
                     {
-                        if (Conf.LogToChat) Main.NewText("Steam path is null or empty.");
+                        ChatHelper.NewText("Steam path is null or empty.");
                         Log.Error("Steam path is null or empty.");
                         return;
                     }
 
                     string file = Path.Combine(steamPath, "start-tModLoader.bat");
-                    if (Conf.LogToChat) Main.NewText("Opening another client...");
+                    ChatHelper.NewText("Opening another client...");
 
                     Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
                 }
                 catch (Exception ex)
                 {
-                    if (Conf.LogToChat) Main.NewText("Error opening another client: " + ex.Message);
+                    ChatHelper.NewText("Error opening another client: " + ex.Message);
                     Log.Error("Error opening another client: " + ex.Message);
                 }
             }

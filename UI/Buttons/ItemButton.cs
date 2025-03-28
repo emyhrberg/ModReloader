@@ -8,7 +8,7 @@ using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
-    public class ItemButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class ItemButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set custom animation dimensions
         private float _scale = 1.2f;
@@ -84,12 +84,6 @@ namespace ModHelper.UI.Buttons
 
                 // Draw the spritesheet.
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
-            }
-
-            // Draw tooltip text if hovering and HoverText is given (see MainState).
-            if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
-            {
-                UICommon.TooltipMouseText(HoverText);
             }
         }
 

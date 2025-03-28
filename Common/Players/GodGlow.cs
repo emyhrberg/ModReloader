@@ -225,20 +225,17 @@ namespace ModHelper.Common.Players
 
         protected override void Draw(ref PlayerDrawSet _set)
         {
-            if (!Conf.C.GodGlow)
-            {
+            if (Main.gameMenu)
                 return;
-            }
+
+            if (!Conf.C.GodGlow)
+                return;
 
             if (Main.LocalPlayer.whoAmI != _set.drawPlayer.whoAmI)
-            {
                 return;
-            }
 
             if (!PlayerCheatManager.God)
-            {
                 return;
-            }
 
             if (GodGlow.ready)
             {

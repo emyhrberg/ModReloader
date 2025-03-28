@@ -1,4 +1,4 @@
-Mod Helper offers plenty of testing and debugging features for modders and players who want full control.
+Mod Helper is the ultimate tool for testing and debugging features for modders and players who want full control.
 
 Features:
 🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
@@ -11,7 +11,8 @@ Features:
 🔹 Teleport Anywhere – instantly move across the map.
 🔹 Hitbox Tracker – track players, NPCs, projectiles with arrows and hitboxes.
 🔹 Keep Game Running - keeps the game running when out of focus if desired.
-🔹 Multiplayer And Server Reload: Restart and re-joins in multiplayer to test multiple clients.
+🔹 Custom Exceptions - adds a button to copy exception to clipboard
+🔹 Multiplayer And Server Reload: Restart and re-join multiplayer servers to test multiple clients.
 And of course, the entire mod, its UI, and every single feature can be toggled in its menu and customized in the config.
 
 Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀

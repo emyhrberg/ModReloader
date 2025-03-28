@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using ModHelper.Helpers;
+using ModHelper.UI.Buttons;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -35,7 +36,7 @@ namespace ModHelper.UI
                     "ModHelper: MainSystem",
                     () =>
                     {
-                        // actual drawing of all UI elements
+                        // actual drawing of entire user interface
                         // dont mess with this
                         userInterface?.Draw(Main.spriteBatch, new GameTime());
                         return true;

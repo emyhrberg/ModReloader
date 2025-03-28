@@ -60,7 +60,7 @@ namespace ModHelper.UI.Elements
             modSortButtons.Add(allMods);
 
             // Add other ModSortButtons:
-            Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad);
+            Asset<Texture2D> defaultIcon = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.AsyncLoad);
             var mods = ModLoader.Mods.Skip(1); // ignore the built in Modloader mod
             float left = 25;
             foreach (Mod mod in mods)

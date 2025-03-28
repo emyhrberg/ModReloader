@@ -134,28 +134,5 @@ namespace ModHelper.Common.Configs
 
         // Instance
         public static Config C => ModContent.GetInstance<Config>();
-
-        // Reload header
-        public static bool Reload => C.Reload;
-        public static string ModToReload => C.LatestModToReload;
-        public static bool SaveWorldOnReload => C.SaveWorldOnReload;
-        public static bool ClearClientLogOnReload => C.ClearClientLogOnReload;
-
-        // UI
-        public static float ButtonSize => C.ButtonSize;
-        public static string ButtonsPosition => C.ButtonPosition;
-        public static bool DraggablePanels => C.DraggablePanels;
-        public static float PanelWidth => C.PanelWidth;
-        public static float PanelHeight => C.PanelHeight;
-
-        // Game
-        public static Vector2 NPCSpawnLocation => C.SpawnOffset;
-        public static bool EnterWorldSuperMode => C.EnterWorldSuperMode;
-        public static bool KeepRunning => C.GameKeepRunning;
-        public static bool AlwaysShowTextOnTop => C.ShowGameKeepRunningText;
-
-        // Logging
-        public static bool LogToLogFile => C.LogToLogFile;
-        public static bool LogToChat => C.LogToChat;
     }
 }

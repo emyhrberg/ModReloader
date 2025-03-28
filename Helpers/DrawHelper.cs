@@ -1,18 +1,79 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
+using ModHelper.UI;
+using ModHelper.UI.Buttons;
+using ReLogic.Content;
+using ReLogic.Graphics;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.UI.Chat;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ModHelper.Helpers
 {
     public static class DrawHelper
     {
+        /// <summary>
+        /// Draws a tooltip panel just above a BaseButton element.
+        /// </summary>
+        public static void DrawTooltipPanel(this BaseButton element, string text, string tooltip)
+        {
+            int pad = 6;
+            DynamicSpriteFont font = FontAssets.MouseText.Value;
+            float nameWidth = ChatManager.GetStringSize(font, text, Vector2.One).X;
+            float tipWidth = ChatManager.GetStringSize(font, tooltip, Vector2.One).X * 0.9f;
+            float width = Math.Max(nameWidth, tipWidth) + pad * 4;
+            float height = ChatManager.GetStringSize(font, $"{text}\n", Vector2.One).Y + pad * 2 - 4;
+
+            if (!string.IsNullOrEmpty(tooltip))
+            {
+                height = ChatManager.GetStringSize(font, $"{text}\n{tooltip}", Vector2.One).Y + pad * 2 - 4;
+            }
+
+            CalculatedStyle dims = element.GetDimensions();
+            if (element is WorldButton)
+            {
+                dims.Y -= 15f;
+            }
+
+            float tooltipX = dims.X + (dims.Width - width) / 2f;
+            float tooltipY = dims.Y - height;
+            Rectangle rect = new((int)tooltipX, (int)tooltipY, (int)width, (int)height);
+
+            // draw bg panel
+            Color darkBlue = new Color(22, 22, 55) * 0.925f;
+            Utils.DrawInvBG(Main.spriteBatch, rect, darkBlue);
+
+            // Calculate center X of panel
+            float centerX = tooltipX + width / 2f;
+
+            // draw main header text (centered)
+            float headerTextWidth = ChatManager.GetStringSize(font, text, Vector2.One).X;
+            Vector2 headerPos = new Vector2(centerX - headerTextWidth / 2f, tooltipY + pad);
+            Utils.DrawBorderString(Main.spriteBatch, text, headerPos, Color.White);
+
+            // draw tooltip description text (centered)
+            if (!string.IsNullOrEmpty(tooltip))
+            {
+                float tooltipTextWidth = ChatManager.GetStringSize(font, tooltip, Vector2.One).X * 0.9f;
+                Vector2 tooltipPos = new Vector2(centerX - tooltipTextWidth / 2f, headerPos.Y + ChatManager.GetStringSize(font, text, Vector2.One).Y + 4);
+                Utils.DrawBorderString(Main.spriteBatch, tooltip, tooltipPos, Color.LightGray, 0.9f);
+            }
+        }
+
+        /// <summary>
+        /// Draws a texture at the proper scale to fit within the given UI element.
+        /// /// </summary>
         public static void DrawProperScale(SpriteBatch spriteBatch, UIElement element, Texture2D tex, float scale = 1.0f, float opacity = 1.0f, bool active = false)
         {
             if (tex == null || element == null)
-                if (Main.GameUpdateCount % 60 * 5 == 0)
-                    Log.Error($"Failed to find texture: {tex}, element: {element}");
+            {
+                Log.SlowInfo("Failed to find texture to draw. Skipping draw.", seconds: 5);
+            }
 
             // Get the UI element's dimensions
             CalculatedStyle dims = element.GetDimensions();

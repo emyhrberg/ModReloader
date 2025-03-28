@@ -106,7 +106,7 @@ namespace ModHelper.Common.Systems
                 string startServerFileName = Path.Combine(steamPath, "start-tModLoaderServer.bat");
                 if (!File.Exists(startServerFileName))
                 {
-                    if (Conf.LogToChat) Main.NewText("Failed to find start-tModLoaderServer.bat file.");
+                    ChatHelper.NewText("Failed to find start-tModLoaderServer.bat file.");
                     Mod.Logger.Error("Failed to find start-tModLoaderServer.bat file.");
                     return;
                 }
@@ -125,7 +125,7 @@ namespace ModHelper.Common.Systems
             catch (Exception e)
             {
                 // log it
-                if (Conf.LogToChat) Main.NewText("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
+                ChatHelper.NewText("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
                 Log.Error("Failed to start server!!! C:/Program Files (x86)/Steam/steamapps/common/tModLoader/start-tModLoaderServer.bat" + e.Message);
                 return;
             }

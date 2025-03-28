@@ -6,7 +6,7 @@ using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
-    public class WorldButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class WorldButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Spinning globe pixel art
         // protected override float Scale => 0.08f;

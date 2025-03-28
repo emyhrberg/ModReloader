@@ -75,7 +75,7 @@ namespace ModHelper.PacketHandlers
 
                 await ReloadUtilities.ExitWorldOrServer();
 
-                var modName = Conf.ModToReload;
+                var modName = Conf.C.LatestModToReload;
 
                 Hook hookForUnload = null;
 

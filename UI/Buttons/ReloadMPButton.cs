@@ -29,7 +29,7 @@ namespace ModHelper.UI.Buttons
         protected override int FrameHeight => 65;
 
         // Constructor
-        public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : base(spritesheet, buttonText, hoverText, textSize)
+        public ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : base(spritesheet, buttonText, hoverText, hoverTextDescription)
         {
             // deactived by default since the SP button is active
             if (Main.netMode == NetmodeID.SinglePlayer)

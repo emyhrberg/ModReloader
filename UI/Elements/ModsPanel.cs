@@ -200,6 +200,9 @@ namespace ModHelper.UI.Elements
                 using Stream s = (Stream)getStreamMethod.Invoke(TmodFile, ["icon.png", true]);
 
                 Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(s, ".png", AssetRequestMode.ImmediateLoad);
+
+                // note: Probably MUST be immediateLoad, otherwise it doesnt show up.
+
                 // Log.Info("Successfully loaded icon from TmodFile.");
                 return iconTexture.Value;
             }

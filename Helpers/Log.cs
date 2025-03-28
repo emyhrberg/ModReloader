@@ -51,7 +51,7 @@ namespace ModHelper.Helpers
         public static void SlowInfo(string message, int seconds = 3, [CallerFilePath] string callerFilePath = "")
         {
             Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.LogToLogFile == false) return;
+            if (c != null && Conf.C.LogToLogFile == false) return;
 
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
@@ -72,7 +72,7 @@ namespace ModHelper.Helpers
         public static void Info(string message, [CallerFilePath] string callerFilePath = "")
         {
             Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.LogToLogFile == false) return;
+            if (c != null && Conf.C.LogToLogFile == false) return;
 
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
@@ -87,7 +87,7 @@ namespace ModHelper.Helpers
         public static void Warn(string message)
         {
             Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.LogToLogFile == false) return;
+            if (c != null && Conf.C.LogToLogFile == false) return;
 
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
@@ -99,7 +99,7 @@ namespace ModHelper.Helpers
         public static void Error(string message)
         {
             Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.LogToLogFile == false) return;
+            if (c != null && Conf.C.LogToLogFile == false) return;
 
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
@@ -125,19 +125,19 @@ namespace ModHelper.Helpers
                 // Reactivate the appender so that logging resumes.
                 appender.ActivateOptions();
             }
-            if (Conf.LogToChat) Main.NewText("Client.log cleared.");
+            ChatHelper.NewText("Client.log cleared.");
         }
 
         public static void OpenLogFolder()
         {
-            if (Conf.LogToChat) Main.NewText("Opening log folder...");
+            ChatHelper.NewText("Opening log folder...");
 
             try
             {
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    if (Conf.LogToChat) Main.NewText("Steam path not found.");
+                    ChatHelper.NewText("Steam path not found.");
                     Error("Steam path not found.");
                     return;
                 }
@@ -150,7 +150,7 @@ namespace ModHelper.Helpers
             }
             catch (Exception ex)
             {
-                if (Conf.LogToChat) Main.NewText("Error opening log folder: " + ex.Message);
+                ChatHelper.NewText("Error opening log folder: " + ex.Message);
                 Error("Error opening log folder: " + ex.Message);
             }
         }
@@ -165,14 +165,14 @@ namespace ModHelper.Helpers
 
         public static void OpenClientLog()
         {
-            if (Conf.LogToChat) Main.NewText("Opening client.log...");
+            ChatHelper.NewText("Opening client.log...");
 
             try
             {
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    if (Conf.LogToChat) Main.NewText("Steam path is null or empty.");
+                    ChatHelper.NewText("Steam path is null or empty.");
                     Log.Error("Steam path is null or empty.");
                     return;
                 }
@@ -182,14 +182,14 @@ namespace ModHelper.Helpers
             }
             catch (Exception ex)
             {
-                if (Conf.LogToChat) Main.NewText("Error opening client.log: " + ex.Message);
+                ChatHelper.NewText("Error opening client.log: " + ex.Message);
                 Log.Error("Error opening client.log: " + ex.Message);
             }
         }
 
         public static void OpenEnabledJson()
         {
-            if (Conf.LogToChat) Main.NewText("Opening enabled.json...");
+            ChatHelper.NewText("Opening enabled.json...");
 
             // Get the path to the enabled.json file in $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
             try
@@ -205,7 +205,7 @@ namespace ModHelper.Helpers
 
         public static void OpenEnabledJsonFolder()
         {
-            if (Conf.LogToChat) Main.NewText("Opening enabled.json folder...");
+            ChatHelper.NewText("Opening enabled.json folder...");
 
             try
             {

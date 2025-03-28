@@ -43,7 +43,7 @@ namespace ModHelper.UI.Elements
             // passing a temp icon because above doesnt work
             // maybe because path its not loaded yet.
             // Texture2D temp = TextureAssets.MagicPixel.Value;
-            Texture2D temp2 = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.ImmediateLoad).Value;
+            Texture2D temp2 = Main.Assets.Request<Texture2D>("Images/UI/DefaultResourcePackIcon", AssetRequestMode.AsyncLoad).Value;
 
             optionIcon = new(temp2);
             Append(optionIcon);

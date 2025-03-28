@@ -32,8 +32,8 @@ namespace ModHelper.UI.Elements
         public SpawnerPanel(string header) : base(header)
         {
             // Set the panel properties
-            Width.Set(Conf.PanelWidth, 0f);
-            Height.Set(Conf.PanelHeight, 0f);
+            Width.Set(Conf.C.PanelWidth, 0f);
+            Height.Set(Conf.C.PanelHeight, 0f);
             HAlign = 0.0f;
             VAlign = 1.0f;
             Top.Set(-70, 0f);
@@ -60,7 +60,7 @@ namespace ModHelper.UI.Elements
             Scrollbar = new UIScrollbar()
             {
                 HAlign = 1f,
-                Height = { Pixels = Conf.PanelHeight - 130 - 10 }, // -10 because of scrollbarPadding=5 on top and bottom
+                Height = { Pixels = Conf.C.PanelHeight - 130 - 10 }, // -10 because of scrollbarPadding=5 on top and bottom
                 MaxHeight = { Pixels = 700 },
                 Width = { Pixels = 20 },
                 Top = { Pixels = -padding + 30 + padding + 35 + padding + 5 },
@@ -70,7 +70,7 @@ namespace ModHelper.UI.Elements
             ItemsGrid = new CustomGrid()
             {
                 MaxHeight = { Pixels = 700 },
-                Height = { Pixels = Conf.PanelHeight - 130 },
+                Height = { Pixels = Conf.C.PanelHeight - 130 },
                 Width = { Percent = 1f, Pixels = -20 },
                 ListPadding = 0f, // distance between items
                 Top = { Pixels = -padding + 30 + padding + 35 + padding },
@@ -89,7 +89,7 @@ namespace ModHelper.UI.Elements
                 float maxHeight = 180f;
 
                 // Clamp max height
-                if (newHeight > Conf.PanelHeight + 60f || newHeight < maxHeight)
+                if (newHeight > Conf.C.PanelHeight + 60f || newHeight < maxHeight)
                 {
                     return;
                 }
@@ -156,14 +156,14 @@ namespace ModHelper.UI.Elements
                 return;
 
             // height
-            float panelH = Conf.PanelHeight;
+            float panelH = Conf.C.PanelHeight;
 
             //Height.Set(panelH, 0);
             //ItemsGrid.Height.Set(panelH - 130, 0);
             //Scrollbar.Height.Set(panelH - 140, 0);
 
             // width
-            Width.Set(Conf.PanelWidth, 0);
+            Width.Set(Conf.C.PanelWidth, 0);
 
             if (ContainsPoint(Main.MouseScreen))
             {
@@ -181,7 +181,7 @@ namespace ModHelper.UI.Elements
 
             // If we have buttons to the left, move the panel to the right
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (Conf.ButtonsPosition == "Left" && sys.mainState.AreButtonsShowing)
+            if (Conf.C.ButtonPosition == "Left" && sys.mainState.AreButtonsShowing)
             {
                 Left.Set(sys.mainState.ButtonSize, 0f);
                 // Log.SlowInfo("Moving panel to the right");

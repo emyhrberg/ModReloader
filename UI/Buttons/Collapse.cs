@@ -41,7 +41,7 @@ namespace ModHelper.UI.Buttons
             VAlign = 1f;
             HAlign = 0.5f;
 
-            if (Conf.ButtonsPosition == "Left")
+            if (Conf.C.ButtonPosition == "Left")
             {
                 HAlign = 0f;
                 VAlign = 0.8f;
@@ -107,7 +107,7 @@ namespace ModHelper.UI.Buttons
 
             if (mainState != null)
             {
-                if (Conf.ButtonsPosition == "Bottom")
+                if (Conf.C.ButtonPosition == "Bottom")
                 {
                     if (mainState.AreButtonsShowing)
                     {
@@ -120,7 +120,7 @@ namespace ModHelper.UI.Buttons
                         Top.Set(0, 0); // Collapsed
                     }
                 }
-                else if (Conf.ButtonsPosition == "Left")
+                else if (Conf.C.ButtonPosition == "Left")
                 {
                     if (mainState.AreButtonsShowing)
                     {
@@ -152,11 +152,11 @@ namespace ModHelper.UI.Buttons
             float buttonSize = mainState?.ButtonSize ?? 0;
             if (sys != null && mainState.AreButtonsShowing)
             {
-                if (Conf.ButtonsPosition == "Bottom")
+                if (Conf.C.ButtonPosition == "Bottom")
                 {
                     Top.Set(-buttonSize, 0);
                 }
-                else if (Conf.ButtonsPosition == "Left")
+                else if (Conf.C.ButtonPosition == "Left")
                 {
                     Left.Set(buttonSize, 0);
                 }

@@ -52,7 +52,7 @@ namespace ModHelper.UI.Elements
                 if (isConfigOpen)
                 {
                     hover = $"Open {internalModName} config";
-                    if (Conf.LogToChat) Main.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
+                    ChatHelper.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
                     Main.menuMode = 0;
                     Main.InGameUI.SetState(null);
                     isConfigOpen = false;
@@ -80,14 +80,14 @@ namespace ModHelper.UI.Elements
                     Mod modInstance = ModLoader.GetMod(modName);
                     if (modInstance == null)
                     {
-                        if (Conf.LogToChat) Main.NewText($"Mod '{modName}' not found.", Color.Red);
+                        ChatHelper.NewText($"Mod '{modName}' not found.", Color.Red);
                         return;
                     }
 
                     // Check if there are any configs for this mod.
                     if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
                     {
-                        if (Conf.LogToChat) Main.NewText("No config available for mod: " + modName, Color.Yellow);
+                        ChatHelper.NewText("No config available for mod: " + modName, Color.Yellow);
                         return;
                     }
 
@@ -108,7 +108,7 @@ namespace ModHelper.UI.Elements
                     // Open the mod config UI.
                     Main.InGameUI.SetState(modConfigInstance as UIState);
                     Main.menuMode = 10024;
-                    if (Conf.LogToChat) Main.NewText("Opening config for " + modName, Color.Green);
+                    ChatHelper.NewText("Opening config for " + modName, Color.Green);
 
                     // Hover text update
                     hover = $"Close {internalModName} config";
@@ -124,7 +124,7 @@ namespace ModHelper.UI.Elements
                 }
                 catch (Exception ex)
                 {
-                    if (Conf.LogToChat) Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
+                    ChatHelper.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
                     return;
                 }
             }

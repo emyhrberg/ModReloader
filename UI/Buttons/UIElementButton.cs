@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
-    public class UIElementButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class UIElementButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Sprite size
         private float _scale = 1.3f;

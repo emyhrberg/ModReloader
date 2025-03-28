@@ -35,7 +35,7 @@ namespace ModHelper.UI.Elements
         #region Constructor
         public DraggablePanel(string header)
         {
-            if (Conf.DraggablePanels)
+            if (Conf.C.DraggablePanels)
             {
                 Draggable = true;
             }
@@ -43,7 +43,7 @@ namespace ModHelper.UI.Elements
             // Set some default panel properties 
             // Children will override this hopefully :)
             Width.Set(PANEL_WIDTH, 0f);
-            Height.Set(Conf.PanelHeight, 0f);
+            Height.Set(Conf.C.PanelHeight, 0f);
             HAlign = 1.0f; // right aligned
             VAlign = 1.0f; // bottom aligned
             BackgroundColor = darkBlue;
@@ -70,7 +70,7 @@ namespace ModHelper.UI.Elements
 
             // update this with 2 second intervals lol
             if (Main.GameUpdateCount % 120 == 0)
-                Draggable = Conf.DraggablePanels;
+                Draggable = Conf.C.DraggablePanels;
 
             if (!Active)
                 return;

@@ -9,7 +9,7 @@ using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
-    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize) : BaseButton(spritesheet, buttonText, hoverText, textSize)
+    public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set custom animation dimensions
         private float _scale = 0.8f;
@@ -21,9 +21,9 @@ namespace ModHelper.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            if (!Conf.Reload)
+            if (!Conf.C.Reload)
             {
-                if (Conf.LogToChat) Main.NewText("Reload is disabled, toggle it in config.");
+                ChatHelper.NewText("Reload is disabled, toggle it in config.");
                 Log.Warn("Reload is disabled");
                 // WorldGen.SaveAndQuit();
                 // Main.menuMode = 0;
@@ -32,13 +32,13 @@ namespace ModHelper.UI.Buttons
 
             if (ModsToReload.modsToReload.Count == 0)
             {
-                if (Conf.LogToChat) Main.NewText("No mods to reload, add some in Mods.");
+                ChatHelper.NewText("No mods to reload, add some in Mods.");
                 Log.Warn("No mods to reload");
                 return;
             }
 
             // 1 Clear logs if needed
-            if (Conf.ClearClientLogOnReload)
+            if (Conf.C.ClearClientLogOnReload)
                 Log.ClearClientLog();
 
             // 2 Prepare client data

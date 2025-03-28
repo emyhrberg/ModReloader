@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using ModHelper.UI;
 using ModHelper.UI.Elements;
 using Terraria;
@@ -124,13 +125,13 @@ namespace ModHelper.Common.Systems
             showAll = !showAll;
             if (showAll)
             {
-                if (Conf.LogToChat) Main.NewText("Showing all UI elements.", Color.Green);
+                ChatHelper.NewText("Showing all UI elements.", Color.Green);
                 foreach (var elem in elements)
                     elementToggles[elem] = false;
             }
             else
             {
-                if (Conf.LogToChat) Main.NewText("Hiding all UI elements.", new Color(226, 57, 39));
+                ChatHelper.NewText("Hiding all UI elements.", new Color(226, 57, 39));
                 foreach (var elem in elements)
                     elementToggles[elem] = true;
             }

@@ -21,7 +21,8 @@ namespace ModHelper.UI.Buttons
         // General variables for a button
         protected Asset<Texture2D> Button;
         protected Asset<Texture2D> Spritesheet { get; set; }
-        protected string HoverText = "";
+        public string HoverText = "";
+        public string HoverTextDescription;
         protected float opacity = 0.8f;
         public ButtonText ButtonText;
         public bool Active = true;
@@ -39,11 +40,12 @@ namespace ModHelper.UI.Buttons
         protected abstract int FrameHeight { get; } // abstract means force child classes to implement this
 
         // Constructor
-        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, float textSize = 0.9f) : base(spritesheet)
+        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription="", float textSize = 0.9f) : base(spritesheet)
         {
             Button = Ass.Button;
             Spritesheet = spritesheet;
             HoverText = hoverText;
+            HoverTextDescription = hoverTextDescription;
             SetImage(Button);
             currFrame = StartFrame;
 
@@ -56,11 +58,8 @@ namespace ModHelper.UI.Buttons
         public void UpdateHoverText()
         {
             // Based on modstoreload, make the hovertext.
-            HoverText = "Reload\n";
-            foreach (var mod in ModsToReload.modsToReload)
-            {
-                HoverText += $"{mod}\n";
-            }
+            string modsToReload = string.Join(", ", ModsToReload.modsToReload);
+            HoverText = $"Reload {modsToReload}";
         }
 
         /// <summary>
@@ -121,11 +120,15 @@ namespace ModHelper.UI.Buttons
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
             }
 
+            // Update: Drawing is now done in MainState
+            /// <see cref="MainState"/> 
             // Draw tooltip text if hovering and HoverText is given (see MainState).
-            if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
-            {
-                UICommon.TooltipMouseText(HoverText);
-            }
+            // if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
+            // {
+            //     UICommon.TooltipMouseText(HoverText);
+
+            //     DrawHelper.DrawTooltipPanel(this, "a", HoverText); // Draw the tooltip panel
+            // }
         }
 
         //Disable button click if config window is open

@@ -9,6 +9,7 @@ using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.Drawing;
+using Terraria.GameContent.Events;
 using Terraria.ID;
 using static ModHelper.UI.Elements.OptionElement;
 
@@ -90,7 +91,7 @@ namespace ModHelper.UI.Elements
                     SpawnRateMultiplier.Multiplier = currentSpawnRate;
                     spawnRateSlider.SetValue(currentSpawnRate); // set normalized value 0 to 1
                     // set normalized value 0 to 1
-                    if (Conf.LogToChat) Main.NewText("Spawn rate set to " + currentSpawnRate);
+                    ChatHelper.NewText("Spawn rate set to " + currentSpawnRate);
                 },
                 rightClickText: () =>
                 {
@@ -127,7 +128,7 @@ namespace ModHelper.UI.Elements
                     Main.maxRaining = currentRainRate;
                     Main.cloudAlpha = currentRainRate;
                     rainSlider.SetValue(currentRainRate);
-                    if (Conf.LogToChat) Main.NewText("Rain set to " + rainStrings[currentRainRate]);
+                    ChatHelper.NewText("Rain set to " + rainStrings[currentRainRate]);
                 },
                 rightClickText: () =>
                 {
@@ -168,7 +169,7 @@ namespace ModHelper.UI.Elements
                         _ => ""
                     };
 
-                    if (Conf.LogToChat) Main.NewText($"Wind set to {Math.Abs(currentWindRate * 60):F0} mph {direction}");
+                    ChatHelper.NewText($"Wind set to {Math.Abs(currentWindRate * 60):F0} mph {direction}");
                 },
                 rightClickText: () =>
                 {
@@ -245,21 +246,36 @@ namespace ModHelper.UI.Elements
             }
             AddPadding();
 
-            // save
-            AddHeader("Save");
+            AddHeader("Misc");
 
             string playerPath = Main.ActivePlayerFileData.Path;
             string playerName = Path.GetFileName(playerPath);
-            var savePlayerCurrentOption = new ActionOption(savePlayer, "Player", $"Save the current player as {playerName} \nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
-            uiList.Add(savePlayerCurrentOption);
-            AddPadding(3f);
+            AddAction(savePlayer, "Save Player", $"Save the current player file as '{playerName}' \nRight click to open folder", rightClick: () => OpenFolder(Main.ActivePlayerFileData.Path));
 
             string worldPath = Main.ActiveWorldFileData.Path;
             string worldName = Path.GetFileName(worldPath);
-            var saveWorldOption = new ActionOption(saveWorld, "World", $"Save the current world as {worldName}\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
-            uiList.Add(saveWorldOption);
-            AddPadding(3f);
-            AddPadding();
+            AddAction(saveWorld, "Save World", $"Save the current world file as '{worldName}'\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
+
+            AddAction(StopInvasion, "Stop Invasion", "Stop the current invasion if one is in progress", rightClick: () => Main.NewText("No right click action"));
+
+            // invasion / toggles
+            // AddHeader("Invasions");
+            // AddOption("Party", ToggleParty, "Start a party in the world");
+            // AddOption("Slime Rain", ToggleSlimeRain, "Start or stop slime rain");
+            // AddOption("Blood Moon", StartBloodMoon, "Start or stop a blood moon");
+            // AddOption("Solar Eclipse", ToggleSolarEclipse, "Start or stop a solar eclipse");
+            // AddPadding(5);
+
+            // // invasions
+            // AddHeader("More Invasions");
+            // AddAction(() => TryStartInvasion(InvasionID.GoblinArmy), "Goblin Army", "Start Goblin Army invasion");
+            // AddAction(() => TryStartInvasion(InvasionID.PirateInvasion), "Pirate Invasion", "Start Pirate Invasion");
+            // AddAction(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Pumpkin Moon", "Start Pumpkin Moon invasion");
+            // AddAction(() => TryStartInvasion(InvasionID.CachedFrostMoon), "Frost Moon", "Start Frost Moon invasion");
+            // AddAction(() => TryStartInvasion(InvasionID.MartianMadness), "Martian Madness", "Start Martian Madness invasion");
+            // AddPadding(5);
+            // AddAction(() => TryStartInvasion(InvasionID.CachedOldOnesArmy), "Old Ones Army", "Start Old Ones Army invasion");
+            // AddAction(StopInvasion, "Stop Invasion", "Stop the current invasion");
         }
         #endregion // end of constructor
 
@@ -267,7 +283,7 @@ namespace ModHelper.UI.Elements
         private void ToggleFreezeTime()
         {
             FreezeTimeManager.FreezeTime = !FreezeTimeManager.FreezeTime;
-            if (Conf.LogToChat) Main.NewText("Time is now " + (FreezeTimeManager.FreezeTime ? "frozen" : "unfrozen"));
+            ChatHelper.NewText("Time is now " + (FreezeTimeManager.FreezeTime ? "frozen" : "unfrozen"));
             timeSlider.optionTitle.hover = FreezeTimeManager.FreezeTime ? "Click to unfreeze time" : "Click to freeze time";
         }
         #endregion
@@ -591,14 +607,89 @@ namespace ModHelper.UI.Elements
         }
 
         #region Invasions
-        private void StartRandomInvasion()
-        {
 
+        private static string GetInvasionName(int invasionType)
+        {
+            return invasionType switch
+            {
+                InvasionID.GoblinArmy => "Goblin Army Invasion",
+                InvasionID.PirateInvasion => "Pirate Invasion",
+                InvasionID.CachedPumpkinMoon => "Pumpkin Moon",
+                InvasionID.MartianMadness => "Martian Madness",
+                _ => "Unknown Invasion"
+            };
         }
 
-        private void StopInvasion()
+        private static void TryStartInvasion(int invasionType)
         {
+            if (Main.CanStartInvasion(invasionType, ignoreDelay: true))
+            {
+                if (Main.invasionType == 0)
+                {
+                    Main.invasionDelay = 0;
+                    Main.StartInvasion(invasionType);
+                    Main.NewText($"Starting {GetInvasionName(invasionType)}... ");
+                }
+                else
+                {
+                    Main.NewText("An invasion is already in progress!");
+                }
+            }
+            else
+            {
+                Main.NewText("An invasion cannot be started.");
+            }
+        }
 
+        private static void StartBloodMoon()
+        {
+            if (Main.bloodMoon)
+            {
+                Main.bloodMoon = false;
+                Main.NewText("Ending Blood Moon...");
+            }
+            else
+            {
+                // set time to 7:29 PM
+                Main.dayTime = true;
+                Main.time = 53999.0;
+
+                Main.bloodMoon = true;
+                Main.NewText("Starting Blood Moon... (and night)");
+            }
+        }
+
+        private static void ToggleSlimeRain()
+        {
+            // check status of slime rain and toggle it
+            if (Main.slimeRain)
+            {
+                Main.StopSlimeRain();
+                Main.NewText("Ending Slime Rain...");
+            }
+            else
+            {
+                Main.StartSlimeRain();
+                Main.NewText("Starting Slime Rain...");
+            }
+        }
+
+        private static void ToggleParty()
+        {
+            BirthdayParty.ToggleManualParty();
+        }
+
+        private void ToggleSolarEclipse()
+        {
+            Main.eclipse = !Main.eclipse;
+            Main.NewText(Main.eclipse ? "Starting Solar Eclipse..." : "Ending Solar Eclipse...");
+        }
+
+        private static void StopInvasion()
+        {
+            Main.NewText("Stopping invasion...");
+            Main.invasionType = 0;
+            Main.invasionProgress = 0;
         }
 
         #endregion

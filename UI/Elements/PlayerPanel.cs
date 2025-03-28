@@ -80,7 +80,7 @@ namespace ModHelper.UI.Elements
                 }
 
                 Main.refreshMap = true;
-                if (Conf.LogToChat) Main.NewText("Map fully revealed!", 255, 255, 255);
+                ChatHelper.NewText("Map fully revealed!");
             });
         }
 
@@ -95,7 +95,7 @@ namespace ModHelper.UI.Elements
                     item.TurnToAir(false);
                 }
             }
-            if (Conf.LogToChat) Main.NewText("Inventory cleared", byte.MaxValue, byte.MaxValue, byte.MaxValue);
+            ChatHelper.NewText("Inventory cleared");
         }
 
         private void ToggleAll()

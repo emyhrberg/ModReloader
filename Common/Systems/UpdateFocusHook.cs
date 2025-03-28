@@ -1,4 +1,5 @@
 using System;
+using ModHelper.Helpers;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria;
@@ -15,6 +16,29 @@ namespace ModHelper.Common.Systems
             IL_Main.DoUpdate += DoUpdate;
             IL_Main.DrawRain += DrawRain;
             IL_Main.UpdateAudio += UpdateAudio;
+            // IL_Main.UpdateWeather += UpdateWeather;
+        }
+
+        private void UpdateWeather(ILContext il)
+        {
+            ILCursor c = new ILCursor(il);
+
+            // We're trying to force the bool "flag" to true.
+            // Reference:
+            // public void UpdateWeather(GameTime gameTime, int currentDayRateIteration)
+            //     if (Main.netMode != 2 && currentDayRateIteration == 0)
+            //         bool flag = base.IsActive;
+            //        Let's go!
+
+            Log.Info("IL_Main.UpdateWeather");
+
+            if (c.TryGotoNext(i => i.MatchLdsfld(typeof(Main), "netMode"), i => i.MatchLdcI4(2), i => i.MatchBneUn(out _)))
+            {
+                // Remove the original instructions.
+                c.Remove();
+                c.Emit(OpCodes.Ldc_I4_1); // Load true
+                c.Emit(OpCodes.Stloc_0); // Store it in the local variable
+            }
         }
 
         private void DoUpdate(ILContext il)
