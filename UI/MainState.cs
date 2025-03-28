@@ -76,13 +76,13 @@ namespace ModHelper.UI
             AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", hoverTextDescription: "Right click to toggle all UI elements hitboxes");
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
-            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload \n{Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle MP reload");
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle SP reload");
+                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.C.LatestModToReload}");
             }
             else if (Main.netMode == NetmodeID.SinglePlayer)
             {
+                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle MP reload");
                 offset -= ButtonSize;
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle SP reload");
             }
@@ -103,7 +103,7 @@ namespace ModHelper.UI
             uiPanel = AddPanel<UIElementPanel>("right");
             worldPanel = AddPanel<WorldPanel>("right");
 
-            if (Conf.C.ShowGameKeepRunningText)
+            if (Main.netMode == NetmodeID.SinglePlayer && Conf.C.ShowGameKeepRunningText)
             {
                 string onOff = Conf.C.ShowGameKeepRunningText ? "ON" : "OFF";
                 KeepGameRunningTextButton topText = new("Keep Game Running: " + onOff);

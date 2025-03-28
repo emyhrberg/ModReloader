@@ -61,7 +61,7 @@ namespace ModHelper.UI.Elements
         {
             AddPadding(5);
             AddHeader("World");
-            timeSlider = new(
+            timeSlider = AddSlider(
                 title: "Time",
                 min: 0f,
                 max: 1f,
@@ -73,10 +73,8 @@ namespace ModHelper.UI.Elements
                 leftClickText: ToggleFreezeTime,
                 rightClickText: () => Main.NewText("No right click action")
             );
-            uiList.Add(timeSlider);
-            AddPadding(3f);
 
-            spawnRateSlider = new(
+            spawnRateSlider = AddSlider(
                 title: "Spawn Rate",
                 min: 0,
                 max: 30,
@@ -100,10 +98,8 @@ namespace ModHelper.UI.Elements
                     spawnRateSlider.SetValue(currentSpawnRate);
                 }
             );
-            uiList.Add(spawnRateSlider);
-            AddPadding(3f);
 
-            rainSlider = new(
+            rainSlider = AddSlider(
                 title: "Rain",
                 min: 0,
                 max: 1,
@@ -118,34 +114,11 @@ namespace ModHelper.UI.Elements
                     value = (float)Math.Round(value, 1);
                     return rainStrings[value];
                 },
-                leftClickText: () =>
-                {
-                    currentRainRate = rainRates[(rainRates.IndexOf(currentRainRate) + 1) % rainRates.Count];
-                    // round to nearest 0.1
-                    currentRainRate = (float)Math.Round(currentRainRate, 1);
-
-                    // Main.rainTime = 3600; // Set a reasonable duration for rain
-                    Main.maxRaining = currentRainRate;
-                    Main.cloudAlpha = currentRainRate;
-                    rainSlider.SetValue(currentRainRate);
-                    ChatHelper.NewText("Rain set to " + rainStrings[currentRainRate]);
-                },
-                rightClickText: () =>
-                {
-                    currentRainRate = rainRates[(rainRates.IndexOf(currentRainRate) + rainRates.Count - 1) % rainRates.Count];
-
-                    // round to nearest 0.1
-                    // Main.rainTime = 3600; // Set a reasonable duration for rain
-                    Main.maxRaining = currentRainRate;
-                    Main.cloudAlpha = currentRainRate;
-                    rainSlider.SetValue(currentRainRate);
-                }
+                leftClickText: () => UpdateRain(forwards: true),
+                rightClickText: () => UpdateRain(forwards: false)
             );
-            uiList.Add(rainSlider);
-            AddPadding(3f);
 
-
-            windSlider = new(
+            windSlider = AddSlider(
                 title: "Wind",
                 min: -1.2f, // -1.2f is -60 mph
                 max: 1.2f,  // 1.2f is 60 mph
@@ -154,30 +127,8 @@ namespace ModHelper.UI.Elements
                 increment: 0.05f, // This gives us ~24 increments across the range, good precision for mph
                 hover: "Set wind speed",
                 textSize: 0.9f,
-                leftClickText: () =>
-                {
-                    currentWindRate = windRates[(windRates.IndexOf(currentWindRate) + 1) % windRates.Count];
-                    Main.windSpeedCurrent = currentWindRate;
-                    Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
-                    windSlider.SetValue(currentWindRate);
-
-                    // prettify wind rate to -60 to 60 mph
-                    string direction = currentWindRate switch
-                    {
-                        < 0f => "E",
-                        > 0f => "W",
-                        _ => ""
-                    };
-
-                    ChatHelper.NewText($"Wind set to {Math.Abs(currentWindRate * 60):F0} mph {direction}");
-                },
-                rightClickText: () =>
-                {
-                    currentWindRate = windRates[(windRates.IndexOf(currentWindRate) + windRates.Count - 1) % windRates.Count];
-                    Main.windSpeedCurrent = currentWindRate;
-                    Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
-                    windSlider.SetValue(currentWindRate);
-                },
+                leftClickText: () => UpdateWind(forwards: true),
+                rightClickText: () => UpdateWind(forwards: false),
                 valueFormatter: value =>
                 {
                     // -1.2 to 1.2 represents -60 to 60 mph
@@ -191,18 +142,7 @@ namespace ModHelper.UI.Elements
                 }
             );
 
-            uiList.Add(windSlider);
-            AddPadding(3f);
-
-            // Town NPCs
-            // Force at least 1 for the max, just so the slider has a range
-            int numberOfTownNPCs = GetTownNpcCount();
-            if (numberOfTownNPCs <= 0)
-            {
-                numberOfTownNPCs = 0;
-            }
-
-            townNpcSlider = new(
+            townNpcSlider = AddSlider(
                 title: "Town NPCs",
                 defaultValue: 1,
                 min: 0f,
@@ -212,10 +152,9 @@ namespace ModHelper.UI.Elements
                 hover: "Set the number of town NPCs",
                 textSize: 0.9f
             );
-            uiList.Add(townNpcSlider);
             AddPadding();
 
-            // tracking
+            // Tracking
             AddHeader("Tracking");
             toggleAllTracking = AddOption("Toggle All", ToggleAllTracking, "Toggle all tracking");
             foreach (var tracking in TrackingSystem.Trackings)
@@ -257,27 +196,41 @@ namespace ModHelper.UI.Elements
             AddAction(saveWorld, "Save World", $"Save the current world file as '{worldName}'\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
 
             AddAction(StopInvasion, "Stop Invasion", "Stop the current invasion if one is in progress", rightClick: () => Main.NewText("No right click action"));
-
-            // invasion / toggles
-            // AddHeader("Invasions");
-            // AddOption("Party", ToggleParty, "Start a party in the world");
-            // AddOption("Slime Rain", ToggleSlimeRain, "Start or stop slime rain");
-            // AddOption("Blood Moon", StartBloodMoon, "Start or stop a blood moon");
-            // AddOption("Solar Eclipse", ToggleSolarEclipse, "Start or stop a solar eclipse");
-            // AddPadding(5);
-
-            // // invasions
-            // AddHeader("More Invasions");
-            // AddAction(() => TryStartInvasion(InvasionID.GoblinArmy), "Goblin Army", "Start Goblin Army invasion");
-            // AddAction(() => TryStartInvasion(InvasionID.PirateInvasion), "Pirate Invasion", "Start Pirate Invasion");
-            // AddAction(() => TryStartInvasion(InvasionID.CachedPumpkinMoon), "Pumpkin Moon", "Start Pumpkin Moon invasion");
-            // AddAction(() => TryStartInvasion(InvasionID.CachedFrostMoon), "Frost Moon", "Start Frost Moon invasion");
-            // AddAction(() => TryStartInvasion(InvasionID.MartianMadness), "Martian Madness", "Start Martian Madness invasion");
-            // AddPadding(5);
-            // AddAction(() => TryStartInvasion(InvasionID.CachedOldOnesArmy), "Old Ones Army", "Start Old Ones Army invasion");
-            // AddAction(StopInvasion, "Stop Invasion", "Stop the current invasion");
         }
         #endregion // end of constructor
+
+        #region Weather
+
+        private void UpdateRain(bool forwards)
+        {
+            int plusOrMinus = forwards ? 1 : -1;
+
+            currentRainRate = rainRates[(rainRates.IndexOf(currentRainRate) + plusOrMinus) % rainRates.Count];
+            // round to nearest 0.1
+            currentRainRate = (float)Math.Round(currentRainRate, 1);
+
+            // Main.rainTime = 3600; // Set a reasonable duration for rain
+            Main.maxRaining = currentRainRate;
+            Main.cloudAlpha = currentRainRate;
+            rainSlider.SetValue(currentRainRate);
+            ChatHelper.NewText("Rain set to " + rainStrings[currentRainRate]);
+        }
+
+        private void UpdateWind(bool forwards)
+        {
+            int plusOrMinus = forwards ? 1 : -1;
+
+            currentWindRate = windRates[(windRates.IndexOf(currentWindRate) + plusOrMinus) % windRates.Count];
+            // round to nearest 0.1
+            currentWindRate = (float)Math.Round(currentWindRate, 1);
+
+            Main.windSpeedCurrent = currentWindRate;
+            Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
+            windSlider.SetValue(currentWindRate);
+            // ChatHelper.NewText("Wind set to " + Math.Abs(currentWindRate * 60) + " mph " + (currentWindRate < 0 ? "E" : "W"));
+        }
+
+        #endregion
 
         #region Freeze Time
         private void ToggleFreezeTime()

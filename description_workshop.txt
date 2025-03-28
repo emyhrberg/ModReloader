@@ -11,6 +11,7 @@ Features:
 🔹 Teleport Anywhere – instantly move across the map.
 🔹 Hitbox Tracker – track players, NPCs, projectiles with arrows and hitboxes.
 🔹 Keep Game Running - keeps the game running when out of focus if desired.
+🔹 Custom Exceptions - adds a button to copy exception to clipboard
 🔹 Multiplayer And Server Reload: Restart and re-joins in multiplayer to test multiple clients.
 And of course, the entire mod, its UI, and every single feature can be toggled in its menu and customized in the config.
 
@@ -20,7 +21,7 @@ https://i.imgur.com/2aswesl.mp4
 Reload Demo:
 https://i.imgur.com/M7iq5FQ.mp4
 
-Steps For Multiplayer And Server Reload:
+Multiplayer And Server Reload is in an experimental state but here are the steps:
 1. Right click the green reload button to toggle and show the red reload button.
 2. Click the red reload button to start a server and join it.
 3. Launch a second client.

@@ -61,6 +61,10 @@ namespace ModHelper.Common.Players
 
         public void EnableSupermode()
         {
+            // Force config option to true.
+            Conf.C.EnterWorldSuperMode = true;
+            Conf.ForceSaveConfig(Conf.C);
+
             SuperMode = true;
 
             SetAllCheats(true);
@@ -98,6 +102,11 @@ namespace ModHelper.Common.Players
 
         public void DisableSupermode()
         {
+            // Force config option to false.
+            // To set it for future reloads, for the users convenience.
+            Conf.C.EnterWorldSuperMode = false;
+            Conf.ForceSaveConfig(Conf.C);
+
             SuperMode = false;
 
             SetAllCheats(false);
