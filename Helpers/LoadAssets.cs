@@ -25,7 +25,8 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> CollapseLeft;
         public static Asset<Texture2D> CollapseRight;
         public static Asset<Texture2D> Button;
-        public static Asset<Texture2D> ButtonOnOff;
+        public static Asset<Texture2D> ButtonNoOutline;
+        public static Asset<Texture2D> ButtonHighlight;
         public static Asset<Texture2D> ButtonConfig;
         public static Asset<Texture2D> ButtonItems;
         public static Asset<Texture2D> ButtonNPC;

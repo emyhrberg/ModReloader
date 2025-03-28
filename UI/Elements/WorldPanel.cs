@@ -213,7 +213,12 @@ namespace ModHelper.UI.Elements
             Main.maxRaining = currentRainRate;
             Main.cloudAlpha = currentRainRate;
             rainSlider.SetValue(currentRainRate);
-            ChatHelper.NewText("Rain set to " + rainStrings[currentRainRate]);
+
+            // Send packet
+            if (Main.netMode == NetmodeID.Server)
+            {
+                NetMessage.SendData(MessageID.WorldData);
+            }
         }
 
         private void UpdateWind(bool forwards)
@@ -227,7 +232,6 @@ namespace ModHelper.UI.Elements
             Main.windSpeedCurrent = currentWindRate;
             Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
             windSlider.SetValue(currentWindRate);
-            // ChatHelper.NewText("Wind set to " + Math.Abs(currentWindRate * 60) + " mph " + (currentWindRate < 0 ? "E" : "W"));
         }
 
         #endregion
@@ -640,6 +644,28 @@ namespace ModHelper.UI.Elements
 
         private static void StopInvasion()
         {
+            // Check if slime rain, blood moon, or solar eclipse
+            if (Main.slimeRain)
+            {
+                Main.StopSlimeRain();
+                Main.NewText("Ending Slime Rain...");
+            }
+            if (Main.bloodMoon)
+            {
+                Main.bloodMoon = false;
+                Main.NewText("Ending Blood Moon...");
+            }
+            if (Main.eclipse)
+            {
+                Main.eclipse = false;
+                Main.NewText("Ending Solar Eclipse...");
+            }
+            if (Main.invasionType == 0)
+            {
+                Main.NewText("No invasion in progress.");
+                return;
+            }
+
             Main.NewText("Stopping invasion...");
             Main.invasionType = 0;
             Main.invasionProgress = 0;

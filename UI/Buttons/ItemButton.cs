@@ -29,92 +29,27 @@ namespace ModHelper.UI.Buttons
             _scale = 1.2f + (buttonSize - 70f) * 0.005f;
         }
 
-        /// <summary>
-        /// This is needed because ItemButton is set to end animation at its last frame 5.
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        protected override void DrawSelf(SpriteBatch spriteBatch)
-        {
-            if (!Active || Button == null || Button.Value == null)
-                return;
-
-            // Get the button size from MainState
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = sys?.mainState?.ButtonSize ?? 70f;
-
-            // Get the dimensions based on the button size.
-            CalculatedStyle dimensions = GetInnerDimensions();
-            Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
-            opacity = IsMouseHovering ? 1f : 0.7f; // Determine opacity based on mouse hover.
-
-            // Set UIText opacity
-            ButtonText.TextColor = Color.White * opacity;
-
-            // Draw the texture with the calculated opacity.
-            spriteBatch.Draw(Button.Value, drawRect, Color.White * opacity);
-
-            // Draw the animation texture
-            if (Spritesheet != null)
-            {
-                if (IsMouseHovering)
-                {
-                    frameCounter++;
-                    if (frameCounter >= FrameSpeed)
-                    {
-                        if (currFrame < FrameCount) // only increment if not at last frame
-                        {
-                            currFrame++;
-                        }
-                        // Otherwise, if currFrame is already MaxFrames, do nothing.
-                        frameCounter = 0;
-                    }
-                }
-                else
-                {
-                    currFrame = StartFrame;
-                    frameCounter = 0;
-                }
-
-                // Use a custom scale and offset to draw the animated overlay.
-                Vector2 position = dimensions.Position();
-                Vector2 size = new(dimensions.Width, dimensions.Height);
-                Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * Scale) / 2f;
-                Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
-                centeredPosition.Y -= 7; // magic offset to move it up a bit
-
-                // Draw the spritesheet.
-                spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
-            }
-        }
-
         public override void LeftClick(UIMouseEvent evt)
         {
-            // force open inventory
-            // Main.playerInventory = true;
-
-            // Close the NPCSpawnerPanel.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            var npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
-            if (npcSpawnerPanel != null && npcSpawnerPanel.GetActive())
-            {
-                npcSpawnerPanel.SetActive(false);
-            }
 
             // Toggle the ItemsPanel.
-            ItemSpawner itemSpawnerPanel = sys?.mainState?.itemSpawnerPanel;
-            if (itemSpawnerPanel != null)
+            ItemSpawner panel = sys?.mainState?.itemSpawnerPanel;
+            if (panel != null)
             {
-                if (itemSpawnerPanel.GetActive())
+                // Close the NPC spawner if open
+                var npcPanel = sys.mainState.npcSpawnerPanel;
+                if (npcPanel != null && npcPanel.GetActive())
                 {
-                    itemSpawnerPanel.SetActive(false);
+                    npcPanel.SetActive(false);
+                    var npcButton = sys.mainState.AllButtons.Find(x => x is NPCButton);
+                    if (npcButton != null)
+                        npcButton.ParentActive = false;
                 }
-                else
-                {
-                    itemSpawnerPanel.SetActive(true);
 
-                    // focus on the search bar
-                    itemSpawnerPanel.GetCustomTextBox()?.Focus();
-                }
+                // Use the new helper to ensure other left-side panels are closed
+                sys.mainState.TogglePanel(panel);
+                ParentActive = panel.GetActive();
             }
         }
     }

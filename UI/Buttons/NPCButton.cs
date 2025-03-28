@@ -18,29 +18,30 @@ namespace ModHelper.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Close the ItemSpawnerPanel.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            var itemSpawnerPanel = sys?.mainState?.itemSpawnerPanel;
-            if (itemSpawnerPanel != null && itemSpawnerPanel.GetActive())
-            {
-                itemSpawnerPanel.SetActive(false);
-            }
 
-            // Toggle the NPCSpawnerPanel.
-            NPCSpawner npcSpawnerPanel = sys?.mainState?.npcSpawnerPanel;
-
-            if (npcSpawnerPanel != null)
+            // Toggle the NPCPanel.
+            NPCSpawner panel = sys?.mainState?.npcSpawnerPanel;
+            if (panel != null)
             {
-                if (npcSpawnerPanel.GetActive())
+                // Close the Item spawner if open
+                var itemPanel = sys.mainState.itemSpawnerPanel;
+                if (itemPanel != null && itemPanel.GetActive())
                 {
-                    npcSpawnerPanel.SetActive(false);
+                    itemPanel.SetActive(false);
+                    var itemButton = sys.mainState.AllButtons.Find(x => x is ItemButton);
+                    if (itemButton != null)
+                        itemButton.ParentActive = false;
                 }
-                else
-                {
-                    npcSpawnerPanel.SetActive(true);
 
-                    // focus on textbox
-                    npcSpawnerPanel.GetCustomTextBox()?.Focus();
+                // Use the helper to ensure other left-side panels are closed
+                sys.mainState.TogglePanel(panel);
+                ParentActive = panel.GetActive();
+
+                // Focus on textbox if panel is active
+                if (panel.GetActive())
+                {
+                    panel.GetCustomTextBox()?.Focus();
                 }
             }
         }

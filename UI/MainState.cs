@@ -67,13 +67,15 @@ namespace ModHelper.UI
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
             // Add buttons
-            AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", hoverTextDescription: "Right click to toggle super mode");
             AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Set world settings and debugging");
             AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", hoverTextDescription: "Right click to open log");
             AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", hoverTextDescription: "Right click to toggle all UI elements hitboxes");
+            AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", hoverTextDescription: "Right click to go to mod sources");
+
+            // offset += ButtonSize;
 
             // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
             if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -84,11 +86,11 @@ namespace ModHelper.UI
             {
                 reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle MP reload");
                 offset -= ButtonSize;
-                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle SP reload");
+                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle SP reload");
             }
 
-            // Mods button
-            AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods");
+            AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
+
 
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
@@ -184,6 +186,22 @@ namespace ModHelper.UI
                     DrawHelper.DrawTooltipPanel(button, button.HoverText, button.HoverTextDescription); // Draw the tooltip panel
                 }
             }
+        }
+
+        public void TogglePanel(DraggablePanel panel)
+        {
+            // Determine if the panel is in LeftSidePanels or RightSidePanels
+            bool isLeft = LeftSidePanels.Contains(panel);
+
+            // Deactivate other panels on the same side
+            var panelGroup = isLeft ? LeftSidePanels : RightSidePanels;
+            foreach (var p in panelGroup)
+            {
+                if (p != panel) p.SetActive(false);
+            }
+
+            // Toggle the target panel
+            panel.SetActive(!panel.GetActive());
         }
     }
 }

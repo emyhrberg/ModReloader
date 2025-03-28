@@ -20,12 +20,15 @@ namespace ModHelper.UI.Buttons
     {
         // General variables for a button
         protected Asset<Texture2D> Button;
+        protected Asset<Texture2D> ButtonHighlight;
+        protected Asset<Texture2D> ButtonNoOutline;
         protected Asset<Texture2D> Spritesheet { get; set; }
         public string HoverText = "";
         public string HoverTextDescription;
         protected float opacity = 0.8f;
         public ButtonText ButtonText;
         public bool Active = true;
+        public bool ParentActive = false;
 
         // Animation frames
         protected int currFrame = 1; // the current frame
@@ -40,9 +43,11 @@ namespace ModHelper.UI.Buttons
         protected abstract int FrameHeight { get; } // abstract means force child classes to implement this
 
         // Constructor
-        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription="", float textSize = 0.9f) : base(spritesheet)
+        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription = "", float textSize = 0.9f) : base(spritesheet)
         {
             Button = Ass.Button;
+            ButtonHighlight = Ass.ButtonHighlight;
+            ButtonNoOutline = Ass.ButtonNoOutline;
             Spritesheet = spritesheet;
             HoverText = hoverText;
             HoverTextDescription = hoverTextDescription;
@@ -81,13 +86,42 @@ namespace ModHelper.UI.Buttons
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
 
             // Set the opacity based on mouse hover.
-            opacity = IsMouseHovering ? 1f : 0.8f; // Determine opacity based on mouse hover.
+            opacity = IsMouseHovering ? 1f : 0.9f; // Determine opacity based on mouse hover.
 
             // Set UIText opacity
-            ButtonText.TextColor = Color.White * opacity;
+            ButtonText.TextColor = Color.White;
 
-            // Draw the texture with the calculated opacity.
-            spriteBatch.Draw(Button.Value, drawRect, Color.White * opacity);
+            // Draw the button with full opacity.
+            spriteBatch.Draw(Button.Value, drawRect, Color.White);
+
+            if (IsMouseHovering)
+            {
+                spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Black * 0.3f);
+            }
+
+            // if (this is ReloadSPButton || this is ReloadMPButton || this is LaunchButton)
+            // {
+            //     // Draw the button with full opacity.
+            //     spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Green * 0.5f);
+            // }
+
+            //Log.Info("parent active: " + ParentActive + "name: " + HoverText);
+
+            if (ParentActive)
+            {
+                // Scale down the highlight and center it
+                float scale = 0.9f; // Scale factor for the highlight
+                Rectangle scaledRect = new Rectangle(
+                    (int)(drawRect.X + drawRect.Width * (1 - scale) / 2),
+                    (int)(drawRect.Y + drawRect.Height * (1 - scale) / 2),
+                    (int)(drawRect.Width * scale),
+                    (int)(drawRect.Height * scale)
+                );
+                spriteBatch.Draw(ButtonHighlight.Value, scaledRect, Color.White * 0.7f);
+            }
+
+            //if (IsMouseHovering)
+            //DrawHelper.DrawProperScale(spriteBatch, this, ButtonHover.Value, scale: 0.92f);
 
             // Draw the animation texture
             if (Spritesheet != null)
@@ -97,9 +131,20 @@ namespace ModHelper.UI.Buttons
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
                     {
-                        currFrame++;
-                        if (currFrame > FrameCount)
-                            currFrame = StartFrame;
+                        // This is needed because ItemButton is set to end animation at its last frame 5.
+                        if (this is ItemButton || this is ModsButton)
+                        {
+                            if (currFrame < FrameCount) // only increment if not at last frame
+                            {
+                                currFrame++;
+                            }
+                        }
+                        else
+                        {
+                            currFrame++;
+                            if (currFrame > FrameCount)
+                                currFrame = StartFrame;
+                        }
                         frameCounter = 0;
                     }
                 }
