@@ -134,18 +134,20 @@ namespace ModHelper.Common.Systems
                 if (IsMouseHovering)
                 {
                     if (!hasCopied)
-                        UICommon.TooltipMouseText("Copy the current exception message to your clipboard");
+                    {
+                        DrawHelper.DrawTooltipPanel(this, "Click to copy", "Copy the error message to your clipboard.");
+                    }
                     else
                     {
-                        UICommon.TooltipMouseText("Copied!");
+                        DrawHelper.DrawTooltipPanel(this, "Copied!", "The error message has been copied to your clipboard.");
+                    }
 
-                        // If it's been 3 seconds, reset the button
-                        TimeSpan interval = TimeSpan.FromSeconds(3);
-                        bool has3SecondsPassed = DateTime.Now - copyTime >= interval;
-                        if (has3SecondsPassed)
-                        {
-                            hasCopied = false;
-                        }
+                    // If it's been 3 seconds, reset the button
+                    TimeSpan interval = TimeSpan.FromSeconds(3);
+                    bool has3SecondsPassed = DateTime.Now - copyTime >= interval;
+                    if (has3SecondsPassed)
+                    {
+                        hasCopied = false;
                     }
                 }
             }

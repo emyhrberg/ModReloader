@@ -7,8 +7,10 @@ namespace ModHelper.Common.Players
     {
         public override void PostUpdate()
         {
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
             // Only teleport if TeleportMode is on, right mouse is held, AND mouse not consumed by UI.
-            if (PlayerCheatManager.TeleportWithRightClick && Main.mouseRight && !Main.LocalPlayer.mouseInterface)
+            if (p.GetTeleportWithRightClick() && Main.mouseRight && !Main.LocalPlayer.mouseInterface)
             {
                 Main.LocalPlayer.Teleport(Main.MouseWorld);
             }

@@ -12,17 +12,6 @@ using Terraria.ModLoader;
 
 namespace ModHelper.Helpers
 {
-    /// <summary>
-    /// Factory class for creating TimeSpans.
-    /// </summary>
-    public static class TimeSpanFactory
-    {
-        public static TimeSpan FromSeconds(double seconds)
-        {
-            return TimeSpan.FromSeconds(seconds);
-        }
-    }
-
     public static class Log
     {
         // Log a message once every 5 second
@@ -184,6 +173,30 @@ namespace ModHelper.Helpers
             {
                 ChatHelper.NewText("Error opening client.log: " + ex.Message);
                 Log.Error("Error opening client.log: " + ex.Message);
+            }
+        }
+
+        public static void OpenServerLog()
+        {
+            ChatHelper.NewText("Opening server.log...");
+
+            try
+            {
+                string steamPath = GetSteamPath();
+                if (string.IsNullOrEmpty(steamPath))
+                {
+                    ChatHelper.NewText("Steam path is null or empty.");
+                    Log.Error("Steam path is null or empty.");
+                    return;
+                }
+
+                string file = Path.Combine(steamPath, "tModLoader-Logs", "server.log");
+                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                ChatHelper.NewText("Error opening server.log: " + ex.Message);
+                Log.Error("Error opening server.log: " + ex.Message);
             }
         }
 

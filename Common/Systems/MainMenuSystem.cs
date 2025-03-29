@@ -1,0 +1,67 @@
+using Humanizer;
+using Microsoft.Xna.Framework;
+using ModHelper.Helpers;
+using Terraria;
+using Terraria.ModLoader;
+
+namespace ModHelper.Common.Systems
+{
+    using System;
+    using Terraria.UI;
+
+    public class MainMenuSystem : ModSystem
+    {
+        private static UserInterface menuInterface;
+        private static MainMenuState menuUI;
+
+        public override void Load()
+        {
+            // Create our UI
+            menuUI = new MainMenuState();
+            menuInterface = new UserInterface();
+            menuInterface.SetState(menuUI);
+
+            // Hook Update and Draw
+            On_Main.Update += MenuUpdateHook;
+            On_Main.DrawMenu += MenuDrawHook;
+        }
+
+        public override void Unload()
+        {
+            On_Main.Update -= MenuUpdateHook;
+            On_Main.DrawMenu -= MenuDrawHook;
+            menuInterface = null;
+            menuUI = null;
+        }
+
+        private static void MenuUpdateHook(On_Main.orig_Update orig, Main self, GameTime gameTime)
+        {
+            orig(self, gameTime);
+            if (Main.gameMenu)
+            {
+                menuInterface?.Update(gameTime);
+            }
+        }
+
+        private static void MenuDrawHook(On_Main.orig_DrawMenu orig, Main self, GameTime gameTime)
+        {
+            orig(self, gameTime);
+
+            Main.spriteBatch.Begin();
+            try
+            {
+                menuInterface.Draw(Main.spriteBatch, gameTime);
+            }
+            catch (Exception ex)
+            {
+                // Log the error but don't crash the game
+                Log.Error("Error drawing menu UI: " + ex.Message);
+            }
+            finally
+            {
+                // Always end the sprite batch
+                Main.spriteBatch.End();
+            }
+        }
+    }
+}

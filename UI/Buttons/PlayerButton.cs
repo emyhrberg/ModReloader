@@ -65,11 +65,7 @@ namespace ModHelper.UI.Buttons
             // Toggle super mode
             PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
 
-            p.SuperMode = !p.SuperMode;
-            if (p.SuperMode)
-                p.EnableSupermode();
-            else
-                p.DisableSupermode();
+            p.ToggleSuperMode();
         }
     }
 }

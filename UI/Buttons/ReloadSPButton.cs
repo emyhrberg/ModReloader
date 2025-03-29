@@ -32,7 +32,7 @@ namespace ModHelper.UI.Buttons
 
             if (ModsToReload.modsToReload.Count == 0)
             {
-                ChatHelper.NewText("No mods to reload, add some in Mods.");
+                ChatHelper.NewText("No mods to reload. Add a mod by checking the box in the Mod Sources list.");
                 Log.Warn("No mods to reload");
                 return;
             }

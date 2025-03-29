@@ -110,6 +110,11 @@ Mods: {
 				Tooltip: Shader God Glow
 				DisplayName: Border Shader Dye
 			}
+
+			GodGlowDyeItem: {
+				DisplayName: God Glow Dye Item
+				Tooltip: ""
+			}
 		}
 	}
 }

@@ -83,20 +83,8 @@ namespace ModHelper.UI.Elements
                 increment: 1,
                 hover: "Set the spawn rate multiplier",
                 textSize: 0.9f,
-                leftClickText: () =>
-                {
-                    currentSpawnRate = spawnRates[(spawnRates.IndexOf(currentSpawnRate) + 1) % spawnRates.Count];
-                    SpawnRateMultiplier.Multiplier = currentSpawnRate;
-                    spawnRateSlider.SetValue(currentSpawnRate); // set normalized value 0 to 1
-                    // set normalized value 0 to 1
-                    ChatHelper.NewText("Spawn rate set to " + currentSpawnRate);
-                },
-                rightClickText: () =>
-                {
-                    currentSpawnRate = spawnRates[(spawnRates.IndexOf(currentSpawnRate) + spawnRates.Count - 1) % spawnRates.Count];
-                    SpawnRateMultiplier.Multiplier = currentSpawnRate;
-                    spawnRateSlider.SetValue(currentSpawnRate);
-                }
+                leftClickText: () => UpdateSpawnRate(forwards: true),
+                rightClickText: () => UpdateSpawnRate(forwards: false)
             );
 
             rainSlider = AddSlider(
@@ -155,7 +143,7 @@ namespace ModHelper.UI.Elements
             AddPadding();
 
             // Tracking
-            AddHeader("Tracking");
+            AddHeader("Tracking", hover: "Track the positions of all entities in the world with arrows");
             toggleAllTracking = AddOption("Toggle All", ToggleAllTracking, "Toggle all tracking");
             foreach (var tracking in TrackingSystem.Trackings)
             {
@@ -170,7 +158,7 @@ namespace ModHelper.UI.Elements
             }
             AddPadding();
 
-            AddHeader("Hitboxes");
+            AddHeader("Hitboxes", hover: "Toggle the hitboxes for all entities in the world");
             toggleAllHitboxes = AddOption("Toggle All", ToggleAllHitboxes, "Toggle all hitboxes");
             foreach (var hitbox in HitboxSystem.Hitboxes)
             {
@@ -185,7 +173,7 @@ namespace ModHelper.UI.Elements
             }
             AddPadding();
 
-            AddHeader("Misc");
+            AddHeader("Misc", hover: "Miscellaneous actions related to the world");
 
             string playerPath = Main.ActivePlayerFileData.Path;
             string playerName = Path.GetFileName(playerPath);
@@ -195,11 +183,35 @@ namespace ModHelper.UI.Elements
             string worldName = Path.GetFileName(worldPath);
             AddAction(saveWorld, "Save World", $"Save the current world file as '{worldName}'\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
 
-            AddAction(StopInvasion, "Stop Invasion", "Stop the current invasion if one is in progress", rightClick: () => Main.NewText("No right click action"));
+            AddAction(TryStopInvasion, "Stop Invasion", "Stop the current invasion if one is in progress", rightClick: () => Main.NewText("No right click action"));
         }
         #endregion // end of constructor
 
         #region Weather
+
+        private void UpdateSpawnRate(bool forwards)
+        {
+            int plusOrMinus = forwards ? 1 : -1;
+
+            currentSpawnRate = spawnRates[(spawnRates.IndexOf(currentSpawnRate) + plusOrMinus) % spawnRates.Count];
+            // round to nearest 0.1
+            currentSpawnRate = (float)Math.Round(currentSpawnRate, 1);
+
+            SpawnRateMultiplier.Multiplier = currentSpawnRate;
+            spawnRateSlider.SetValue(currentSpawnRate);
+
+            // if we set the spawn rate to 0, we also butcher all NPCs
+            if (currentSpawnRate == 0)
+            {
+                foreach (NPC npc in Main.npc)
+                {
+                    if (npc.active && !npc.friendly && !npc.townNPC && !npc.dontTakeDamage)
+                    {
+                        npc.StrikeInstantKill();
+                    }
+                }
+            }
+        }
 
         private void UpdateRain(bool forwards)
         {
@@ -232,6 +244,46 @@ namespace ModHelper.UI.Elements
             Main.windSpeedCurrent = currentWindRate;
             Main.windSpeedTarget = currentWindRate; // Also set target to avoid drift
             windSlider.SetValue(currentWindRate);
+        }
+
+        private void UpdateRainSlider(float newValue)
+        {
+            // Round to nearest 0.1
+            newValue = (float)Math.Round(newValue, 1);
+
+            if (newValue == 0)
+            {
+                // Stop rain completely
+                Main.rainTime = 0;
+                Main.StopRain();
+                Main.cloudAlpha = 0f;
+                Main.maxRaining = 0f;
+                return;
+            }
+
+            // Start rain if it's not already raining
+            if (!Main.raining)
+            {
+                Main.StartRain();
+            }
+
+            // Set rain and cloud intensity based on slider value (0.01-1.0)
+            Main.maxRaining = newValue;
+            Main.cloudAlpha = newValue;
+            // Main.rainTime = 3600; // Set a reasonable duration for rain
+        }
+
+        private void UpdateWindSlider(float newValue)
+        {
+            // newValue is already in our desired range of -60 to 60
+            // so we can directly set it to the current and target wind speeds
+            Log.SlowInfo($"Wind Slider: {newValue}");
+
+            Main.windSpeedCurrent = newValue;
+            Main.windSpeedTarget = newValue;
+
+            // Update our tracking variable to match
+            currentWindRate = newValue;
         }
 
         #endregion
@@ -280,45 +332,7 @@ namespace ModHelper.UI.Elements
 
         #endregion
 
-        private void UpdateRainSlider(float newValue)
-        {
-            // Round to nearest 0.1
-            newValue = (float)Math.Round(newValue, 1);
-
-            if (newValue == 0)
-            {
-                // Stop rain completely
-                Main.rainTime = 0;
-                Main.StopRain();
-                Main.cloudAlpha = 0f;
-                Main.maxRaining = 0f;
-                return;
-            }
-
-            // Start rain if it's not already raining
-            if (!Main.raining)
-            {
-                Main.StartRain();
-            }
-
-            // Set rain and cloud intensity based on slider value (0.01-1.0)
-            Main.maxRaining = newValue;
-            Main.cloudAlpha = newValue;
-            // Main.rainTime = 3600; // Set a reasonable duration for rain
-        }
-
-        private void UpdateWindSlider(float newValue)
-        {
-            // newValue is already in our desired range of -60 to 60
-            // so we can directly set it to the current and target wind speeds
-            Log.SlowInfo($"Wind Slider: {newValue}");
-
-            Main.windSpeedCurrent = newValue;
-            Main.windSpeedTarget = newValue;
-
-            // Update our tracking variable to match
-            currentWindRate = newValue;
-        }
+        #region Town NPCs
 
         private void UpdateTownNpcSlider(float newValue)
         {
@@ -339,6 +353,9 @@ namespace ModHelper.UI.Elements
 
         private int GetTownNpcCount() => Main.npc.Where(npc => npc.active && npc.townNPC).Count();
 
+        #endregion
+
+        #region Time
         private float GetCurrentTimeNormalized()
         {
             // Get the total time in ticks
@@ -434,6 +451,10 @@ namespace ModHelper.UI.Elements
             // }
         }
 
+        #endregion
+
+        #region Update (all)
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -527,6 +548,7 @@ namespace ModHelper.UI.Elements
                 timeSlider.UpdateText("Time: " + CalcIngameTime());
             }
         }
+        #endregion
 
         #region Save
         // To use :
@@ -642,7 +664,7 @@ namespace ModHelper.UI.Elements
             Main.NewText(Main.eclipse ? "Starting Solar Eclipse..." : "Ending Solar Eclipse...");
         }
 
-        private static void StopInvasion()
+        private static void TryStopInvasion()
         {
             // Check if slime rain, blood moon, or solar eclipse
             if (Main.slimeRain)

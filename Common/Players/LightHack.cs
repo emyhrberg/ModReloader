@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace ModHelper.Common.Players
@@ -7,7 +8,9 @@ namespace ModHelper.Common.Players
     {
         public override void ModifyLight(int i, int j, int type, ref float r, ref float g, ref float b)
         {
-            if (PlayerCheatManager.LightMode)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetLightMode())
             {
                 r = MathHelper.Clamp(r + 0.5f, 0, 1);
                 g = MathHelper.Clamp(g + 0.5f, 0, 1);

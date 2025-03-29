@@ -14,11 +14,13 @@ namespace ModHelper.Common.Players
         public override void PostUpdate()
         {
             // Only run in singleplayer
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                return;
+            // if (Main.netMode != NetmodeID.SinglePlayer)
+            //     return;
+
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
 
             // If the cheat is not active, exit
-            if (!PlayerCheatManager.MineAura)
+            if (!p.GetMineAura())
                 return;
 
             // Convert the player's position to tile coordinates.

@@ -21,7 +21,8 @@ namespace ModHelper.Common.Players
         // Fixed by setting to a high value (e.g 100) instead of max value.
         public override void UpdateEquips()
         {
-            if (PlayerCheatManager.BuildAnywhere)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+            if (p.GetBuildAnywhere())
             {
                 // Set infinite range
                 int range = 100;
@@ -39,7 +40,9 @@ namespace ModHelper.Common.Players
 
         private void PlaceThing_Tiles(On_Player.orig_PlaceThing_Tiles orig, Player player)
         {
-            if (PlayerCheatManager.BuildAnywhere && player == Main.LocalPlayer)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetBuildAnywhere())
             {
                 Tile tile = Framing.GetTileSafely(Player.tileTargetX, Player.tileTargetY);
                 ushort wallType = tile.WallType;
@@ -55,8 +58,10 @@ namespace ModHelper.Common.Players
 
         private void PlaceThing_Walls(On_Player.orig_PlaceThing_Walls orig, Player player)
         {
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
             // Only apply when build mode is on
-            if (PlayerCheatManager.BuildAnywhere && player == Main.LocalPlayer)
+            if (p.GetBuildAnywhere())
             {
                 Tile tile = Framing.GetTileSafely(Player.tileTargetX - 1, Player.tileTargetY);
                 bool hasTile = tile.HasTile;

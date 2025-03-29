@@ -67,6 +67,7 @@ namespace ModHelper.UI
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
             // Add buttons
+            AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
             AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
             AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
             AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", hoverTextDescription: "Right click to toggle super mode");
@@ -89,9 +90,6 @@ namespace ModHelper.UI
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle SP reload");
             }
 
-            AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
-
-
             // Add collapse button on top
             collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
             Append(collapse);
@@ -111,6 +109,10 @@ namespace ModHelper.UI
                 KeepGameRunningTextButton topText = new("Keep Game Running: " + onOff);
                 Append(topText);
             }
+
+            // Temporary debug text for player name, who am I, and frame rate
+            DebugText debugText = new("Debug Text", TextSize, large: false);
+            Append(debugText);
         }
 
         private T AddPanel<T>(string side) where T : DraggablePanel, new()

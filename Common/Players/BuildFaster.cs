@@ -7,8 +7,10 @@ namespace ModHelper.Common.Players
     {
         public override float UseTimeMultiplier(Item item)
         {
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
             // Fast speed for tools
-            if (PlayerCheatManager.BuildFaster)
+            if (p.GetBuildFaster())
             {
                 if (item.pick > 0 || item.axe > 0 || item.hammer > 0)
                 {
@@ -27,7 +29,9 @@ namespace ModHelper.Common.Players
 
         public override float UseAnimationMultiplier(Item item)
         {
-            if (PlayerCheatManager.BuildFaster)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetBuildFaster())
             {
                 // Animation update speed
                 if (item.pick > 0 || item.axe > 0 || item.hammer > 0)

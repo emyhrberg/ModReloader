@@ -9,15 +9,19 @@ namespace ModHelper.Common.Players
     {
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
             // If God mode is enabled and KillAura is NOT enabled, be immune.
-            if (PlayerCheatManager.God && !PlayerCheatManager.KillAura)
+            if (p.GetGod() && !p.GetKillAura())
                 return true;
             return false;
         }
 
         public override void PostUpdate()
         {
-            if (PlayerCheatManager.God)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetGod())
             {
                 // Set player stats to max
                 Player.statLife = Player.statLifeMax2;
@@ -29,9 +33,11 @@ namespace ModHelper.Common.Players
 
         public override void PreUpdateBuffs()
         {
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
             // Remove all debuffs if god mode is enabled
             // Kinda scuffed because it shows the debuff icon for a split second
-            if (PlayerCheatManager.God)
+            if (p.GetGod())
             {
                 for (int i = 0; i < Player.MaxBuffs; i++)
                 {
@@ -52,7 +58,9 @@ namespace ModHelper.Common.Players
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            if (PlayerCheatManager.God)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetGod())
             {
                 // Don't kill the player
                 Player.statLife = Player.statLifeMax2;

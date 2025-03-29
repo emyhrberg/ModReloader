@@ -39,18 +39,20 @@ namespace ModHelper.Common.Players
 
         public override void PostUpdate()
         {
+            if (Main.dedServ)
+                return;
+
             // reset just to be sure
             ready = false;
 
             // create it if it doesnt already exist.
             // You get an exception if you try to do this in
             // Load() for some reason
-            if (!Main.dedServ && playerDrawingTarget == null)
-                playerDrawingTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, (int)GodGlow.renderSize.X, (int)GodGlow.renderSize.Y);
+            playerDrawingTarget = new RenderTarget2D(Main.graphics.GraphicsDevice, (int)GodGlow.renderSize.X, (int)GodGlow.renderSize.Y);
 
             // since just testing, its only drawn for the local player
-            if (Player.whoAmI != Main.myPlayer || playerDrawingTarget == null)
-                return;
+            // if (Player.whoAmI != Main.myPlayer || playerDrawingTarget == null)
+            // return;
 
             // set up the player draw layer stuff and
             // then go collect/run all of the layers
@@ -97,7 +99,7 @@ namespace ModHelper.Common.Players
 
             // set the shader of the draw data to the glow effect thing.
             // This can be changed to any other shader
-            int shaderId = GameShaders.Armor.GetShaderIdFromItemId(ModContent.ItemType<BorderShaderDye>());
+            int shaderId = GameShaders.Armor.GetShaderIdFromItemId(ModContent.ItemType<GodGlowDyeItem>());
             if (shaderId != -1)
             {
                 glowDraw.shader = shaderId;
@@ -212,76 +214,6 @@ namespace ModHelper.Common.Players
             //PlayerDrawLayers.DrawPlayer_37_BeetleBuff(ref drawInfo);
             //PlayerDrawLayers.DrawPlayer_38_EyebrellaCloud(ref drawInfo);
             //PlayerDrawLayers.DrawPlayer_MakeIntoFirstFractalAfterImage(ref drawInfo);
-        }
-    }
-
-    /// <summary>
-    /// Draws/adds the glow image thing behind the player
-    /// </summary>
-    public class PlayerGlowEffectLayer : PlayerDrawLayer
-    {
-        public override Position GetDefaultPosition() => PlayerDrawLayers.BeforeFirstVanillaLayer;
-        public override bool IsHeadLayer => false;
-
-        protected override void Draw(ref PlayerDrawSet _set)
-        {
-            if (Main.gameMenu)
-                return;
-
-            if (!Conf.C.GodGlow)
-                return;
-
-            if (Main.LocalPlayer.whoAmI != _set.drawPlayer.whoAmI)
-                return;
-
-            if (!PlayerCheatManager.God)
-                return;
-
-            if (GodGlow.ready)
-            {
-                // draw the draw data 4 times, but shifted in different
-                // directions for each. This gives it a softer
-                // gradiant and fills in more holes
-                GodGlow.sData.position = _set.Position - Main.screenPosition + (_set.drawPlayer.Size / 2).Floor();
-                DrawData d0, d1, d2, d3;
-                d0 = d1 = d2 = d3 = GodGlow.sData;
-                d0.position += Vector2.UnitY * 3;
-                d1.position += Vector2.UnitY * -3;
-                d2.position += Vector2.UnitX * 3;
-                d3.position += Vector2.UnitY * -3;
-                _set.DrawDataCache.Add(d0);
-                _set.DrawDataCache.Add(d1);
-                _set.DrawDataCache.Add(d2);
-                _set.DrawDataCache.Add(d3);
-            }
-        }
-    }
-
-    /// <summary>
-    /// An empty item created only for its
-    /// ItemID. All armor shaders require themselves
-    /// to be bound to a specific item type.
-    /// </summary>
-    public class BorderShaderDye : ModItem
-    {
-        public override string Texture => "Terraria/Images/Item_" + ItemID.ColorOnlyDye;
-
-        public override void SetStaticDefaults()
-        {
-            if (!Conf.C.GodGlow)
-            {
-                return;
-            }
-
-            if (!Main.dedServ)
-            {
-                GameShaders.Armor.BindShader(Type, new ArmorShaderData(Mod.Assets.Request<Effect>("Effects/OutlineEffect"), "Pass0"));
-            }
-        }
-
-        public override void SetDefaults()
-        {
-            Item.CloneDefaults(ItemID.ColorOnlyDye);
         }
     }
 }

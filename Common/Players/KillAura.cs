@@ -20,7 +20,9 @@ namespace ModHelper.Common.Players
             // base.ModifyHitByNPC(npc, ref modifiers);
 
             // If both KillAura and God mode are enabled...
-            if (PlayerCheatManager.KillAura)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetKillAura())
             {
                 // Instantly kill the NPC...
                 npc.StrikeInstantKill();

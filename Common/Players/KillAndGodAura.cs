@@ -9,7 +9,9 @@ namespace ModHelper.Common.Players
         {
             base.ResetEffects(npc);
 
-            if (PlayerCheatManager.KillAura && PlayerCheatManager.God)
+            PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
+
+            if (p.GetKillAura() && p.GetGod())
             {
                 // Log.SlowInfo("Both KillAura and God mode are enabled!");
 

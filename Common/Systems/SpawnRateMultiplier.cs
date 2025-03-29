@@ -44,7 +44,7 @@ namespace ModHelper.Common.Systems
         {
             Multiplier = value;
 
-            // If spawn rate is set to 0, butcher all hostile NPCs
+            // If spawn rate is set to 0, butcher all enemies
             if (value == 0)
             {
                 foreach (var npc in Main.npc)
@@ -60,7 +60,7 @@ namespace ModHelper.Common.Systems
                 }
                 if (!didPrint)
                 {
-                    ChatHelper.NewText("All hostile NPCs butchered!", new Color(226, 57, 39));
+                    ChatHelper.NewText("All hostile NPCs butchered!", Color.Green);
                     didPrint = true;
                 }
             }
