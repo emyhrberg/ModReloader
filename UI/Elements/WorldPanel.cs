@@ -81,7 +81,7 @@ namespace ModHelper.UI.Elements
                 defaultValue: SpawnRateMultiplier.Multiplier,
                 onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
                 increment: 1,
-                hover: "Set the spawn rate multiplier",
+                hover: "Click to set the spawn rate multiplier",
                 textSize: 0.9f,
                 leftClickText: () => UpdateSpawnRate(forwards: true),
                 rightClickText: () => UpdateSpawnRate(forwards: false)
@@ -94,7 +94,7 @@ namespace ModHelper.UI.Elements
                 defaultValue: Main.maxRaining,
                 onValueChanged: UpdateRainSlider,
                 increment: 0.1f,
-                hover: "Set rain intensity",
+                hover: "Click to set rain intensity",
                 textSize: 0.9f,
                 valueFormatter: value =>
                 {
@@ -113,7 +113,7 @@ namespace ModHelper.UI.Elements
                 defaultValue: MathHelper.Clamp(Main.windSpeedCurrent, -1.2f, 1.2f),
                 onValueChanged: UpdateWindSlider,
                 increment: 0.05f, // This gives us ~24 increments across the range, good precision for mph
-                hover: "Set wind speed",
+                hover: "Click to set wind speed",
                 textSize: 0.9f,
                 leftClickText: () => UpdateWind(forwards: true),
                 rightClickText: () => UpdateWind(forwards: false),

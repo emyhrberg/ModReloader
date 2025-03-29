@@ -71,6 +71,10 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool LogToChat = true;
 
+        [Header("MainMenu")]
+        [DefaultValue(true)]
+        public bool CreateMainMenuButtons = true;
+
         [Header("NPCSpawner")]
 
         [Range(-500f, 500f)]

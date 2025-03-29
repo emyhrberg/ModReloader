@@ -70,20 +70,28 @@ namespace ModHelper.UI.Elements
 
             base.RightClick(evt);
 
-            Active = false;
+            Active = !Active;
 
-            Conf.C.ShowGameKeepRunningText = false;
+            Conf.C.ShowGameKeepRunningText = !Conf.C.ShowGameKeepRunningText;
             Conf.ForceSaveConfig(Conf.C);
 
-            ChatHelper.NewText("Hiding the 'Keep Game Running' text. Open config to toggle show again.", Color.Green);
+            if (Active)
+            {
+                ChatHelper.NewText("'Keep Game Running' text hidden.", new Color(226, 57, 39));
+            }
+            else
+            {
+                ChatHelper.NewText("'Keep Game Running' text shown.", Color.Green);
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (!Active)
-            {
-                return;
-            }
+            // Keep updating the text no matter what so we can toggle even if its hidden
+            // if (!Active)
+            // {
+            // return;
+            // }
 
             if (IsMouseHovering)
             {
@@ -104,7 +112,7 @@ namespace ModHelper.UI.Elements
 
             if (IsMouseHovering)
             {
-                UICommon.TooltipMouseText("Click to toggle whether the game will keep running when unfocused\nRight click to hide this text (show again by toggling the option in the config)");
+                UICommon.TooltipMouseText("Left click to toggle option \nRight click to toggle visibility");
             }
         }
     }

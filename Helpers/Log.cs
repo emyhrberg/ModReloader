@@ -49,7 +49,7 @@ namespace ModHelper.Helpers
                 return; // Skip logging if the mod is unloading or null
 
             // Use TimeSpanFactory to create a 3-second interval.
-            TimeSpan interval = TimeSpanFactory.FromSeconds(seconds);
+            TimeSpan interval = TimeHelper.FromSeconds(seconds);
             if (DateTime.UtcNow - lastLogTime >= interval)
             {
                 // Prepend the class name to the log message.

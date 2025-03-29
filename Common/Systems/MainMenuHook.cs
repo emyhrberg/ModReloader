@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
@@ -7,13 +8,20 @@ using Terraria.UI;
 
 namespace ModHelper.Common.Systems
 {
-    public class MainMenuSystem : ModSystem
+    public class MainMenuHook : ModSystem
     {
         private static UserInterface menuInterface;
         private static MainMenuState menuUI;
 
         public override void Load()
         {
+            // Check if we should hook at all
+            if (Conf.C != null && !Conf.C.CreateMainMenuButtons)
+            {
+                Log.Info("MainMenuHook: CreateMainMenuButtons is set to false. Not hooking into Main Menu.");
+                return;
+            }
+
             // Create our UI
             menuUI = new MainMenuState();
             menuInterface = new UserInterface();

@@ -11,6 +11,7 @@ Mods: {
 					NPCSpawner: NPC Spawner
 					UI: UI
 					Logging: Logging
+					MainMenu: Main Menu Header
 				}
 
 				ClearClientLogOnReload: {
@@ -101,6 +102,11 @@ Mods: {
 				GodGlow: {
 					Label: God Glow
 					Tooltip: Toggle the visual effect showing when god mode is enabled
+				}
+
+				CreateMainMenuButtons: {
+					Label: Create Main Menu Buttons
+					Tooltip: ""
 				}
 			}
 		}

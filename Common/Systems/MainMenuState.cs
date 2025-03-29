@@ -9,17 +9,26 @@ namespace ModHelper.Common.Systems
 {
     public class MainMenuState : UIState
     {
+        private float verticalOffset = 0.06f;
+
         public MainMenuState()
         {
-            MainMenuButton btn1 = new(text: "SkipSelect Singleplayer", verticalOffset: 0f, action: SkipSelectSingleplayer);
-            MainMenuButton btn2 = new("Host Multiplayer", 0.07f, HostMultiplayer);
-            MainMenuButton btn3 = new("SkipSelect Multiplayer", 0.14f, SkipSelectMultiplayer);
-            MainMenuButton btn4 = new("Reload selected mod", 0.21f, async () => ReloadSelectedMod());
+            MainMenuButton button = new MainMenuButton("Mod Helper", 0, null, 0.75f);
 
-            Append(btn1);
-            Append(btn2);
-            Append(btn3);
-            Append(btn4);
+            Append(button);
+
+            int hoverHeightOffset = 38;
+            AddButton("Singleplayer Join", SkipSelectSingleplayer, "Join first available\n world");
+            AddButton("Multiplayer Host", HostMultiplayer, "Host a multiplayer game\n with the first available world", hoverHeightOffset);
+            AddButton("Multiplayer Join", SkipSelectMultiplayer, "Join localhost server\n with first available player", hoverHeightOffset * 2);
+            AddButton("Reload Selected Mod", ReloadSelectedMod, "Reload the selected mod\n in config", hoverHeightOffset * 3);
+        }
+
+        private void AddButton(string text, Action action, string tooltip = "", int yOffset = 0)
+        {
+            MainMenuButton button = new(text: text, verticalOffset: verticalOffset, action: action, tooltip: tooltip, yOffset: yOffset);
+            this.verticalOffset += 0.04f; // Increment the offset for the next button
+            Append(button);
         }
 
         private async void ReloadSelectedMod()
@@ -95,20 +104,24 @@ namespace ModHelper.Common.Systems
             if (Main.PlayerList.Count == 0 || Main.WorldList.Count == 0)
                 throw new Exception("No players or worlds found.");
 
-            // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList.FirstOrDefault();
-
-            // Start game with pair
-            Main.SelectPlayer(player);
-            Log.Info($"Starting game with Player: {player.Name}, World: {Main.WorldList.FirstOrDefault().Name}");
-            Main.ActiveWorldFileData = Main.WorldList.FirstOrDefault();
-            // Ensure the world's file path is valid
+            // Check if the first world has a valid path
             if (string.IsNullOrEmpty(Main.WorldList.FirstOrDefault().Path))
             {
                 Log.Error($"World {Main.WorldList.FirstOrDefault().Name} has an invalid or null path.");
                 var worldPath = Main.WorldList.FirstOrDefault()?.Path;
                 throw new ArgumentNullException(nameof(worldPath), "World path cannot be null or empty.");
             }
+
+            // Getting Player and World from ClientDataHandler
+            var player = Main.PlayerList.FirstOrDefault();
+            var world = Main.WorldList.FirstOrDefault();
+
+            // Start game with pair
+            Main.SelectPlayer(player);
+            Main.ActiveWorldFileData = world;
+
+            Log.Info($"Starting game with Player: {player.Name}, World: {Main.WorldList.FirstOrDefault().Name}");
+
             // Play the selected world in singleplayer
             WorldGen.playWorld();
         }

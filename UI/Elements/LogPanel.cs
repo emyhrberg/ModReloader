@@ -21,8 +21,8 @@ namespace ModHelper.UI.Elements
                 onLeftClick: Log.OpenLogFolder,
                 hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
 
-            AddAction(Log.OpenServerLog, "Open Log", "Click to open tModLoader.log");
             AddAction(Log.OpenClientLog, "Open Client Log", "Click to open client.log");
+            AddAction(Log.OpenServerLog, "Open Server Log", "Click to open server.log");
             AddAction(Log.ClearClientLog, "Clear Log", "Clear the client.log file");
 
             AddOption("Clear Log On Reload", ClearClientOnReload, "When reloading mods, clears the entire client.log between reloads", padding: 3f);

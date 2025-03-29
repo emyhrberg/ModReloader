@@ -5,7 +5,7 @@ using System;
 /// </summary>
 namespace ModHelper.Helpers
 {
-    public static class TimeSpanFactory
+    public static class TimeHelper
     {
         public static TimeSpan FromSeconds(double seconds)
         {
