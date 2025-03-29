@@ -8,6 +8,7 @@ using ModHelper.Common.Configs;
 using ModHelper.PacketHandlers;
 using MonoMod.RuntimeDetour;
 using Terraria;
+using Terraria.ID;
 
 namespace ModHelper.Helpers
 {
@@ -24,6 +25,45 @@ namespace ModHelper.Helpers
             ClientDataHandler.ClientMode = clientMode;
             ClientDataHandler.PlayerID = Utilities.FindPlayerId();
             ClientDataHandler.WorldID = Utilities.FindWorldId();
+        }
+
+        public static async Task Reload()
+        {
+            if (!Conf.C.Reload)
+            {
+                ChatHelper.NewText("Reload is disabled, toggle it in config.");
+                Log.Warn("Reload is disabled");
+                // WorldGen.SaveAndQuit();
+                // Main.menuMode = 0;
+                return;
+            }
+
+            if (ModsToReload.modsToReload.Count == 0)
+            {
+                ChatHelper.NewText("No mods to reload. Add a mod by checking the box in the Mod Sources list.");
+                Log.Warn("No mods to reload");
+                return;
+            }
+
+            // 1 Clear logs if needed
+            if (Conf.C.ClearClientLogOnReload)
+                Log.ClearClientLog();
+
+            // 2 Prepare client data
+            ReloadUtilities.PrepareClient(ClientModes.SinglePlayer);
+
+            // 3 Exit server or world
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                await ReloadUtilities.ExitWorldOrServer();
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                await ReloadUtilities.ExitAndKillServer();
+            }
+
+            // 4 Reload
+            ReloadUtilities.BuildAndReloadMods();
         }
 
         public static Task ExitWorldOrServer()

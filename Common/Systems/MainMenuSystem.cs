@@ -1,14 +1,12 @@
-using Humanizer;
+using System;
 using Microsoft.Xna.Framework;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace ModHelper.Common.Systems
 {
-    using System;
-    using Terraria.UI;
-
     public class MainMenuSystem : ModSystem
     {
         private static UserInterface menuInterface;

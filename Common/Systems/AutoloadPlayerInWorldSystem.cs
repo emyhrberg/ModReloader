@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using ModHelper.Common.Configs;
@@ -66,17 +67,9 @@ namespace ModHelper.Common.Systems
                 throw new Exception("No players or worlds found.");
 
             // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList[ClientDataHandler.PlayerID];
-            var world = Main.WorldList[ClientDataHandler.WorldID];
+            var player = Main.PlayerList.FirstOrDefault();
+            var world = Main.WorldList.FirstOrDefault();
 
-            StartGameWithPair(player, world);
-
-            // Reset Mode status (maybe should be moved to Exit World hook but naaaah)
-            ClientDataHandler.ClientMode = ClientModes.FreshClient;
-        }
-
-        private void StartGameWithPair(PlayerFileData player, WorldFileData world)
-        {
             Main.SelectPlayer(player);
             Mod.Logger.Info($"Starting game with Player: {player.Name}, World: {world.Name}");
             Main.ActiveWorldFileData = world;
