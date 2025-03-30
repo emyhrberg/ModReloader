@@ -159,8 +159,10 @@ namespace ModHelper.Helpers
             try
             {
                 string path = Logging.LogPath;
-                Log.Info("Opening client log: " + path);
-                ChatHelper.NewText("Opening client log: " + path);
+                string fileName = Path.GetFileName(path);
+
+                Log.Info($"Opening {fileName}...");
+                ChatHelper.NewText("Opening " + fileName + "...");
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)

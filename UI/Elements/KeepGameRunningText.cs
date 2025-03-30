@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -17,10 +17,12 @@ namespace ModHelper.UI.Elements
         public KeepGameRunningText(string text, float textScale = 1.0f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
-            VAlign = 0.85f;
+            VAlign = 0.78f;
             HAlign = 0.02f;
+
+            // Arbitrary size, should use ChatManager.GetStringSize() instead
             Width.Set(200, 0);
-            Height.Set(20, 0);
+            Height.Set(20 * 1, 0); // 20 * 3 for 3 lines of text
         }
 
         public override void MouseOver(UIMouseEvent evt)
@@ -36,46 +38,29 @@ namespace ModHelper.UI.Elements
         public override void LeftClick(UIMouseEvent evt)
         {
             KeepGameRunning.KeepRunning = !KeepGameRunning.KeepRunning;
-
-            if (KeepGameRunning.KeepRunning)
-            {
-                SetText("Keep Game Running: ON");
-                Log.Info("Keep Game Running: ON");
-            }
-            else
-            {
-                SetText("Keep Game Running: OFF");
-                Log.Info("Keep Game Running: OFF");
-            }
         }
 
         public override void RightClick(UIMouseEvent evt)
         {
-            if (!Active)
-            {
-                return;
-            }
-
-            base.RightClick(evt);
-
             Active = !Active;
 
-            // Conf.C.ShowGameKeepRunningText = !Conf.C.ShowGameKeepRunningText;
-            // Conf.ForceSaveConfig(Conf.C);
-
-            if (!Active)
+            if (Active)
             {
-                ChatHelper.NewText("Hiding keep game running text");
+                ChatHelper.NewText("Showing debug text", Color.White);
             }
             else
             {
-                ChatHelper.NewText("Showing keep game running text");
+                ChatHelper.NewText("Hiding debug text", Color.White);
             }
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            string onOff = KeepGameRunning.KeepRunning ? "ON" : "OFF";
+            string text = $"Keep Game Running: {onOff}\n";
+            SetText(text);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -90,9 +75,8 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering)
             {
                 Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                UICommon.TooltipMouseText("Left click to toggle option \nRight click to toggle visibility");
+                UICommon.TooltipMouseText("Right click to toggle visibility");
             }
         }
     }
-
 }

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using log4net;
@@ -21,9 +22,11 @@ namespace ModHelper.UI.Elements
                 onLeftClick: Log.OpenLogFolder,
                 hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
 
-            AddAction(() => Log.OpenClientLog(), "Open Client Log", "Click to open client.log");
+            AddPadding(3f);
+            string clientPath = Path.GetFileName(Logging.LogPath);
+            AddAction(Log.OpenClientLog, "Open Client Log", $"Click to open {clientPath}");
             AddAction(Log.OpenServerLog, "Open Server Log", "Click to open server.log");
-            AddAction(Log.ClearClientLog, "Clear Log", "Clear the client.log file");
+            AddAction(Log.ClearClientLog, "Clear Log", $"Clear the {clientPath} file");
 
             AddOption("Clear Log On Reload", ClearClientOnReload, "When reloading mods, clears the entire client.log between reloads", padding: 3f);
             AddPadding(5);

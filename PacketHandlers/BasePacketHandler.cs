@@ -2,8 +2,12 @@
 using Terraria.ModLoader;
 namespace ModHelper.PacketHandlers
 {
-    //Taken from https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
-    internal abstract class PacketHandler
+    // Reference:
+    // https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
+
+    // This class acts as a base class for all packet handlers.
+    // When adding new packet handlers, you should inherit from this class and implement the HandlePacket method.
+    internal abstract class BasePacketHandler
     {
         // The type of the packet handler. This is used to identify the packet handler.
         internal byte HandlerType { get; set; }
@@ -11,7 +15,7 @@ namespace ModHelper.PacketHandlers
         public abstract void HandlePacket(BinaryReader reader, int fromWho);
 
         // Constructor for the packet handler.
-        protected PacketHandler(byte handlerType)
+        protected BasePacketHandler(byte handlerType)
         {
             HandlerType = handlerType;
         }

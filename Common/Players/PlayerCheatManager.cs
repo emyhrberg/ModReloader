@@ -33,7 +33,7 @@ namespace ModHelper.Common.Players
                 {
                     ModNetHandler.GodModePacketHandler.SendGodMode(
                         toWho: -1, // -1 means all players
-                        targetPlayerId: Main.LocalPlayer.whoAmI,
+                        targetPlayerId: Main.myPlayer,
                         godMode: Main.LocalPlayer.GetModPlayer<PlayerCheatManager>().GetGod()
                     );
                 }
@@ -85,6 +85,10 @@ namespace ModHelper.Common.Players
             Conf.C.EnterWorldSuperMode = !Conf.C.EnterWorldSuperMode;
             Conf.ForceSaveConfig(Conf.C);
 
+            // Toggle God mode by sending packet via its record
+            Cheat godModeCheat = Cheats.Find(c => c.Name == "God");
+            godModeCheat?.ToggleGod();
+
             if (SuperMode)
             {
                 DisableSupermode();
@@ -110,6 +114,16 @@ namespace ModHelper.Common.Players
             if (Conf.C.EnterWorldSuperMode)
             {
                 EnableSupermode(print: false); // Don't print when entering world
+
+                // Send god mode packet to server
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ModNetHandler.GodModePacketHandler.SendGodMode(
+                        toWho: -1, // -1 means all players
+                        targetPlayerId: Main.myPlayer,
+                        godMode: Main.LocalPlayer.GetModPlayer<PlayerCheatManager>().GetGod()
+                    );
+                }
             }
         }
 
@@ -125,6 +139,7 @@ namespace ModHelper.Common.Players
             KillAura = false;
             TeleportWithRightClick = false;
             SpawnRateMultiplier.Multiplier = 0f;
+
 
             // Update the spawn rate slider to 0
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -183,6 +198,7 @@ namespace ModHelper.Common.Players
             WorldPanel w = sys.mainState.worldPanel;
             w.spawnRateSlider.SetValue(1f);
 
+            ChatHelper.NewText("Super Mode disabled!", new Color(226, 57, 39));
 
             // Update the enabled texts all Disabled
             PlayerPanel p = sys.mainState.playerPanel;

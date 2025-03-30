@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
@@ -16,6 +17,16 @@ namespace ModHelper.UI
 {
     public class MainState : UIState
     {
+        // Buttons
+        public LaunchButton launchButton;
+        public ItemButton itemButton;
+        public NPCButton npcButton;
+        public PlayerButton playerButton;
+        public WorldButton worldButton;
+        public LogButton logButton;
+        public UIElementButton uiButton;
+        public ModsButton modsButton;
+
         // Panels
         public ItemSpawner itemSpawnerPanel;
         public NPCSpawner npcSpawnerPanel;
@@ -48,6 +59,7 @@ namespace ModHelper.UI
             { 80f, 1.2f }
         };
 
+        #region Constructor
         // MainState Constructor. This is where we create all the buttons and set up their positions.
         public MainState() => AddEverything();
 
@@ -66,15 +78,18 @@ namespace ModHelper.UI
             offset = -ButtonSize * 4;
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
+            // Get client{x}.log
+            string logPath = Path.GetFileName(Logging.LogPath);
+
             // Add buttons
-            AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
-            AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
-            AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
-            AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", hoverTextDescription: "Right click to toggle super mode");
-            AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Set world settings and debugging");
-            AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", hoverTextDescription: "Right click to open log");
-            AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", hoverTextDescription: "Right click to toggle all UI elements hitboxes");
-            AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", hoverTextDescription: "Right click to go to mod sources");
+            launchButton = AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
+            itemButton = AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
+            npcButton = AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
+            playerButton = AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", hoverTextDescription: "Right click to toggle super mode");
+            worldButton = AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Set world settings and debugging");
+            logButton = AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", hoverTextDescription: $"Right click to open {logPath}");
+            uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", hoverTextDescription: "Right click to toggle all UI elements hitboxes");
+            modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", hoverTextDescription: "Right click to go to mod sources");
 
             // offset += ButtonSize;
 
@@ -103,17 +118,30 @@ namespace ModHelper.UI
             uiPanel = AddPanel<UIElementPanel>("right");
             worldPanel = AddPanel<WorldPanel>("right");
 
+            // Associate buttons with panels so we can highlight the buttons with open panels 
+            itemSpawnerPanel.AssociatedButton = itemButton;
+            npcSpawnerPanel.AssociatedButton = npcButton;
+            playerPanel.AssociatedButton = playerButton;
+            logPanel.AssociatedButton = logButton;
+            modsPanel.AssociatedButton = modsButton;
+            uiPanel.AssociatedButton = uiButton;
+            worldPanel.AssociatedButton = worldButton;
+
             if (Main.netMode == NetmodeID.SinglePlayer && Conf.C.ShowGameKeepRunningText)
             {
                 string onOff = Conf.C.ShowGameKeepRunningText ? "ON" : "OFF";
-                KeepGameRunningText topText = new($"Keep Game Running: {onOff})");
+                KeepGameRunningText topText = new($"Keep Game Running: {onOff}");
                 Append(topText);
             }
 
             // Temporary debug text for player name, who am I, and frame rate
-            DebugText debugText = new(text: "");
-            Append(debugText);
+            if (Conf.C.ShowDebugText)
+            {
+                DebugText debugText = new(text: "");
+                Append(debugText);
+            }
         }
+        #endregion
 
         private T AddPanel<T>(string side) where T : DraggablePanel, new()
         {
@@ -144,21 +172,17 @@ namespace ModHelper.UI
             button.MaxHeight = new StyleDimension(size, 0);
             button.MinWidth = new StyleDimension(size, 0);
             button.MinHeight = new StyleDimension(size, 0);
-            button.Recalculate();
-            button.VAlign = 1.0f;
-            button.HAlign = 0.5f;
 
             // set x pos with offset
             button.Left.Set(pixels: offset, precent: 0f);
 
             // custom left pos. override default
-            if (Conf.C.ButtonPosition == "Left")
-            {
-                button.VAlign = 0.73f;
-                button.HAlign = 0f;
-                button.Left.Set(pixels: 0, precent: 0f);
-                button.Top.Set(pixels: offset, precent: 0f);
-            }
+            // convert vector2 to valign and halign
+            // buttonposition is from 0 to 1
+            button.VAlign = Conf.C.ButtonPosition.Y;
+            button.HAlign = Conf.C.ButtonPosition.X;
+
+            button.Recalculate();
 
             // increase offset for next button, except MPbutton
             offset += ButtonSize;
@@ -180,8 +204,6 @@ namespace ModHelper.UI
 
             foreach (var button in AllButtons)
             {
-                // bool isAnyPanelOpen = LeftSidePanels.Any(p => p.Active) || RightSidePanels.Any(p => p.Active);
-
                 if (button.IsMouseHovering && button.HoverText != null)
                 {
                     // Draw the tooltip

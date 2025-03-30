@@ -180,14 +180,14 @@ namespace ModHelper.UI.Elements
             }
 
             // If we have buttons to the left, move the panel to the right
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (Conf.C.ButtonPosition == "Left" && sys.mainState.AreButtonsShowing)
-            {
-                Left.Set(sys.mainState.ButtonSize, 0f);
-                // Log.SlowInfo("Moving panel to the right");
-                Recalculate();
-                return;
-            }
+            // MainSystem sys = ModContent.GetInstance<MainSystem>();
+            // if (Conf.C.ButtonPosition == "Left" && sys.mainState.AreButtonsShowing)
+            // {
+            //     Left.Set(sys.mainState.ButtonSize, 0f);
+            //     // Log.SlowInfo("Moving panel to the right");
+            //     Recalculate();
+            //     return;
+            // }
 
             if (Draggable & dragging)
             {

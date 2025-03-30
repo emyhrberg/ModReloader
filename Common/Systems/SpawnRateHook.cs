@@ -20,8 +20,8 @@ namespace ModHelper.Common.Systems
             // Type GlobalNPC = a.GetType("Terraria.ModLoader.GlobalNPC");
             // MethodInfo editSpawnRateMethod = GlobalNPC.GetMethod("EditSpawnRate", BindingFlags.Public | BindingFlags.Instance);
 
-
-            MethodInfo editSpawnRateMethod = typeof(EnemySpawnSystem).GetMethod("EditSpawnRate", BindingFlags.Public | BindingFlags.Instance);
+            // This just gets my local method lol, idk if this is correct
+            MethodInfo editSpawnRateMethod = typeof(SpawnRateNPC).GetMethod("EditSpawnRate", BindingFlags.Public | BindingFlags.Instance);
 
             if (editSpawnRateMethod != null)
             {

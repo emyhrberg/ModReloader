@@ -1,11 +1,11 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -23,31 +23,11 @@ namespace ModHelper.UI.Elements
 
             // Arbitrary size, should use ChatManager.GetStringSize() instead
             Width.Set(200, 0);
-            Height.Set(40, 0);
+            Height.Set(20 * 4, 0); // 20 * 3 for 3 lines of text
         }
-
-        // public override void MouseOver(UIMouseEvent evt)
-        // {
-        //     base.MouseOver(evt);
-
-        //     TextColor = Color.Yellow;
-        // }
-
-        // public override void MouseOut(UIMouseEvent evt)
-        // {
-        //     base.MouseOut(evt);
-
-        //     TextColor = Color.White;
-        // }
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // if (!Active)
-            // {
-            //     return;
-            // }
-            // base.RightClick(evt);
-
             Active = !Active;
 
             if (Active)
@@ -73,17 +53,16 @@ namespace ModHelper.UI.Elements
             string netmode = Main.netMode switch
             {
                 NetmodeID.SinglePlayer => "Singleplayer",
-                NetmodeID.Server => "Server",
                 NetmodeID.MultiplayerClient => "Multiplayer",
                 _ => "Unknown"
             };
 
-            string text = $"Player: {playerName} ({whoAmI})" +
-                $"\n{fps}fps {ups}ups ({Main.upTimerMax.ToString("0.0")}ms)" +
-                $"\nNetmode: {netmode}";
+            string fileName = Path.GetFileName(Logging.LogPath);
+            string text = $"{playerName} ({whoAmI})" +
+                $"\n{netmode} ({fileName})" +
+                $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
 
             SetText(text);
-            // Log.Info("Setting text: " + text);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -102,5 +81,4 @@ namespace ModHelper.UI.Elements
             }
         }
     }
-
 }

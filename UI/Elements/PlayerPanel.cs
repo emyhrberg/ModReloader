@@ -26,7 +26,7 @@ namespace ModHelper.UI.Elements
             // Automatically create an option for each cheat
             PlayerCheatManager p = Main.LocalPlayer.GetModPlayer<PlayerCheatManager>();
 
-            Log.Info("cheats: " + p.GetCheats().Count);
+            // Log.Info("cheats: " + p.GetCheats().Count);
 
             foreach (var cheat in p.GetCheats())
             {

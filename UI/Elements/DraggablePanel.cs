@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
+using ModHelper.UI.Buttons;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -31,6 +32,10 @@ namespace ModHelper.UI.Elements
 
         // Size
         protected static float PANEL_WIDTH = 350f;
+
+        // Its associated button. Used so CloseButtonPanel can close the correct panel
+        // And update its state of "open" panel for a button which is highlighted.
+        public BaseButton AssociatedButton { get; set; } = null;
 
         #region Constructor
         public DraggablePanel(string header)

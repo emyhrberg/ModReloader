@@ -13,7 +13,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 namespace ModHelper.PacketHandlers
 {
-    internal class RefreshServerPacketHandler : PacketHandler
+    internal class RefreshServerPacketHandler : BasePacketHandler
     {
         public const byte KillingServer = 1;
         public const byte RefreshClients = 2;

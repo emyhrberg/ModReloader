@@ -38,17 +38,17 @@ namespace ModHelper.UI.Buttons
             Top.Set(-buttonSize, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
-            VAlign = 1f;
-            HAlign = 0.5f;
+            VAlign = Conf.C.ButtonPosition.Y;
+            HAlign = Conf.C.ButtonPosition.X;
 
-            if (Conf.C.ButtonPosition == "Left")
-            {
-                HAlign = 0f;
-                VAlign = 0.8f;
-                Top.Set(-buttonSize - 15 / 2, 0);
-                Left.Set(buttonSize, 0);
-                SetImage(CollapseLeft.Value); // unsure if this works
-            }
+            // if (Conf.C.ButtonPosition == "Left")
+            // {
+            //     HAlign = 0f;
+            //     VAlign = 0.8f;
+            //     Top.Set(-buttonSize - 15 / 2, 0);
+            //     Left.Set(buttonSize, 0);
+            //     SetImage(CollapseLeft.Value); // unsure if this works
+            // }
         }
 
         public override void LeftClick(UIMouseEvent evt)
@@ -107,32 +107,32 @@ namespace ModHelper.UI.Buttons
 
             if (mainState != null)
             {
-                if (Conf.C.ButtonPosition == "Bottom")
+                // if (Conf.C.ButtonPosition == "Bottom")
+                // {
+                if (mainState.AreButtonsShowing)
                 {
-                    if (mainState.AreButtonsShowing)
-                    {
-                        SetImage(CollapseDown.Value);
-                        Top.Set(-buttonSize, 0); // Expanded
-                    }
-                    else
-                    {
-                        SetImage(CollapseUp.Value);
-                        Top.Set(0, 0); // Collapsed
-                    }
+                    SetImage(CollapseDown.Value);
+                    Top.Set(-buttonSize, 0); // Expanded
                 }
-                else if (Conf.C.ButtonPosition == "Left")
+                else
                 {
-                    if (mainState.AreButtonsShowing)
-                    {
-                        SetImage(CollapseLeft.Value);
-                        Left.Set(buttonSize, 0); // Expanded
-                    }
-                    else
-                    {
-                        SetImage(CollapseRight.Value);
-                        Left.Set(0, 0); // Collapsed
-                    }
+                    SetImage(CollapseUp.Value);
+                    Top.Set(0, 0); // Collapsed
                 }
+                // }
+                // else if (Conf.C.ButtonPosition == "Left")
+                // {
+                //     if (mainState.AreButtonsShowing)
+                //     {
+                //         SetImage(CollapseLeft.Value);
+                //         Left.Set(buttonSize, 0); // Expanded
+                //     }
+                //     else
+                //     {
+                //         SetImage(CollapseRight.Value);
+                //         Left.Set(0, 0); // Collapsed
+                //     }
+                // }
             }
         }
 
@@ -152,14 +152,14 @@ namespace ModHelper.UI.Buttons
             float buttonSize = mainState?.ButtonSize ?? 0;
             if (sys != null && mainState.AreButtonsShowing)
             {
-                if (Conf.C.ButtonPosition == "Bottom")
-                {
-                    Top.Set(-buttonSize, 0);
-                }
-                else if (Conf.C.ButtonPosition == "Left")
-                {
-                    Left.Set(buttonSize, 0);
-                }
+                // if (Conf.C.ButtonPosition == "Bottom")
+                // {
+                Top.Set(-buttonSize, 0);
+                // }
+                // else if (Conf.C.ButtonPosition == "Left")
+                // {
+                // Left.Set(buttonSize, 0);
+                // }
             }
 
             base.Draw(spriteBatch);

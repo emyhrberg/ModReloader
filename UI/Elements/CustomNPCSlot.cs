@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
+using ModHelper.PacketHandlers;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -121,18 +122,13 @@ namespace ModHelper.UI.Elements
 
                 int desiredX = (int)(playerX + Conf.C.SpawnOffset.X);
                 int desiredY = (int)(playerY + Conf.C.SpawnOffset.Y);
-                NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
+                NPC.NewNPC(new SpawnNPCEntitySource("CustomData"), desiredX, desiredY, displayNPC.type);
             }
         }
 
         public override void LeftClick(UIMouseEvent evt)
         {
             // Spawn the NPC 200 tiles above and 200 tiles to the left of players pos
-            // Only singleplayer
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                return;
-            }
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (sys.mainState.npcSpawnerPanel.IsDragging || sys.mainState.npcSpawnerPanel.GetActive() == false)
@@ -146,12 +142,21 @@ namespace ModHelper.UI.Elements
 
             int desiredX = (int)(playerX + Conf.C.SpawnOffset.X);
             int desiredY = (int)(playerY + Conf.C.SpawnOffset.Y);
-            NPC.NewNPC(new MyCustomNPCSource("CustomData"), desiredX, desiredY, displayNPC.type);
-            Log.Info("Spawned NPC " + displayNPC.FullName + " at (X,Y):" + desiredX + ", " + desiredY);
+
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                // Spawn the NPC at the desired position
+                NPC.NewNPC(new SpawnNPCEntitySource("SpawnNPCEntitySource"), desiredX, desiredY, displayNPC.type);
+                Log.Info("Spawned singleplayer NPC " + displayNPC.FullName + " at (X,Y):" + desiredX + ", " + desiredY);
+            }
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModNetHandler.NPCSpawnPacketHandler.SendNPCSpawnPacket(Main.myPlayer, desiredX, desiredY, displayNPC.type);
+            }
         }
     }
 
-    public class MyCustomNPCSource(string customData) : IEntitySource
+    public class SpawnNPCEntitySource(string customData) : IEntitySource
     {
         public string RandomStringForNoReason = customData;
 

@@ -29,9 +29,10 @@ namespace ModHelper.Common.Configs
 
         [Header("UI")]
 
-        [OptionStrings(["Left", "Bottom"])]
-        [DefaultValue("Bottom")]
-        public string ButtonPosition;
+        [Range(0f, 1f)]
+        // [Increment(0.1f)]
+        [DefaultValue(typeof(Vector2), "0.5, 1.0")]
+        public Vector2 ButtonPosition = new Vector2(0.5f, 1.0f);
 
         [Range(50f, 80f)]
         [Increment(5f)]
@@ -62,6 +63,9 @@ namespace ModHelper.Common.Configs
         public bool ShowGameKeepRunningText = true;
 
         [DefaultValue(true)]
+        public bool ShowDebugText = true;
+
+        [DefaultValue(true)]
         public bool GodGlow = true;
 
         [Header("Logging")]
@@ -72,8 +76,8 @@ namespace ModHelper.Common.Configs
         public bool LogToChat = true;
 
         [Header("MainMenu")]
-        [DefaultValue(true)]
-        public bool CreateMainMenuButtons = true;
+        [DefaultValue(false)]
+        public bool CreateMainMenuButtons = false;
 
         [Header("NPCSpawner")]
 

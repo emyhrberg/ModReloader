@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
+using ModHelper.PacketHandlers;
 using Terraria;
 using Terraria.GameContent.Drawing;
 using Terraria.GameContent.Events;
@@ -79,7 +80,7 @@ namespace ModHelper.UI.Elements
                 min: 0,
                 max: 30,
                 defaultValue: SpawnRateMultiplier.Multiplier,
-                onValueChanged: SpawnRateMultiplier.SetSpawnRateMultiplier,
+                onValueChanged: OnSpawnRateValueChanged,
                 increment: 1,
                 hover: "Click to set the spawn rate multiplier",
                 textSize: 0.9f,
@@ -187,31 +188,89 @@ namespace ModHelper.UI.Elements
         }
         #endregion // end of constructor
 
-        #region Weather
+        #region Spawn Rate
+
+        private void OnSpawnRateValueChanged(float value)
+        {
+            // Update local value
+            currentSpawnRate = value;
+            SpawnRateMultiplier.SetSpawnRateMultiplier(value);
+
+            // Send to server in multiplayer
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModNetHandler.SpawnRatePacketHandler.SendSpawnRate(value, Main.myPlayer);
+            }
+        }
 
         private void UpdateSpawnRate(bool forwards)
         {
-            int plusOrMinus = forwards ? 1 : -1;
-
-            currentSpawnRate = spawnRates[(spawnRates.IndexOf(currentSpawnRate) + plusOrMinus) % spawnRates.Count];
-            // round to nearest 0.1
-            currentSpawnRate = (float)Math.Round(currentSpawnRate, 1);
-
-            SpawnRateMultiplier.Multiplier = currentSpawnRate;
-            spawnRateSlider.SetValue(currentSpawnRate);
-
-            // if we set the spawn rate to 0, we also butcher all NPCs
-            if (currentSpawnRate == 0)
+            try
             {
-                foreach (NPC npc in Main.npc)
+                // Find current index, defaulting to 0 if not found
+                int currentIndex = spawnRates.IndexOf(currentSpawnRate);
+                if (currentIndex == -1)
                 {
-                    if (npc.active && !npc.friendly && !npc.townNPC && !npc.dontTakeDamage)
+                    // If current rate isn't in our list, find closest value
+                    currentIndex = 0;
+                    float closestDiff = float.MaxValue;
+                    for (int i = 0; i < spawnRates.Count; i++)
                     {
-                        npc.StrikeInstantKill();
+                        float diff = Math.Abs(spawnRates[i] - currentSpawnRate);
+                        if (diff < closestDiff)
+                        {
+                            closestDiff = diff;
+                            currentIndex = i;
+                        }
+                    }
+                    Log.Info($"Spawn rate {currentSpawnRate} not found in list, using closest value {spawnRates[currentIndex]}");
+                }
+
+                // Calculate new index with proper wrapping
+                int newIndex;
+                if (forwards)
+                {
+                    newIndex = (currentIndex + 1) % spawnRates.Count;
+                }
+                else
+                {
+                    newIndex = (currentIndex - 1 + spawnRates.Count) % spawnRates.Count;
+                }
+
+                // Update current spawn rate
+                currentSpawnRate = spawnRates[newIndex];
+                Log.Info($"Updated spawn rate to {currentSpawnRate} (index {newIndex})");
+
+                // Update multiplier and slider
+                SpawnRateMultiplier.Multiplier = currentSpawnRate;
+                spawnRateSlider.SetValue(currentSpawnRate);
+
+                // Kill hostile NPCs if spawn rate is 0
+                if (currentSpawnRate == 0)
+                {
+                    foreach (NPC npc in Main.npc)
+                    {
+                        if (npc.active && !npc.friendly && !npc.townNPC && !npc.dontTakeDamage)
+                        {
+                            npc.StrikeInstantKill();
+                        }
                     }
                 }
+
+                // Send to server if in multiplayer client mode
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                {
+                    ModNetHandler.SpawnRatePacketHandler.SendSpawnRate(currentSpawnRate, Main.myPlayer);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Error in UpdateSpawnRate: {ex.Message}\n{ex.StackTrace}");
             }
         }
+        #endregion
+
+        #region Weather
 
         private void UpdateRain(bool forwards)
         {
@@ -444,16 +503,16 @@ namespace ModHelper.UI.Elements
             // Log the new time to the console
             // Log.Info($"Slider adjusted: Normalized = {normalizedValue}, In-Game Time = {formattedTime}");
 
-            // Sync in multiplayer (if needed)
-            // if (Main.netMode == NetmodeID.Server)
-            // {
-            //     NetMessage.SendData(MessageID.WorldData);
-            // }
+            // Sync in multiplayer(if needed)
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                ModNetHandler.TimePacketHandler.SendTime(dayTime: Main.dayTime, time: Main.time, fromWho: Main.myPlayer);
+            }
         }
 
         #endregion
 
-        #region Update (all)
+        #region Update everything
 
         public override void Update(GameTime gameTime)
         {
@@ -464,6 +523,9 @@ namespace ModHelper.UI.Elements
             if (true)
             // if (Main.GameUpdateCount % 30 == 0)
             {
+                // Update spawn rate slider text
+                spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateSystem.Multiplier} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateSystem.Multiplier * 30} (max number of enemies in the world)";
+
                 // Update rain slider text
                 if (!CustomSliderBase.IsAnySliderLocked)
                 {

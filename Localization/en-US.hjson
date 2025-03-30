@@ -108,6 +108,11 @@ Mods: {
 					Label: Create Main Menu Buttons
 					Tooltip: ""
 				}
+
+				ShowDebugText: {
+					Tooltip: ""
+					Label: Show Debug Text
+				}
 			}
 		}
 
