@@ -3,10 +3,10 @@ using Terraria;
 
 namespace ModHelper.Helpers
 {
-    //Class basically for universal helping functions
+    // Class basically for universal helping functions
     internal class Utilities
     {
-        public static int ProccesId => Process.GetCurrentProcess().Id;
+        public static int ProcessID => Process.GetCurrentProcess().Id;
 
         public static int FindPlayerId()
         {

@@ -20,7 +20,6 @@ namespace ModHelper.UI.Buttons
     {
         // General variables for a button
         protected Asset<Texture2D> Button;
-        protected Asset<Texture2D> ButtonHighlight;
         protected Asset<Texture2D> ButtonNoOutline;
         protected Asset<Texture2D> Spritesheet { get; set; }
         public string HoverText = "";
@@ -46,7 +45,6 @@ namespace ModHelper.UI.Buttons
         protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription = "", float textSize = 0.9f) : base(spritesheet)
         {
             Button = Ass.Button;
-            ButtonHighlight = Ass.ButtonHighlight;
             ButtonNoOutline = Ass.ButtonNoOutline;
             Spritesheet = spritesheet;
             HoverText = hoverText;
@@ -79,8 +77,6 @@ namespace ModHelper.UI.Buttons
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             float buttonSize = sys.mainState?.ButtonSize ?? 70f;
 
-            // Update the scale based on the buttonsize. 70f means a scale of 1. For every 10 pixels, the scale is increased by 0.1f.
-
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
             Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
@@ -99,30 +95,6 @@ namespace ModHelper.UI.Buttons
                 spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Black * 0.3f);
             }
 
-            // if (this is ReloadSPButton || this is ReloadMPButton || this is LaunchButton)
-            // {
-            //     // Draw the button with full opacity.
-            //     spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Green * 0.5f);
-            // }
-
-            //Log.Info("parent active: " + ParentActive + "name: " + HoverText);
-
-            if (ParentActive)
-            {
-                // Scale down the highlight and center it
-                float scale = 0.9f; // Scale factor for the highlight
-                Rectangle scaledRect = new Rectangle(
-                    (int)(drawRect.X + drawRect.Width * (1 - scale) / 2),
-                    (int)(drawRect.Y + drawRect.Height * (1 - scale) / 2),
-                    (int)(drawRect.Width * scale),
-                    (int)(drawRect.Height * scale)
-                );
-                spriteBatch.Draw(ButtonHighlight.Value, scaledRect, Color.White * 0.7f);
-            }
-
-            //if (IsMouseHovering)
-            //DrawHelper.DrawProperScale(spriteBatch, this, ButtonHover.Value, scale: 0.92f);
-
             // Draw the animation texture
             if (Spritesheet != null)
             {
@@ -131,20 +103,9 @@ namespace ModHelper.UI.Buttons
                     frameCounter++;
                     if (frameCounter >= FrameSpeed)
                     {
-                        // This is needed because ItemButton is set to end animation at its last frame 5.
-                        if (this is ItemButton || this is ModsButton)
-                        {
-                            if (currFrame < FrameCount) // only increment if not at last frame
-                            {
-                                currFrame++;
-                            }
-                        }
-                        else
-                        {
-                            currFrame++;
-                            if (currFrame > FrameCount)
-                                currFrame = StartFrame;
-                        }
+                        currFrame++;
+                        if (currFrame > FrameCount)
+                            currFrame = StartFrame;
                         frameCounter = 0;
                     }
                 }
@@ -164,16 +125,6 @@ namespace ModHelper.UI.Buttons
                 // Draw the spritesheet.
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
             }
-
-            // Update: Drawing is now done in MainState
-            /// <see cref="MainState"/> 
-            // Draw tooltip text if hovering and HoverText is given (see MainState).
-            // if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
-            // {
-            //     UICommon.TooltipMouseText(HoverText);
-
-            //     DrawHelper.DrawTooltipPanel(this, "a", HoverText); // Draw the tooltip panel
-            // }
         }
 
         //Disable button click if config window is open

@@ -1,19 +1,11 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Common.Systems;
-using ModHelper.UI;
-using ModHelper.UI.Buttons;
-using ReLogic.Content;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ModHelper.Helpers
 {
@@ -86,10 +78,6 @@ namespace ModHelper.Helpers
             }
 
             CalculatedStyle dims = element.GetDimensions();
-            if (element is WorldButton)
-            {
-                dims.Y -= 15f;
-            }
 
             float tooltipX = dims.X + (dims.Width - width) / 2f;
             float tooltipY = dims.Y - height;

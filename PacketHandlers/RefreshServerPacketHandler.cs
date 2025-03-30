@@ -73,9 +73,9 @@ namespace ModHelper.PacketHandlers
             {
                 ReloadUtilities.PrepareClient(ClientModes.MPMinor);
 
-                await ReloadUtilities.ExitWorldOrServer();
+                await ReloadUtilities.ExitWorld();
 
-                var modName = Conf.C.LatestModToReload;
+                var modName = Conf.C.ModToReload;
 
                 Hook hookForUnload = null;
 

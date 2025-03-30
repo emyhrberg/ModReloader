@@ -64,13 +64,13 @@ namespace ModHelper.Helpers
 
                 var data = new ClientDataJson
                 {
-                    ProcessID = Utilities.ProccesId,
+                    ProcessID = Utilities.ProcessID,
                     ClientMode = ClientMode,
                     PlayerID = PlayerID,
                     WorldID = WorldID
                 };
 
-                var existingData = listJson.FirstOrDefault(d => d.ProcessID == Utilities.ProccesId);
+                var existingData = listJson.FirstOrDefault(d => d.ProcessID == Utilities.ProcessID);
 
                 if (existingData != null)
                 {
@@ -115,7 +115,7 @@ namespace ModHelper.Helpers
                 var listJson = GetListFromJson(reader);
 
                 var index = listJson.Select((data, index) => new { data, index = index + 1 })
-                .Where(pair => (pair.data.ProcessID == Utilities.ProccesId))
+                .Where(pair => (pair.data.ProcessID == Utilities.ProcessID))
                 .Select((pair) => pair.index)
                 .FirstOrDefault() - 1;
 
@@ -165,13 +165,13 @@ namespace ModHelper.Helpers
                     using (StreamReader reader = new StreamReader(fs, new UTF8Encoding(false)))
                     using (StreamWriter writer = new StreamWriter(fs, new UTF8Encoding(false)))
                     {
-                        Log.Info($"File {Path.GetFileName(filePath)} is locked by {Utilities.ProccesId} process. Editing...");
+                        Log.Info($"File {Path.GetFileName(filePath)} is locked by {Utilities.ProcessID} process. Editing...");
                         fs.Seek(0, SeekOrigin.Begin);
                         reader.BaseStream.Seek(0, SeekOrigin.Begin);
 
                         action?.Invoke(reader, writer);
 
-                        Log.Info($"File {Path.GetFileName(filePath)} editing complete by {Utilities.ProccesId} process");
+                        Log.Info($"File {Path.GetFileName(filePath)} editing complete by {Utilities.ProcessID} process");
                         break;
                     }
                 }

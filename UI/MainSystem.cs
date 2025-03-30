@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using ModHelper.Helpers;
-using ModHelper.UI.Buttons;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;

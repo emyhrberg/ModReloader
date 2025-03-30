@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 
 namespace ModHelper.UI.Buttons
 {
@@ -11,6 +10,7 @@ namespace ModHelper.UI.Buttons
 
         public ButtonText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
+            // Place the buttontext at the bottom of the button.
             HAlign = 0.5f;
             VAlign = 0.85f;
         }
@@ -28,11 +28,7 @@ namespace ModHelper.UI.Buttons
             if (!Active)
                 return;
 
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys?.mainState.AreButtonsShowing ?? true)
-            {
-                base.Draw(spriteBatch);
-            }
+            base.Draw(spriteBatch);
         }
     }
 }

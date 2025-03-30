@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
 using ModHelper.PacketHandlers;
 using MonoMod.RuntimeDetour;
@@ -12,7 +14,7 @@ using Terraria.ID;
 
 namespace ModHelper.Helpers
 {
-    //All functions, related to reload
+    // All functions, related to reload
     internal class ReloadUtilities
     {
         public const string pipeName = "ModHelperPipe";
@@ -27,54 +29,56 @@ namespace ModHelper.Helpers
             ClientDataHandler.WorldID = Utilities.FindWorldId();
         }
 
+        /// <summary> Returns a list of mod sources found via reflection. </summary>
+        private static List<string> FindModSourcesFolderPaths()
+        {
+            // Find mod sources via reflection
+            Assembly assembly = typeof(Main).Assembly;
+            Type modCompileType = assembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
+            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
+
+            // Check if modSources is null or empty.
+            return modSources.ToList();
+        }
+
+        /// <summary> Main function to reload mod. </summary>
         public static async Task Reload()
         {
-            if (!Conf.C.Reload)
+            // 1: Null / error checking. 
+            // Ensure that the config option is a mod that exists in mod sources.
+            List<string> modSources = FindModSourcesFolderPaths();
+            List<string> modNames = modSources.Select(Path.GetFileName).ToList();
+            if (!modNames.Contains(Conf.C.ModToReload, StringComparer.InvariantCultureIgnoreCase))
             {
-                ChatHelper.NewText("Reload is disabled, toggle it in config.");
-                Log.Warn("Reload is disabled");
-                // WorldGen.SaveAndQuit();
-                // Main.menuMode = 0;
+                Log.Warn($"{Conf.C.ModToReload}' not found in mod sources. Please enter a valid mod name in the config.");
+                ChatHelper.NewText($"Mod To Reload '{Conf.C.ModToReload}' not found in mod sources. Valid options are:");
+                for (int i = 1; i < modNames.Count; i++)
+                {
+                    ChatHelper.NewText($"{modNames[i]}");
+                }
                 return;
             }
 
-            if (ModsToReload.modsToReload.Count == 0)
-            {
-                ChatHelper.NewText("No mods to reload. Add a mod by checking the box in the Mod Sources list.");
-                Log.Warn("No mods to reload");
-                return;
-            }
+            // 2: Prepare client data
+            PrepareClient(ClientModes.SinglePlayer);
 
-            // 1 Clear logs if needed
-            if (Conf.C.ClearClientLogOnReload)
-                Log.ClearClientLog();
-
-            // 2 Prepare client data
-            ReloadUtilities.PrepareClient(ClientModes.SinglePlayer);
-
-            // 3 Exit server or world
+            // 3 Exit world
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
-                await ReloadUtilities.ExitWorldOrServer();
+                await ExitWorld();
             }
             else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                await ReloadUtilities.ExitAndKillServer();
+                await ExitAndKillServer();
             }
 
             // 4 Reload
-            ReloadUtilities.BuildAndReloadMods();
+            BuildAndReloadMods();
         }
 
-        public static Task ExitWorldOrServer()
+        public static Task ExitWorld()
         {
-            // TODO check if Conf is null
-            if (Conf.C == null) // Assuming 'Instance' is a static property or field in 'Conf'
-            {
-                Log.Warn("Conf is null");
-                return Task.CompletedTask;
-            }
-
             if (Conf.C.SaveWorldOnReload)
             {
                 Log.Warn("Saving and quitting...");
@@ -90,7 +94,6 @@ namespace ModHelper.Helpers
                 WorldGen.JustQuit();
                 return Task.CompletedTask;
             }
-
         }
 
         public static Task ExitAndKillServer()
@@ -112,29 +115,14 @@ namespace ModHelper.Helpers
 
         public static void BuildAndReloadMods(Action actionAfterBuild = null)
         {
-            // 0. Check if we should reload mods
-            if (Conf.C.Reload == false)
-            {
-                Log.Warn("Config.Reload is false, skipping mod reload.");
-                return;
-            }
+            Assembly assembly = typeof(Main).Assembly;
 
-            // 1. Getting Assembly
-            Assembly tModLoaderAssembly = typeof(Main).Assembly;
-
-            // 2. Getting method for finding modSources paths
-            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            // Getting method for finding modSources paths
+            Type modCompileType = assembly.GetType("Terraria.ModLoader.Core.ModCompile");
             MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
             string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
 
-            // Check if modSources is null or empty.
-            if (modSources == null || modSources.Length == 0)
-            {
-                Log.Warn("No mod sources were found via reflection.");
-                return;
-            }
-
-            // 3. Get all modPaths for future
+            // Get all modPaths for future
             Log.Info("Executing Mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
 
             var modPaths = ModsToReload.modsToReload.Select((modName) =>
@@ -145,20 +133,13 @@ namespace ModHelper.Helpers
 
             // 4. Getting method for reloading a mod
             // 4.1 Getting UIBuildMod Instance
-            Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
+            Type interfaceType = assembly.GetType("Terraria.ModLoader.UI.Interface");
             FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.NonPublic | BindingFlags.Static);
             object buildModInstance = buildModField?.GetValue(null);
 
             // 4.2 Getting correct BuildMod method of UIBuildMod
-            Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
+            Type uiBuildModType = assembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
             MethodInfo buildModMethod = uiBuildModType.GetMethod("BuildMod", BindingFlags.Instance | BindingFlags.NonPublic, [typeof(Action<>).MakeGenericType(modCompileType), typeof(bool)]);
-
-            // Check if it exist
-            if (buildModMethod == null)
-            {
-                Log.Warn("No buildMethod were found via reflection.");
-                return;
-            }
 
             // 4.3 Getting correct Build method from ModCompile
             MethodInfo mcBuildModFolder = modCompileType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string)]);
@@ -182,22 +163,6 @@ namespace ModHelper.Helpers
             Main.menuMode = 10003;
             Task.Run(() =>
             {
-                if (buildModMethod == null)
-                {
-                    Log.Error("buildModMethod is null. Cannot proceed with building mods.");
-                    return Task.CompletedTask;
-                }
-                if (buildModInstance == null)
-                {
-                    Log.Error("buildModInstance is null. Cannot proceed with building mods.");
-                    return Task.CompletedTask;
-                }
-                if (modPaths == null || !modPaths.Any())
-                {
-                    Log.Error("No modPaths found. Cannot proceed with building mods.");
-                    return Task.CompletedTask;
-                }
-
                 try
                 {
                     return (Task)buildModMethod.Invoke(buildModInstance,
@@ -232,8 +197,8 @@ namespace ModHelper.Helpers
             });
         }
 
-        //string can be replaced with json if needed
-        //for me the fact of sending messages would be enough
+        // string can be replaced with json if needed
+        // for me the fact of sending messages would be enough
         public static async Task<string?> ReadPipeMessage(NamedPipeServerStream pipe)
         {
             using StreamReader reader = new StreamReader(pipe);
