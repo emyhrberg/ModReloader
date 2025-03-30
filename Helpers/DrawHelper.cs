@@ -22,7 +22,7 @@ namespace ModHelper.Helpers
         /// <summary>
         /// Draws a tooltip panel just above a BaseButton element.
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(this MainMenuButton element, string text, string tooltip, int yOffset = 0)
+        public static void DrawMainMenuTooltipPanel(this UIElement element, string text, string tooltip, int yOffset = 0)
         {
             int pad = 6;
             DynamicSpriteFont font = FontAssets.MouseText.Value;

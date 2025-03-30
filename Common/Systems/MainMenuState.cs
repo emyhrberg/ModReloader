@@ -1,33 +1,91 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using ModHelper.Helpers;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.Common.Systems
 {
     public class MainMenuState : UIState
     {
-        private float verticalOffset = 0.06f;
+        private float rightVerticalOffset = 0.06f;
+        private float leftVerticalOffset = 0.06f;
 
         public MainMenuState()
         {
-            MainMenuButton button = new MainMenuButton("Mod Helper", 0, null, 0.75f);
-
-            Append(button);
-
             int hoverHeightOffset = 38;
-            AddButton("Singleplayer Join", SkipSelectSingleplayer, "Join first available\n world");
-            AddButton("Multiplayer Host", HostMultiplayer, "Host a multiplayer game\n with the first available world", hoverHeightOffset);
-            AddButton("Multiplayer Join", SkipSelectMultiplayer, "Join localhost server\n with first available player", hoverHeightOffset * 2);
-            AddButton("Reload Selected Mod", ReloadSelectedMod, "Reload the selected mod\n in config", hoverHeightOffset * 3);
+            MainMenuButtonLeftSide button = new("Mod Helper", 0, null, 0.75f);
+            Append(button);
+            AddLeftSideButton("Singleplayer Join", SingleplayerJoin, "Join first available\n world");
+            AddLeftSideButton("Reload Selected Mod", ReloadSelectedMod, "Reload the selected mod\n in config", hoverHeightOffset);
+
+            MainMenuButtonRightSide button2 = new("Multiplayer Helper", 0, null, 0.75f);
+            Append(button2);
+            AddRightSideButton("Multiplayer Start Server", StartServer, "Start a server with\n the first available world");
+            AddRightSideButton("Multiplayer Start Client", StartClient, "Starts an additional \n instance of tModLoader", hoverHeightOffset * 1);
+            AddRightSideButton("Multiplayer Join", MultiplayerJoin, "Join localhost server\n with first available player", hoverHeightOffset * 2);
         }
 
-        private void AddButton(string text, Action action, string tooltip = "", int yOffset = 0)
+        private void StartServer()
         {
-            MainMenuButton button = new(text: text, verticalOffset: verticalOffset, action: action, tooltip: tooltip, yOffset: yOffset);
-            this.verticalOffset += 0.04f; // Increment the offset for the next button
+            try
+            {
+                Main.LoadWorlds();
+
+                if (Main.WorldList.Count == 0)
+                    throw new Exception("No worlds found.");
+
+                // Getting Player and World from ClientDataHandler
+                var world = Main.WorldList[ClientDataHandler.WorldID];
+
+                if (string.IsNullOrEmpty(world.Path))
+                {
+                    Log.Error($"World {world.Name} has an invalid or null path.");
+                    var worldPath = world.Path;
+                    throw new ArgumentNullException(nameof(worldPath), "World path cannot be null or empty.");
+                }
+
+                string steamPath = Log.GetSteamPath();
+                string startServerFileName = Path.Combine(steamPath, "start-tModLoaderServer.bat");
+                if (!File.Exists(startServerFileName))
+                {
+                    Log.Error("Failed to find start-tModLoaderServer.bat file.");
+                    return;
+                }
+
+                // create a process
+                ProcessStartInfo process = new(startServerFileName)
+                {
+                    UseShellExecute = true,
+                    Arguments = $"-nosteam -world {world.Path}"
+                };
+
+                // start the process
+                Process serverProcess = Process.Start(process);
+                Log.Info("Server process started with ID: " + serverProcess.Id + " and name: " + serverProcess.ProcessName);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Failed to start server (start-tModLoaderServer.bat failed to launch): " + e.Message);
+                return;
+            }
+        }
+
+        private void AddLeftSideButton(string text, Action action, string tooltip = "", int yOffset = 0)
+        {
+            MainMenuButtonLeftSide button = new(text: text, verticalOffset: leftVerticalOffset, action: action, tooltip: tooltip, yOffset: yOffset);
+            this.leftVerticalOffset += 0.04f; // Increment the offset for the next button
+            Append(button);
+        }
+
+        private void AddRightSideButton(string text, Action action, string tooltip = "", int yOffset = 0)
+        {
+            MainMenuButtonRightSide button = new(text: text, verticalOffset: rightVerticalOffset, action: action, tooltip: tooltip, yOffset: yOffset);
+            this.rightVerticalOffset += 0.04f; // Increment the offset for the next button
             Append(button);
         }
 
@@ -36,7 +94,7 @@ namespace ModHelper.Common.Systems
             await ReloadUtilities.Reload();
         }
 
-        private void SkipSelectMultiplayer()
+        private void MultiplayerJoin()
         {
             // Simply join localhost, easy.
             Log.Info("EnterMultiplayerWorld() called!");
@@ -47,6 +105,8 @@ namespace ModHelper.Common.Systems
 
             // Getting Player and World from ClientDataHandler
             var player = Main.PlayerList[ClientDataHandler.PlayerID];
+
+            // TODO check if player is already in server and if so, join with a different player.
 
             Main.SelectPlayer(player);
 
@@ -88,12 +148,36 @@ namespace ModHelper.Common.Systems
             }
         }
 
-        private void HostMultiplayer()
+        private void StartClient()
         {
-            // Make this host.
+            try
+            {
+                string steamPath = Log.GetSteamPath();
+                string startGameFileName = Path.Combine(steamPath, "start-tModLoader.bat");
+                if (!File.Exists(startGameFileName))
+                {
+                    Log.Error("Failed to find start-tModLoader.bat file.");
+                    return;
+                }
+
+                // create a process
+                ProcessStartInfo process = new(startGameFileName)
+                {
+                    UseShellExecute = true,
+                };
+
+                // start the process
+                Process gameProcess = Process.Start(process);
+                Log.Info("Game process started with ID: " + gameProcess.Id + " and name: " + gameProcess.ProcessName);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Failed to start game process (start-tModLoader.bat failed to launch): " + e.Message);
+                return;
+            }
         }
 
-        private void SkipSelectSingleplayer()
+        private void SingleplayerJoin()
         {
             Log.Info("EnterSingleplayerWorld() called!");
 

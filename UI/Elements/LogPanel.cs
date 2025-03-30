@@ -21,7 +21,7 @@ namespace ModHelper.UI.Elements
                 onLeftClick: Log.OpenLogFolder,
                 hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
 
-            AddAction(Log.OpenClientLog, "Open Client Log", "Click to open client.log");
+            AddAction(() => Log.OpenClientLog(), "Open Client Log", "Click to open client.log");
             AddAction(Log.OpenServerLog, "Open Server Log", "Click to open server.log");
             AddAction(Log.ClearClientLog, "Clear Log", "Clear the client.log file");
 

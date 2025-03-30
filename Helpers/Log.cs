@@ -152,27 +152,21 @@ namespace ModHelper.Helpers
             return steamPath;
         }
 
+        /// <summary>
+        /// Opens the client log file in the default text editor for the right player.
         public static void OpenClientLog()
         {
-            ChatHelper.NewText("Opening client.log...");
-
             try
             {
-                string steamPath = GetSteamPath();
-                if (string.IsNullOrEmpty(steamPath))
-                {
-                    ChatHelper.NewText("Steam path is null or empty.");
-                    Log.Error("Steam path is null or empty.");
-                    return;
-                }
-
-                string file = Path.Combine(steamPath, "tModLoader-Logs", "client.log");
-                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
+                string path = Logging.LogPath;
+                Log.Info("Opening client log: " + path);
+                ChatHelper.NewText("Opening client log: " + path);
+                Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
-                ChatHelper.NewText("Error opening client.log: " + ex.Message);
-                Log.Error("Error opening client.log: " + ex.Message);
+                ChatHelper.NewText("Error opening client log: " + ex.Message);
+                Log.Error("Error opening client log: " + ex.Message);
             }
         }
 

@@ -33,7 +33,7 @@ namespace ModHelper.Common.Players
                 {
                     ModNetHandler.GodModePacketHandler.SendGodMode(
                         toWho: -1, // -1 means all players
-                        fromWho: Main.LocalPlayer.whoAmI,
+                        targetPlayerId: Main.LocalPlayer.whoAmI,
                         godMode: Main.LocalPlayer.GetModPlayer<PlayerCheatManager>().GetGod()
                     );
                 }
@@ -159,7 +159,7 @@ namespace ModHelper.Common.Players
             // Dont need to print in every enter world, its annoying.
             if (print)
             {
-                ChatHelper.NewText("Super Mode enabled and all hostile NPCs butchered!", Color.Green);
+                ChatHelper.NewText("Super Mode enabled!", Color.Green);
             }
 
             Conf.C.EnterWorldSuperMode = true;

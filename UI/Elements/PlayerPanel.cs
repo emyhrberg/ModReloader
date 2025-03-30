@@ -65,12 +65,9 @@ namespace ModHelper.UI.Elements
             AddHeader("Actions");
             AddPadding(5);
 
-            ActionOption clear = new(ClearInventory, "Clear Inventory", "Clears your inventory except favorited items");
-            uiList.Add(clear);
-            AddPadding(5);
+            AddAction(ClearInventory, "Clear Inventory", "Clears your inventory except favorited items");
 
-            ActionOption reveal = new(RevealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
-            uiList.Add(reveal);
+            AddAction(RevealMap, "Reveal Map", "The world map becomes completely explored for this character permanently");
         }
 
         private void RevealMap()

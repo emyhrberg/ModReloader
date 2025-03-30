@@ -10,7 +10,7 @@ using Terraria.UI.Chat;
 
 namespace ModHelper.Common.Systems
 {
-    public class MainMenuButton : UIText
+    public class MainMenuButtonLeftSide : UIText
     {
         // Width and height of the text
         private float w;
@@ -21,11 +21,11 @@ namespace ModHelper.Common.Systems
         private string tooltip;
         private int yOffset = 0;
 
-        public MainMenuButton(string text, float verticalOffset, Action action = null, float textScale = 0.55f, string tooltip = "", int yOffset = 0) : base(text, textScale, large: true)
+        public MainMenuButtonLeftSide(string text, float verticalOffset, Action action = null, float textScale = 0.55f, string tooltip = "", int yOffset = 0) : base(text, textScale, large: true)
         {
             // Position
             HAlign = 0.5f;
-            VAlign = 0.3f + verticalOffset;
+            VAlign = 0.23f + verticalOffset;
             Top.Set(0, 0);
             Left.Set(-260f, 0);
 

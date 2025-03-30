@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements;
 using ReLogic.Content;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -60,7 +61,6 @@ namespace ModHelper.UI.Buttons
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // Open client log instantly
             Log.OpenClientLog();
         }
     }

@@ -106,12 +106,12 @@ namespace ModHelper.UI
             if (Main.netMode == NetmodeID.SinglePlayer && Conf.C.ShowGameKeepRunningText)
             {
                 string onOff = Conf.C.ShowGameKeepRunningText ? "ON" : "OFF";
-                KeepGameRunningTextButton topText = new("Keep Game Running: " + onOff);
+                KeepGameRunningText topText = new($"Keep Game Running: {onOff})");
                 Append(topText);
             }
 
             // Temporary debug text for player name, who am I, and frame rate
-            DebugText debugText = new("Debug Text", TextSize, large: false);
+            DebugText debugText = new(text: "");
             Append(debugText);
         }
 

@@ -5,6 +5,7 @@ using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -14,7 +15,7 @@ namespace ModHelper.UI.Elements
     {
         private bool Active = true;
 
-        public DebugText(string text, float scale = 0.3f, bool large = true) : base(text, scale, large)
+        public DebugText(string text, float textScale = 1.0f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
             VAlign = 0.9f;
@@ -22,7 +23,7 @@ namespace ModHelper.UI.Elements
 
             // Arbitrary size, should use ChatManager.GetStringSize() instead
             Width.Set(200, 0);
-            Height.Set(20, 0);
+            Height.Set(40, 0);
         }
 
         // public override void MouseOver(UIMouseEvent evt)
@@ -49,7 +50,14 @@ namespace ModHelper.UI.Elements
 
             Active = !Active;
 
-            ChatHelper.NewText("Hiding the 'Keep Game Running' text. Open config to toggle show again.", Color.Green);
+            if (Active)
+            {
+                ChatHelper.NewText("Showing debug text", Color.White);
+            }
+            else
+            {
+                ChatHelper.NewText("Hiding debug text", Color.White);
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -58,12 +66,21 @@ namespace ModHelper.UI.Elements
 
             // update the text to show playername, whoAmI, and FPS
             string playerName = Main.LocalPlayer.name;
-            int whoAmI = Main.LocalPlayer.whoAmI;
+            int whoAmI = Main.myPlayer;
             int fps = Main.frameRate;
             int ups = Main.updateRate;
-            string text = $"Player: {playerName}" +
-                $"\nWhoAmI: {whoAmI}" +
-                $"\n{fps}fps {ups}ups ({Main.upTimerMax.ToString("0.0")}ms)";
+
+            string netmode = Main.netMode switch
+            {
+                NetmodeID.SinglePlayer => "Singleplayer",
+                NetmodeID.Server => "Server",
+                NetmodeID.MultiplayerClient => "Multiplayer",
+                _ => "Unknown"
+            };
+
+            string text = $"Player: {playerName} ({whoAmI})" +
+                $"\n{fps}fps {ups}ups ({Main.upTimerMax.ToString("0.0")}ms)" +
+                $"\nNetmode: {netmode}";
 
             SetText(text);
             // Log.Info("Setting text: " + text);
@@ -81,7 +98,7 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering)
             {
                 Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                UICommon.TooltipMouseText("Right click to toggle");
+                UICommon.TooltipMouseText("Right click to toggle visibility");
             }
         }
     }
