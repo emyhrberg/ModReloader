@@ -67,8 +67,8 @@ namespace ModHelper.Common.Systems
                 throw new Exception("No players or worlds found.");
 
             // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList.FirstOrDefault();
-            var world = Main.WorldList.FirstOrDefault();
+            var player = Main.PlayerList[ClientDataHandler.PlayerID];
+            var world = Main.WorldList[ClientDataHandler.WorldID];
 
             Main.SelectPlayer(player);
             Mod.Logger.Info($"Starting game with Player: {player.Name}, World: {world.Name}");

@@ -55,13 +55,13 @@ namespace ModHelper.Helpers
             if (path == null)
                 return;
 
-            var listJson = GetListFromJson();
+            Log.Info("Writing ClientData");
 
             LockingFile(path, (reader, writer) =>
             {
-                Log.Info("Writing Data");
 
-                // Use the strongly typed class:
+                var listJson = GetListFromJson(reader);
+
                 var data = new ClientDataJson
                 {
                     ProcessID = Utilities.ProccesId,
@@ -85,15 +85,18 @@ namespace ModHelper.Helpers
                     listJson.Add(data);
                 }
 
-                var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-                string jsonString = JsonSerializer.Serialize(listJson, jsonOptions);
-                writer.BaseStream.SetLength(0);  // Clears the file
-                writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start
-                writer.Write(jsonString);
-                writer.Flush();
+                WriteListToFile(listJson, writer);
             });
+        }
 
-
+        private static void WriteListToFile(List<ClientDataJson> listJson, StreamWriter writer)
+        {
+            var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
+            string jsonString = JsonSerializer.Serialize(listJson, jsonOptions);
+            writer.BaseStream.SetLength(0);  // Clears the file
+            writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start
+            writer.Write(jsonString);
+            writer.Flush();
         }
 
         public static void ReadData()
@@ -101,49 +104,50 @@ namespace ModHelper.Helpers
             if (Main.dedServ)
                 return;
 
-            Log.Info("Reading Data");
-            var listJson = GetListFromJson();
-            foreach (var data in listJson)
-            {
-                if (data.ProcessID == Utilities.ProccesId)
-                {
-                    ClientMode = data.ClientMode;
-                    PlayerID = data.PlayerID;
-                    WorldID = data.WorldID;
-                    break;
-                }
-            }
-
-        }
-
-        private static List<ClientDataJson> GetListFromJson()
-        {
-            List<ClientDataJson> listJson = new List<ClientDataJson>();
-
             string path = GetFolderPath();
             if (path == null)
-                return listJson;
+                return;
 
-            try
+            Log.Info("Reading ClientData");
+
+            LockingFile(path, (reader, writer) =>
             {
-                string jsonString = null;
-                LockingFile(path, (reader, writer) =>
+                var listJson = GetListFromJson(reader);
+
+                var index = listJson.Select((data, index) => new { data, index = index + 1 })
+                .Where(pair => (pair.data.ProcessID == Utilities.ProccesId))
+                .Select((pair) => pair.index)
+                .FirstOrDefault() - 1;
+
+                if (index >= 0)
                 {
-                    jsonString = reader.ReadToEnd();
-                });
-                if (string.IsNullOrEmpty(jsonString))
-                {
-                    listJson = new();
+                    ClientMode = listJson[index].ClientMode;
+                    PlayerID = listJson[index].PlayerID;
+                    WorldID = listJson[index].WorldID;
+                    // Clear data after reading it
+                    listJson.RemoveAt(index);
                 }
-                else
-                {
-                    listJson = JsonSerializer.Deserialize<List<ClientDataJson>>(jsonString);
-                }
-            }
-            catch (Exception ex)
+
+                WriteListToFile(listJson, writer);
+            });
+        }
+
+        private static List<ClientDataJson> GetListFromJson(StreamReader reader)
+        {
+            List<ClientDataJson> listJson = new List<ClientDataJson>();
+            string jsonString = reader.ReadToEnd();
+
+            Log.Info("Reading from file: " + jsonString);
+
+            if (string.IsNullOrEmpty(jsonString))
             {
-                Log.Error("Error reading or deserializing data: " + ex.Message);
+                listJson = [];
             }
+            else
+            {
+                listJson = JsonSerializer.Deserialize<List<ClientDataJson>>(jsonString);
+            }
+
             return listJson;
         }
 
