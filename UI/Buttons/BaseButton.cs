@@ -29,6 +29,9 @@ namespace ModHelper.UI.Buttons
         public bool Active = true;
         public bool ParentActive = false;
 
+        public object Tag { get; set; } // Tag for the button, can be used to store any object.
+        public int ButtonIndex { get; set; } // Index of the button in the list of buttons
+
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed

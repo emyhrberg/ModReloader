@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
@@ -24,6 +26,13 @@ namespace ModHelper.UI.Buttons
 
         public override void RightClick(UIMouseEvent evt)
         {
+            // Dont execute if we are dragging
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.rightClicking)
+            {
+                return;
+            }
+
             // Go to mod sources menu
             WorldGen.JustQuit();
             Main.menuMode = 10001;

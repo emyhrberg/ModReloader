@@ -22,7 +22,7 @@ Reload Demo:
 https://i.imgur.com/M7iq5FQ.mp4
 
 Copy Exception Demo:
-
+https://i.imgur.com/XeTf3KX.png
 
 Multiplayer And Server Reload is in an experimental state but here are the steps:
 1. Right click the green reload button to toggle and show the red reload button.
