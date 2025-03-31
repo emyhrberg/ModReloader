@@ -524,7 +524,7 @@ namespace ModHelper.UI.Elements
             // if (Main.GameUpdateCount % 30 == 0)
             {
                 // Update spawn rate slider text
-                spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateSystem.Multiplier} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateSystem.Multiplier * 30} (max number of enemies in the world)";
+                spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateHook.StoredSpawnRate} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateHook.StoredMaxSpawns} (max number of enemies in the world)";
 
                 // Update rain slider text
                 if (!CustomSliderBase.IsAnySliderLocked)

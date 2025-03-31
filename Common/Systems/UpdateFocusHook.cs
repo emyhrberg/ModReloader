@@ -9,7 +9,7 @@ namespace ModHelper.Common.Systems
 {
     public class KeepGameRunning : ModSystem
     {
-        public static bool KeepRunning = true;
+        public static bool KeepRunning = false;
 
         public override void Load()
         {

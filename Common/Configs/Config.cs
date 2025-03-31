@@ -21,8 +21,8 @@ namespace ModHelper.Common.Configs
         [DefaultValue("")]
         public string LatestModToReload = "";
 
-        [DefaultValue(true)]
-        public bool SaveWorldOnReload = true;
+        [DefaultValue(false)]
+        public bool SaveWorldOnReload = false;
 
         [DefaultValue(false)]
         public bool ClearClientLogOnReload = false;

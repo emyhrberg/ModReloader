@@ -29,6 +29,14 @@ namespace ModHelper.Helpers
 
         public static async Task Reload()
         {
+            // Check if list is empty
+            if (ModsToReload.modsToReload.Count == 0)
+            {
+                ChatHelper.NewText("No mods are selected to reload. Please select mods to reload.");
+                Log.Warn("No mods to reload.");
+                return;
+            }
+
             if (!Conf.C.Reload)
             {
                 ChatHelper.NewText("Reload is disabled, toggle it in config.");
@@ -38,11 +46,25 @@ namespace ModHelper.Helpers
                 return;
             }
 
-            if (ModsToReload.modsToReload.Count == 0)
+            // Another null check for modstoreload, check if modsources contains any mod
+            Type modCompileType = typeof(Main).Assembly.GetType("Terraria.ModLoader.Core.ModCompile");
+            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
+            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
+            string[] modNames = modSources.Select(Path.GetFileName).ToArray();
+
+            foreach (var modName in ModsToReload.modsToReload)
             {
-                ChatHelper.NewText("No mods to reload. Add a mod by checking the box in the Mod Sources list.");
-                Log.Warn("No mods to reload");
-                return;
+                Log.Info("Reloading mod: " + modName);
+                if (!modNames.Contains(modName))
+                {
+                    ChatHelper.NewText($"Mod '{modName}' not found in mod sources. Please check the mod name and try again.");
+                    Log.Warn($"Mod '{modName}' not found in mod sources.");
+                    return;
+                }
+                else
+                {
+                    Log.Info($"Mod '{modName}' found in mod sources.");
+                }
             }
 
             // 1 Clear logs if needed
@@ -112,13 +134,6 @@ namespace ModHelper.Helpers
 
         public static void BuildAndReloadMods(Action actionAfterBuild = null)
         {
-            // 0. Check if we should reload mods
-            if (Conf.C.Reload == false)
-            {
-                Log.Warn("Config.Reload is false, skipping mod reload.");
-                return;
-            }
-
             // 1. Getting Assembly
             Assembly tModLoaderAssembly = typeof(Main).Assembly;
 
@@ -126,13 +141,6 @@ namespace ModHelper.Helpers
             Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
             MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
             string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
-
-            // Check if modSources is null or empty.
-            if (modSources == null || modSources.Length == 0)
-            {
-                Log.Warn("No mod sources were found via reflection.");
-                return;
-            }
 
             // 3. Get all modPaths for future
             Log.Info("Executing Mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
@@ -182,22 +190,6 @@ namespace ModHelper.Helpers
             Main.menuMode = 10003;
             Task.Run(() =>
             {
-                if (buildModMethod == null)
-                {
-                    Log.Error("buildModMethod is null. Cannot proceed with building mods.");
-                    return Task.CompletedTask;
-                }
-                if (buildModInstance == null)
-                {
-                    Log.Error("buildModInstance is null. Cannot proceed with building mods.");
-                    return Task.CompletedTask;
-                }
-                if (modPaths == null || !modPaths.Any())
-                {
-                    Log.Error("No modPaths found. Cannot proceed with building mods.");
-                    return Task.CompletedTask;
-                }
-
                 try
                 {
                     return (Task)buildModMethod.Invoke(buildModInstance,
@@ -206,13 +198,9 @@ namespace ModHelper.Helpers
                         {
                             foreach (var modPath in modPaths)
                             {
-                                if (string.IsNullOrWhiteSpace(modPath))
-                                {
-                                    Log.Error("Encountered empty or null modPath. Skipping.");
-                                    continue;
-                                }
                                 try
                                 {
+                                    Log.Info("Building mod: " + modPath);
                                     mcBuildModFolder.Invoke(mc, [modPath]);
                                 }
                                 catch (Exception buildEx)

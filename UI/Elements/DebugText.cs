@@ -15,15 +15,41 @@ namespace ModHelper.UI.Elements
     {
         private bool Active = true;
 
-        public DebugText(string text, float textScale = 1.0f, bool large = false) : base(text, textScale, large)
+        public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
-            VAlign = 0.9f;
+            VAlign = 0.98f;
             HAlign = 0.02f;
 
+            // start text at top left corner of its element
+            TextOriginX = 0f;
+            TextOriginY = 0f;
+
             // Arbitrary size, should use ChatManager.GetStringSize() instead
-            Width.Set(200, 0);
-            Height.Set(20 * 4, 0); // 20 * 3 for 3 lines of text
+            Width.Set(220, 0);
+            Height.Set(20 * 4 + 10, 0); // 20 * 3 for 3 lines of text
+        }
+
+        public override void MouseOver(UIMouseEvent evt)
+        {
+            //always call base! otherwise IsMouseHovering wont work
+            base.MouseOver(evt);
+            TextColor = Color.Yellow;
+        }
+
+        public override void MouseOut(UIMouseEvent evt)
+        {
+            //always call base! otherwise IsMouseHovering wont work
+            base.MouseOut(evt);
+            TextColor = Color.White;
+        }
+
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            // base.LeftClick(evt);
+
+            // Open client log
+            Log.OpenClientLog();
         }
 
         public override void RightClick(UIMouseEvent evt)
@@ -77,7 +103,7 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering)
             {
                 Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                UICommon.TooltipMouseText("Right click to toggle visibility");
+                // UICommon.TooltipMouseText("Right click to hide");
             }
         }
     }

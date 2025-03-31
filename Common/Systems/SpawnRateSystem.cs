@@ -24,7 +24,7 @@ namespace ModHelper.Common.Systems
 
             if (value == 0 && !didPrint)
             {
-                ChatHelper.NewText("All hostile NPCs butchered!", Color.Green);
+                // ChatHelper.NewText("All hostile NPCs butchered!", Color.Green);
                 didPrint = true;
             }
             else if (value > 0)

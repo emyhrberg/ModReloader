@@ -4,7 +4,6 @@ using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -14,24 +13,32 @@ namespace ModHelper.UI.Elements
     {
         private bool Active = true;
 
-        public KeepGameRunningText(string text, float textScale = 1.0f, bool large = false) : base(text, textScale, large)
+        public KeepGameRunningText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
-            VAlign = 0.78f;
+            VAlign = 0.89f;
             HAlign = 0.02f;
 
+            // start text at top left corner of its element
+            TextOriginX = 0f;
+            TextOriginY = 0f;
+
             // Arbitrary size, should use ChatManager.GetStringSize() instead
-            Width.Set(200, 0);
-            Height.Set(20 * 1, 0); // 20 * 3 for 3 lines of text
+            Width.Set(220, 0);
+            Height.Set(20 * 1 + 10, 0); // 20 * 3 for 3 lines of text
         }
 
         public override void MouseOver(UIMouseEvent evt)
         {
+            //always call base! otherwise IsMouseHovering wont work
+            base.MouseOver(evt);
             TextColor = Color.Yellow;
         }
 
         public override void MouseOut(UIMouseEvent evt)
         {
+            //always call base! otherwise IsMouseHovering wont work
+            base.MouseOut(evt);
             TextColor = Color.White;
         }
 
@@ -46,11 +53,11 @@ namespace ModHelper.UI.Elements
 
             if (Active)
             {
-                ChatHelper.NewText("Showing debug text", Color.White);
+                ChatHelper.NewText("Showing keep game running text", Color.White);
             }
             else
             {
-                ChatHelper.NewText("Hiding debug text", Color.White);
+                ChatHelper.NewText("Hiding keep game running text", Color.White);
             }
         }
 
@@ -75,7 +82,7 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering)
             {
                 Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                UICommon.TooltipMouseText("Right click to toggle visibility");
+                // UICommon.TooltipMouseText("Right click to hide");
             }
         }
     }
