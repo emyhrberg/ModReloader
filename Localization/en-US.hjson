@@ -6,9 +6,9 @@ Mods: {
 
 				Headers: {
 					Reload: Reload
-					MainMenu: Main Menu
-					Game: Game Header
-					ShowButtons: Show Buttons Header
+					Game: Game
+					ShowButtons: Show/Hide Buttons
+					Improvements: Improvements
 				}
 
 				ModToReload: {
@@ -38,17 +38,17 @@ Mods: {
 
 				ImproveMainMenu: {
 					Label: Improve Main Menu
-					Tooltip: ""
+					Tooltip: "Adds options to the main menu"
 				}
 
 				ImproveExceptionMenu: {
 					Label: Improve Exception Menu
-					Tooltip: ""
+					Tooltip: "Adds options and improves the look of the error message"
 				}
 
 				ShowButtons: {
 					Label: Show Buttons
-					Tooltip: ""
+					Tooltip: "Choose which buttons to show or hide"
 				}
 			}
 

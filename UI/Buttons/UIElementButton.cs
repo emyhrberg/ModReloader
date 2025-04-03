@@ -62,6 +62,12 @@ namespace ModHelper.UI.Buttons
 
         public override void RightClick(UIMouseEvent evt)
         {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick)
+            {
+                return;
+            }
+
             base.RightClick(evt);
 
             // Toggle all elements

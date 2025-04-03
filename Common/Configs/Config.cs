@@ -23,11 +23,6 @@ namespace ModHelper.Common.Configs
 
         [Header("Game")]
 
-        [Range(0f, 1f)]
-        // [Increment(0.1f)]
-        [DefaultValue(typeof(Vector2), "0.5, 1.0")]
-        public Vector2 ButtonsPosition;
-
         [Range(50f, 80f)]
         [Increment(5f)]
         [DefaultValue(70)]
@@ -36,7 +31,7 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool ShowDebugText;
 
-        [Header("MainMenu")]
+        [Header("Improvements")]
         [DefaultValue(false)]
         public bool ImproveMainMenu;
 
@@ -63,16 +58,16 @@ namespace ModHelper.Common.Configs
     public class ShowButtons
     {
         [DefaultValue(true)]
-        public bool ShowOptionsButton;
+        public bool ShowOptionsButton = true;
 
         [DefaultValue(true)]
-        public bool ShowLogButton;
+        public bool ShowUIButton = true;
 
         [DefaultValue(true)]
-        public bool ShowUIButton;
+        public bool ShowModsButton = true;
 
         [DefaultValue(true)]
-        public bool ShowModsButton;
+        public bool ShowReloadButton = true;
     }
 
     public static class Conf
@@ -101,5 +96,6 @@ namespace ModHelper.Common.Configs
         // Instance of the Config class
         // Use it like Conf.C for easy access to the config values
         public static Config C => ModContent.GetInstance<Config>();
+        public static ShowButtons Show => C.ShowButtons;
     }
 }

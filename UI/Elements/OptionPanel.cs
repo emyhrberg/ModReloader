@@ -126,15 +126,14 @@ namespace ModHelper.UI.Elements
             // If the inventory is open, move the panel to the left by 350 pixels
             bool inventoryOpen = Main.playerInventory;
 
-            if (inventoryOpen)
-            {
-                Left.Set(-225, 0f);
-            }
-            else
-            {
-                Left.Set(-20, 0f);
-            }
-
+            // if (inventoryOpen)
+            // {
+            //     Left.Set(-225, 0f);
+            // }
+            // else
+            // {
+            //     Left.Set(-20, 0f);
+            // }
         }
 
         public override void LeftMouseDown(UIMouseEvent evt)

@@ -44,8 +44,8 @@ namespace ModHelper.UI
             { 60f, 0.9f },
             { 65f, 0.9f },
             { 70f, 1f },
-            { 75f, 1.1f },
-            { 80f, 1.2f }
+            { 75f, 1.15f },
+            { 80f, 1.35f }
         };
 
         #region Constructor
@@ -69,10 +69,17 @@ namespace ModHelper.UI
             string logPath = Path.GetFileName(Logging.LogPath);
 
             // Add buttons
-            optionsButton = AddButton<OptionsButton>(Ass.ButtonDebug, "Options", "Options", hoverTextDescription: $"Customize");
-            uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
-            modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Mods List", hoverTextDescription: "Right click to go to mod sources");
-            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload");
+            if (Conf.C.ShowButtons.ShowOptionsButton)
+                optionsButton = AddButton<OptionsButton>(Ass.ButtonDebug, "Options", "Options", hoverTextDescription: $"Customize");
+
+            if (Conf.C.ShowButtons.ShowUIButton)
+                uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
+
+            if (Conf.C.ShowButtons.ShowModsButton)
+                modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Mods List", hoverTextDescription: "Right click to go to mod sources");
+
+            if (Conf.C.ShowButtons.ShowReloadButton)
+                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload");
 
             // Add the panels (invisible by default)
             optionsPanel = AddPanel<OptionsPanel>();
@@ -127,8 +134,13 @@ namespace ModHelper.UI
             // custom left pos. override default
             // convert vector2 to valign and halign
             // buttonposition is from 0 to 1
-            button.VAlign = Conf.C.ButtonsPosition.Y;
-            button.HAlign = Conf.C.ButtonsPosition.X;
+            // button.VAlign = Conf.C.ButtonsPosition.Y;
+            // button.HAlign = Conf.C.ButtonsPosition.X;
+
+            // Read the VAlign and HAlign from the config
+            Vector2 buttonsPosition = ConfigJsonHelper.ReadButtonsPosition();
+            button.VAlign = buttonsPosition.Y;
+            button.HAlign = buttonsPosition.X;
 
             button.Recalculate();
 
@@ -221,7 +233,7 @@ namespace ModHelper.UI
         }
 
         // used to separate clicking from dragging
-        public bool rightClicking = false;
+        public bool isClick = false;
 
         public override void Update(GameTime gameTime)
         {
@@ -233,10 +245,10 @@ namespace ModHelper.UI
                 float dragDistance = Vector2.Distance(new Vector2(Main.mouseX, Main.mouseY), dragStartPosition);
                 if (dragDistance < 10f) // 10 pixels threshold
                 {
-                    rightClicking = true;
+                    isClick = true;
                     return;
                 }
-                rightClicking = false;
+                isClick = false;
 
                 // Calculate the drag delta as percentage of screen
                 Vector2 mouseDelta = new Vector2(Main.mouseX, Main.mouseY) - dragStartPosition;
@@ -285,8 +297,10 @@ namespace ModHelper.UI
 
                 // Save the new button position to config
                 // Use the first button's alignment values
-                Conf.C.ButtonsPosition = new Vector2(AllButtons[0].HAlign, AllButtons[0].VAlign);
-                Conf.Save();
+                Vector2 buttonsPosition = new Vector2(AllButtons[0].HAlign, AllButtons[0].VAlign);
+
+                // Write the updated config to a JSON file.
+                ConfigJsonHelper.WriteButtonsPosition(buttonsPosition);
             }
         }
 

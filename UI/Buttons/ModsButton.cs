@@ -71,7 +71,7 @@ namespace ModHelper.UI.Buttons
         public override void RightClick(UIMouseEvent evt)
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.rightClicking)
+            if (!sys.mainState.isClick)
             {
                 return;
             }

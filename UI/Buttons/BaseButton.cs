@@ -185,29 +185,29 @@ namespace ModHelper.UI.Buttons
             if (!Active) // Dont allow clicking if button is disabled.
                 return false;
 
-            try
-            {
-                if (Main.InGameUI != null)
-                {
-                    var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
-                    if (currentStateProp != null)
-                    {
-                        var currentState = currentStateProp.GetValue(Main.InGameUI);
-                        if (currentState != null)
-                        {
-                            string stateName = currentState.GetType().Name;
-                            if (stateName.Contains("Config"))
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
-            }
+            // try
+            // {
+            //     if (Main.InGameUI != null)
+            //     {
+            //         var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
+            //         if (currentStateProp != null)
+            //         {
+            //             var currentState = currentStateProp.GetValue(Main.InGameUI);
+            //             if (currentState != null)
+            //             {
+            //                 string stateName = currentState.GetType().Name;
+            //                 if (stateName.Contains("Config"))
+            //                 {
+            //                     return false;
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
+            // catch (Exception ex)
+            // {
+            //     Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
+            // }
 
             return base.ContainsPoint(point);
         }
