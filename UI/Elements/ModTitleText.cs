@@ -52,17 +52,17 @@ namespace ModHelper.UI.Elements
                 if (isConfigOpen)
                 {
                     hover = $"Open {internalModName} config";
-                    ChatHelper.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
+                    Main.NewText("Closing config for " + internalModName, new Color(226, 57, 39));
                     Main.menuMode = 0;
                     Main.InGameUI.SetState(null);
                     isConfigOpen = false;
 
                     // Expand the hotbar
-                    MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    if (sys != null)
-                    {
-                        sys.mainState.collapse.SetCollapsed(false);
-                    }
+                    // MainSystem sys = ModContent.GetInstance<MainSystem>();
+                    // if (sys != null)
+                    // {
+                    //     sys.mainState.collapse.SetCollapsed(false);
+                    // }
 
                     return;
                 }
@@ -80,14 +80,14 @@ namespace ModHelper.UI.Elements
                     Mod modInstance = ModLoader.GetMod(modName);
                     if (modInstance == null)
                     {
-                        ChatHelper.NewText($"Mod '{modName}' not found.", Color.Red);
+                        Main.NewText($"Mod '{modName}' not found.", Color.Red);
                         return;
                     }
 
                     // Check if there are any configs for this mod.
                     if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
                     {
-                        ChatHelper.NewText("No config available for mod: " + modName, Color.Yellow);
+                        Main.NewText("No config available for mod: " + modName, Color.Yellow);
                         return;
                     }
 
@@ -108,7 +108,7 @@ namespace ModHelper.UI.Elements
                     // Open the mod config UI.
                     Main.InGameUI.SetState(modConfigInstance as UIState);
                     Main.menuMode = 10024;
-                    ChatHelper.NewText("Opening config for " + modName, Color.Green);
+                    Main.NewText("Opening config for " + modName, Color.Green);
 
                     // Hover text update
                     hover = $"Close {internalModName} config";
@@ -118,13 +118,13 @@ namespace ModHelper.UI.Elements
 
                     Main.playerInventory = false;
                     MainSystem sys = ModContent.GetInstance<MainSystem>();
-                    sys?.mainState?.collapse?.SetCollapsed(true);
-                    sys.mainState.AreButtonsShowing = false;
-                    sys.mainState.collapse.UpdateCollapseImage();
+                    // sys?.mainState?.collapse?.SetCollapsed(true);
+                    // sys.mainState.AreButtonsShowing = false;
+                    // sys.mainState.collapse.UpdateCollapseImage();
                 }
                 catch (Exception ex)
                 {
-                    ChatHelper.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
+                    Main.NewText($"No config found for mod '{internalModName}'. : {ex.Message}", Color.Red);
                     return;
                 }
             }
@@ -197,9 +197,9 @@ namespace ModHelper.UI.Elements
                     MainSystem sys = ModContent.GetInstance<MainSystem>();
                     if (sys?.mainState != null)
                     {
-                        sys.mainState.AreButtonsShowing = true;
-                        sys.mainState.collapse?.SetCollapsed(false);
-                        sys.mainState.collapse?.UpdateCollapseImage();
+                        // sys.mainState.AreButtonsShowing = true;
+                        // sys.mainState.collapse?.SetCollapsed(false);
+                        // sys.mainState.collapse?.UpdateCollapseImage();
                     }
 
                     Log.SlowInfo($"Detected manual config closure for {internalModName}", seconds: 1);

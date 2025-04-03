@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
@@ -18,35 +19,23 @@ namespace ModHelper.UI
     public class MainState : UIState
     {
         // Buttons
-        public LaunchButton launchButton;
-        public ItemButton itemButton;
-        public NPCButton npcButton;
-        public PlayerButton playerButton;
-        public WorldButton worldButton;
-        public LogButton logButton;
+        public OptionsButton optionsButton;
         public UIElementButton uiButton;
         public ModsButton modsButton;
+        public ReloadSPButton reloadSPButton;
 
         // Panels
-        public ItemSpawner itemSpawnerPanel;
-        public NPCSpawner npcSpawnerPanel;
-        public PlayerPanel playerPanel;
-        public LogPanel logPanel;
+        public OptionsPanel optionsPanel;
         public ModsPanel modsPanel;
         public UIElementPanel uiPanel;
-        public WorldPanel worldPanel;
-        public List<DraggablePanel> LeftSidePanels = [];
-        public List<DraggablePanel> RightSidePanels = [];
+        public List<DraggablePanel> AllPanels = [];
 
         // Buttons
-        public Collapse collapse;
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
         public float ButtonSize = 70f;
         public float TextSize = 0.9f;
         public float offset = 0; // START offset for first button position relative to center
         public List<BaseButton> AllButtons = [];
-        public ReloadSPButton reloadSPButton;
-        public ReloadMPButton reloadMPButton;
 
         private Dictionary<float, float> buttonTextSizes = new()
         {
@@ -61,9 +50,7 @@ namespace ModHelper.UI
 
         #region Constructor
         // MainState Constructor. This is where we create all the buttons and set up their positions.
-        public MainState() => AddEverything();
-
-        public void AddEverything()
+        public MainState()
         {
             // Set buttonsize according to config
             Config c = ModContent.GetInstance<Config>();
@@ -82,57 +69,21 @@ namespace ModHelper.UI
             string logPath = Path.GetFileName(Logging.LogPath);
 
             // Add buttons
-            launchButton = AddButton<LaunchButton>(Ass.ButtonSecond, "Launch", "Start additional tML client");
-            itemButton = AddButton<ItemButton>(Ass.ButtonItems, "Items", "Spawn all items in the game");
-            npcButton = AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn all NPC in the game");
-            playerButton = AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Edit player stats and abilities", hoverTextDescription: "Right click to toggle super mode");
-            worldButton = AddButton<WorldButton>(Ass.ButtonWorld2, "World", "Set world settings and debugging");
-            logButton = AddButton<LogButton>(Ass.ButtonDebug, "Log", "Customize logging", hoverTextDescription: $"Right click to open {logPath}");
-            uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "View and edit UI elements", hoverTextDescription: "Right click to toggle all UI elements hitboxes");
-            modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "View list of mods", hoverTextDescription: "Right click to go to mod sources");
-
-            // offset += ButtonSize;
-
-            // Reload buttons. If MultiplayerClient, show only multiplayer. Otherwise, show both with toggle.
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload \n{Conf.C.LatestModToReload}");
-            }
-            else if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, "Reload", $"Reload {Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle MP reload");
-                offset -= ButtonSize;
-                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, "Reload", $"Reload {Conf.C.LatestModToReload}", hoverTextDescription: $"Right click to toggle SP reload");
-            }
-
-            // Add collapse button on top
-            collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
-            Append(collapse);
+            optionsButton = AddButton<OptionsButton>(Ass.ButtonDebug, "Options", "Options", hoverTextDescription: $"Customize");
+            uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
+            modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Mods List", hoverTextDescription: "Right click to go to mod sources");
+            reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload");
 
             // Add the panels (invisible by default)
-            itemSpawnerPanel = AddPanel<ItemSpawner>("left");
-            npcSpawnerPanel = AddPanel<NPCSpawner>("left");
-            playerPanel = AddPanel<PlayerPanel>("right");
-            logPanel = AddPanel<LogPanel>("right");
-            modsPanel = AddPanel<ModsPanel>("right");
-            uiPanel = AddPanel<UIElementPanel>("right");
-            worldPanel = AddPanel<WorldPanel>("right");
+            optionsPanel = AddPanel<OptionsPanel>();
+            modsPanel = AddPanel<ModsPanel>();
+            uiPanel = AddPanel<UIElementPanel>();
 
             // Associate buttons with panels so we can highlight the buttons with open panels 
-            itemSpawnerPanel.AssociatedButton = itemButton;
-            npcSpawnerPanel.AssociatedButton = npcButton;
-            playerPanel.AssociatedButton = playerButton;
-            logPanel.AssociatedButton = logButton;
+            // And close 
             modsPanel.AssociatedButton = modsButton;
             uiPanel.AssociatedButton = uiButton;
-            worldPanel.AssociatedButton = worldButton;
-
-            if (Main.netMode == NetmodeID.SinglePlayer && Conf.C.ShowGameKeepRunningText)
-            {
-                string onOff = Conf.C.ShowGameKeepRunningText ? "ON" : "OFF";
-                KeepGameRunningText topText = new($"Keep Game Running: {onOff}");
-                Append(topText);
-            }
+            optionsPanel.AssociatedButton = optionsButton;
 
             // Temporary debug text for player name, who am I, and frame rate
             if (Conf.C.ShowDebugText)
@@ -143,16 +94,13 @@ namespace ModHelper.UI
         }
         #endregion
 
-        private T AddPanel<T>(string side) where T : DraggablePanel, new()
+        private T AddPanel<T>() where T : DraggablePanel, new()
         {
             // Create a new panel using reflection
             T panel = new();
 
             // Add to appropriate list
-            if (side == "left")
-                LeftSidePanels.Add(panel);
-            else if (side == "right")
-                RightSidePanels.Add(panel);
+            AllPanels.Add(panel);
 
             // Add to MainState
             Append(panel);
@@ -179,8 +127,8 @@ namespace ModHelper.UI
             // custom left pos. override default
             // convert vector2 to valign and halign
             // buttonposition is from 0 to 1
-            button.VAlign = Conf.C.ButtonPosition.Y;
-            button.HAlign = Conf.C.ButtonPosition.X;
+            button.VAlign = Conf.C.ButtonsPosition.Y;
+            button.HAlign = Conf.C.ButtonsPosition.X;
 
             button.Recalculate();
 
@@ -201,7 +149,6 @@ namespace ModHelper.UI
 
             // last, draw the tooltips
             // this is to avoid the tooltips being drawn over the buttons
-
             foreach (var button in AllButtons)
             {
                 if (button.IsMouseHovering && button.HoverText != null)
@@ -212,20 +159,137 @@ namespace ModHelper.UI
             }
         }
 
-        public void TogglePanel(DraggablePanel panel)
-        {
-            // Determine if the panel is in LeftSidePanels or RightSidePanels
-            bool isLeft = LeftSidePanels.Contains(panel);
+        #region Right  dragging
 
-            // Deactivate other panels on the same side
-            var panelGroup = isLeft ? LeftSidePanels : RightSidePanels;
-            foreach (var p in panelGroup)
+        public bool dragging; // whether we are dragging or not
+        private Vector2 dragStartPosition; // where the drag started
+
+        // Helper to get the rectangle that encompasses all buttons
+        private Rectangle GetButtonAreaRectangle()
+        {
+            // Find min and max positions of all buttons
+            float minX = float.MaxValue;
+            float minY = float.MaxValue;
+            float maxX = float.MinValue;
+            float maxY = float.MinValue;
+
+            foreach (var button in AllButtons)
             {
-                if (p != panel) p.SetActive(false);
+                CalculatedStyle dimensions = button.GetDimensions();
+                minX = Math.Min(minX, dimensions.X);
+                minY = Math.Min(minY, dimensions.Y);
+                maxX = Math.Max(maxX, dimensions.X + dimensions.Width);
+                maxY = Math.Max(maxY, dimensions.Y + dimensions.Height);
             }
 
-            // Toggle the target panel
-            panel.SetActive(!panel.GetActive());
+            return new Rectangle(
+                (int)minX,
+                (int)minY,
+                (int)(maxX - minX),
+                (int)(maxY - minY)
+            );
         }
+
+        // Check if the mouse is within the button area
+        private bool IsMouseInButtonArea()
+        {
+            Rectangle buttonArea = GetButtonAreaRectangle();
+            return buttonArea.Contains(Main.mouseX, Main.mouseY);
+        }
+
+        public override void RightMouseDown(UIMouseEvent evt)
+        {
+            base.RightMouseDown(evt);
+
+            // Only start dragging if mouse is within button area
+            if (IsMouseInButtonArea())
+            {
+                dragStartPosition = new Vector2(Main.mouseX, Main.mouseY);
+                dragging = true;
+
+                // Store initial alignments and offsets of all buttons
+                foreach (var button in AllButtons)
+                {
+                    // Store tuple of: HAlign, VAlign, Left offset
+                    button.Tag = new Tuple<float, float, float>(
+                        button.HAlign,
+                        button.VAlign,
+                        button.Left.Pixels
+                    );
+                }
+            }
+        }
+
+        // used to separate clicking from dragging
+        public bool rightClicking = false;
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (dragging)
+            {
+                // First check if we dragged far enough to consider it a drag
+                float dragDistance = Vector2.Distance(new Vector2(Main.mouseX, Main.mouseY), dragStartPosition);
+                if (dragDistance < 10f) // 10 pixels threshold
+                {
+                    rightClicking = true;
+                    return;
+                }
+                rightClicking = false;
+
+                // Calculate the drag delta as percentage of screen
+                Vector2 mouseDelta = new Vector2(Main.mouseX, Main.mouseY) - dragStartPosition;
+                Vector2 alignmentDelta = new Vector2(
+                    mouseDelta.X / Main.screenWidth,
+                    mouseDelta.Y / Main.screenHeight
+                );
+
+                // Move all buttons by adjusting alignment but preserve horizontal spacing
+                foreach (var button in AllButtons)
+                {
+                    if (button.Tag is Tuple<float, float, float> initialData)
+                    {
+                        // Unpack the tuple
+                        float initialHAlign = initialData.Item1;
+                        float initialVAlign = initialData.Item2;
+                        float initialLeftOffset = initialData.Item3;
+
+                        // Calculate new alignment values with clamping to keep on screen
+                        float newHAlign = Math.Clamp(initialHAlign + alignmentDelta.X, 0.01f, 0.99f);
+                        float newVAlign = Math.Clamp(initialVAlign + alignmentDelta.Y, 0.01f, 0.99f);
+
+                        // Apply the new alignment
+                        button.HAlign = newHAlign;
+                        button.VAlign = newVAlign;
+
+                        // Keep the original horizontal offset
+                        button.Left.Set(initialLeftOffset, 0);
+
+                        button.Recalculate();
+                    }
+                }
+
+                // Prevent using items while dragging
+                Main.LocalPlayer.mouseInterface = true;
+            }
+        }
+
+        public override void RightMouseUp(UIMouseEvent evt)
+        {
+            base.RightMouseUp(evt);
+
+            if (dragging)
+            {
+                dragging = false;
+
+                // Save the new button position to config
+                // Use the first button's alignment values
+                Conf.C.ButtonsPosition = new Vector2(AllButtons[0].HAlign, AllButtons[0].VAlign);
+                Conf.Save();
+            }
+        }
+
+        #endregion
     }
 }

@@ -34,7 +34,7 @@ namespace ModHelper.UI.Elements
         {
             base.LeftClick(evt);
 
-            ChatHelper.NewText("Opening mod folder: " + modPath);
+            Main.NewText("Opening mod folder: " + modPath);
 
             try
             {

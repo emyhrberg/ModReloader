@@ -6,7 +6,6 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements
@@ -18,8 +17,8 @@ namespace ModHelper.UI.Elements
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
-            VAlign = 0.98f;
-            HAlign = 0.02f;
+            VAlign = 0.99f;
+            HAlign = 0.04f;
 
             // start text at top left corner of its element
             TextOriginX = 0f;
@@ -58,11 +57,11 @@ namespace ModHelper.UI.Elements
 
             if (Active)
             {
-                ChatHelper.NewText("Showing debug text", Color.White);
+                Main.NewText("Showing debug text", Color.White);
             }
             else
             {
-                ChatHelper.NewText("Hiding debug text", Color.White);
+                Main.NewText("Hiding debug text", Color.White);
             }
         }
 
@@ -84,8 +83,12 @@ namespace ModHelper.UI.Elements
             };
 
             string fileName = Path.GetFileName(Logging.LogPath);
-            string text = $"{playerName} ({whoAmI})" +
-                $"\n{netmode} ({fileName})" +
+
+            // string text = $"{playerName} ({whoAmI})" +
+            // $"\n{netmode} ({fileName})" +
+            // $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
+
+            string text = $"{playerName} ({whoAmI}) ({fileName})" +
                 $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
 
             SetText(text);
@@ -98,12 +101,19 @@ namespace ModHelper.UI.Elements
                 return;
             }
 
+            // also, if chat is open, hide the text
+            if (Main.drawingPlayerChat)
+            {
+                return;
+            }
+
             base.Draw(spriteBatch);
 
             if (IsMouseHovering)
             {
                 Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                // UICommon.TooltipMouseText("Right click to hide");
+                string fileName = Path.GetFileName(Logging.LogPath);
+                // Main.hoverItemName = $"Left click to open {fileName}\nRight click to hide text";
             }
         }
     }

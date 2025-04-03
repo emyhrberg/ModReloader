@@ -125,13 +125,13 @@ namespace ModHelper.Common.Systems
             showAll = !showAll;
             if (showAll)
             {
-                ChatHelper.NewText("Showing all UI elements.", Color.Green);
+                Main.NewText("Showing all UI elements.", Color.Green);
                 foreach (var elem in elements)
                     elementToggles[elem] = false;
             }
             else
             {
-                ChatHelper.NewText("Hiding all UI elements.", new Color(226, 57, 39));
+                Main.NewText("Hiding all UI elements.", new Color(226, 57, 39));
                 foreach (var elem in elements)
                     elementToggles[elem] = true;
             }

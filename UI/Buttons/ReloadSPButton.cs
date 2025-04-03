@@ -19,32 +19,9 @@ namespace ModHelper.UI.Buttons
         protected override int FrameHeight => 65;
         protected override float Scale => _scale;
 
-        public async override void LeftClick(UIMouseEvent evt)
-        {
-            await ReloadUtilities.Reload();
-        }
-
-        public override void RightClick(UIMouseEvent evt)
-        {
-            // If we are in multiplayer, we cant right click
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                return;
-
-            // If right click, toggle the mode and return
-            Active = false;
-            ButtonText.Active = false;
-
-            // set MP active
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            foreach (var btn in sys?.mainState?.AllButtons)
-            {
-                if (btn is ReloadMPButton spBtn)
-                {
-                    spBtn.Active = true;
-                    spBtn.ButtonText.Active = true;
-                }
-            }
-            return;
-        }
+        // public async override void LeftClick(UIMouseEvent evt)
+        // {
+        //     // await ReloadUtilities.Reload();
+        // }
     }
 }

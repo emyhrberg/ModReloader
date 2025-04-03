@@ -25,9 +25,9 @@ namespace ModHelper.Common.Systems
 
             MainMenuButtonRightSide button2 = new("Multiplayer Helper", 0, null, 0.75f);
             Append(button2);
-            AddRightSideButton("Multiplayer Start Server", StartServer, "Start a server with\n the first available world");
+            // AddRightSideButton("Multiplayer Start Server", StartServer, "Start a server with\n the first available world");
             AddRightSideButton("Multiplayer Start Client", StartClient, "Starts an additional \n instance of tModLoader", hoverHeightOffset * 1);
-            AddRightSideButton("Multiplayer Join", MultiplayerJoin, "Join localhost server\n with first available player", hoverHeightOffset * 2);
+            // AddRightSideButton("Multiplayer Join", MultiplayerJoin, "Join localhost server\n with first available player", hoverHeightOffset * 2);
         }
 
         private void StartServer()
@@ -40,7 +40,7 @@ namespace ModHelper.Common.Systems
                     throw new Exception("No worlds found.");
 
                 // Getting Player and World from ClientDataHandler
-                var world = Main.WorldList[ClientDataHandler.WorldID];
+                var world = Main.WorldList.FirstOrDefault();
 
                 if (string.IsNullOrEmpty(world.Path))
                 {
@@ -91,7 +91,7 @@ namespace ModHelper.Common.Systems
 
         private async void ReloadSelectedMod()
         {
-            await ReloadUtilities.Reload();
+            // await ReloadUtilities.Reload();
         }
 
         private void MultiplayerJoin()
@@ -104,7 +104,7 @@ namespace ModHelper.Common.Systems
                 throw new Exception("No players found.");
 
             // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList[ClientDataHandler.PlayerID];
+            var player = Main.PlayerList.FirstOrDefault();
 
             // TODO check if player is already in server and if so, join with a different player.
 

@@ -30,6 +30,9 @@ namespace ModHelper.UI.Buttons
         public bool Active = true;
         public bool ParentActive = false;
 
+        // Tag for index positioning when dragging
+        public object Tag { get; set; } = null;
+
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed
@@ -63,8 +66,8 @@ namespace ModHelper.UI.Buttons
         public void UpdateHoverText()
         {
             // Based on modstoreload, make the hovertext.
-            string modsToReload = string.Join(", ", ModsToReload.modsToReload);
-            HoverText = $"Reload {modsToReload}";
+            // string modsToReload = string.Join(", ", ModsToReload.modsToReload);
+            // HoverText = $"Reload {modsToReload}";
         }
 
         /// <summary>
@@ -132,7 +135,7 @@ namespace ModHelper.UI.Buttons
                     if (frameCounter >= FrameSpeed)
                     {
                         // This is needed because ItemButton is set to end animation at its last frame 5.
-                        if (this is ItemButton || this is ModsButton)
+                        if (this is ModsButton)
                         {
                             if (currFrame < FrameCount) // only increment if not at last frame
                             {

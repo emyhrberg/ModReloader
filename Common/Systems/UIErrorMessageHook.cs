@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
@@ -19,6 +20,12 @@ namespace ModHelper.Common.Systems
 
         public override void Load()
         {
+            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            {
+                Log.Info("MainMenuHook: CreateMainMenuButtons is set to false. Not hooking into Main Menu.");
+                return;
+            }
+
             // Get the UIErrorMessage type
             Type UIErrorMessage = typeof(Main).Assembly.GetType("Terraria.ModLoader.UI.UIErrorMessage");
 

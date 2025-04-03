@@ -1,9 +1,8 @@
 using System;
-using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -30,12 +29,12 @@ namespace ModHelper.UI.Elements
         public OptionPanel(string title, bool scrollbarEnabled = true) : base(title)
         {
             // panel settings
-            BackgroundColor = darkBlue * 1.0f; // modify opacity if u want here
-            Height.Set(Conf.C.PanelHeight, 0f);
+            Height.Set(460f, 0f);
             Top.Set(-70, 0f);
             Left.Set(-20, 0f);
+            BackgroundColor = ColorHelper.DarkBluePanel;
 
-            Draggable = false; // maybe change this later when u fix sliders
+            Draggable = true; // maybe change this later when u fix sliders
 
             // Create a new list
             uiList = new UIList
@@ -88,7 +87,7 @@ namespace ModHelper.UI.Elements
             return option;
         }
 
-        protected ActionOption AddAction(Action leftClick, string text, string hover, Action rightClick = null, float textSize = 0.4f, float padding = 5f)
+        protected ActionOption AddAction(string text, Action leftClick, string hover, Action rightClick = null, float textSize = 0.4f, float padding = 5f)
         {
             ActionOption actionOption = new(leftClick, text, hover, rightClick);
             uiList.Add(actionOption);
@@ -123,11 +122,6 @@ namespace ModHelper.UI.Elements
             //uiList.Width.Set(0, 1);
 
             base.Update(gameTime);
-
-            if (Conf.C.DraggablePanels)
-            {
-                return;
-            }
 
             // If the inventory is open, move the panel to the left by 350 pixels
             bool inventoryOpen = Main.playerInventory;

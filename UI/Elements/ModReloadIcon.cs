@@ -32,7 +32,7 @@ namespace ModHelper.UI.Elements
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            await ReloadUtilities.Reload();
+            // await ReloadUtilities.Reload();
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -108,18 +108,18 @@ namespace ModHelper.UI.Elements
             Append(checkbox);
 
             // if this is the current mod, add checkmark
-            bool isCurrentModToReload = Conf.C.LatestModToReload == internalNameFolderName;
-            if (isCurrentModToReload)
-            {
-                checkbox.SetCheckState(true);
+            bool isCurrentModToReload = Conf.C.ModToReload == internalNameFolderName;
+            // if (isCurrentModToReload)
+            // {
+            //     checkbox.SetCheckState(true);
 
-                // add initial mod
-                if (!ModsToReload.modsToReload.Contains(internalNameFolderName))
-                {
-                    Log.Info($"Added {internalNameFolderName} to ModsToReload.");
-                    ModsToReload.modsToReload.Add(internalNameFolderName);
-                }
-            }
+            //     // add initial mod
+            //     if (!ModsToReload.modsToReload.Contains(internalNameFolderName))
+            //     {
+            //         Log.Info($"Added {internalNameFolderName} to ModsToReload.");
+            //         ModsToReload.modsToReload.Add(internalNameFolderName);
+            //     }
+            // }
 
 
             // reload icon

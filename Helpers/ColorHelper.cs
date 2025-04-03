@@ -4,7 +4,7 @@ namespace ModHelper.Helpers
 {
     public static class ColorHelper
     {
-        public static Color Red => new(226, 57, 39);
-        // public static Color PanelBlue => new(0, 0, 255, 100);
+        public static Color CalamityRed => new(226, 57, 39);
+        public static Color DarkBluePanel = new(39, 49, 109, 255);
     }
 }

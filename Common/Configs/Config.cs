@@ -15,132 +15,91 @@ namespace ModHelper.Common.Configs
 
         [Header("Reload")]
 
-        [DefaultValue(true)]
-        public bool Reload = true;
-
         [DefaultValue("")]
-        public string LatestModToReload = "";
+        public string ModToReload;
 
         [DefaultValue(false)]
-        public bool SaveWorldOnReload = false;
+        public bool SaveWorldBeforeReloading;
 
-        [DefaultValue(false)]
-        public bool ClearClientLogOnReload = false;
-
-        [Header("UI")]
+        [Header("Game")]
 
         [Range(0f, 1f)]
         // [Increment(0.1f)]
         [DefaultValue(typeof(Vector2), "0.5, 1.0")]
-        public Vector2 ButtonPosition = new Vector2(0.5f, 1.0f);
+        public Vector2 ButtonsPosition;
 
         [Range(50f, 80f)]
         [Increment(5f)]
         [DefaultValue(70)]
-        public float ButtonSize = 70;
-
-        [Range(300, 700f)]
-        [Increment(50f)]
-        [DefaultValue(460)]
-        public float PanelWidth = 460;
-
-        [Range(300, 700f)]
-        [Increment(50f)]
-        [DefaultValue(500f)]
-        public float PanelHeight = 500;
-
-        [DefaultValue(false)]
-        public bool DraggablePanels = false;
-
-        [Header("Game")]
-        [DefaultValue(false)]
-        public bool EnterWorldSuperMode = false;
+        public float ButtonSize;
 
         [DefaultValue(true)]
-        public bool GameKeepRunning = true;
-
-        [DefaultValue(true)]
-        public bool ShowGameKeepRunningText = true;
-
-        [DefaultValue(true)]
-        public bool ShowDebugText = true;
-
-        [DefaultValue(true)]
-        public bool GodGlow = true;
-
-        [Header("Logging")]
-        [DefaultValue(true)]
-        public bool LogToLogFile = true;
-
-        [DefaultValue(true)]
-        public bool LogToChat = true;
+        public bool ShowDebugText;
 
         [Header("MainMenu")]
         [DefaultValue(false)]
-        public bool CreateMainMenuButtons = false;
+        public bool ImproveMainMenu;
 
-        [Header("NPCSpawner")]
+        [DefaultValue(false)]
+        public bool ImproveExceptionMenu;
 
-        [Range(-500f, 500f)]
-        [Increment(100f)]
-        [DefaultValue(typeof(Vector2), "0, 0")]
-        public Vector2 SpawnOffset = new Vector2(0, 0);
+        [Header("ShowButtons")]
+        public ShowButtons ShowButtons = new();
 
         public override void OnChanged()
         {
             base.OnChanged();
 
-            // Get mainstate
+            // remove and re-create entire MainState.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys == null)
+            if (sys != null && sys.mainState != null)
             {
-                Log.Info("MainSystem is null in Config.OnChanged()");
-                return;
+                // Create a new MainState (reset everything)
+                sys.OnWorldLoad();
             }
-            MainState mainState = sys.mainState;
-
-            if (mainState == null)
-            {
-                Log.Info("MainState is null in Config.OnChanged()");
-                return;
-            }
-
-            // Delete all buttons and re-add them
-            mainState.AreButtonsShowing = true;
-            mainState.AllButtons.Clear();
-            mainState.RemoveAllChildren();
-            mainState.AddEverything();
-
-            // expand so we can see the changes
-            mainState.collapse.SetCollapsed(false);
-
-            Log.Info("Config.OnChanged() ran successfully");
         }
     }
 
-    internal static class Conf
+    public class ShowButtons
     {
-        // NOTE: Stolen from CalamityMod
-        // https://github.com/CalamityTeam/CalamityModPublic/blob/e0838b30b8fdf86aeb4037931c8123703acd7c7e/CalamityMod.cs#L550
-        #region Force ModConfig save (Reflection)
-        internal static void ForceSaveConfig(Config cfg)
+        [DefaultValue(true)]
+        public bool ShowOptionsButton;
+
+        [DefaultValue(true)]
+        public bool ShowLogButton;
+
+        [DefaultValue(true)]
+        public bool ShowUIButton;
+
+        [DefaultValue(true)]
+        public bool ShowModsButton;
+    }
+
+    public static class Conf
+    {
+        /// <summary>
+        /// There is no current way to manually save a mod configuration file in tModLoader.
+        // / The method which saves mod config files is private in ConfigManager, so reflection is used to invoke it.
+        /// CalamityMod does this great
+        /// Reference: 
+        // https://github.com/CalamityTeam/CalamityModPublic/blob/1.4.4/CalamityMod.cs#L550
+        /// </summary>
+        public static void Save()
         {
-            // There is no current way to manually save a mod configuration file in tModLoader.
-            // The method which saves mod config files is private in ConfigManager, so reflection is used to invoke it.
             try
             {
                 MethodInfo saveMethodInfo = typeof(ConfigManager).GetMethod("Save", BindingFlags.Static | BindingFlags.NonPublic);
                 if (saveMethodInfo is not null)
-                    saveMethodInfo.Invoke(null, [cfg]);
+                    saveMethodInfo.Invoke(null, [Conf.C]);
             }
             catch
             {
                 Log.Error("An error occurred while manually saving ModConfig!.");
             }
         }
-        #endregion
 
-        // Instance
+        // Instance of the Config class
+        // Use it like Conf.C for easy access to the config values
         public static Config C => ModContent.GetInstance<Config>();
     }
 }

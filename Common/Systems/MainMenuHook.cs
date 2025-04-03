@@ -20,7 +20,7 @@ namespace ModHelper.Common.Systems
         public override void Load()
         {
             // Check if we should hook at all
-            if (Conf.C != null && !Conf.C.CreateMainMenuButtons)
+            if (Conf.C != null && !Conf.C.ImproveMainMenu)
             {
                 Log.Info("MainMenuHook: CreateMainMenuButtons is set to false. Not hooking into Main Menu.");
                 return;

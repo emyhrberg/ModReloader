@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
-using ModHelper.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -39,9 +38,6 @@ namespace ModHelper.Helpers
         /// </summary>
         public static void SlowInfo(string message, int seconds = 3, [CallerFilePath] string callerFilePath = "")
         {
-            Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.C.LogToLogFile == false) return;
-
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
             var instance = ModInstance;
@@ -60,9 +56,6 @@ namespace ModHelper.Helpers
 
         public static void Info(string message, [CallerFilePath] string callerFilePath = "")
         {
-            Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.C.LogToLogFile == false) return;
-
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
             var instance = ModInstance;
@@ -75,9 +68,6 @@ namespace ModHelper.Helpers
 
         public static void Warn(string message)
         {
-            Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.C.LogToLogFile == false) return;
-
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null
@@ -87,9 +77,6 @@ namespace ModHelper.Helpers
 
         public static void Error(string message)
         {
-            Config c = ModContent.GetInstance<Config>();
-            if (c != null && Conf.C.LogToLogFile == false) return;
-
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null
@@ -114,19 +101,20 @@ namespace ModHelper.Helpers
                 // Reactivate the appender so that logging resumes.
                 appender.ActivateOptions();
             }
-            ChatHelper.NewText("Client.log cleared.");
+            string fileName = Path.GetFileName(Logging.LogPath);
+            Main.NewText($"{fileName} cleared.");
         }
 
         public static void OpenLogFolder()
         {
-            ChatHelper.NewText("Opening log folder...");
+            Main.NewText("Opening log folder...");
 
             try
             {
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    ChatHelper.NewText("Steam path not found.");
+                    Main.NewText("Steam path not found.");
                     Error("Steam path not found.");
                     return;
                 }
@@ -139,7 +127,7 @@ namespace ModHelper.Helpers
             }
             catch (Exception ex)
             {
-                ChatHelper.NewText("Error opening log folder: " + ex.Message);
+                Main.NewText("Error opening log folder: " + ex.Message);
                 Error("Error opening log folder: " + ex.Message);
             }
         }
@@ -162,26 +150,26 @@ namespace ModHelper.Helpers
                 string fileName = Path.GetFileName(path);
 
                 Log.Info($"Opening {fileName}...");
-                ChatHelper.NewText("Opening " + fileName + "...");
+                Main.NewText("Opening " + fileName + "...");
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
-                ChatHelper.NewText("Error opening client log: " + ex.Message);
+                Main.NewText("Error opening client log: " + ex.Message);
                 Log.Error("Error opening client log: " + ex.Message);
             }
         }
 
         public static void OpenServerLog()
         {
-            ChatHelper.NewText("Opening server.log...");
+            Main.NewText("Opening server.log...");
 
             try
             {
                 string steamPath = GetSteamPath();
                 if (string.IsNullOrEmpty(steamPath))
                 {
-                    ChatHelper.NewText("Steam path is null or empty.");
+                    Main.NewText("Steam path is null or empty.");
                     Log.Error("Steam path is null or empty.");
                     return;
                 }
@@ -191,14 +179,14 @@ namespace ModHelper.Helpers
             }
             catch (Exception ex)
             {
-                ChatHelper.NewText("Error opening server.log: " + ex.Message);
+                Main.NewText("Error opening server.log: " + ex.Message);
                 Log.Error("Error opening server.log: " + ex.Message);
             }
         }
 
         public static void OpenEnabledJson()
         {
-            ChatHelper.NewText("Opening enabled.json...");
+            Main.NewText("Opening enabled.json...");
 
             // Get the path to the enabled.json file in $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
             try
@@ -214,7 +202,7 @@ namespace ModHelper.Helpers
 
         public static void OpenEnabledJsonFolder()
         {
-            ChatHelper.NewText("Opening enabled.json folder...");
+            Main.NewText("Opening enabled.json folder...");
 
             try
             {

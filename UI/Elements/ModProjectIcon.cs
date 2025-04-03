@@ -38,7 +38,7 @@ namespace ModHelper.UI.Elements
             try
             {
                 string modName = Path.GetFileName(modPath);
-                ChatHelper.NewText("Opening mod project: " + modPath);
+                Main.NewText("Opening mod project: " + modPath);
                 string csprojFile = Path.Combine(modPath + "/" + modName + ".csproj");
                 Process.Start(new ProcessStartInfo($@"{csprojFile}") { UseShellExecute = true });
             }

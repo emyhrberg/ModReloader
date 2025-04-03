@@ -18,7 +18,6 @@ namespace ModHelper.UI.Elements
         // Panel values
         protected bool Active = false; // draw and update when true
         protected const int padding = 12;
-        protected Color darkBlue = new(73, 85, 186);
         public string Header = "";
         public CustomTitlePanel TitlePanel;
 
@@ -40,18 +39,13 @@ namespace ModHelper.UI.Elements
         #region Constructor
         public DraggablePanel(string header)
         {
-            if (Conf.C.DraggablePanels)
-            {
-                Draggable = true;
-            }
-
             // Set some default panel properties 
             // Children will override this hopefully :)
             Width.Set(PANEL_WIDTH, 0f);
-            Height.Set(Conf.C.PanelHeight, 0f);
+            Height.Set(460f, 0f);
             HAlign = 1.0f; // right aligned
             VAlign = 1.0f; // bottom aligned
-            BackgroundColor = darkBlue;
+            // BackgroundColor = ColorHelper.DarkBluePanel;
             Header = header;
 
             // Create all content in the panel
@@ -72,10 +66,6 @@ namespace ModHelper.UI.Elements
                 IsDragging = false;
                 return;
             }
-
-            // update this with 2 second intervals lol
-            if (Main.GameUpdateCount % 120 == 0)
-                Draggable = Conf.C.DraggablePanels;
 
             if (!Active)
                 return;

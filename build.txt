@@ -1,6 +1,6 @@
 displayName = Mod Helper
 author = Erky
 version = 0.1
-side = both
+side = client
 hideCode = false
 buildIgnore = Assets\Old*, icon.psd
