@@ -19,9 +19,15 @@ namespace ModHelper.UI.Buttons
         protected override int FrameHeight => 65;
         protected override float Scale => _scale;
 
-        // public async override void LeftClick(UIMouseEvent evt)
-        // {
-        //     // await ReloadUtilities.Reload();
-        // }
+        public async override void LeftClick(UIMouseEvent evt)
+        {
+            if (Main.netMode != NetmodeID.SinglePlayer)
+            {
+                Main.NewText("This button can only be used in Singleplayer mode.");
+                return;
+            }
+
+            await ReloadHelper.Reload();
+        }
     }
 }

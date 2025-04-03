@@ -38,6 +38,7 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool ImproveExceptionMenu;
 
+        [Expand(false, false)]
         [Header("ShowButtons")]
         public ShowButtons ShowButtons = new();
 
@@ -68,6 +69,9 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowReloadButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowReloadMPButton = true;
     }
 
     public static class Conf

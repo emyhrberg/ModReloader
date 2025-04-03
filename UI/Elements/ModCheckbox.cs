@@ -34,18 +34,30 @@ namespace ModHelper.UI.Elements
             Width.Set(size, 0f);
             Height.Set(size, 0f);
             VAlign = 0.5f;
+
+            // check if this mod is the current mod to reload in the config. if so, check it.
+            if (Conf.C.ModToReload == modSourcePathString)
+            {
+                ToggleCheckState();
+                // add to mods to reload also
+
+                ReloadHelper.ModsToReload.Add(modSourcePathString);
+            }
         }
 
         public void ToggleCheckState()
         {
             isChecked = !isChecked;
-        }
 
-        public void SetCheckState(bool state)
-        {
-            isChecked = state;
+            if (isChecked)
+            {
+                hover = $"Remove {modSourcePathString} from reload";
+            }
+            else
+            {
+                hover = $"Add {modSourcePathString} to reload";
+            }
         }
-
         public override void LeftClick(UIMouseEvent evt)
         {
             base.LeftClick(evt);
@@ -57,58 +69,54 @@ namespace ModHelper.UI.Elements
             foreach (var mod in modsPanel.modSourcesElements)
             {
                 string internalFolderNameFromMod = Path.GetFileName(mod.modPath);
-                // Log.Info("clicked on mod: " + modSourcePathString);
-                // Log.Info("checking mod: " + internalFolderNameFromMod);
+                Log.Info("clicked on mod: " + modSourcePathString);
+                Log.Info("checking mod: " + internalFolderNameFromMod);
 
-                // if (internalFolderNameFromMod == modSourcePathString)
-                // {
-                //     // set checkbox
-                //     mod.checkbox.ToggleCheckState();
+                if (internalFolderNameFromMod == modSourcePathString)
+                {
+                    // set checkbox
+                    mod.checkbox.ToggleCheckState();
 
-                //     // update list
-                //     if (mod.checkbox.isChecked)
-                //     {
-                //         // Update config
-                //         Conf.C.LatestModToReload = modSourcePathString;
-                //         Conf.Save(Conf.C);
+                    // update list
+                    if (mod.checkbox.isChecked)
+                    {
+                        // Update config
+                        Conf.C.ModToReload = modSourcePathString;
+                        Conf.Save();
 
-                //         // only add if it doesnt already exist
-                //         if (!ModsToReload.modsToReload.Contains(modSourcePathString))
-                //         {
-                //             ModsToReload.modsToReload.Add(modSourcePathString);
-                //             // Log.Info("added mod to reload: " + modSourcePathString);
-                //         }
-                //     }
-                //     else
-                //     {
-                //         // Log.Info("removing mod to reload: " + modSourcePathString);
-                //         ModsToReload.modsToReload.Remove(modSourcePathString);
-                //         Conf.C.LatestModToReload = "";
-                //         Conf.Save(Conf.C);
+                        // only add if it doesnt already exist
+                        if (!ReloadHelper.ModsToReload.Contains(modSourcePathString))
+                        {
+                            ReloadHelper.ModsToReload.Add(modSourcePathString);
+                            // Log.Info("added mod to reload: " + modSourcePathString);
+                        }
+                    }
+                    else
+                    {
+                        // Log.Info("removing mod to reload: " + modSourcePathString);
+                        ReloadHelper.ModsToReload.Remove(modSourcePathString);
+                        Conf.C.ModToReload = "";
+                        Conf.Save();
 
-                //         // unchecked.
-                //         // update config if modstoreload only has one entry
-                //         if (ModsToReload.modsToReload.Count == 1)
-                //         {
-                //             Conf.C.LatestModToReload = ModsToReload.modsToReload.FirstOrDefault();
-                //             Log.Info("Setting single mod to reload to: " + Conf.C.LatestModToReload);
-                //             Conf.Save(Conf.C);
-                //         }
-                //     }
+                        // unchecked.
+                        // update config if modstoreload only has one entry
+                        if (ReloadHelper.ModsToReload.Count == 1)
+                        {
+                            Conf.C.ModToReload = ReloadHelper.ModsToReload.FirstOrDefault();
+                            Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
+                            Conf.Save();
+                        }
+                    }
 
-                //     // set hovertext in reloadSP
-                //     ReloadSPButton sp = sys.mainState.reloadSPButton;
-                //     ReloadMPButton mp = sys.mainState.reloadMPButton;
-                //     sp.UpdateHoverText();
-                //     mp.UpdateHoverText();
+                    // set hovertext in reloadSP
+                    ReloadSPButton sp = sys.mainState.reloadSPButton;
+                    ReloadMPButton mp = sys.mainState.reloadMPButton;
+                    sp.UpdateHoverTextDescription();
+                    mp.UpdateHoverTextDescription();
 
-                //     Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
-                //     Main.NewText("Mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
-                // }
-                // else
-                // {
-                // mod.checkbox.SetCheckState(false);
-                // }
+                    // Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
+                    Main.NewText("Mods to reload: " + string.Join(", ", ReloadHelper.ModsToReload));
+                }
             }
             modsPanel.Recalculate();
         }

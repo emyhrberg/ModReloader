@@ -23,6 +23,7 @@ namespace ModHelper.UI
         public UIElementButton uiButton;
         public ModsButton modsButton;
         public ReloadSPButton reloadSPButton;
+        public ReloadMPButton reloadMPButton;
 
         // Panels
         public OptionsPanel optionsPanel;
@@ -78,8 +79,13 @@ namespace ModHelper.UI
             if (Conf.C.ShowButtons.ShowModsButton)
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Mods List", hoverTextDescription: "Right click to go to mod sources");
 
+            string reloadHoverMods = Conf.C.ModToReload ?? "No mod selected";
+
             if (Conf.C.ShowButtons.ShowReloadButton)
-                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload");
+                reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
+
+            if (Conf.C.ShowButtons.ShowReloadMPButton)
+                reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
             // Add the panels (invisible by default)
             optionsPanel = AddPanel<OptionsPanel>();

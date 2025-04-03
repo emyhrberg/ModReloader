@@ -38,17 +38,17 @@ Mods: {
 
 				ImproveMainMenu: {
 					Label: Improve Main Menu
-					Tooltip: "Adds options to the main menu"
+					Tooltip: Adds options to the main menu
 				}
 
 				ImproveExceptionMenu: {
 					Label: Improve Exception Menu
-					Tooltip: "Adds options and improves the look of the error message"
+					Tooltip: Adds options and improves the look of the error message
 				}
 
 				ShowButtons: {
 					Label: Show Buttons
-					Tooltip: "Choose which buttons to show or hide"
+					Tooltip: Choose which buttons to show or hide
 				}
 			}
 
@@ -77,6 +77,11 @@ Mods: {
 
 				ShowLogButton: {
 					Label: Show Log Button
+					Tooltip: ""
+				}
+
+				ShowReloadMPButton: {
+					Label: Show Reload MP Button
 					Tooltip: ""
 				}
 			}

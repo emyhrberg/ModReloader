@@ -63,11 +63,11 @@ namespace ModHelper.UI.Buttons
             Append(ButtonText);
         }
 
-        public void UpdateHoverText()
+        public void UpdateHoverTextDescription()
         {
             // Based on modstoreload, make the hovertext.
-            // string modsToReload = string.Join(", ", ModsToReload.modsToReload);
-            // HoverText = $"Reload {modsToReload}";
+            string modsToReload = string.Join(", ", ReloadHelper.ModsToReload);
+            HoverTextDescription = $"{modsToReload}";
         }
 
         /// <summary>
