@@ -103,7 +103,7 @@ namespace ModHelper.UI.Elements
             float dist = 27f;
 
             // checkbox icon
-            checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Click to add {internalNameFolderName} to the list of mods to reload");
+            checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Add {internalNameFolderName} to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
 

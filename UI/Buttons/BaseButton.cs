@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
@@ -7,7 +5,6 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
@@ -44,9 +41,12 @@ namespace ModHelper.UI.Buttons
         protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
         protected abstract int FrameWidth { get; } // abstract means force child classes to implement this
         protected abstract int FrameHeight { get; } // abstract means force child classes to implement this
+        public float TextScale; // the scale of the text, set by  
+        /// <see cref="MainState"/> 
 
         // Constructor
-        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription = "", float textSize = 0.9f) : base(spritesheet)
+        #region Constructor
+        protected BaseButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription = "") : base(spritesheet)
         {
             Button = Ass.Button;
             ButtonHighlight = Ass.ButtonHighlight;
@@ -57,11 +57,17 @@ namespace ModHelper.UI.Buttons
             SetImage(Button);
             currFrame = StartFrame;
 
+            // Set textScale based on buttonscale.
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            TextScale = sys?.mainState?.TextSize ?? 0.9f;
+            // Log.Info("TextScale: " + TextScale);
+
             // Add a UIText centered horizontally at the bottom of the button.
             // Set the scale; 70f seems to fit to 0.9f scale.
-            ButtonText = new ButtonText(text: buttonText, textScale: textSize, large: false);
+            ButtonText = new ButtonText(text: buttonText, textScale: TextScale, large: false);
             Append(ButtonText);
         }
+        #endregion
 
         public void UpdateHoverTextDescription()
         {
@@ -73,6 +79,7 @@ namespace ModHelper.UI.Buttons
         /// <summary>
         /// Draws the button with the specified image/animation and tooltip text
         /// </summary>
+        #region Draw
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
             if (!Active || Button == null || Button.Value == null)
@@ -178,6 +185,7 @@ namespace ModHelper.UI.Buttons
             //     DrawHelper.DrawTooltipPanel(this, "a", HoverText); // Draw the tooltip panel
             // }
         }
+        #endregion
 
         //Disable button click if config window is open
         public override bool ContainsPoint(Vector2 point)
@@ -211,6 +219,18 @@ namespace ModHelper.UI.Buttons
 
             return base.ContainsPoint(point);
         }
+
+        #region LeftClick
+        public override void LeftClick(UIMouseEvent evt)
+        {
+            // disable click if dragging
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick)
+            {
+                return;
+            }
+        }
+        #endregion
 
         // Disable item use on click
         public override void Update(GameTime gameTime)

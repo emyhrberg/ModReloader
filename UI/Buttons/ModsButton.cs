@@ -16,7 +16,7 @@ namespace ModHelper.UI.Buttons
     public class ModsButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set button image size
-        private float _scale = 0.6f;
+        private float _scale = 0.9f;
         protected override float Scale => _scale;
 
         // OLD BUTTON, DO NOT DELETE
@@ -31,7 +31,14 @@ namespace ModHelper.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            base.LeftClick(evt);
+
             MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
+            {
+                return;
+            }
+
             List<DraggablePanel> allPanels = sys?.mainState?.AllPanels;
 
             // replace with THIS panel

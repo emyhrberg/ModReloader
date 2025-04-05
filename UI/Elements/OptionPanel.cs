@@ -144,6 +144,9 @@ namespace ModHelper.UI.Elements
             if (!Active)
                 return;
 
+            // this drag code needs to be here because we override some stuff above.
+            // so OptionPanel needs to have its own LeftMouseDown method
+            // and call base.LeftMouseDown(evt) to make it work properly.
             mouseDownPos = evt.MousePosition;
             base.LeftMouseDown(evt);
             dragging = true;

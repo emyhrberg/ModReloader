@@ -81,8 +81,8 @@ namespace ModHelper.UI.Elements
                     if (mod.checkbox.isChecked)
                     {
                         // Update config
-                        Conf.C.ModToReload = modSourcePathString;
-                        Conf.Save();
+                        // Conf.C.ModToReload = modSourcePathString;
+                        // Conf.Save();
 
                         // only add if it doesnt already exist
                         if (!ReloadHelper.ModsToReload.Contains(modSourcePathString))
@@ -95,8 +95,8 @@ namespace ModHelper.UI.Elements
                     {
                         // Log.Info("removing mod to reload: " + modSourcePathString);
                         ReloadHelper.ModsToReload.Remove(modSourcePathString);
-                        Conf.C.ModToReload = "";
-                        Conf.Save();
+                        // Conf.C.ModToReload = ReloadHelper.ModsToReload.Count > 0 ? ReloadHelper.ModsToReload.LastOrDefault() : string.Empty;
+                        // Conf.Save();
 
                         // unchecked.
                         // update config if modstoreload only has one entry

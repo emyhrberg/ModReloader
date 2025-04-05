@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
@@ -10,7 +9,6 @@ using ModHelper.UI.Buttons;
 using ModHelper.UI.Elements;
 using ReLogic.Content;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -55,12 +53,16 @@ namespace ModHelper.UI
         {
             // Set buttonsize according to config
             Config c = ModContent.GetInstance<Config>();
-            if (c != null)
-                ButtonSize = Conf.C.ButtonSize;
+            // if (c != null)
+            // ButtonSize = Conf.C.Buttons.ButtonSize != 0 ? Conf.C.Buttons.ButtonSize : 70f;
 
             // Set text size
             if (buttonTextSizes.TryGetValue(ButtonSize, out float value))
+            {
+                // Log.Info($"Button size: {ButtonSize}, Text size: {value}");
                 TextSize = value;
+            }
+            ButtonSize = 70f;
 
             // Set offset for first button position relative to center
             offset = -ButtonSize * 4;
@@ -70,21 +72,21 @@ namespace ModHelper.UI
             string logPath = Path.GetFileName(Logging.LogPath);
 
             // Add buttons
-            if (Conf.C.ShowButtons.ShowOptionsButton)
-                optionsButton = AddButton<OptionsButton>(Ass.ButtonDebug, "Options", "Options", hoverTextDescription: $"Customize");
+            if (Conf.C.Buttons.ShowOptionsButton)
+                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options", hoverTextDescription: $"Customize");
 
-            if (Conf.C.ShowButtons.ShowUIButton)
+            if (Conf.C.Buttons.ShowUIButton)
                 uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
 
-            if (Conf.C.ShowButtons.ShowModsButton)
+            if (Conf.C.Buttons.ShowModsButton)
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Mods List", hoverTextDescription: "Right click to go to mod sources");
 
             string reloadHoverMods = Conf.C.ModToReload ?? "No mod selected";
 
-            if (Conf.C.ShowButtons.ShowReloadButton)
+            if (Conf.C.Buttons.ShowReloadButton)
                 reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
-            if (Conf.C.ShowButtons.ShowReloadMPButton)
+            if (Conf.C.Buttons.ShowReloadMPButton)
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
             // Add the panels (invisible by default)
@@ -99,7 +101,7 @@ namespace ModHelper.UI
             optionsPanel.AssociatedButton = optionsButton;
 
             // Temporary debug text for player name, who am I, and frame rate
-            if (Conf.C.ShowDebugText)
+            if (Conf.C.SizeDebugText != "Off")
             {
                 DebugText debugText = new(text: "");
                 Append(debugText);
@@ -114,6 +116,16 @@ namespace ModHelper.UI
 
             // Add to appropriate list
             AllPanels.Add(panel);
+
+            // If the panel is already open, set it to active
+            if (panel.GetActive())
+            {
+                panel.SetActive(true);
+            }
+            else
+            {
+                panel.SetActive(false);
+            }
 
             // Add to MainState
             Append(panel);
@@ -137,12 +149,11 @@ namespace ModHelper.UI
             // set x pos with offset
             button.Left.Set(pixels: offset, precent: 0f);
 
+            // set text scale
+            button.TextScale = TextSize;
+
             // custom left pos. override default
             // convert vector2 to valign and halign
-            // buttonposition is from 0 to 1
-            // button.VAlign = Conf.C.ButtonsPosition.Y;
-            // button.HAlign = Conf.C.ButtonsPosition.X;
-
             // Read the VAlign and HAlign from the config
             Vector2 buttonsPosition = ConfigJsonHelper.ReadButtonsPosition();
             button.VAlign = buttonsPosition.Y;
@@ -177,10 +188,50 @@ namespace ModHelper.UI
             }
         }
 
-        #region Right  dragging
+        #region Left/right dragging
 
         public bool dragging; // whether we are dragging or not
         private Vector2 dragStartPosition; // where the drag started
+        public bool isClick = false; // used to separate clicking from dragging
+
+        public override void RightMouseDown(UIMouseEvent evt)
+        {
+            base.RightMouseDown(evt);
+
+            if (Conf.C.DragButtons == "Right")
+            {
+                DragStart();
+            }
+        }
+
+        public override void RightMouseUp(UIMouseEvent evt)
+        {
+            base.RightMouseUp(evt);
+
+            if (Conf.C.DragButtons == "Right")
+            {
+                DragEnd();
+            }
+        }
+
+        public override void LeftMouseDown(UIMouseEvent evt)
+        {
+            base.LeftMouseDown(evt);
+            if (Conf.C.DragButtons == "Left")
+            {
+                DragStart();
+            }
+        }
+
+        public override void LeftMouseUp(UIMouseEvent evt)
+        {
+            base.LeftMouseUp(evt);
+
+            if (Conf.C.DragButtons == "Left")
+            {
+                DragEnd();
+            }
+        }
 
         // Helper to get the rectangle that encompasses all buttons
         private Rectangle GetButtonAreaRectangle()
@@ -215,10 +266,8 @@ namespace ModHelper.UI
             return buttonArea.Contains(Main.mouseX, Main.mouseY);
         }
 
-        public override void RightMouseDown(UIMouseEvent evt)
+        private void DragStart()
         {
-            base.RightMouseDown(evt);
-
             // Only start dragging if mouse is within button area
             if (IsMouseInButtonArea())
             {
@@ -238,8 +287,20 @@ namespace ModHelper.UI
             }
         }
 
-        // used to separate clicking from dragging
-        public bool isClick = false;
+        private void DragEnd()
+        {
+            if (dragging)
+            {
+                dragging = false;
+
+                // Save the new button position to config
+                // Use the first button's alignment values
+                Vector2 buttonsPosition = new Vector2(AllButtons[0].HAlign, AllButtons[0].VAlign);
+
+                // Write the updated config to a JSON file.
+                ConfigJsonHelper.WriteButtonsPosition(buttonsPosition);
+            }
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -274,8 +335,8 @@ namespace ModHelper.UI
                         float initialLeftOffset = initialData.Item3;
 
                         // Calculate new alignment values with clamping to keep on screen
-                        float newHAlign = Math.Clamp(initialHAlign + alignmentDelta.X, 0.01f, 0.99f);
-                        float newVAlign = Math.Clamp(initialVAlign + alignmentDelta.Y, 0.01f, 0.99f);
+                        float newHAlign = Math.Clamp(initialHAlign + alignmentDelta.X, 0.16f, 1.05f);
+                        float newVAlign = Math.Clamp(initialVAlign + alignmentDelta.Y, 0.0f, 0.99f);
 
                         // Apply the new alignment
                         button.HAlign = newHAlign;
@@ -290,23 +351,6 @@ namespace ModHelper.UI
 
                 // Prevent using items while dragging
                 Main.LocalPlayer.mouseInterface = true;
-            }
-        }
-
-        public override void RightMouseUp(UIMouseEvent evt)
-        {
-            base.RightMouseUp(evt);
-
-            if (dragging)
-            {
-                dragging = false;
-
-                // Save the new button position to config
-                // Use the first button's alignment values
-                Vector2 buttonsPosition = new Vector2(AllButtons[0].HAlign, AllButtons[0].VAlign);
-
-                // Write the updated config to a JSON file.
-                ConfigJsonHelper.WriteButtonsPosition(buttonsPosition);
             }
         }
 

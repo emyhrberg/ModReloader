@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements;
 using ReLogic.Content;
@@ -22,7 +23,14 @@ namespace ModHelper.UI.Buttons
 
         public override void LeftClick(UIMouseEvent evt)
         {
+            base.LeftClick(evt);
+
             MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
+            {
+                return;
+            }
+
             List<DraggablePanel> rightSidePanels = sys?.mainState?.AllPanels;
 
             // replace with THIS panel

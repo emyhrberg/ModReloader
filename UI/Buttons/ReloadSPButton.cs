@@ -21,6 +21,12 @@ namespace ModHelper.UI.Buttons
 
         public async override void LeftClick(UIMouseEvent evt)
         {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
+            {
+                return;
+            }
+
             if (Main.netMode != NetmodeID.SinglePlayer)
             {
                 Main.NewText("This button can only be used in Singleplayer mode.");

@@ -81,16 +81,24 @@ namespace ModHelper.Common.Systems
                 }
             }
 
-            // Add a custom copy button next to all the others
-            copyButton = new("Copy to Clipboard", 0.7f, true, errorMessage);
-            copyButton.Top.Set(-108 + 50 + 5, 1f);
-            copyButton.WithFadedMouseOver(); // add yellow hover effect
-            area.Append(copyButton);
-
             if (webHelpButtonExists)
             {
                 // Move our button up
-                copyButton.Top.Set(-108 - 50, 1f);
+                copyButton = new("Copy to Clipboard", 0.3f, true, errorMessage);
+                copyButton.Top.Set(-108 - 30, 1f);
+                copyButton.Left.Set(-30, 0f);
+                copyButton.Height.Set(20, 0);
+                copyButton.Width.Set(200, 0);
+                copyButton.WithFadedMouseOver(); // add yellow hover effect
+                area.Append(copyButton);
+            }
+            else
+            {
+                // Add a custom copy button next to all the others
+                copyButton = new("Copy to Clipboard", 0.7f, true, errorMessage);
+                copyButton.Top.Set(-108 + 50 + 5, 1f);
+                copyButton.WithFadedMouseOver(); // add yellow hover effect
+                area.Append(copyButton);
             }
         }
 
@@ -103,61 +111,6 @@ namespace ModHelper.Common.Systems
             FieldInfo messageField = UIErrorMessage.GetField("message", BindingFlags.NonPublic | BindingFlags.Instance);
             string errorMessage = (string)messageField.GetValue(self);
             return errorMessage;
-        }
-
-        public class CopyButton : UITextPanel<string>
-        {
-            private string errorMessage;
-            private bool hasCopied = false;
-            DateTime copyTime;
-
-            public CopyButton(string text, float textScale, bool large, string errorMessage) : base(text, textScale, large)
-            {
-                this.errorMessage = errorMessage;
-
-                // Bottom right position. There are 3 other buttons.
-                Width.Set(-10, 0.5f);
-                Height.Set(50, 0f);
-                HAlign = 1.0f;
-            }
-
-            public override void LeftClick(UIMouseEvent evt)
-            {
-                base.LeftClick(evt);
-
-                ReLogic.OS.Platform.Get<IClipboard>().Value = errorMessage;
-                Log.Info("Copied error message to clipboard.");
-                hasCopied = true;
-
-                // Start the timer
-                copyTime = DateTime.Now;
-            }
-
-            public override void Draw(SpriteBatch spriteBatch)
-            {
-                base.Draw(spriteBatch);
-
-                // Draw the button with hover:
-                if (IsMouseHovering)
-                {
-                    if (!hasCopied)
-                    {
-                        DrawHelper.DrawTooltipPanel(this, "Click to copy", "Copy the error message to your clipboard.");
-                    }
-                    else
-                    {
-                        DrawHelper.DrawTooltipPanel(this, "Copied!", "The error message has been copied to your clipboard.");
-                    }
-
-                    // If it's been 3 seconds, reset the button
-                    TimeSpan interval = TimeSpan.FromSeconds(3);
-                    bool has3SecondsPassed = DateTime.Now - copyTime >= interval;
-                    if (has3SecondsPassed)
-                    {
-                        hasCopied = false;
-                    }
-                }
-            }
         }
     }
 }

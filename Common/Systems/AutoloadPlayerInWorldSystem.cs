@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,6 +21,12 @@ namespace ModHelper.Common.Systems
 
         public override void OnModLoad()
         {
+            if (!Conf.C.AutoJoinWorldAfterUnload)
+            {
+                Log.Info("AutoJoinWorldAfterUnload is disabled. Skipping EnterSingleplayerWorld() hook.");
+                return;
+            }
+
             // Get the OnSuccessfulLoad field using reflection
             FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);
 
@@ -39,7 +47,7 @@ namespace ModHelper.Common.Systems
             }
             else
             {
-                Mod.Logger.Warn("Failed to access OnSuccessfulLoad field.");
+                Log.Warn("Failed to access OnSuccessfulLoad field.");
             }
         }
 
@@ -51,7 +59,7 @@ namespace ModHelper.Common.Systems
 
         private void EnterSingleplayerWorld()
         {
-            Mod.Logger.Info("EnterSingleplayerWorld() called!");
+            Log.Info("EnterSingleplayerWorld() called!");
 
             // Loading lists of Players and Worlds
             Main.LoadWorlds();
@@ -67,16 +75,19 @@ namespace ModHelper.Common.Systems
             var world = Main.WorldList.FirstOrDefault();
 
             Main.SelectPlayer(player);
-            Mod.Logger.Info($"Starting game with Player: {player.Name}, World: {world.Name}");
+            Log.Info($"Starting game with Player: {player.Name}, World: {world.Name}");
             Main.ActiveWorldFileData = world;
             // Ensure the world's file path is valid
             if (string.IsNullOrEmpty(world.Path))
             {
-                Mod.Logger.Error($"World {world.Name} has an invalid or null path.");
+                Log.Error($"World {world.Name} has an invalid or null path.");
                 throw new ArgumentNullException(nameof(world.Path), "World path cannot be null or empty.");
             }
             // Play the selected world in singleplayer
             WorldGen.playWorld();
+
+            // Show the custom load screen
+            CustomLoadWorld.Show(world.Name);
         }
     }
 }

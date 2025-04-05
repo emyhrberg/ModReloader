@@ -16,7 +16,8 @@ namespace ModHelper.UI.Elements
     public abstract class DraggablePanel : UIPanel
     {
         // Panel values
-        protected bool Active = false; // draw and update when true
+        protected bool prev_Active_state = false; // previous active state
+        protected bool Active = false; // default to false
         protected const int padding = 12;
         public string Header = "";
         public CustomTitlePanel TitlePanel;
@@ -160,6 +161,7 @@ namespace ModHelper.UI.Elements
             /// <see cref="SpawnerPanel"/> 
             /// <see cref="OptionPanel"/> 
             Log.Info($"{(active ? "Open" : "Close")} {Header} panel");
+            AssociatedButton.ParentActive = false;
             return Active = active;
         }
         #endregion

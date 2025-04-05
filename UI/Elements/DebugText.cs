@@ -1,6 +1,7 @@
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -53,16 +54,27 @@ namespace ModHelper.UI.Elements
 
         public override void RightClick(UIMouseEvent evt)
         {
-            Active = !Active;
+            // toggle conf option
+            Conf.C.SizeDebugText = Conf.C.SizeDebugText switch
+            {
+                "Off" => "Small",
+                "Small" => "Medium",
+                "Medium" => "Large",
+                "Large" => "Off",
+                _ => "Off"
+            };
+            Conf.Save();
 
-            if (Active)
-            {
-                Main.NewText("Showing debug text", Color.White);
-            }
-            else
-            {
-                Main.NewText("Hiding debug text", Color.White);
-            }
+            // Active = !Active;
+
+            // if (Active)
+            // {
+            // Main.NewText("Showing debug text", Color.White);
+            // }
+            // else
+            // {
+            // Main.NewText("Hiding debug text", Color.White);
+            // }
         }
 
         public override void Update(GameTime gameTime)
@@ -91,7 +103,16 @@ namespace ModHelper.UI.Elements
             string text = $"{playerName} ({whoAmI}) ({fileName})" +
                 $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
 
-            SetText(text);
+            float size = Conf.C.SizeDebugText switch
+            {
+                "Small" => 0.7f,
+                "Medium" => 0.9f,
+                "Large" => 1.1f,
+                "Off" => 0f,
+                _ => 0f
+            };
+
+            SetText(text, size, large: false);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

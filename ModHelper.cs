@@ -1,6 +1,3 @@
-using ModHelper.Helpers;
-using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace ModHelper
@@ -10,8 +7,11 @@ namespace ModHelper
     // [Autoload(Side = ModSide.Both)]
     public class ModHelper : Mod
     {
+        public static ModHelper Instance { get; private set; }
+
         public override void Load()
         {
+            Instance = this;
             // if (Main.netMode != NetmodeID.Server)
             // ClientDataHandler.ReadData();
         }

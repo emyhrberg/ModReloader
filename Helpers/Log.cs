@@ -36,7 +36,7 @@ namespace ModHelper.Helpers
         /// <summary>
         /// Log a message once every 3 second
         /// </summary>
-        public static void SlowInfo(string message, int seconds = 3, [CallerFilePath] string callerFilePath = "")
+        public static void SlowInfo(string message, int seconds = 1, [CallerFilePath] string callerFilePath = "")
         {
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);

@@ -7,8 +7,9 @@ Mods: {
 				Headers: {
 					Reload: Reload
 					Game: Game
-					ShowButtons: Show/Hide Buttons
 					Improvements: Improvements
+					DebugText: Debug Text
+					Buttons: Buttons
 				}
 
 				ModToReload: {
@@ -26,14 +27,14 @@ Mods: {
 					Tooltip: Set the position of the button, also right click to drag
 				}
 
+				Buttons: {
+					Label: Buttons
+					Tooltip: ""
+				}
+
 				ButtonSize: {
 					Label: Button Size
 					Tooltip: Set the size of the buttons
-				}
-
-				ShowDebugText: {
-					Label: Show Debug Text
-					Tooltip: Toggle the visibility of the debug text in the bottom left corner
 				}
 
 				ImproveMainMenu: {
@@ -43,17 +44,42 @@ Mods: {
 
 				ImproveExceptionMenu: {
 					Label: Improve Exception Menu
-					Tooltip: Adds options and improves the look of the error message
+					Tooltip: Adds options and improves the look of the error message screen
 				}
 
 				ShowButtons: {
 					Label: Show Buttons
 					Tooltip: Choose which buttons to show or hide
 				}
+
+				DebugTextSize: {
+					Label: Debug Text Size
+					Tooltip: ""
+				}
+
+				SizeDebugText: {
+					Label: Size Debug Text
+					Tooltip: ""
+				}
+
+				AutoJoinWorldAfterUnload: {
+					Tooltip: ""
+					Label: Auto Join World After Unload
+				}
+
+				DragButtons: {
+					Tooltip: ""
+					Label: Drag Buttons
+				}
 			}
 
-			ShowButtons: {
+			Buttons: {
 				Tooltip: ""
+
+				ButtonSize: {
+					Label: Button Size
+					Tooltip: ""
+				}
 
 				ShowOptionsButton: {
 					Label: Show Options Button
@@ -72,11 +98,6 @@ Mods: {
 
 				ShowReloadButton: {
 					Label: Show Reload Button
-					Tooltip: ""
-				}
-
-				ShowLogButton: {
-					Label: Show Log Button
 					Tooltip: ""
 				}
 
