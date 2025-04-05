@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using ModHelper.Common.Systems.Menus;
 using ModHelper.Helpers;
 using ModHelper.UI;
 using ModHelper.UI.Elements;
@@ -26,7 +27,7 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool SaveWorldBeforeReloading;
 
-        [Header("Debug Text")]
+        [Header("DebugText")]
 
         [DrawTicks]
         [OptionStrings(["Off", "Small", "Medium", "Large"])]
@@ -55,7 +56,22 @@ namespace ModHelper.Common.Configs
         {
             base.OnChanged();
 
-            // remove and re-create entire MainState.
+            RecreateMainstate();
+            ReopenPreviousOpenPanel();
+            UpdateExceptionState();
+        }
+
+        private void RecreateMainstate()
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys != null && sys.mainState != null)
+            {
+                sys.OnWorldLoad();
+            }
+        }
+
+        private void ReopenPreviousOpenPanel()
+        {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (sys != null && sys.mainState != null)
             {
@@ -70,18 +86,34 @@ namespace ModHelper.Common.Configs
                 }
 
                 // Log all active panels in one line
-                Log.Info("Active panels: " + string.Join(", ", activePanels.Keys));
+                // Log.Info("Active panels: " + string.Join(", ", activePanels.Keys));
 
                 // Create a new MainState (reset everything)
                 sys.OnWorldLoad();
 
-                // Restore active panels
+                // Restore active panels (so we dont lose them)
                 foreach (var panel in sys.mainState.AllPanels)
                 {
                     if (activePanels.TryGetValue(panel.GetType(), out bool isActive))
                     {
                         panel.SetActive(isActive);
                     }
+                }
+            }
+        }
+
+        private static void UpdateExceptionState()
+        {
+            // Only try to remove the button if ImproveExceptionMenu is disabled and the hook class exists
+            if (Conf.C != null && !Conf.C.ImproveExceptionMenu)
+            {
+                try
+                {
+                    ExceptionHookv2.RemoveCopyButtonFromErrorUI();
+                }
+                catch
+                {
+                    Log.Error("An error occurred while removing the button from the Exception Menu.");
                 }
             }
         }

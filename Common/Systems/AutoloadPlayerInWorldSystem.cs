@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using ModHelper.Common.Configs;
+using ModHelper.Common.Systems.Menus;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.ID;
@@ -18,6 +19,42 @@ namespace ModHelper.Common.Systems
         // OnModLoad, OnLoad.
         // TODO: Investigate differences between the above methods.
         // Also, NetReceive, NetSend, , CanWorldBePlayed, OnWorldLoad, etc.
+
+        public override void Load()
+        {
+            if (Main.netMode != NetmodeID.Server)
+                ClientDataHandler.ReadData();
+        }
+
+        public override void Unload()
+        {
+            if (Main.netMode != NetmodeID.Server)
+                ClientDataHandler.WriteData();
+
+            // Reset some hooks
+            typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, null);
+        }
+
+        public override void OnWorldLoad()
+        {
+            // Save player and world ID
+            // check netmode.
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                // TODO maybe ClientMode will be MPMinor here at some point.
+                ClientDataHandler.ClientMode = ClientMode.MPMain;
+            }
+            else if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                ClientDataHandler.ClientMode = ClientMode.SinglePlayer;
+            }
+
+            ClientDataHandler.PlayerID = Utilities.FindPlayerId();
+            ClientDataHandler.WorldID = Utilities.FindWorldId();
+
+            // write to file
+            ClientDataHandler.WriteData();
+        }
 
         public override void OnModLoad()
         {
@@ -51,12 +88,6 @@ namespace ModHelper.Common.Systems
             }
         }
 
-        public override void Unload()
-        {
-            // Reset some hooks
-            typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, null);
-        }
-
         private void EnterSingleplayerWorld()
         {
             Log.Info("EnterSingleplayerWorld() called!");
@@ -68,14 +99,24 @@ namespace ModHelper.Common.Systems
             if (Main.PlayerList.Count == 0 || Main.WorldList.Count == 0)
                 throw new Exception("No players or worlds found.");
 
+            // getting playerID and worldID and print
+            Log.Info("PlayerID: " + ClientDataHandler.PlayerID + ", WorldID: " + ClientDataHandler.WorldID);
+
+            int playerID = ClientDataHandler.PlayerID;
+            int worldID = ClientDataHandler.WorldID;
+
+            if (playerID == -1 || worldID == -1)
+            {
+                Log.Error("PlayerID or WorldID is -1. Cannot autoload.");
+                return;
+            }
+
             // Getting Player and World from ClientDataHandler
-            // var player = Main.PlayerList[ClientDataHandler.PlayerID];
-            // var world = Main.WorldList[ClientDataHandler.WorldID];
-            var player = Main.PlayerList.FirstOrDefault();
-            var world = Main.WorldList.FirstOrDefault();
+            var player = Main.PlayerList[ClientDataHandler.PlayerID];
+            var world = Main.WorldList[ClientDataHandler.WorldID];
 
             Main.SelectPlayer(player);
-            Log.Info($"Starting game with Player: {player.Name}, World: {world.Name}");
+            Log.Info($"Autoload using ClientDataHandler. Starting game with Player: {player.Name}, World: {world.Name}");
             Main.ActiveWorldFileData = world;
             // Ensure the world's file path is valid
             if (string.IsNullOrEmpty(world.Path))

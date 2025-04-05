@@ -7,7 +7,7 @@ using Terraria;
 
 namespace ModHelper.Helpers
 {
-    public static class ConfigJsonHelper
+    public static class ButtonsPositionJsonHelper
     {
         /// <summary>
         /// A helper class to manage configuration settings for the mod.

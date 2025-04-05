@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,31 +10,58 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
-using MonoMod.RuntimeDetour;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems
+namespace ModHelper.Common.Systems.Menus
 {
     public class MainMenuHook : ModSystem
     {
         public override void Load()
         {
+            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            {
+                Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not hooking into Main Menu.");
+                return;
+            }
             On_Main.DrawVersionNumber += DrawMenuOptions;
         }
 
+        public override void Unload()
+        {
+            // Unload the hook
+            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            {
+                Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not unloading the hook into Main Menu.");
+                return;
+            }
+            On_Main.DrawVersionNumber -= DrawMenuOptions;
+
+        }
+        #region draw hook
         private static void DrawMenuOptions(On_Main.orig_DrawVersionNumber orig, Color menucolor, float upbump)
         {
             // Draw vanilla stuff first
             orig(menucolor, upbump);
 
+            // Debug menu modes.
+            // Log.SlowInfo("UIElementSystem: Draw called. MenuMode: " + Main.menuMode + ", State: " + Main.MenuUI.CurrentState?.GetType().Name);
+
             // Only draw all this stuff if in main menu mode 0 (default main menu screen)
             if (Main.menuMode != 0) return;
+
+            // Check the config
+            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            {
+                // Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not drawing menu options.");
+                return;
+            }
 
             // check if mod is loaded
             Mod mod = ModHelper.Instance;
@@ -54,13 +82,15 @@ namespace ModHelper.Common.Systems
                 ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f),
                 ("Join Singleplayer", JoinSingleplayer, 1.02f),
                 ("Join Multiplayer", JoinMultiplayer, 1.02f),
-                ("Host Multiplayer (todo)", null, 1.02f),
-                ("Host Server", HostServer, 1.02f),
-                ("Kill Server (todo)", null, 1.02f),
+                ("Start Server", StartServer, 1.02f),
                 ("Start Client", StartClient, 1.02f),
                 ("Open Log", Log.OpenClientLog, 1.02f),
                 ("Clear Log", Log.ClearClientLog, 1.02f),
-                ("Open config", () => Conf.C.Open(), 1.02f)
+                ("Open config", OpenConfig, 1.02f),
+                ("Reload", async () => await ReloadSelectedMod(), 1.02f),
+                (" ", null, 1.15f), // empty line
+                ($"Cotlim Is The Best", null, 1.15f),
+                ("Host Multiplayer", HostMultiplayer, 1.02f),
             };
 
             foreach (var (text, action, scale) in menuOptions)
@@ -74,11 +104,11 @@ namespace ModHelper.Common.Systems
                 {
                     Main.LocalPlayer.mouseInterface = true;
                     // Click
-                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                    if (Main.mouseLeft && Main.mouseLeftRelease && action != null)
                     {
                         SoundEngine.PlaySound(SoundID.MenuOpen);
                         Main.mouseLeftRelease = false;
-                        action.Invoke(); // Call the corresponding action
+                        action?.Invoke(); // Call the corresponding action
                     }
                 }
 
@@ -100,17 +130,95 @@ namespace ModHelper.Common.Systems
                 drawPos.Y += size.Y + 8f;
             }
         }
+        #endregion
 
         #region actions
 
-        private static void HostMultiplayer()
+        private static void OpenConfig()
         {
+            // this does the same as below code
+            Conf.C.Open();
 
+            return;
+            // below code is not needed
+            try
+            {
+                // Use reflection to get the private ConfigManager.Configs property.
+                FieldInfo configsProp = typeof(ConfigManager).GetField("Configs", BindingFlags.Static | BindingFlags.NonPublic);
+                var configs = configsProp.GetValue(null) as IDictionary<Mod, List<ModConfig>>;
+
+                // Get the mod name from the modPath.
+                // string modName = Path.GetFileName(modPath);
+                string modName = ModHelper.Instance.Name;
+                Mod modInstance = ModLoader.GetMod(modName);
+                if (modInstance == null)
+                {
+                    Log.Info($"Mod '{modName}' not found.");
+                    return;
+                }
+
+                // Check if there are any configs for this mod.
+                if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
+                {
+                    Log.Info("No config available for mod: " + modName);
+                    return;
+                }
+
+                // Use the first available config.
+                ModConfig config = modConfigs[0];
+
+                // Open the config UI.
+                // Use reflection to set the mod and config for the modConfig UI.
+                Assembly assembly = typeof(Main).Assembly;
+                Type interfaceType = assembly.GetType("Terraria.ModLoader.UI.Interface");
+                var modConfigField = interfaceType.GetField("modConfig", BindingFlags.Static | BindingFlags.NonPublic);
+                var modConfigInstance = modConfigField.GetValue(null);
+                var setModMethod = modConfigInstance.GetType().GetMethod("SetMod", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                // Invoke the SetMod method to set the mod and config for the modConfig UI.
+                setModMethod.Invoke(modConfigInstance, [modInstance, config, false, null, null, true]);
+
+                // Open the mod config UI.
+                Main.InGameUI.SetState(modConfigInstance as UIState);
+                Main.menuMode = 10024; // config UI (must set this!)
+                Main.NewText("Opening config for " + modName, Color.Green);
+            }
+            catch (Exception ex)
+            {
+                Log.Info($"No config found for mod '{ModHelper.Instance.Name}'. : {ex.Message}");
+                return;
+            }
         }
 
-        private static void KillServer()
+        private static async Task ReloadSelectedMod()
         {
+            // Add the config to the list of mods to reload
+            ReloadUtilities.ModsToReload.Clear();
+            ReloadUtilities.ModsToReload.Add(Conf.C.ModToReload);
 
+            Log.Info("mods to reload 1: " + string.Join(", ", ReloadUtilities.ModsToReload));
+
+            // Reload the selected mod
+            await ReloadUtilities.MainReload();
+        }
+
+        private static void HostMultiplayer()
+        {
+            // First, always load players and worlds
+            Main.LoadPlayers();
+            Main.LoadWorlds();
+
+            // Select player and world based on json
+            var player = Main.PlayerList[ClientDataHandler.PlayerID];
+            var world = Main.WorldList[ClientDataHandler.WorldID];
+
+            Log.Info("HostMultiplayer. Found player: " + player.Name + ", world: " + world.Name);
+
+            Main.SelectPlayer(player);
+            Main.ActiveWorldFileData = world;
+
+            // Main.menuMode = 889; // host & play menu
+            Main.menuMode = 30; // enter password menu
         }
 
         private static void StartClient()
@@ -142,7 +250,7 @@ namespace ModHelper.Common.Systems
             }
         }
 
-        private static void HostServer()
+        private static void StartServer()
         {
             try
             {
@@ -152,7 +260,7 @@ namespace ModHelper.Common.Systems
                     throw new Exception("No worlds found.");
 
                 // Getting Player and World from ClientDataHandler
-                var world = Main.WorldList.FirstOrDefault();
+                var world = Main.WorldList[ClientDataHandler.WorldID];
 
                 if (string.IsNullOrEmpty(world.Path))
                 {
@@ -210,7 +318,7 @@ namespace ModHelper.Common.Systems
             options.DontFragment = true; // prevent packet from splitting into smaller packets
             string data = "a"; // dummy data to send because the Send method requires it
             byte[] buffer = System.Text.Encoding.ASCII.GetBytes(data); // convert string to byte array
-            int timeout = 2000; // 120 ms timeout before the ping request is considered failed
+            int timeout = 2000; // 2000 ms timeout before the ping request is considered failed
 
             // Ping the server IP using the server's IP address
             PingReply reply;
@@ -243,7 +351,7 @@ namespace ModHelper.Common.Systems
 
         private static void JoinSingleplayer()
         {
-            Log.Info("EnterSingleplayerWorld() called!");
+            Log.Info("JoinSingleplayer() called!");
 
             // Loading lists of Players and Worlds
             Main.LoadWorlds();
@@ -270,7 +378,6 @@ namespace ModHelper.Common.Systems
 
             Log.Info($"Starting game with Player: {player.Name}, World: {Main.WorldList.FirstOrDefault().Name}");
 
-
             WorldGen.playWorld(); // Play the selected world in singleplayer
 
             // show loading screen
@@ -287,10 +394,14 @@ namespace ModHelper.Common.Systems
         {
             for (int i = 0; i < 5; i++)
             {
-                Color color = Color.Black;
-                if (i == 4)
+                Color color;
+                if (i == 4) // draw the main text last
                 {
                     color = drawColor;
+                }
+                else // Draw the outline first
+                {
+                    color = Color.Black;
                     if (special)
                     {
                         color.R = (byte)((255 + color.R) / 2);

@@ -169,8 +169,8 @@ namespace ModHelper.UI.Elements
         }
 
         // Dynamic UI elements for each UIElement type
-        private List<string> elements = new List<string>();
-        public Dictionary<string, UIElement> dynamicOptions = new();
+        private readonly List<string> elements = [];
+        public Dictionary<string, UIElement> dynamicOptions = [];
 
         public override void Update(GameTime gameTime)
         {

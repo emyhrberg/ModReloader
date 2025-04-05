@@ -1,3 +1,6 @@
+using ModHelper.Helpers;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace ModHelper
@@ -12,14 +15,6 @@ namespace ModHelper
         public override void Load()
         {
             Instance = this;
-            // if (Main.netMode != NetmodeID.Server)
-            // ClientDataHandler.ReadData();
-        }
-
-        public override void Unload()
-        {
-            // if (Main.netMode != NetmodeID.Server)
-            // ClientDataHandler.WriteData();
         }
     }
 }

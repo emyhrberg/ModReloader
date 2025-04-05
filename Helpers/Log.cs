@@ -34,7 +34,7 @@ namespace ModHelper.Helpers
         }
 
         /// <summary>
-        /// Log a message once every 3 second
+        /// Log a message once every x second(s)
         /// </summary>
         public static void SlowInfo(string message, int seconds = 1, [CallerFilePath] string callerFilePath = "")
         {

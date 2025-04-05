@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;

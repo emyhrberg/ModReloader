@@ -30,17 +30,17 @@ namespace ModHelper.UI.Elements
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            ReloadHelper.ModsToReload.Clear();
-            if (!ReloadHelper.ModsToReload.Contains(internalModName))
+            ReloadUtilities.ModsToReload.Clear();
+            if (!ReloadUtilities.ModsToReload.Contains(internalModName))
             {
-                ReloadHelper.ModsToReload.Add(internalModName);
+                ReloadUtilities.ModsToReload.Add(internalModName);
             }
 
             // Set config.ModToReload to the mod name.
-            Conf.C.ModToReload = internalModName;
-            Conf.Save();
+            // Conf.C.ModToReload = internalModName;
+            // Conf.Save();
 
-            await ReloadHelper.Reload();
+            await ReloadUtilities.MainReload();
         }
 
         public override void Draw(SpriteBatch spriteBatch)

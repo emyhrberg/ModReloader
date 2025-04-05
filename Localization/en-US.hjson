@@ -54,32 +54,27 @@ Mods: {
 
 				DebugTextSize: {
 					Label: Debug Text Size
-					Tooltip: ""
-				}
-
-				SizeDebugText: {
-					Label: Size Debug Text
-					Tooltip: ""
+					Tooltip: Shows a text containing player name, player ID, fps, delay, and more in the bottom left corner in-game.
 				}
 
 				AutoJoinWorldAfterUnload: {
-					Tooltip: ""
+					Tooltip: Automatically enters a world when mods finish loading. Useful for faster reloading and testing.
 					Label: Auto Join World After Unload
 				}
 
 				DragButtons: {
-					Tooltip: ""
+					Tooltip: Choose which mouse button to drag the buttons with
 					Label: Drag Buttons
+				}
+
+				SizeDebugText: {
+					Label: Size Debug Text
+					Tooltip: Set the size of the debug text, or turn it off
 				}
 			}
 
 			Buttons: {
-				Tooltip: ""
-
-				ButtonSize: {
-					Label: Button Size
-					Tooltip: ""
-				}
+				Tooltip: Show or hide buttons
 
 				ShowOptionsButton: {
 					Label: Show Options Button

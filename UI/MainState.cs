@@ -73,7 +73,7 @@ namespace ModHelper.UI
 
             // Add buttons
             if (Conf.C.Buttons.ShowOptionsButton)
-                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options", hoverTextDescription: $"Customize");
+                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options", hoverTextDescription: $"Misc mod actions");
 
             if (Conf.C.Buttons.ShowUIButton)
                 uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
@@ -155,7 +155,7 @@ namespace ModHelper.UI
             // custom left pos. override default
             // convert vector2 to valign and halign
             // Read the VAlign and HAlign from the config
-            Vector2 buttonsPosition = ConfigJsonHelper.ReadButtonsPosition();
+            Vector2 buttonsPosition = ButtonsPositionJsonHelper.ReadButtonsPosition();
             button.VAlign = buttonsPosition.Y;
             button.HAlign = buttonsPosition.X;
 
@@ -298,7 +298,7 @@ namespace ModHelper.UI
                 Vector2 buttonsPosition = new Vector2(AllButtons[0].HAlign, AllButtons[0].VAlign);
 
                 // Write the updated config to a JSON file.
-                ConfigJsonHelper.WriteButtonsPosition(buttonsPosition);
+                ButtonsPositionJsonHelper.WriteButtonsPosition(buttonsPosition);
             }
         }
 

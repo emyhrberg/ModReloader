@@ -10,7 +10,7 @@ using Terraria.Localization;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems
+namespace ModHelper.Common.Systems.Menus
 {
     public class CustomLoadScreen : UIState
     {

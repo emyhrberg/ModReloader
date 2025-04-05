@@ -41,7 +41,7 @@ namespace ModHelper.UI.Elements
                 ToggleCheckState();
                 // add to mods to reload also
 
-                ReloadHelper.ModsToReload.Add(modSourcePathString);
+                ReloadUtilities.ModsToReload.Add(modSourcePathString);
             }
         }
 
@@ -85,26 +85,26 @@ namespace ModHelper.UI.Elements
                         // Conf.Save();
 
                         // only add if it doesnt already exist
-                        if (!ReloadHelper.ModsToReload.Contains(modSourcePathString))
+                        if (!ReloadUtilities.ModsToReload.Contains(modSourcePathString))
                         {
-                            ReloadHelper.ModsToReload.Add(modSourcePathString);
+                            ReloadUtilities.ModsToReload.Add(modSourcePathString);
                             // Log.Info("added mod to reload: " + modSourcePathString);
                         }
                     }
                     else
                     {
                         // Log.Info("removing mod to reload: " + modSourcePathString);
-                        ReloadHelper.ModsToReload.Remove(modSourcePathString);
+                        ReloadUtilities.ModsToReload.Remove(modSourcePathString);
                         // Conf.C.ModToReload = ReloadHelper.ModsToReload.Count > 0 ? ReloadHelper.ModsToReload.LastOrDefault() : string.Empty;
                         // Conf.Save();
 
                         // unchecked.
                         // update config if modstoreload only has one entry
-                        if (ReloadHelper.ModsToReload.Count == 1)
+                        if (ReloadUtilities.ModsToReload.Count == 1)
                         {
-                            Conf.C.ModToReload = ReloadHelper.ModsToReload.FirstOrDefault();
+                            // Conf.C.ModToReload = ReloadUtilities.ModsToReload.FirstOrDefault();
                             Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
-                            Conf.Save();
+                            // Conf.Save();
                         }
                     }
 
@@ -115,7 +115,7 @@ namespace ModHelper.UI.Elements
                     mp.UpdateHoverTextDescription();
 
                     // Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
-                    Main.NewText("Mods to reload: " + string.Join(", ", ReloadHelper.ModsToReload));
+                    Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));
                 }
             }
             modsPanel.Recalculate();
