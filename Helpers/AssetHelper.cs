@@ -28,6 +28,7 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ButtonReloadSP;
         public static Asset<Texture2D> ButtonReloadMP;
         public static Asset<Texture2D> ButtonMods;
+        public static Asset<Texture2D> ButtonModSources;
 
         // Misc
         public static Asset<Texture2D> Resize;

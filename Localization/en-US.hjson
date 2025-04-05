@@ -62,6 +62,11 @@ Mods: {
 					Label: Auto Join World After Unload
 				}
 
+				AutoJoinWorld: {
+					Label: Auto Join World
+					Tooltip: ""
+				}
+
 				DragButtons: {
 					Tooltip: Choose which mouse button to drag the buttons with
 					Label: Drag Buttons
@@ -98,6 +103,11 @@ Mods: {
 
 				ShowReloadMPButton: {
 					Label: Show Reload MP Button
+					Tooltip: ""
+				}
+
+				ShowModSourcesButton: {
+					Label: Show Mod Sources Button
 					Tooltip: ""
 				}
 			}

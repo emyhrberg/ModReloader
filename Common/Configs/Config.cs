@@ -22,7 +22,7 @@ namespace ModHelper.Common.Configs
         public string ModToReload;
 
         [DefaultValue(true)]
-        public bool AutoJoinWorldAfterUnload;
+        public bool AutoJoinWorld;
 
         [DefaultValue(false)]
         public bool SaveWorldBeforeReloading;
@@ -134,6 +134,9 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowModsButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowModSourcesButton = true;
 
         [DefaultValue(true)]
         public bool ShowReloadButton = true;

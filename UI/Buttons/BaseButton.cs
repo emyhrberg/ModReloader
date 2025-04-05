@@ -142,7 +142,7 @@ namespace ModHelper.UI.Buttons
                     if (frameCounter >= FrameSpeed)
                     {
                         // This is needed because ItemButton is set to end animation at its last frame 5.
-                        if (this is ModsButton)
+                        if (this is ModSourcesButton)
                         {
                             if (currFrame < FrameCount) // only increment if not at last frame
                             {

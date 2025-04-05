@@ -56,7 +56,6 @@ namespace ModHelper.Helpers
             ClientDataHandler.ClientMode = clientMode;
             ClientDataHandler.PlayerID = Utilities.FindPlayerId();
             ClientDataHandler.WorldID = Utilities.FindWorldId();
-
             Log.Info("set player and worldid to " + ClientDataHandler.PlayerID + " and " + ClientDataHandler.WorldID);
         }
 
@@ -91,7 +90,7 @@ namespace ModHelper.Helpers
 
                 // Set modsbutton parentactive to true, and set the panel active
                 List<BaseButton> allButtons = sys?.mainState?.AllButtons;
-                var modsButton = allButtons?.FirstOrDefault(b => b is ModsButton);
+                var modsButton = allButtons?.FirstOrDefault(b => b is ModSourcesButton);
                 if (modsButton != null)
                 {
                     modsButton.ParentActive = true;
@@ -154,110 +153,70 @@ namespace ModHelper.Helpers
             return false;
         }
 
-        public static void BuildAndReloadMods(Action actionAfterBuild = null)
+        public static void BuildAndReloadMods()
         {
-            // 1. Getting Assembly
-            Assembly tModLoaderAssembly = typeof(Main).Assembly;
-
-            // 2. Getting method for finding modSources paths
-            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
-            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
-            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
-
-            // 3. Get all modPaths for future
-            Log.Info("Executing Mods to reload: " + string.Join(", ", ModsToReload));
-
-            var modPaths = ModsToReload.Select((modName) =>
-                modSources.FirstOrDefault(p =>
-                    !string.IsNullOrEmpty(p) &&
-                    Directory.Exists(p) &&
-                    Path.GetFileName(p)?.Equals(modName, StringComparison.InvariantCultureIgnoreCase) == true));
-
-            // 4. Getting method for reloading a mod
-            // 4.1 Getting UIBuildMod Instance
-            Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
-            FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.NonPublic | BindingFlags.Static);
-            object buildModInstance = buildModField?.GetValue(null);
-
-            // 4.2 Getting correct BuildMod method of UIBuildMod
-            Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
-            MethodInfo buildModMethod = uiBuildModType.GetMethod("BuildMod", BindingFlags.Instance | BindingFlags.NonPublic, [typeof(Action<>).MakeGenericType(modCompileType), typeof(bool)]);
-
-            // Check if it exist
-            if (buildModMethod == null)
+            // Instead of trying to call ModCompile.Build directly, we should use the Interface.buildMod that's already set up
+            Type interfaceType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface");
+            if (interfaceType == null)
             {
-                Log.Warn("No buildMethod were found via reflection.");
+                Log.Error("Could not find Interface type");
                 return;
             }
 
-            // 4.3 Getting correct Build method from ModCompile
-            MethodInfo mcBuildModFolder = modCompileType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string)]);
-
-            // 5. Setting a hook on BuildMod method of UIBuildMod
-            Hook buildModMethodHook = null;
-            buildModMethodHook = new Hook(buildModMethod, (Func<object, Action<object>, bool, Task> orig, object self, Action<object> buildAction, bool reload) =>
+            // Get the buildMod field
+            FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            if (buildModField == null)
             {
-                Task origTask = orig(self, buildAction, reload); // Call original method correctly
+                Log.Error("Could not find buildMod field");
+                return;
+            }
 
-                return origTask.ContinueWith(t =>
-                {
-                    // Check if the task completed successfully or had an exception
-                    if (t.IsCompletedSuccessfully)
-                    {
-                        Log.Info("successfully built mod(s)");
-                        // Only continue with reload if build was successful
-                        actionAfterBuild?.Invoke();
-                    }
-                    else
-                    {
-                        // If there was an error, log it and don't proceed with reload
-                        Log.Error("Build failed - halting reload process to show errors");
-
-                        // Optional: You can add code here to ensure the error UI stays visible
-                        // For example, setting a flag to prevent automatic world reentry
-                        ClientDataHandler.ClientMode = ClientMode.FreshClient;
-                        ClientDataHandler.PlayerID = -1;
-                        ClientDataHandler.WorldID = -1;
-                    }
-
-                    buildModMethodHook?.Dispose(); // Always dispose the hook
-                });
-            });
-
-            Log.Info("Starting to build mods..." + string.Join(", ", modPaths));
-
-            // 6. Creating a task
-            Main.menuMode = 10003;
-            Task.Run(() =>
+            // Get the UIBuildMod instance
+            object buildModInstance = buildModField.GetValue(null);
+            if (buildModInstance == null)
             {
+                Log.Error("buildMod instance is null");
+                return;
+            }
+
+            Type buildModType = buildModInstance.GetType();
+
+            // Find the Build method that takes a string and a boolean
+            MethodInfo buildMethod = buildModType.GetMethod("Build",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new[] { typeof(string), typeof(bool) },
+                null);
+
+            if (buildMethod == null)
+            {
+                Log.Error("Could not find Build(string, bool) method");
+                return;
+            }
+
+            // Set ClientDataHandler values to default to prevent auto-reload if errors occur
+            Log.Info("Mods to reload: " + string.Join(", ", ModsToReload));
+            foreach (var modName in ModsToReload)
+            {
+                string fullPath = Path.Combine(Main.SavePath, "ModSources", modName);
                 try
                 {
-                    return (Task)buildModMethod.Invoke(buildModInstance,
-                    [
-                        (Action<object>) (mc =>
-                                {
-                                    foreach (var modPath in modPaths)
-                                    {
-                                        try
-                                        {
-                                            Log.Info("Building mod: " + modPath);
-                                            mcBuildModFolder.Invoke(mc, [modPath]);
-                                        }
-                                        catch (Exception buildEx)
-                                        {
-                                            Log.Error($"Failed to build mod at '{modPath}': {buildEx.Message}");
-                                        }
-                                    }
-                                }),
-                                true
-                    ]);
+                    Log.Info($"Building mod: {fullPath}");
+                    // Call the Build method with reload=true
+                    buildMethod.Invoke(buildModInstance, [fullPath, true]);
+
+                    // This line is reached only if no exception was thrown
+                    Log.Info("Successfully built mod: " + fullPath);
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"Failed to invoke buildModMethod: {ex.Message}");
-                    return Task.CompletedTask;
+                    // If any exception occurs, reset ClientDataHandler to prevent auto-reload
+                    Log.Error($"Error building mod {modName}: {ex.Message}");
+                    ClientDataHandler.ClientMode = ClientMode.FreshClient;
+                    ClientDataHandler.PlayerID = -1;
+                    ClientDataHandler.WorldID = -1;
                 }
-            });
+            }
         }
     }
 }

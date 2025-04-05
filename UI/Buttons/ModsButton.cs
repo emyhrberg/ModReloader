@@ -68,7 +68,7 @@ namespace ModHelper.UI.Buttons
             // Disable World, Log, UI, Mods buttons
             foreach (var button in sys.mainState.AllButtons)
             {
-                if (button is UIElementButton || button is OptionsButton)
+                if (button is UIElementButton || button is OptionsButton || button is ModSourcesButton)
                 {
                     button.ParentActive = false;
                 }

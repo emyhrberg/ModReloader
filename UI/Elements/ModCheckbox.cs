@@ -64,9 +64,9 @@ namespace ModHelper.UI.Elements
 
             // toggle config and check status
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            ModsPanel modsPanel = sys.mainState.modsPanel;
+            ModSourcesPanel modSourcesPanel = sys.mainState.modSourcesPanel;
 
-            foreach (var mod in modsPanel.modSourcesElements)
+            foreach (var mod in modSourcesPanel.modSourcesElements)
             {
                 string internalFolderNameFromMod = Path.GetFileName(mod.modPath);
                 Log.Info("clicked on mod: " + modSourcePathString);
@@ -118,7 +118,7 @@ namespace ModHelper.UI.Elements
                     Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));
                 }
             }
-            modsPanel.Recalculate();
+            modSourcesPanel.Recalculate();
         }
 
         public override void Draw(SpriteBatch sb)
