@@ -46,16 +46,13 @@ namespace ModHelper.UI.Elements
             BackgroundColor = Color.White;
             BorderColor = Color.Black;
 
-            int padding = 12;
-
             // more:
             Width.Set(200, 0f);
             Height.Set(35, 0f);
-            HAlign = 0f;
-            VAlign = 0f;
-            Top.Set(-padding + 35 + padding, 0f);
             BackgroundColor = Color.White;
             BorderColor = Color.Black;
+
+            // uiList parent container will do positioning for us.
         }
 
         public override void LeftClick(UIMouseEvent evt)

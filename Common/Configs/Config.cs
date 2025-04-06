@@ -63,6 +63,16 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool ShowSearchboxBlinker = false;
 
+        [DefaultValue(true)]
+        public bool RightClickBuildButtonToGoToModSources = true;
+
+
+        // ------------------------------------------------------
+        // ON CHANGED CONFIG
+        // This is a risky method that sometimes causes bugs due to the way it's run kinda frequently.
+        // It is called when the config is changed, and it will recreate the mainstate and reopen the previous open panel.
+        // ------------------------------------------------------
+
         public override void OnChanged()
         {
             base.OnChanged();

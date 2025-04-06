@@ -149,8 +149,8 @@ namespace ModHelper.Helpers
                 string path = Logging.LogPath;
                 string fileName = Path.GetFileName(path);
 
-                Log.Info($"Opening {fileName}...");
-                Main.NewText("Opening " + fileName + "...");
+                Log.Info($"Opening {fileName}");
+                Main.NewText("Opening " + fileName);
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)
@@ -162,7 +162,7 @@ namespace ModHelper.Helpers
 
         public static void OpenServerLog()
         {
-            Main.NewText("Opening server.log...");
+            Main.NewText("Opening server.log");
 
             try
             {
@@ -184,9 +184,10 @@ namespace ModHelper.Helpers
             }
         }
 
+        // note: unused
         public static void OpenEnabledJson()
         {
-            Main.NewText("Opening enabled.json...");
+            Main.NewText("Opening enabled.json");
 
             // Get the path to the enabled.json file in $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
             try

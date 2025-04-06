@@ -9,6 +9,7 @@ using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using Terraria.UI;
 using static ModHelper.UI.Elements.OptionElement;
@@ -20,7 +21,9 @@ namespace ModHelper.UI.Elements
     /// </summary>
     public class ModsPanel : OptionPanel
     {
+        // top container for enable all, disable all, and searchbox
         public Searchbox searchbox;
+        private UIElement topContainer;
 
         // enabled mods
         private readonly List<ModElement> enabledMods = [];
@@ -28,13 +31,39 @@ namespace ModHelper.UI.Elements
         // disabled mods
         private List<ModElement> allMods = [];
 
+        // filter state
+        private string currentFilter = "";
+        private bool updateNeeded = false;
+
         #region Constructor
         public ModsPanel() : base(title: "Manage Mods", scrollbarEnabled: true)
         {
-            AddPadding(3f);
-            AddHeader("Enable All", enableAllMods, color: Color.Green, HAlign: 0.82f, hover: "Enable all mods");
-            AddHeader("Disable All", disableAllMods, color: Color.Red, HAlign: 0.82f, hover: "Disable all mods");
-            Searchbox searchbox = new("Type to search");
+            AddPadding(20f);
+
+            Active = true; // show by default for testing
+
+            // we add this to UIlist, so it will be positioned by uiList
+            topContainer = new() // top pos for enable all, disable all, and searchbox
+            {
+                Width = new StyleDimension(0f, 1f),
+                Height = new StyleDimension(40, 0f),
+            };
+            // Add searchbox.
+            searchbox = new Searchbox("Type to search");
+            searchbox.Width.Set(200, 0f);
+            searchbox.Height.Set(35, 0f);
+            searchbox.Left.Set(5, 0f); // Place at the left edge
+
+            // On text change event
+            searchbox.OnTextChanged += () =>
+            {
+                currentFilter = searchbox.currentString;
+                updateNeeded = true;
+            };
+
+            topContainer.Append(searchbox);
+
+            // Add clear button
             UIImageButton clearSearchButton = new(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"))
             {
                 HAlign = 1f,
@@ -42,14 +71,91 @@ namespace ModHelper.UI.Elements
                 Left = new StyleDimension(-2f, 0f)
             };
             searchbox.Append(clearSearchButton);
+            clearSearchButton.OnLeftClick += (evt, element) =>
+            {
+                searchbox.SetText(string.Empty);
+                currentFilter = string.Empty;
+                updateNeeded = true;
+            };
 
+            // Create and configure the "Enable All" header.
+            HeaderElement enableAll = new HeaderElement("Enable All", leftClick: EnableAllMods, hover: "Enable all mods", color: Color.Green, HAlign: 0.5f);
+            enableAll.Width.Set(100, 0f);
+            enableAll.Height.Set(20, 0f);
+            enableAll.Top.Set(-5, 0);
+            enableAll.HAlign = 0.92f;
+            topContainer.Append(enableAll);
+
+            // Create and configure the "Disable All" header.
+            HeaderElement disableAll = new HeaderElement("Disable All", leftClick: DisableAllMods, hover: "Disable all mods", color: ColorHelper.CalamityRed, HAlign: 0.5f);
+            disableAll.Width.Set(100, 0f);
+            disableAll.Height.Set(20, 0f);
+            disableAll.HAlign = 0.92f;
+            disableAll.Top.Set(25, 0);
+            topContainer.Append(disableAll);
+
+            // Now, add the horizontal container to the UIList.
+            uiList.Add(topContainer);
             AddPadding(20f);
 
+            // initial constructing of mod lists
             ConstructEnabledMods();
             ConstructAllMods();
             AddPadding(3f);
         }
+        #endregion // end of constructor
+
+        #region filter
+
+        /// <summary>
+        /// Clears the uiList, removes all elements, and adds the mods that match the current filter.
+        /// </summary>
+        private void FilterMods()
+        {
+            // Clear all elements except the first one in the UIList
+            uiList.Clear();
+
+            // re-add the first element (the top container)
+            AddPadding(20f);
+            uiList.Add(topContainer);
+            AddPadding(20f);
+
+            // add all mods that match the current filter
+            List<ModElement> filteredMods = [];
+
+            List<ModElement> allAndEnabledMods = allMods.Concat(enabledMods).ToList(); // Combine all mods into one list
+            foreach (ModElement modElement in allAndEnabledMods)
+            {
+                // Check if the mod name contains the current filter string
+                if (modElement.cleanModName.Contains(currentFilter, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Add the mod element to the UIList
+                    filteredMods.Add(modElement);
+                }
+            }
+            Log.Info("found " + filteredMods.Count + " mods matching filter: " + currentFilter);
+            uiList.AddRange(filteredMods);
+            AddPadding(3f);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (updateNeeded)
+            {
+                FilterMods();
+                updateNeeded = false;
+            }
+        }
+
         #endregion
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            // use for hot reload UI changes
+            base.Draw(spriteBatch);
+        }
 
         #region Constructing mod lists
 
@@ -226,7 +332,7 @@ namespace ModHelper.UI.Elements
 
         #region Toggle all methods
 
-        private void enableAllMods()
+        private void EnableAllMods()
         {
             // Combine allMods and enabledMods into one list
             var combinedMods = enabledMods.Concat(allMods);
@@ -242,7 +348,7 @@ namespace ModHelper.UI.Elements
             }
         }
 
-        private void disableAllMods()
+        private void DisableAllMods()
         {
             // Combine allMods and enabledMods into one list
             var combinedMods = enabledMods.Concat(allMods);
@@ -258,14 +364,6 @@ namespace ModHelper.UI.Elements
             }
         }
 
-        #endregion
-
-        #region Navigation methods
-        private void GoToModsList()
-        {
-            WorldGen.JustQuit();
-            Main.menuMode = 10000;
-        }
         #endregion
     }
 }

@@ -59,6 +59,7 @@ namespace ModHelper.Helpers
             Log.Info("set player and worldid to " + ClientDataHandler.PlayerID + " and " + ClientDataHandler.WorldID);
         }
 
+        /// <summary> A little messy function to close all other panels and open the mods panel. </summary>
         private static bool CheckIfModsToReloadIsEmpty()
         {
             if (ModsToReload.Count == 0)
@@ -69,21 +70,25 @@ namespace ModHelper.Helpers
                 List<DraggablePanel> allPanels = sys?.mainState?.AllPanels;
 
                 // replace with THIS panel
-                var panel = sys?.mainState?.modSourcesPanel;
+                var modSourcesPanel = sys?.mainState?.modSourcesPanel;
 
                 // Disable all other panels
-                if (allPanels != null)
+                if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
                 {
-                    foreach (var p in allPanels?.Except([panel]))
+                    if (allPanels != null)
                     {
-                        if (p != panel && p.GetActive())
+                        foreach (var p in allPanels?.Except([modSourcesPanel]))
                         {
-                            p?.SetActive(false);
+                            if (p != modSourcesPanel && p.GetActive())
+                            {
+                                p?.SetActive(false);
+                            }
                         }
                     }
                 }
+
                 // Set the mods panel active
-                panel?.SetActive(true);
+                modSourcesPanel?.SetActive(true);
 
                 // Set modsbutton parentactive to true, and set the panel active
                 List<BaseButton> allButtons = sys?.mainState?.AllButtons;
@@ -94,13 +99,17 @@ namespace ModHelper.Helpers
                 }
 
                 // Disable World, Log, UI, Mods buttons
-                foreach (var button in sys.mainState.AllButtons)
+                if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
                 {
-                    if (button is UIElementButton || button is OptionsButton)
+                    foreach (var button in sys.mainState.AllButtons)
                     {
-                        button.ParentActive = false;
+                        if (button is UIElementButton || button is OptionsButton || button is ModsButton)
+                        {
+                            button.ParentActive = false;
+                        }
                     }
                 }
+
                 return false;
             }
             return true;

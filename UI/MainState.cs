@@ -95,7 +95,7 @@ namespace ModHelper.UI
             string reloadHoverMods;
             if (modsToReloadFromJson == null || modsToReloadFromJson.Count == 0)
             {
-                reloadHoverMods = "No mods selected.";
+                reloadHoverMods = "No mods selected";
             }
             else
             {

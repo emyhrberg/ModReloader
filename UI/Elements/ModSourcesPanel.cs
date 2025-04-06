@@ -44,10 +44,10 @@ namespace ModHelper.UI.Elements
             }
 
             // if mwe have less than 10 mods, remove the scrollbar
-            if (modSourcesElements.Count < 10)
-            {
-                scrollbar.Remove();
-            }
+            // if (modSourcesElements.Count < 10)
+            // {
+            // scrollbar.Remove();
+            // }
         }
 
         private string GetModSourcesCleanName(string modFolder)

@@ -24,24 +24,5 @@ namespace ModHelper.UI.Buttons
 
         protected override int FrameWidth => 60;
         protected override int FrameHeight => 58;
-
-        public override void RightClick(UIMouseEvent evt)
-        {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.isClick)
-            {
-                return;
-            }
-
-            if (Conf.C.SaveWorldBeforeReloading)
-            {
-                WorldGen.SaveAndQuit();
-            }
-            else
-            {
-                WorldGen.JustQuit();
-            }
-            Main.menuMode = 10001;
-        }
     }
 }

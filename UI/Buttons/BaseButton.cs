@@ -77,8 +77,14 @@ namespace ModHelper.UI.Buttons
 
         public void UpdateHoverTextDescription()
         {
-            // Based on modstoreload, make the hovertext.
+            // Based on ModsToReload, make the hovertext.
             string modsToReload = string.Join(", ", ReloadUtilities.ModsToReload);
+
+            if (string.IsNullOrEmpty(modsToReload))
+            {
+                modsToReload = "No mods to reload";
+            }
+
             HoverTextDescription = $"{modsToReload}";
         }
 

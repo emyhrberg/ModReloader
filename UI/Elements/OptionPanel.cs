@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -97,17 +98,19 @@ namespace ModHelper.UI.Elements
 
         protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "", Color color = default, float HAlign = 0.5f)
         {
-            HeaderElement headerElement = new(title, hover, color, HAlign);
-            headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke();
+            HeaderElement headerElement = new(title, hover, color, HAlign, onLeftClick);
+            // headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke(); // not needed?
             uiList.Add(headerElement);
             return headerElement;
         }
 
-        protected Searchbox addSearchbox(float padding = 3f)
+        protected Searchbox AddSearchbox(float paddingBefore = 20f, float paddingAfter = 3f)
         {
+            // Add padding before the searchbox
+            AddPadding(paddingBefore);
             Searchbox searchbox = new("Type to search");
             uiList.Add(searchbox);
-            AddPadding(padding);
+            AddPadding(paddingAfter);
             return searchbox;
         }
 
@@ -254,7 +257,7 @@ namespace ModHelper.UI.Elements
         // This method is called to reset the position of the panel when it is toggled (when the panel is shown again).
         public override bool SetActive(bool active)
         {
-            if (active)
+            if (active && Conf.C.ResetPanelPositionWhenToggling)
             {
                 // Reset panel position
                 Top.Set(-70, 0f);

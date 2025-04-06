@@ -97,6 +97,11 @@ Mods: {
 					Label: Show Searchbox Blinker
 					Tooltip: ""
 				}
+
+				RightClickBuildButtonToGoToModSources: {
+					Label: Right Click Build Button To Go To Mod Sources
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

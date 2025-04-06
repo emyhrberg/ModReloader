@@ -18,6 +18,7 @@ namespace ModHelper.UI.Elements
             AddAction("Clear Log", Log.ClearClientLog, hover: "Clear the log file");
             AddAction("Start Client", StartClient, hover: "Start an additional tModLoader client");
             AddAction("Start Server", null, hover: "Start a tModLoader server");
+            //AddAction("Open enabled.json", Log.OpenEnabledJson);
         }
 
         private static void StartClient()
