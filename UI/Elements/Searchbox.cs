@@ -11,7 +11,7 @@ using Terraria.UI;
 namespace ModHelper.UI.Elements
 {
     //ty jopojelly and darthmorf
-    public class SearchBox : UIPanel
+    public class Searchbox : UIPanel
     {
         internal string currentString = string.Empty;
 
@@ -37,11 +37,21 @@ namespace ModHelper.UI.Elements
 
         internal bool unfocusOnTab = true;
 
-        internal SearchBox(string hintText, string text = "")
+        internal Searchbox(string hintText, string text = "")
         {
             this.hintText = hintText;
             currentString = text;
             SetPadding(0);
+            BackgroundColor = Color.White;
+            BorderColor = Color.Black;
+
+            int padding = 12;
+
+            // more:
+            Width.Set(200, 0f);
+            Height.Set(35, 0f);
+            HAlign = 0.5f;
+            Top.Set(-padding + 35 + padding, 0f);
             BackgroundColor = Color.White;
             BorderColor = Color.Black;
         }

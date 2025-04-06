@@ -8,11 +8,16 @@ namespace ModHelper.UI.Elements
     {
         private string hover;
 
-        public HeaderElement(string title, string hover = "") : base(title)
+        public HeaderElement(string title, string hover = "", Color color = default) : base(title)
         {
             this.hover = hover;
             IsHoverEnabled = false;
-            textElement.TextColor = Color.White;
+
+            if (color == default)
+            {
+                color = Color.White;
+            }
+            textElement.TextColor = color;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

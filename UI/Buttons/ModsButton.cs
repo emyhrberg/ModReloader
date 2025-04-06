@@ -63,6 +63,7 @@ namespace ModHelper.UI.Buttons
             {
                 ParentActive = true;
                 panel.SetActive(true);
+                panel.searchbox.Focus();
             }
 
             // Disable World, Log, UI, Mods buttons

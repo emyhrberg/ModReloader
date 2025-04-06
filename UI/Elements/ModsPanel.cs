@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
+using Terraria.UI;
 using static ModHelper.UI.Elements.OptionElement;
 
 namespace ModHelper.UI.Elements
@@ -17,6 +20,8 @@ namespace ModHelper.UI.Elements
     /// </summary>
     public class ModsPanel : OptionPanel
     {
+        public Searchbox searchbox;
+
         // enabled mods
         private readonly List<ModElement> enabledMods = [];
 
@@ -24,17 +29,108 @@ namespace ModHelper.UI.Elements
         private List<ModElement> allMods = [];
 
         #region Constructor
-        public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
+        public ModsPanel() : base(title: "Manage Mods", scrollbarEnabled: true)
         {
-            AddHeader("Enable All", enableAllMods);
-            AddHeader("Disable All", disableAllMods);
-            AddPadding();
+            AddPadding(3f);
+            AddHeader("Enable All", enableAllMods, color: Color.Green);
+            AddHeader("Disable All", disableAllMods, color: ColorHelper.CalamityRed);
+            searchbox = AddSearchbox();
+
+            UIImageButton clearSearchButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"))
+            {
+                HAlign = 1f,
+                VAlign = 0.5f,
+                Left = new StyleDimension(-2f, 0f)
+            };
+            clearSearchButton.OnLeftClick += (evt, el) =>
+            {
+                searchbox.currentString = "";
+                FilterMods("");
+            };
+            searchbox.Append(clearSearchButton);
+
+            searchbox.OnTextChanged += () =>
+            {
+                FilterMods(searchbox.currentString);
+            };
+
+            AddPadding(20f);
 
             ConstructEnabledMods();
             ConstructAllMods();
             AddPadding(3f);
         }
         #endregion
+
+        #region filter
+        private string currentSearchText = "";
+        private bool filterScheduled = false;
+
+        private void FilterMods(string searchText)
+        {
+            // Just store the search text and set a flag - don't modify collections during event handling
+            currentSearchText = searchText;
+            filterScheduled = true;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            // Apply filtering in Update, not during event handling
+            if (filterScheduled)
+            {
+                ApplyFilter();
+                filterScheduled = false;
+            }
+        }
+
+        private void ApplyFilter()
+        {
+            // Create a new list for filtered mods
+            List<UIElement> filteredItems = new List<UIElement>();
+
+            // Add the buttons first (they should always be visible)
+            // Use uiList._items to get access to the internal items list
+            int headerCount = 0;
+            foreach (var item in uiList._items)
+            {
+                if (item is HeaderElement || item is Searchbox || item is UIPanel)
+                {
+                    filteredItems.Add(item);
+                    headerCount++;
+                    if (headerCount >= 3) break; // First 3 elements are headers and searchbox
+                }
+            }
+
+            // Add padding
+            filteredItems.Add(new HeaderElement("") { Height = { Pixels = 3f } });
+
+            // Filter mods
+            var combinedMods = enabledMods.Concat(allMods);
+            foreach (var modElement in combinedMods)
+            {
+                if (string.IsNullOrEmpty(currentSearchText) ||
+                    modElement.cleanModName.IndexOf(currentSearchText, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    filteredItems.Add(modElement);
+                    // Add padding after each mod
+                    filteredItems.Add(new HeaderElement("") { Height = { Pixels = 3f } });
+                }
+            }
+
+            // Replace the entire list at once to prevent collection modification during enumeration
+            uiList._items.Clear();
+            foreach (var item in filteredItems)
+            {
+                uiList._items.Add(item);
+            }
+
+            // Recalculate the list
+            uiList.Recalculate();
+        }
+        #endregion
+
 
         #region Constructing mod lists
 
@@ -213,19 +309,10 @@ namespace ModHelper.UI.Elements
 
         private void enableAllMods()
         {
-            // Set the state for all mod elements
-            foreach (ModElement modElement in allMods)
-            {
-                modElement.SetState(State.Enabled);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+            // Combine allMods and enabledMods into one list
+            var combinedMods = enabledMods.Concat(allMods);
 
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, true]);
-            }
-
-            // Set the state for all other mod elements
-            foreach (ModElement modElement in enabledMods)
+            foreach (ModElement modElement in combinedMods)
             {
                 modElement.SetState(State.Enabled);
                 string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
@@ -238,8 +325,10 @@ namespace ModHelper.UI.Elements
 
         private void disableAllMods()
         {
-            // Set the state for all mod elements
-            foreach (ModElement modElement in allMods)
+            // Combine allMods and enabledMods into one list
+            var combinedMods = enabledMods.Concat(allMods);
+
+            foreach (ModElement modElement in combinedMods)
             {
                 modElement.SetState(State.Disabled);
                 string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
@@ -247,36 +336,6 @@ namespace ModHelper.UI.Elements
                 // Use reflection to call SetModEnabled on internalModName
                 var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
                 setModEnabled?.Invoke(null, [internalName, false]);
-            }
-
-            // Set the state for all other mod elements
-            foreach (ModElement modElement in enabledMods)
-            {
-                modElement.SetState(State.Disabled);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
-
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, false]);
-            }
-        }
-
-
-        private void ToggleAllEnabledMods()
-        {
-            // Determine the new state based on whether all mods are currently enabled
-            bool anyDisabled = enabledMods.Any(modElement => modElement.GetState() == State.Disabled);
-            State newState = anyDisabled ? State.Enabled : State.Disabled;
-
-            // Set the state for all mod elements
-            foreach (ModElement modElement in enabledMods)
-            {
-                modElement.SetState(newState);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
-
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
             }
         }
 
