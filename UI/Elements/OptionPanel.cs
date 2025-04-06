@@ -95,20 +95,12 @@ namespace ModHelper.UI.Elements
             return actionOption;
         }
 
-        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "", Color color = default)
+        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "", Color color = default, float halign = 0f)
         {
             HeaderElement headerElement = new(title, hover, color);
             headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke();
             uiList.Add(headerElement);
             return headerElement;
-        }
-
-        protected Searchbox AddSearchbox(string text = "", Action<string> onTextChanged = null, string hover = "", float padding = 3f)
-        {
-            Searchbox searchBox = new(hintText: "Type to search");
-            uiList.Add(searchBox);
-            AddPadding(padding);
-            return searchBox;
         }
 
         /// <summary>

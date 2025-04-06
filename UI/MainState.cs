@@ -75,7 +75,7 @@ namespace ModHelper.UI
 
             // Add buttons
             if (Conf.C.Buttons.ShowOptionsButton)
-                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options");
+                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Test", "Options");
 
             if (Conf.C.Buttons.ShowUIButton)
                 uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
