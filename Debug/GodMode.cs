@@ -6,13 +6,12 @@ namespace ModHelper.Debug
 {
     public class GodMode : ModPlayer
     {
-#if DEBUG
         public override bool ImmuneTo(PlayerDeathReason damageSource, int cooldownCounter, bool dodgeable)
         {
-            return true; // Always immune to damage
+            if (DebugConfig.IS_DEBUGGING)
+                return true; // Always immune to damage
 
-            // return base.ImmuneTo(damageSource, cooldownCounter, dodgeable);
+            return base.ImmuneTo(damageSource, cooldownCounter, dodgeable);
         }
-#endif
     }
 }
