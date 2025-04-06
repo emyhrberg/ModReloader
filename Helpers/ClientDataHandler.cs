@@ -58,7 +58,7 @@ namespace ModHelper.Helpers
             {
                 string path = Path.Combine(Main.SavePath, "ModHelper");
                 Directory.CreateDirectory(path); // Ensure the directory exists
-                path = Path.Combine(path, "ModHelper.json");
+                path = Path.Combine(path, "ClientDataHandler.json");
                 Log.Info("Found save path: " + path);
                 return path;
             }

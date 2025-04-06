@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using ModHelper.Common.Systems.Menus;
 using ModHelper.Helpers;
 using ModHelper.UI;
@@ -17,9 +16,6 @@ namespace ModHelper.Common.Configs
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
         [Header("Reload")]
-
-        [DefaultValue("")]
-        public string ModToReload;
 
         [DefaultValue(true)]
         public bool AutoJoinWorld;
@@ -41,6 +37,7 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool ImproveExceptionMenu;
 
+
         // show by default, since its easier to modify ingame for the user like this.
         // [Expand(false, false)]
         [Header("Buttons")]
@@ -51,6 +48,17 @@ namespace ModHelper.Common.Configs
         public string DragButtons;
 
         public Buttons Buttons = new();
+
+        [Header("Misc")]
+
+        [DefaultValue(true)]
+        public bool AllowMultiplePanelsOpenSimultaneously = true;
+
+        [DefaultValue(true)]
+        public bool AllowDraggingPanels = true;
+
+        [DefaultValue(true)]
+        public bool ResetPanelPositionWhenToggling = true;
 
         public override void OnChanged()
         {

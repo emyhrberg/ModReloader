@@ -32,11 +32,11 @@ namespace ModHelper.UI.Elements
         public ModsPanel() : base(title: "Manage Mods", scrollbarEnabled: true)
         {
             AddPadding(3f);
-            AddHeader("Enable All", enableAllMods, color: Color.Green);
-            AddHeader("Disable All", disableAllMods, color: ColorHelper.CalamityRed);
+            AddHeader("Enable All", enableAllMods, color: Color.Green, HAlign: 0.82f);
+            AddHeader("Disable All", disableAllMods, color: ColorHelper.CalamityRed, HAlign: 0.82f);
+
             searchbox = new("Type to search");
             Append(searchbox);
-
             UIImageButton clearSearchButton = new(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"))
             {
                 HAlign = 1f,

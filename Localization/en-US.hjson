@@ -10,6 +10,7 @@ Mods: {
 					Improvements: Improvements
 					DebugText: Debug Text
 					Buttons: Buttons
+					Misc: Misc
 				}
 
 				ModToReload: {
@@ -75,6 +76,21 @@ Mods: {
 				SizeDebugText: {
 					Label: Size Debug Text
 					Tooltip: Set the size of the debug text, or turn it off
+				}
+
+				AllowMultiplePanelsOpenSimultaneously: {
+					Label: Allow Multiple Panels Open Simultaneously
+					Tooltip: ""
+				}
+
+				AllowDraggingPanels: {
+					Label: Allow Dragging Panels
+					Tooltip: ""
+				}
+
+				ResetPanelPositionWhenToggling: {
+					Label: Reset Panel Position When Toggling
+					Tooltip: ""
 				}
 			}
 

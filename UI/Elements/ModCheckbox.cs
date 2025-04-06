@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
@@ -36,12 +37,23 @@ namespace ModHelper.UI.Elements
             VAlign = 0.5f;
 
             // check if this mod is the current mod to reload in the config. if so, check it.
-            if (Conf.C.ModToReload == modSourcePathString)
-            {
-                ToggleCheckState();
-                // add to mods to reload also
+            // if (Conf.C.ModToReload == modSourcePathString)
+            // {
+            //     ToggleCheckState();
+            //     // add to mods to reload also
 
-                ReloadUtilities.ModsToReload.Add(modSourcePathString);
+            //     ReloadUtilities.ModsToReload.Add(modSourcePathString);
+            // }
+
+            // update: read the json file, and update the checkboxes according to the json file.
+            List<string> modsToReloadFromJsonFile = ModsToReloadJsonHelper.ReadModsToReload();
+            foreach (var checkedMod in modsToReloadFromJsonFile)
+            {
+                if (checkedMod == modSourcePathString)
+                {
+                    ToggleCheckState();
+                    ReloadUtilities.ModsToReload.Add(modSourcePathString);
+                }
             }
         }
 
@@ -103,7 +115,7 @@ namespace ModHelper.UI.Elements
                         if (ReloadUtilities.ModsToReload.Count == 1)
                         {
                             // Conf.C.ModToReload = ReloadUtilities.ModsToReload.FirstOrDefault();
-                            Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
+                            // Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
                             // Conf.Save();
                         }
                     }
@@ -111,11 +123,20 @@ namespace ModHelper.UI.Elements
                     // set hovertext in reloadSP
                     ReloadSPButton sp = sys.mainState.reloadSPButton;
                     ReloadMPButton mp = sys.mainState.reloadMPButton;
-                    sp.UpdateHoverTextDescription();
-                    mp.UpdateHoverTextDescription();
+                    if (sp != null)
+                    {
+                        sp.UpdateHoverTextDescription();
+                    }
+                    if (mp != null)
+                    {
+                        mp.UpdateHoverTextDescription();
+                    }
 
                     // Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
                     Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));
+
+                    // Write to json file
+                    ModsToReloadJsonHelper.WriteModsToReload(ReloadUtilities.ModsToReload);
                 }
             }
             modSourcesPanel.Recalculate();

@@ -192,11 +192,13 @@ namespace ModHelper.Common.Systems.Menus
 
         private static async Task ReloadSelectedMod()
         {
-            // Add the config to the list of mods to reload
+            // read the json and add the mods to the list
+            List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
             ReloadUtilities.ModsToReload.Clear();
-            ReloadUtilities.ModsToReload.Add(Conf.C.ModToReload);
-
-            Log.Info("mods to reload 1: " + string.Join(", ", ReloadUtilities.ModsToReload));
+            foreach (var mod in modsToReloadFromJson)
+            {
+                ReloadUtilities.ModsToReload.Add(mod);
+            }
 
             // Reload the selected mod
             await ReloadUtilities.MainReload();
@@ -205,7 +207,13 @@ namespace ModHelper.Common.Systems.Menus
         private static void HostMultiplayer()
         {
             // First, always load players and worlds
+            // LoadPlayers() creates a crash with index out of range
             Main.LoadPlayers();
+            if (Main.PlayerList == null || Main.PlayerList.Count == 0)
+            {
+                Log.Error("No players found after loading players.");
+                return;
+            }
             Main.LoadWorlds();
 
             // Select player and world based on json

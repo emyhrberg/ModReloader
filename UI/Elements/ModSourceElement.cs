@@ -108,7 +108,7 @@ namespace ModHelper.UI.Elements
             Append(checkbox);
 
             // if this is the current mod, add checkmark
-            bool isCurrentModToReload = Conf.C.ModToReload == internalNameFolderName;
+            // bool isCurrentModToReload = Conf.C.ModToReload == internalNameFolderName;
             // if (isCurrentModToReload)
             // {
             //     checkbox.SetCheckState(true);

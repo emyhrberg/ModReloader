@@ -95,9 +95,9 @@ namespace ModHelper.UI.Elements
             return actionOption;
         }
 
-        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "", Color color = default, float halign = 0f)
+        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "", Color color = default, float HAlign = 0.5f)
         {
-            HeaderElement headerElement = new(title, hover, color);
+            HeaderElement headerElement = new(title, hover, color, HAlign);
             headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke();
             uiList.Add(headerElement);
             return headerElement;

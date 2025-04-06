@@ -75,7 +75,7 @@ namespace ModHelper.UI
 
             // Add buttons
             if (Conf.C.Buttons.ShowOptionsButton)
-                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Test", "Options");
+                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options");
 
             if (Conf.C.Buttons.ShowUIButton)
                 uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
@@ -85,12 +85,16 @@ namespace ModHelper.UI
 
             if (Conf.C.Buttons.ShowModSourcesButton)
             {
-                modSourcesButton = AddButton<ModSourcesButton>(Ass.ButtonModSources, "Mods", "Mod Sources", hoverTextDescription: "View and edit mods to reload");
+                modSourcesButton = AddButton<ModSourcesButton>(Ass.ButtonModSources, "Mods", "Mod Sources", hoverTextDescription: "Manage mod sources and reload");
             }
 
             // Initialize reload SP and MP buttons
 
-            string reloadHoverMods = Conf.C.ModToReload ?? "No mod selected";
+            List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
+
+            string reloadHoverMods = modsToReloadFromJson.Count > 0
+                ? string.Join(", ", modsToReloadFromJson)
+                : "No mods selected.";
 
             if (Conf.C.Buttons.ShowReloadButton)
                 reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);

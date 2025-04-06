@@ -19,7 +19,6 @@ namespace ModHelper.UI.Elements
         {
             // Active = true; // uncomment to show the panel by default
             AddPadding(5);
-            AddHeader("Mod Sources", GoToModSources, "Click to exit world and go to mod sources");
             ConstructModSources();
         }
         #endregion
@@ -28,7 +27,6 @@ namespace ModHelper.UI.Elements
 
         private void ConstructModSources()
         {
-            Log.Info("Constructing Mod Sources");
             // Get all the mod sources paths
             foreach (string fullModPath in GetModSourcesPaths())
             {

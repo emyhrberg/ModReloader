@@ -8,7 +8,7 @@ namespace ModHelper.UI.Elements
     {
         private string hover;
 
-        public HeaderElement(string title, string hover = "", Color color = default) : base(title)
+        public HeaderElement(string title, string hover = "", Color color = default, float HAlign = 0.5f) : base(title)
         {
             this.hover = hover;
             IsHoverEnabled = false;
@@ -18,6 +18,7 @@ namespace ModHelper.UI.Elements
                 color = Color.White;
             }
             textElement.TextColor = color;
+            textElement.HAlign = HAlign;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

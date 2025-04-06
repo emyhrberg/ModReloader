@@ -40,16 +40,20 @@ namespace ModHelper.UI.Buttons
             }
 
             List<DraggablePanel> allPanels = sys?.mainState?.AllPanels;
+            bool allowMultiple = Conf.C.AllowMultiplePanelsOpenSimultaneously;
 
             // replace with THIS panel
             var panel = sys?.mainState?.modsPanel;
 
             // Disable all other panels
-            foreach (var p in allPanels.Except([panel]))
+            if (!allowMultiple)
             {
-                if (p != panel && p.GetActive())
+                foreach (var p in allPanels.Except([panel]))
                 {
-                    p.SetActive(false);
+                    if (p != panel && p.GetActive())
+                    {
+                        p.SetActive(false);
+                    }
                 }
             }
 
@@ -67,11 +71,14 @@ namespace ModHelper.UI.Buttons
             }
 
             // Disable World, Log, UI, Mods buttons
-            foreach (var button in sys.mainState.AllButtons)
+            if (!allowMultiple)
             {
-                if (button is UIElementButton || button is OptionsButton || button is ModSourcesButton)
+                foreach (var button in sys.mainState.AllButtons)
                 {
-                    button.ParentActive = false;
+                    if (button is UIElementButton || button is OptionsButton || button is ModSourcesButton)
+                    {
+                        button.ParentActive = false;
+                    }
                 }
             }
         }

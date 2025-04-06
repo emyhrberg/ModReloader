@@ -50,7 +50,8 @@ namespace ModHelper.UI.Elements
             // more:
             Width.Set(200, 0f);
             Height.Set(35, 0f);
-            HAlign = 0.5f;
+            HAlign = 0f;
+            VAlign = 0f;
             Top.Set(-padding + 35 + padding, 0f);
             BackgroundColor = Color.White;
             BorderColor = Color.Black;
@@ -157,7 +158,7 @@ namespace ModHelper.UI.Elements
             string displayString = currentString;
             if (textBlinkerState == 1 && focused)
             {
-                displayString += "|";
+                // displayString += "|";
             }
             CalculatedStyle space = GetDimensions();
             Color color = Color.White;
@@ -179,11 +180,12 @@ namespace ModHelper.UI.Elements
 
             foreach (var offset in offsets)
             {
+                // Draw outline text
                 spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
             }
 
             // Draw text
-            if (currentString.Length == 0 && !focused)
+            if (currentString.Length == 0)
             {
                 // Draw hintText
                 color = Color.DimGray;

@@ -134,7 +134,7 @@ namespace ModHelper.UI.Elements
             {
                 Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
                 string fileName = Path.GetFileName(Logging.LogPath);
-                // Main.hoverItemName = $"Left click to open {fileName}\nRight click to hide text";
+                //Main.hoverItemName = $"Left click to open {fileName}\nRight click to hide text";
             }
         }
     }

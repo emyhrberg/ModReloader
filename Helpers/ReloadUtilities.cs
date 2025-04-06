@@ -29,8 +29,8 @@ namespace ModHelper.Helpers
             // Check if list is empty
             if (!CheckIfModsToReloadIsEmpty())
             {
-                Main.NewText("No mods to reload.");
-                Log.Warn("No mods to reload.");
+                Main.NewText("No mods selected, please select mods to reload");
+                Log.Warn("No mods selected, please select mods to reload");
                 return;
             }
 
@@ -63,16 +63,13 @@ namespace ModHelper.Helpers
         {
             if (ModsToReload.Count == 0)
             {
-                Main.NewText("No mods to reload.");
-                Log.Warn("No mods to reload.");
-
                 MainSystem sys = ModContent.GetInstance<MainSystem>();
 
                 // Open the mods panel.
                 List<DraggablePanel> allPanels = sys?.mainState?.AllPanels;
 
                 // replace with THIS panel
-                var panel = sys?.mainState?.modsPanel;
+                var panel = sys?.mainState?.modSourcesPanel;
 
                 // Disable all other panels
                 if (allPanels != null)
