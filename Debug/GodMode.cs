@@ -12,6 +12,6 @@ namespace ModHelper.Debug
 
             // return base.ImmuneTo(damageSource, cooldownCounter, dodgeable);
         }
-    }
 #endif
+    }
 }

@@ -192,19 +192,6 @@ namespace ModHelper.Helpers
             // 4.3 Getting correct Build method from ModCompile
             MethodInfo mcBuildModFolder = modCompileType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string)]);
 
-            // 5. Setting a hook on BuildMod method of UIBuildMod
-            Hook buildModMethodHook = null;
-            buildModMethodHook = new Hook(buildModMethod, (Func<object, Action<object>, bool, Task> orig, object self, Action<object> buildAction, bool reload) =>
-            {
-                Task origTask = orig(self, buildAction, reload); // Call original method correctly
-
-                return origTask.ContinueWith(t =>
-                {
-                    actionAfterBuild?.Invoke(); // Execute custom action after the method finishes
-                    buildModMethodHook?.Dispose(); // Disable hook
-                });
-            });
-
             Log.Info("Starting to build mods..." + string.Join(", ", modPaths));
 
             // 6. Creating a task
@@ -213,24 +200,34 @@ namespace ModHelper.Helpers
             {
                 try
                 {
-                    return (Task)buildModMethod.Invoke(buildModInstance,
+                    return ((Task)buildModMethod.Invoke(buildModInstance,
                     [
                         (Action<object>) (mc =>
-                         {
-                             foreach (var modPath in modPaths)
-                             {
-                                     Log.Info("Building mod: " + modPath);
-                                     mcBuildModFolder.Invoke(mc, [modPath]);
-                             }
-                         }),
-                         true
-                    ]);
+                        {
+                            foreach (var modPath in modPaths)
+                            {
+                                Log.Info("Building mod: " + modPath);
+                                try
+                                {
+                                    mcBuildModFolder.Invoke(mc, [modPath]);
+                                }
+                                catch (TargetInvocationException ex)
+                                {
+                                    throw ex.InnerException!;
+                                }
+                            }
+                        }),
+                        true
+                    ])).ContinueWith(t =>
+                    {
+                        actionAfterBuild?.Invoke(); // Execute custom action after the method finishes
+                    });
                 }
-                catch (Exception ex)
+                catch (TargetInvocationException ex)
                 {
-                    Log.Error($"Failed to invoke buildModMethod: {ex.Message}");
-                    return Task.CompletedTask;
+                    throw ex.InnerException!;
                 }
+
             });
         }
     }
