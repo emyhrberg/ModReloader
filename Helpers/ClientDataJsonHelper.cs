@@ -9,7 +9,7 @@ using Terraria;
 
 namespace ModHelper.Helpers
 {
-    public static class ClientDataHandler
+    public static class ClientDataJsonHelper
     {
         //Function that handles writing info that shoud survive modlreload
 
@@ -52,35 +52,17 @@ namespace ModHelper.Helpers
             }
         }
 
-        private static string GetFolderPath()
-        {
-            try
-            {
-                string path = Path.Combine(Main.SavePath, "ModHelper");
-                Directory.CreateDirectory(path); // Ensure the directory exists
-                path = Path.Combine(path, "ClientDataHandler.json");
-                Log.Info("Found save path: " + path);
-                return path;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Could not find part of the path: " + ex.Message);
-                return null;
-            }
-        }
-
         public static void WriteData()
         {
             if (Main.dedServ)
                 return;
 
-            string path = GetFolderPath();
+            string path = Utilities.GetModHelperFolderPath("ClientDataHandler.json");
             if (path == null)
                 return;
 
             Log.Info("Writing ClientData");
-
-            LockingFile(path, (reader, writer) =>
+            Utilities.LockingFile(path, (reader, writer) =>
             {
 
                 var listJson = GetListFromJson(reader);
@@ -127,13 +109,12 @@ namespace ModHelper.Helpers
             if (Main.dedServ)
                 return;
 
-            string path = GetFolderPath();
+            string path = Utilities.GetModHelperFolderPath("ClientDataHandler.json");
             if (path == null)
                 return;
 
             Log.Info("Reading ClientData");
-
-            LockingFile(path, (reader, writer) =>
+            Utilities.LockingFile(path, (reader, writer) =>
             {
                 var listJson = GetListFromJson(reader);
 
@@ -173,45 +154,5 @@ namespace ModHelper.Helpers
 
             return listJson;
         }
-
-        private static void LockingFile(string filePath, Action<StreamReader, StreamWriter> action)
-        {
-            int retryDelay = 200; // 200ms delay between retries
-            int maxAttempts = 20; // Maximum retries before giving up
-            int attempts = 0;
-
-            while (true)
-            {
-                try
-                {
-                    using (FileStream fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
-                    using (StreamReader reader = new StreamReader(fs, new UTF8Encoding(false)))
-                    using (StreamWriter writer = new StreamWriter(fs, new UTF8Encoding(false)))
-                    {
-                        Log.Info($"File {Path.GetFileName(filePath)} is locked by {Utilities.ProcessID} process. Editing...");
-                        fs.Seek(0, SeekOrigin.Begin);
-                        reader.BaseStream.Seek(0, SeekOrigin.Begin);
-
-                        action?.Invoke(reader, writer);
-
-                        Log.Info($"File {Path.GetFileName(filePath)} editing complete by {Utilities.ProcessID} process");
-                        break;
-                    }
-                }
-                catch (IOException)
-                {
-                    attempts++;
-                    if (attempts >= maxAttempts)
-                    {
-                        Log.Info("Timeout: Unable to access file.");
-                        break;
-                    }
-
-                    Log.Info($"File is in use. Retrying {attempts} time...");
-                    Thread.Sleep(retryDelay); // Wait before retrying
-                }
-            }
-        }
-
     }
 }

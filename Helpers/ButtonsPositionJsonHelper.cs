@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
@@ -17,11 +18,17 @@ namespace ModHelper.Helpers
 
         public static void WriteButtonsPosition(Vector2 buttonsPosition)
         {
-            string filePath = Path.Combine(Main.SavePath, "ModHelper", "ButtonsPosition.json");
+            string filePath = Utilities.GetModHelperFolderPath("ButtonsPosition.json"); 
             try
             {
-                string json = JsonConvert.SerializeObject(buttonsPosition, Formatting.Indented);
-                File.WriteAllText(filePath, json);
+                Utilities.LockingFile(filePath, (reader, writer) =>
+                {
+                    string json = JsonConvert.SerializeObject(buttonsPosition, Formatting.Indented);
+                    writer.BaseStream.SetLength(0);  // Clears the file
+                    writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start
+                    writer.Write(json);
+                    writer.Flush();
+                });
             }
             catch (Exception ex)
             {
@@ -31,13 +38,17 @@ namespace ModHelper.Helpers
 
         public static Vector2 ReadButtonsPosition()
         {
-            string filePath = Path.Combine(Main.SavePath, "ModHelper", "ButtonsPosition.json");
+            string filePath = Utilities.GetModHelperFolderPath("ButtonsPosition.json");
             try
             {
                 if (File.Exists(filePath))
                 {
-                    string json = File.ReadAllText(filePath);
-                    Vector2 data = JsonConvert.DeserializeObject<Vector2>(json);
+                    Vector2 data = default;
+                    Utilities.LockingFile(filePath, (reader, writer) =>
+                    {
+                        string json = reader.ReadToEnd();
+                        data = JsonConvert.DeserializeObject<Vector2>(json);
+                    });
                     // Use default if deserialization returns zero vector (or you could check here further)
                     if (data == default)
                     {

@@ -27,7 +27,7 @@ namespace ModHelper.Common.Systems
         public override void Unload()
         {
             if (Main.netMode != NetmodeID.Server)
-                ClientDataHandler.WriteData();
+                ClientDataJsonHelper.WriteData();
 
             // Reset some hooks
             typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, null);
@@ -48,7 +48,7 @@ namespace ModHelper.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
 
-                if (ClientDataHandler.ClientMode == ClientMode.SinglePlayer)
+                if (ClientDataJsonHelper.ClientMode == ClientMode.SinglePlayer)
                 {
                     // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
                     onSuccessfulLoad += EnterSingleplayerWorld;
@@ -77,10 +77,10 @@ namespace ModHelper.Common.Systems
                 throw new Exception("No players or worlds found.");
 
             // getting playerID and worldID and print
-            Log.Info("PlayerID: " + ClientDataHandler.PlayerID + ", WorldID: " + ClientDataHandler.WorldID);
+            Log.Info("PlayerID: " + ClientDataJsonHelper.PlayerID + ", WorldID: " + ClientDataJsonHelper.WorldID);
 
-            int playerID = ClientDataHandler.PlayerID;
-            int worldID = ClientDataHandler.WorldID;
+            int playerID = ClientDataJsonHelper.PlayerID;
+            int worldID = ClientDataJsonHelper.WorldID;
 
             var player = Main.PlayerList.FirstOrDefault();
             var world = Main.WorldList.FirstOrDefault();
@@ -93,8 +93,8 @@ namespace ModHelper.Common.Systems
             else
             {
                 // all ok, continue.
-                player = Main.PlayerList[ClientDataHandler.PlayerID];
-                world = Main.WorldList[ClientDataHandler.WorldID];
+                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+                world = Main.WorldList[ClientDataJsonHelper.WorldID];
             }
 
             Main.SelectPlayer(player);
