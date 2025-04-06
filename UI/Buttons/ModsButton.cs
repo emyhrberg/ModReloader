@@ -22,63 +22,8 @@ namespace ModHelper.UI.Buttons
         // protected override int FrameCount => 10;
         // protected override int FrameSpeed => 4;
 
-
         protected override int FrameWidth => 60;
         protected override int FrameHeight => 58;
-
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            base.LeftClick(evt);
-
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
-            {
-                return;
-            }
-
-            List<DraggablePanel> allPanels = sys?.mainState?.AllPanels;
-            bool allowMultiple = Conf.C.AllowMultiplePanelsOpenSimultaneously;
-
-            // replace with THIS panel
-            var panel = sys?.mainState?.modsPanel;
-
-            // Disable all other panels
-            if (!allowMultiple)
-            {
-                foreach (var p in allPanels.Except([panel]))
-                {
-                    if (p != panel && p.GetActive())
-                    {
-                        p.SetActive(false);
-                    }
-                }
-            }
-
-            // Toggle the log panel
-            if (panel.GetActive())
-            {
-                panel.SetActive(false);
-                ParentActive = false;
-            }
-            else
-            {
-                ParentActive = true;
-                panel.SetActive(true);
-                panel.searchbox.Focus();
-            }
-
-            // Disable World, Log, UI, Mods buttons
-            if (!allowMultiple)
-            {
-                foreach (var button in sys.mainState.AllButtons)
-                {
-                    if (button is UIElementButton || button is OptionsButton || button is ModSourcesButton)
-                    {
-                        button.ParentActive = false;
-                    }
-                }
-            }
-        }
 
         public override void RightClick(UIMouseEvent evt)
         {

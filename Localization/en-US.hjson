@@ -92,6 +92,11 @@ Mods: {
 					Label: Reset Panel Position When Toggling
 					Tooltip: ""
 				}
+
+				ShowSearchboxBlinker: {
+					Label: Show Searchbox Blinker
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

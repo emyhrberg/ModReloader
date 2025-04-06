@@ -17,7 +17,6 @@ namespace ModHelper.UI.Elements
         // Panel values
         protected bool prev_Active_state = false; // previous active state
         protected bool Active = false; // default to false
-        protected const int padding = 12;
         public string Header = "";
         public CustomTitlePanel TitlePanel;
 

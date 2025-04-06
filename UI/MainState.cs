@@ -85,16 +85,22 @@ namespace ModHelper.UI
 
             if (Conf.C.Buttons.ShowModSourcesButton)
             {
-                modSourcesButton = AddButton<ModSourcesButton>(Ass.ButtonModSources, "Mods", "Mod Sources", hoverTextDescription: "Manage mod sources and reload");
+                modSourcesButton = AddButton<ModSourcesButton>(Ass.ButtonModSources, "Build", "Mod Sources", hoverTextDescription: "Manage mod sources and reload");
             }
 
             // Initialize reload SP and MP buttons
 
             List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
 
-            string reloadHoverMods = modsToReloadFromJson.Count > 0
-                ? string.Join(", ", modsToReloadFromJson)
-                : "No mods selected.";
+            string reloadHoverMods;
+            if (modsToReloadFromJson == null || modsToReloadFromJson.Count == 0)
+            {
+                reloadHoverMods = "No mods selected.";
+            }
+            else
+            {
+                reloadHoverMods = string.Join(", ", modsToReloadFromJson);
+            }
 
             if (Conf.C.Buttons.ShowReloadButton)
                 reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
@@ -110,10 +116,16 @@ namespace ModHelper.UI
 
             // Associate buttons with panels so we can highlight the buttons with open panels 
             // And close 
-            modsPanel.AssociatedButton = modsButton;
-            uiPanel.AssociatedButton = uiButton;
             optionsPanel.AssociatedButton = optionsButton;
+            uiPanel.AssociatedButton = uiButton;
+            modsPanel.AssociatedButton = modsButton;
             modSourcesPanel.AssociatedButton = modSourcesButton;
+
+            // Associate panels with buttons
+            optionsButton.AssociatedPanel = optionsPanel;
+            uiButton.AssociatedPanel = uiPanel;
+            modsButton.AssociatedPanel = modsPanel;
+            modSourcesButton.AssociatedPanel = modSourcesPanel;
 
             // Temporary debug text for player name, who am I, and frame rate
             if (Conf.C.SizeDebugText != "Off")
@@ -202,6 +214,23 @@ namespace ModHelper.UI
                 }
             }
         }
+
+        #region Misc
+        public void BringPanelToFront(DraggablePanel panel)
+        {
+            // First remove the panel from its parent if it exists
+            if (panel.Parent != null)
+            {
+                panel.Remove();
+            }
+
+            // Then append it again to make it the last child (drawn on top)
+            Append(panel);
+
+            // Make sure it's active
+            panel.SetActive(true);
+        }
+        #endregion
 
         #region Left/right dragging
 

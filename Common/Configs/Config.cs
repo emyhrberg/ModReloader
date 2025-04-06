@@ -60,6 +60,9 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool ResetPanelPositionWhenToggling = true;
 
+        [DefaultValue(false)]
+        public bool ShowSearchboxBlinker = false;
+
         public override void OnChanged()
         {
             base.OnChanged();

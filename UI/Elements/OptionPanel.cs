@@ -103,6 +103,14 @@ namespace ModHelper.UI.Elements
             return headerElement;
         }
 
+        protected Searchbox addSearchbox(float padding = 3f)
+        {
+            Searchbox searchbox = new("Type to search");
+            uiList.Add(searchbox);
+            AddPadding(padding);
+            return searchbox;
+        }
+
         /// <summary>
         /// Add padding to the panel with a blank header with the given panel element height
         /// </summary>

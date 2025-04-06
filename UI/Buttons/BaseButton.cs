@@ -1,6 +1,9 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
+using ModHelper.UI.Elements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -33,6 +36,9 @@ namespace ModHelper.UI.Buttons
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed
+
+        // Associated panel for closing and managing multiple panels
+        public DraggablePanel AssociatedPanel { get; set; } = null; // the panel associated with this button
 
         // Animations variables to be set by child classes. virtual means it can be overridden by child classes.
         protected virtual float Scale { get; set; } = 1; // the scale of the animation.
@@ -223,11 +229,87 @@ namespace ModHelper.UI.Buttons
         #region LeftClick
         public override void LeftClick(UIMouseEvent evt)
         {
-            // disable click if dragging
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.isClick)
+
+            // Check if we're in click mode (not drag mode)
+            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
             {
                 return;
+            }
+
+            // Get the associated panel for this button
+            DraggablePanel associatedPanel = null;
+
+            // Determine which panel is associated with this button based on button type
+            if (this is OptionsButton)
+                associatedPanel = sys.mainState.optionsPanel;
+            else if (this is UIElementButton)
+                associatedPanel = sys.mainState.uiPanel;
+            else if (this is ModsButton)
+                associatedPanel = sys.mainState.modsPanel;
+            else if (this is ModSourcesButton)
+                associatedPanel = sys.mainState.modSourcesPanel;
+            else if (AssociatedPanel != null)
+                associatedPanel = AssociatedPanel;
+
+            // If no panel is associated, just return
+            if (associatedPanel == null)
+                return;
+
+            // Get configuration for multiple panels
+            bool allowMultiple = Conf.C.AllowMultiplePanelsOpenSimultaneously;
+            List<DraggablePanel> allPanels = sys.mainState.AllPanels;
+
+            // Toggle the associated panel
+            if (associatedPanel.GetActive())
+            {
+                // Panel is active, so deactivate it
+                associatedPanel.SetActive(false);
+                ParentActive = false;
+            }
+            else
+            {
+                // Panel is inactive, so activate it
+
+                // First, disable other panels if multiple aren't allowed
+                if (!allowMultiple)
+                {
+                    foreach (var panel in allPanels)
+                    {
+                        if (panel != associatedPanel && panel.GetActive())
+                        {
+                            panel.SetActive(false);
+                        }
+                    }
+
+                    // Also deactivate other buttons
+                    foreach (var button in sys.mainState.AllButtons)
+                    {
+                        if (button != this)
+                        {
+                            button.ParentActive = false;
+                        }
+                    }
+                }
+
+                // Now activate this panel and mark button as active
+                ParentActive = true;
+                associatedPanel.SetActive(true);
+
+                // Special handling for Mods panel - focus searchbox
+                if (this is ModsButton && associatedPanel is ModsPanel modsPanel)
+                {
+                    modsPanel.searchbox?.Focus();
+                }
+
+                // Bring the panel to the front
+                if (associatedPanel.Parent != null)
+                {
+                    // Remove and re-append to bring to front
+                    UIElement parent = associatedPanel.Parent;
+                    associatedPanel.Remove();
+                    parent.Append(associatedPanel);
+                }
             }
         }
         #endregion
