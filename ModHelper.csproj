@@ -5,7 +5,7 @@
 
 	<!-- General -->
 	<PropertyGroup>
-		
+	  <LangVersion>preview</LangVersion>
 	</PropertyGroup>
 
 	<!-- References -->
