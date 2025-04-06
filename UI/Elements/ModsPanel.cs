@@ -48,6 +48,7 @@ namespace ModHelper.UI.Elements
             AddPadding();
             AddPadding(3f);
         }
+
         #endregion
 
         #region Constructing mod lists
