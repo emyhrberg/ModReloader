@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Microsoft.Xna.Framework;
-using ModHelper.Helpers;
 using Newtonsoft.Json;
 using Terraria;
 

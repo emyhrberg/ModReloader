@@ -1,7 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
 
 namespace ModHelper.UI.Elements

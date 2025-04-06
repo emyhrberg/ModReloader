@@ -1,20 +1,5 @@
-using log4net;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using ModHelper.Helpers;
-using MonoMod.RuntimeDetour;
 using ReLogic.Content;
-using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Reflection;
-using System.Threading.Tasks;
-using System;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria;
-using Terraria.UI;
-using System.Diagnostics;
-using System.Linq;
 
 namespace ModHelper.UI.Buttons
 {

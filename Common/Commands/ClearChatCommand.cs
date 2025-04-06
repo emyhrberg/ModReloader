@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 

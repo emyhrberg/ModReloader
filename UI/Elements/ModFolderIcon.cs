@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;

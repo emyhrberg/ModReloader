@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Terraria;
+﻿using Terraria;
 
 namespace ModHelper.Helpers
 {

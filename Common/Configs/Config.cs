@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using ModHelper.Common.Systems.Menus;
 using ModHelper.Helpers;
 using ModHelper.UI;
