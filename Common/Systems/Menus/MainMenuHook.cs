@@ -217,8 +217,8 @@ namespace ModHelper.Common.Systems.Menus
             Main.LoadWorlds();
 
             // Select player and world based on json
-            var player = Main.PlayerList[ClientDataHandler.PlayerID];
-            var world = Main.WorldList[ClientDataHandler.WorldID];
+            var player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+            var world = Main.WorldList[ClientDataJsonHelper.WorldID];
 
             Log.Info("HostMultiplayer. Found player: " + player.Name + ", world: " + world.Name);
 
@@ -268,7 +268,7 @@ namespace ModHelper.Common.Systems.Menus
                     throw new Exception("No worlds found.");
 
                 // Getting Player and World from ClientDataHandler
-                var world = Main.WorldList[ClientDataHandler.WorldID];
+                var world = Main.WorldList[ClientDataJsonHelper.WorldID];
 
                 if (string.IsNullOrEmpty(world.Path))
                 {

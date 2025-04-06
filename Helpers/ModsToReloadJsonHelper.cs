@@ -18,11 +18,17 @@ namespace ModHelper.Helpers
 
         public static void WriteModsToReload(List<string> modsToReload)
         {
-            string filePath = Path.Combine(Main.SavePath, "ModHelper", "ModsToReload.json");
+            string filePath = Utilities.GetModHelperFolderPath("ModsToReload.json");
             try
             {
-                string json = JsonConvert.SerializeObject(modsToReload, Formatting.Indented);
-                File.WriteAllText(filePath, json);
+                Utilities.LockingFile(filePath, (reader, writer) =>
+                {
+                    string json = JsonConvert.SerializeObject(modsToReload, Formatting.Indented);
+                    writer.BaseStream.SetLength(0);  // Clears the file
+                    writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start
+                    writer.Write(json);
+                    writer.Flush();
+                });
             }
             catch (Exception ex)
             {
@@ -32,13 +38,17 @@ namespace ModHelper.Helpers
 
         public static List<string> ReadModsToReload()
         {
-            string filePath = Path.Combine(Main.SavePath, "ModHelper", "ModsToReload.json");
+            string filePath = Utilities.GetModHelperFolderPath("ModsToReload.json"); 
             try
             {
                 if (File.Exists(filePath))
                 {
-                    string json = File.ReadAllText(filePath);
-                    List<string> data = JsonConvert.DeserializeObject<List<string>>(json);
+                    List<string> data = default;
+                    Utilities.LockingFile(filePath, (reader, writer) =>
+                    {
+                        string json = reader.ReadToEnd();
+                        data = JsonConvert.DeserializeObject<List<string>>(json);
+                    });
                     // Use default if deserialization returns zero vector (or you could check here further)
                     if (data == default)
                     {

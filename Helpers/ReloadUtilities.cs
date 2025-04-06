@@ -53,10 +53,10 @@ namespace ModHelper.Helpers
 
         public static void PrepareClient(ClientMode clientMode)
         {
-            ClientDataHandler.ClientMode = clientMode;
-            ClientDataHandler.PlayerID = Utilities.FindPlayerId();
-            ClientDataHandler.WorldID = Utilities.FindWorldId();
-            Log.Info("set player and worldid to " + ClientDataHandler.PlayerID + " and " + ClientDataHandler.WorldID);
+            ClientDataJsonHelper.ClientMode = clientMode;
+            ClientDataJsonHelper.PlayerID = Utilities.FindPlayerId();
+            ClientDataJsonHelper.WorldID = Utilities.FindWorldId();
+            Log.Info("set player and worldid to " + ClientDataJsonHelper.PlayerID + " and " + ClientDataJsonHelper.WorldID);
         }
 
         /// <summary> A little messy function to close all other panels and open the mods panel. </summary>
