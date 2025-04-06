@@ -36,6 +36,7 @@ namespace ModHelper.UI.Elements
             AddHeader("Disable All", disableAllMods, color: ColorHelper.CalamityRed);
             searchbox = AddSearchbox();
 
+
             UIImageButton clearSearchButton = new UIImageButton(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"))
             {
                 HAlign = 1f,
