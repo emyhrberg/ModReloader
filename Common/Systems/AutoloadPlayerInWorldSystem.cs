@@ -22,8 +22,6 @@ namespace ModHelper.Common.Systems
 
         public override void Load()
         {
-            if (Main.netMode != NetmodeID.Server)
-                ClientDataHandler.ReadData();
         }
 
         public override void Unload()
@@ -50,7 +48,7 @@ namespace ModHelper.Common.Systems
             {
                 Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
 
-                if (Main.netMode == NetmodeID.SinglePlayer)
+                if (ClientDataHandler.ClientMode == ClientMode.SinglePlayer)
                 {
                     // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
                     onSuccessfulLoad += EnterSingleplayerWorld;

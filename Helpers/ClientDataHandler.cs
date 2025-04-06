@@ -12,9 +12,45 @@ namespace ModHelper.Helpers
     public static class ClientDataHandler
     {
         //Function that handles writing info that shoud survive modlreload
-        public static ClientMode ClientMode = ClientMode.FreshClient;
-        public static int PlayerID = -1; // default to invalid player ID
-        public static int WorldID = -1; // default to invalid world ID
+
+        private static bool flagIsReaded = false; // Used to check if the values are readed
+
+        public static ClientMode ClientMode
+        {
+            get
+            {
+                CheckIfNeedsToReadValues();
+                return field;
+            }
+            set;
+        } = ClientMode.FreshClient;
+        public static int PlayerID // default to invalid player ID
+        {
+            get
+            {
+                CheckIfNeedsToReadValues();
+                return field;
+            }
+            set;
+        } = -1;
+        public static int WorldID // default to invalid world ID
+        {
+            get
+            {
+                CheckIfNeedsToReadValues();
+                return field;
+            }
+            set;
+        } = -1;
+
+        private static void CheckIfNeedsToReadValues()
+        {
+            if (!flagIsReaded)
+            {
+                ReadData();
+                flagIsReaded = true;
+            }
+        }
 
         private static string GetFolderPath()
         {
