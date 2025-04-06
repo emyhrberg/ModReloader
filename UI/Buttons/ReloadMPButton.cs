@@ -20,6 +20,7 @@ namespace ModHelper.UI.Buttons
         {
         }
 
+
         public override void LeftClick(UIMouseEvent evt)
         {
             Main.NewText("Not implemented yet.");
