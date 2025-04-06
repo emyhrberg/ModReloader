@@ -42,20 +42,20 @@ namespace ModHelper.Helpers
                     // Use default if deserialization returns zero vector (or you could check here further)
                     if (data == default)
                     {
-                        return null;
+                        return [];
                     }
                     return data;
                 }
                 else
                 {
                     Log.Error("ModsToReload file not found.");
-                    return null;
+                    return [];
                 }
             }
             catch (Exception ex)
             {
                 Log.Error($"Failed to read from ModsToReload file: {ex.Message}");
-                return null;
+                return [];
             }
         }
     }
