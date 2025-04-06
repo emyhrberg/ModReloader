@@ -219,15 +219,8 @@ namespace ModHelper.Helpers
                          {
                              foreach (var modPath in modPaths)
                              {
-                                 try
-                                 {
                                      Log.Info("Building mod: " + modPath);
                                      mcBuildModFolder.Invoke(mc, [modPath]);
-                                 }
-                                 catch (Exception buildEx)
-                                 {
-                                     Log.Error($"Failed to build mod at '{modPath}': {buildEx.Message}");
-                                 }
                              }
                          }),
                          true
