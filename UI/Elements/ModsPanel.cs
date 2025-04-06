@@ -18,26 +18,20 @@ namespace ModHelper.UI.Elements
     public class ModsPanel : OptionPanel
     {
         // enabled mods
-        private List<ModElement> modElements = [];
-        private OptionElement toggleAllEnabledMods;
+        private readonly List<ModElement> enabledMods = [];
 
         // disabled mods
-        public List<ModElement> allMods = [];
-        private OptionElement toggleAllAllMods;
+        private List<ModElement> allMods = [];
 
         #region Constructor
         public ModsPanel() : base(title: "Mods", scrollbarEnabled: true)
         {
-            AddHeader("Enabled Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
-            ConstructEnabledMods();
-            toggleAllEnabledMods = AddOption("Toggle All", leftClick: ToggleAllEnabledMods, hover: "Toggle all enabled mods on or off");
-            toggleAllEnabledMods.SetState(State.Enabled);
+            AddHeader("Enable All", enableAllMods);
+            AddHeader("Disable All", disableAllMods);
             AddPadding();
 
-            AddHeader("All Mods", onLeftClick: GoToModsList, "Click to exit world and go to mods list");
+            ConstructEnabledMods();
             ConstructAllMods();
-            toggleAllAllMods = AddOption("Toggle All", leftClick: ToggleAllAllMods, hover: "Toggle all disabled mods on or off");
-            AddPadding();
             AddPadding(3f);
         }
         #endregion
@@ -53,7 +47,7 @@ namespace ModHelper.UI.Elements
                 // this is where we set the text of the mod element
                 ModElement modElement = new(mod.DisplayNameClean, mod.Name);
                 uiList.Add(modElement);
-                modElements.Add(modElement);
+                enabledMods.Add(modElement);
                 AddPadding(3);
             }
         }
@@ -71,7 +65,7 @@ namespace ModHelper.UI.Elements
 
                 // Skip mods that are already in the enabled mods list
                 // to avoid duplicates.
-                if (modElements.Any(modElement => modElement.internalName == internalName))
+                if (enabledMods.Any(modElement => modElement.internalName == internalName))
                 {
                     continue;
                 }
@@ -217,35 +211,65 @@ namespace ModHelper.UI.Elements
 
         #region Toggle all methods
 
-        private void ToggleAllAllMods()
+        private void enableAllMods()
         {
-            // Determine the new state based on whether all mods are currently enabled
-            bool anyDisabled = allMods.Any(modElement => modElement.GetState() == State.Disabled);
-            State newState = anyDisabled ? State.Enabled : State.Disabled;
-
             // Set the state for all mod elements
             foreach (ModElement modElement in allMods)
             {
-                modElement.SetState(newState);
+                modElement.SetState(State.Enabled);
                 string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
 
                 // Use reflection to call SetModEnabled on internalModName
                 var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
+                setModEnabled?.Invoke(null, [internalName, true]);
             }
 
-            // Update the "Toggle All" option's state
-            toggleAllAllMods.SetState(newState);
+            // Set the state for all other mod elements
+            foreach (ModElement modElement in enabledMods)
+            {
+                modElement.SetState(State.Enabled);
+                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+
+                // Use reflection to call SetModEnabled on internalModName
+                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+                setModEnabled?.Invoke(null, [internalName, true]);
+            }
         }
+
+        private void disableAllMods()
+        {
+            // Set the state for all mod elements
+            foreach (ModElement modElement in allMods)
+            {
+                modElement.SetState(State.Disabled);
+                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+
+                // Use reflection to call SetModEnabled on internalModName
+                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+                setModEnabled?.Invoke(null, [internalName, false]);
+            }
+
+            // Set the state for all other mod elements
+            foreach (ModElement modElement in enabledMods)
+            {
+                modElement.SetState(State.Disabled);
+                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+
+                // Use reflection to call SetModEnabled on internalModName
+                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
+                setModEnabled?.Invoke(null, [internalName, false]);
+            }
+        }
+
 
         private void ToggleAllEnabledMods()
         {
             // Determine the new state based on whether all mods are currently enabled
-            bool anyDisabled = modElements.Any(modElement => modElement.GetState() == State.Disabled);
+            bool anyDisabled = enabledMods.Any(modElement => modElement.GetState() == State.Disabled);
             State newState = anyDisabled ? State.Enabled : State.Disabled;
 
             // Set the state for all mod elements
-            foreach (ModElement modElement in modElements)
+            foreach (ModElement modElement in enabledMods)
             {
                 modElement.SetState(newState);
                 string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
@@ -254,9 +278,6 @@ namespace ModHelper.UI.Elements
                 var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
                 setModEnabled?.Invoke(null, [internalName, newState == State.Enabled]);
             }
-
-            // Update the "Toggle All" option's state
-            toggleAllEnabledMods.SetState(newState);
         }
 
         #endregion
