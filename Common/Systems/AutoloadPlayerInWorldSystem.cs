@@ -15,7 +15,7 @@ namespace ModHelper.Common.Systems
     /// </summary>
     public class AutoloadPlayerInWorldSystem : ModSystem
     {
-        // Useful overrides:
+        // Useful hooks:
         // OnModLoad, OnLoad.
         // TODO: Investigate differences between the above methods.
         // Also, NetReceive, NetSend, , CanWorldBePlayed, OnWorldLoad, etc.

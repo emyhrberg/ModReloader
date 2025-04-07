@@ -19,7 +19,7 @@ namespace ModHelper.UI.Elements
         protected bool prev_Active_state = false; // previous active state
         protected bool Active = false; // default to false
         public string Header = "";
-        public CustomTitlePanel TitlePanel;
+        public TitlePanel TitlePanel;
 
         // Dragging
         public bool IsDragging;
@@ -61,12 +61,6 @@ namespace ModHelper.UI.Elements
         public override void Update(GameTime gameTime)
         {
             if (!Conf.C.AllowDraggingPanels)
-            {
-                IsDragging = false;
-                return;
-            }
-
-            if (CustomSliderBase.IsAnySliderLocked)
             {
                 IsDragging = false;
                 return;

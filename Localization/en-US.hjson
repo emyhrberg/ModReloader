@@ -132,6 +132,11 @@ Mods: {
 					Label: Always Update Built Ago
 					Tooltip: ""
 				}
+
+				ToggleOnClickEntireElement: {
+					Label: Toggle On Click Entire Element
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

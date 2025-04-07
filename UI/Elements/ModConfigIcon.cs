@@ -179,6 +179,7 @@ namespace ModHelper.UI.Elements
                     catch (Exception ex)
                     {
                         // Handle any reflection errors
+                        Log.Info("Error checking config state: " + ex.Message);
                         configClosed = true;
                     }
                 }

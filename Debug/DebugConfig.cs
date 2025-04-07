@@ -1,8 +1,11 @@
 namespace ModHelper.Debug
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class DebugConfig
     {
-        // public static bool IsDebugMode => System.Diagnostics.Debugger.IsAttached || System.Diagnostics.Debugger.IsLogging();
-        public static bool IS_DEBUGGING => true; // This should be set to true in debug builds but false in release builds.
+        // Debug mode that is true during development and false ahead of release 
+        public static bool DEBUG = true;
     }
 }

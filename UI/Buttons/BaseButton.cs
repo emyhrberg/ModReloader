@@ -247,11 +247,7 @@ namespace ModHelper.UI.Buttons
             DraggablePanel associatedPanel = null;
 
             // Determine which panel is associated with this button based on button type
-            if (this is OptionsButton)
-                associatedPanel = sys.mainState.optionsPanel;
-            else if (this is UIElementButton)
-                associatedPanel = sys.mainState.uiPanel;
-            else if (this is ModsButton)
+            if (this is ModsButton)
                 associatedPanel = sys.mainState.modsPanel;
             else if (this is ModSourcesButton)
                 associatedPanel = sys.mainState.modSourcesPanel;

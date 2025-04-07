@@ -17,17 +17,13 @@ namespace ModHelper.UI
     public class MainState : UIState
     {
         // Buttons
-        public OptionsButton optionsButton;
-        public UIElementButton uiButton;
         public ModsButton modsButton;
         public ModSourcesButton modSourcesButton;
         public ReloadSPButton reloadSPButton;
         public ReloadMPButton reloadMPButton;
 
         // Panels
-        public OptionsPanel optionsPanel;
         public ModsPanel modsPanel;
-        public UIElementPanel uiPanel;
         public ModSourcesPanel modSourcesPanel;
         public List<DraggablePanel> AllPanels = [];
 
@@ -70,18 +66,10 @@ namespace ModHelper.UI
             offset = -ButtonSize * 4;
             offset -= 20; // 20 is CUSTOM CUSTOM CUSTOM offset, see collapse also. this is to avoid the collapse button colliding with heros mod
 
-            // Get client{x}.log
-            string logPath = Path.GetFileName(Logging.LogPath);
-
             // Add buttons
-            // if (Conf.C.Buttons.ShowOptionsButton)
-            // optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options");
-
-            // if (Conf.C.Buttons.ShowUIButton)
-            // uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
 
             if (Conf.C.Buttons.ShowModsButton)
-                modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Manage mods to toggle");
+                modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
 
             if (Conf.C.Buttons.ShowModSourcesButton)
             {
@@ -109,21 +97,15 @@ namespace ModHelper.UI
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
             // Add the panels (invisible by default)
-            // optionsPanel = AddPanel<OptionsPanel>();
-            // uiPanel = AddPanel<UIElementPanel>();
             modsPanel = AddPanel<ModsPanel>();
             modSourcesPanel = AddPanel<ModSourcesPanel>();
 
             // Associate buttons with panels so we can highlight the buttons with open panels 
             // And close 
-            // optionsPanel.AssociatedButton = optionsButton;
-            // uiPanel.AssociatedButton = uiButton;
             modsPanel.AssociatedButton = modsButton;
             modSourcesPanel.AssociatedButton = modSourcesButton;
 
             // Associate panels with buttons
-            // optionsButton.AssociatedPanel = optionsPanel;
-            // uiButton.AssociatedPanel = uiPanel;
             modsButton.AssociatedPanel = modsPanel;
             modSourcesButton.AssociatedPanel = modSourcesPanel;
 
@@ -222,23 +204,6 @@ namespace ModHelper.UI
                 }
             }
         }
-
-        #region Misc
-        public void BringPanelToFront(DraggablePanel panel)
-        {
-            // First remove the panel from its parent if it exists
-            if (panel.Parent != null)
-            {
-                panel.Remove();
-            }
-
-            // Then append it again to make it the last child (drawn on top)
-            Append(panel);
-
-            // Make sure it's active
-            panel.SetActive(true);
-        }
-        #endregion
 
         #region Left/right dragging
 

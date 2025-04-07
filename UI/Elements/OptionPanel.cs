@@ -70,55 +70,10 @@ namespace ModHelper.UI.Elements
             if (scrollbarEnabled) Append(scrollbar);
         }
 
-        protected SliderPanel AddSlider(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1f, string hover = "", Action leftClickText = null, Action rightClickText = null, Func<float, string> valueFormatter = null)
+        protected UIElement AddPadding(float padding = 20f)
         {
-            SliderPanel sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover, leftClickText, rightClickText, valueFormatter);
-            uiList.Add(sliderPanel);
-            AddPadding(3);
-            return sliderPanel;
-        }
-
-        protected OptionElement AddOption(string text, Action leftClick, string hover = "", Action rightClick = null, float padding = 3f)
-        {
-            OptionElement option = new(leftClick, text, hover, rightClick);
-            uiList.Add(option);
-            AddPadding(padding);
-            return option;
-        }
-
-        protected ActionOption AddAction(string text, Action leftClick, string hover, Action rightClick = null, float textSize = 0.4f, float padding = 5f)
-        {
-            ActionOption actionOption = new(leftClick, text, hover, rightClick);
-            uiList.Add(actionOption);
-            AddPadding(padding);
-            return actionOption;
-        }
-
-        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "", Color color = default, float HAlign = 0.5f)
-        {
-            HeaderElement headerElement = new(title, hover, color, HAlign, onLeftClick);
-            // headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke(); // not needed?
-            uiList.Add(headerElement);
-            return headerElement;
-        }
-
-        protected Searchbox AddSearchbox(float paddingBefore = 20f, float paddingAfter = 3f)
-        {
-            // Add padding before the searchbox
-            AddPadding(paddingBefore);
-            Searchbox searchbox = new("Type to search");
-            uiList.Add(searchbox);
-            AddPadding(paddingAfter);
-            return searchbox;
-        }
-
-        /// <summary>
-        /// Add padding to the panel with a blank header with the given panel element height
-        /// </summary>
-        protected HeaderElement AddPadding(float padding = 20f)
-        {
-            // Create a blank UIElement to act as a spacer.
-            HeaderElement paddingElement = new("");
+            // Create a basic UIElement to act as a spacer instead of using HeaderElement
+            UIElement paddingElement = new();
             paddingElement.Height.Set(padding, 0f);
             paddingElement.Width.Set(0, 1f);
             uiList.Add(paddingElement);
@@ -127,22 +82,7 @@ namespace ModHelper.UI.Elements
 
         public override void Update(GameTime gameTime)
         {
-            // test
-            //uiList.Width.Set(0, 1);
-
             base.Update(gameTime);
-
-            // If the inventory is open, move the panel to the left by 350 pixels
-            bool inventoryOpen = Main.playerInventory;
-
-            // if (inventoryOpen)
-            // {
-            //     Left.Set(-225, 0f);
-            // }
-            // else
-            // {
-            //     Left.Set(-20, 0f);
-            // }
         }
 
         public override void LeftMouseDown(UIMouseEvent evt)
@@ -162,9 +102,6 @@ namespace ModHelper.UI.Elements
             IsDragging = false;
             dragOffset = evt.MousePosition - new Vector2(Left.Pixels, Top.Pixels);
         }
-
-        // Build the last ago by every second, adding the time
-
 
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -200,60 +137,26 @@ namespace ModHelper.UI.Elements
                                           timeAgo.TotalHours < 24 ? Color.Orange :
                                           Color.Red;
 
-                        string builtAgo = ConvertLastModifiedToTimeAgo(icon.lastModified);
+                        // string builtAgo = ConvertLastModifiedToTimeAgo(icon.lastModified);
 
-                        if (!string.IsNullOrEmpty(builtAgo))
-                        {
-                            Utils.DrawBorderString(
-                                spriteBatch,
-                                text: $"Built {builtAgo}",
-                                new Vector2(mousePos.X + icon.Width.Pixels, mousePos.Y - 10),
-                                timeColor,
-                                scale: 1.0f,
-                                0.5f,
-                                0.5f
-                            );
-                        }
+                        // if (!string.IsNullOrEmpty(builtAgo))
+                        // {
+                        // Utils.DrawBorderString(
+                        // spriteBatch,
+                        // text: $"Built {builtAgo}",
+                        // new Vector2(mousePos.X + icon.Width.Pixels, mousePos.Y - 10),
+                        // timeColor,
+                        // scale: 1.0f,
+                        // 0.5f,
+                        // 0.5f
+                        // );
+                        // }    
                     }
                 }
             }
         }
 
-        private static string ConvertLastModifiedToTimeAgo(DateTime lastModified)
-        {
-            TimeSpan timeAgo = DateTime.Now - lastModified;
-            if (timeAgo.TotalSeconds < 60)
-            {
-                return $"{timeAgo.Seconds} seconds ago";
-            }
-            else if (timeAgo.TotalMinutes < 2)
-            {
-                return $"{timeAgo.Minutes} minute ago";
-            }
-            else if (timeAgo.TotalMinutes < 60)
-            {
-                return $"{timeAgo.Minutes} minutes ago";
-            }
-            else if (timeAgo.TotalHours < 2)
-            {
-                return $"{timeAgo.Hours} hour ago";
-            }
-            else if (timeAgo.TotalHours < 24)
-            {
-                return $"{timeAgo.Hours} hours ago";
-            }
-            else if (timeAgo.TotalDays < 2)
-            {
-                return $"{timeAgo.Days} day ago";
-            }
-            else
-            {
-                return $"{timeAgo.Days} days ago";
-            }
-        }
-
         #region Reset position
-        // When we click on a button, we toggle the active state of the panel.
         // This method is called to reset the position of the panel when it is toggled (when the panel is shown again).
         public override bool SetActive(bool active)
         {

@@ -79,6 +79,9 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool AlwaysUpdateBuiltAgo = true;
 
+        [DefaultValue(false)]
+        public bool ToggleOnClickEntireElement = false;
+
         // ------------------------------------------------------
         // ON CHANGED CONFIG
         // This is a risky method that sometimes causes bugs due to the way it's run kinda frequently.

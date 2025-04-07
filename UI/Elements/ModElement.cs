@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -120,6 +121,12 @@ namespace ModHelper.UI.Elements
             if (evt.Target is ModConfigIcon modConfigIcon)
             {
                 // If clicked on config icon, don't proceed with mod toggling
+                return;
+            }
+
+            if (!Conf.C.ToggleOnClickEntireElement && evt.Target is not ModEnabledText modEnabledText)
+            {
+                // If clicked on enabled text, don't proceed with mod toggling
                 return;
             }
 

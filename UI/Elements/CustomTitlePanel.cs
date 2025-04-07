@@ -3,14 +3,14 @@ using Terraria.GameContent.UI.Elements;
 
 namespace ModHelper.UI.Elements
 {
-    public class CustomTitlePanel : UIPanel
+    public class TitlePanel : UIPanel
     {
         public UIText HeaderText;
         private Color lightBlue = new(63, 82, 151);
         private int padding = 12;
         private int height = 35;
 
-        public CustomTitlePanel(string header)
+        public TitlePanel(string header)
         {
             // Set up the panel
             MaxWidth.Set(padding * 2, 1f);

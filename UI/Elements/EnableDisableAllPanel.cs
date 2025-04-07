@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
-using Terraria.UI;
 
 namespace ModHelper.UI.Elements
 {

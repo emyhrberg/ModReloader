@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ModHelper.UI.Buttons;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
@@ -35,15 +34,6 @@ namespace ModHelper.UI.Elements
             Height.Set(size, 0f);
             VAlign = 1.0f;
             Top.Set(6, 0);
-
-            // check if this mod is the current mod to reload in the config. if so, check it.
-            // if (Conf.C.ModToReload == modSourcePathString)
-            // {
-            //     ToggleCheckState();
-            //     // add to mods to reload also
-
-            //     ReloadUtilities.ModsToReload.Add(modSourcePathString);
-            // }
 
             // update: read the json file, and update the checkboxes according to the json file.
             List<string> modsToReloadFromJsonFile = ModsToReloadJsonHelper.ReadModsToReload();
@@ -92,10 +82,6 @@ namespace ModHelper.UI.Elements
                     // update list
                     if (mod.checkbox.isChecked)
                     {
-                        // Update config
-                        // Conf.C.ModToReload = modSourcePathString;
-                        // Conf.Save();
-
                         // only add if it doesnt already exist
                         if (!ReloadUtilities.ModsToReload.Contains(modSourcePathString))
                         {
@@ -105,32 +91,16 @@ namespace ModHelper.UI.Elements
                     }
                     else
                     {
+                        // unchecked. 
                         // Log.Info("removing mod to reload: " + modSourcePathString);
                         ReloadUtilities.ModsToReload.Remove(modSourcePathString);
-                        // Conf.C.ModToReload = ReloadHelper.ModsToReload.Count > 0 ? ReloadHelper.ModsToReload.LastOrDefault() : string.Empty;
-                        // Conf.Save();
-
-                        // unchecked.
-                        // update config if modstoreload only has one entry
-                        if (ReloadUtilities.ModsToReload.Count == 1)
-                        {
-                            // Conf.C.ModToReload = ReloadUtilities.ModsToReload.FirstOrDefault();
-                            // Log.Info("Setting single mod to reload to: " + Conf.C.ModToReload);
-                            // Conf.Save();
-                        }
                     }
 
                     // set hovertext in reloadSP
                     ReloadSPButton sp = sys.mainState.reloadSPButton;
                     ReloadMPButton mp = sys.mainState.reloadMPButton;
-                    if (sp != null)
-                    {
-                        sp.UpdateHoverTextDescription();
-                    }
-                    if (mp != null)
-                    {
-                        mp.UpdateHoverTextDescription();
-                    }
+                    sp?.UpdateHoverTextDescription();
+                    mp?.UpdateHoverTextDescription();
 
                     // Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
                     // Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));

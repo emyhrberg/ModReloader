@@ -103,7 +103,7 @@ namespace ModHelper.Helpers
                 // {
                 foreach (var button in sys.mainState.AllButtons)
                 {
-                    if (button is UIElementButton || button is OptionsButton || button is ModsButton)
+                    if (button is ModsButton)
                     {
                         button.ParentActive = false;
                     }
