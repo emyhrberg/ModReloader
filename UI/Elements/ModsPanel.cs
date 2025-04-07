@@ -23,13 +23,13 @@ namespace ModHelper.UI.Elements
     {
         // top container for enable all, disable all, and searchbox
         public Searchbox searchbox;
-        private UIElement topContainer;
+        private readonly UIElement topContainer;
 
         // enabled mods
         public readonly List<ModElement> enabledMods = [];
 
         // disabled mods
-        private List<ModElement> allMods = [];
+        private readonly List<ModElement> allMods = [];
 
         // filter state
         private string currentFilter = "";
@@ -199,16 +199,36 @@ namespace ModHelper.UI.Elements
 
         private void ConstructEnabledMods()
         {
-            var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
-            foreach (Mod mod in mods)
+            // a list of all mods that are enabled
+            var currEnabledMods = ModLoader.Mods.Skip(1); // (skip 1 to ignore tml mod)
+
+            List<object> sortedMods = FindAllMods();
+
+            // Get all mods the user has installed via reflection
+            foreach (var localMod in sortedMods) // "localMod" is of type LocalMod
             {
-                string description = GetLoadedModDescription(mod);
+                string internalName = localMod.ToString();
 
-                Log.Info("modname: " + mod.Name + " Description: " + description);
+                // Only add mod if its in the enabled mods list
+                if (!currEnabledMods.Any(m => m.Name == internalName))
+                {
+                    Log.Info("Skipping mod " + internalName + " as it is not enabled.");
+                    continue;
+                }
 
-                // you could change this to send the "clean name"
-                // this is where we set the text of the mod element
-                ModElement modElement = new(mod.DisplayNameClean, mod.Name, modDescription: description);
+                // Get the mod of Mod instance
+                Mod currMod = ModLoader.GetMod(internalName);
+
+                // Get the clean name using reflection for the LocalMod mod.
+                string cleanName = GetCleanName(localMod);
+                string description = GetLocalModDescription(localMod);
+
+                //     // you could change this to send the "clean name"
+                //     // this is where we set the text of the mod element
+                ModElement modElement = new(
+                    cleanModName: currMod.DisplayNameClean,
+                    internalModName: currMod.Name,
+                    modDescription: description);
                 uiList.Add(modElement);
                 enabledMods.Add(modElement);
                 AddPadding(3);
@@ -217,7 +237,7 @@ namespace ModHelper.UI.Elements
 
         private void ConstructAllMods()
         {
-            List<object> sortedMods = GetAllWorkshopMods();
+            List<object> sortedMods = FindAllMods();
 
             // Get all mods the user has installed via reflection
             foreach (var mod in sortedMods) // "mod" is of type LocalMod
@@ -233,6 +253,7 @@ namespace ModHelper.UI.Elements
                 // to avoid duplicates.
                 if (enabledMods.Any(modElement => modElement.internalName == internalName))
                 {
+                    Log.Info("Skipping mod " + cleanName + " as it is already enabled.");
                     continue;
                 }
 
@@ -262,75 +283,42 @@ namespace ModHelper.UI.Elements
         #region Helpers for getting mod lists
         // Note: Lots of reflection is used here, so be careful with error handling.
 
-        private string GetLoadedModDescription(Mod mod)
-        {
-            try
-            {
-                // For loaded mods, you can try to access the description through the Mod instance
-                // First approach: Try to get the description through reflection
-                Type modType = mod.GetType();
-                FieldInfo propertiesField = modType.GetField("properties", BindingFlags.Instance | BindingFlags.NonPublic);
-
-                if (propertiesField != null)
-                {
-                    object buildProperties = propertiesField.GetValue(mod);
-                    if (buildProperties != null)
-                    {
-                        Type buildPropertiesType = buildProperties.GetType();
-                        FieldInfo descriptionField = buildPropertiesType.GetField("description", BindingFlags.Instance | BindingFlags.Public);
-
-                        if (descriptionField != null)
-                        {
-                            return (string)descriptionField.GetValue(buildProperties) ?? string.Empty;
-                        }
-                    }
-                }
-
-                // Second approach: Check if the mod has ModContent with a description
-                // This might be specific to your mod structure
-                if (mod.DisplayName != null)
-                {
-                    // As a fallback, use the display name if no description is available
-                    return $"A mod named {mod.DisplayName}.";
-                }
-
-                return string.Empty;
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"GetLoadedModDescription: Exception occurred - {ex}");
-                return string.Empty;
-            }
-        }
-
         // Helper method to get all workshop mods
-        private static List<object> GetAllWorkshopMods()
+        private static List<object> FindAllMods()
         {
             // Get all mods the user has installed via reflection
             try
             {
-                Assembly assembly = typeof(ModLoader).Assembly;
-                Type modOrganizerType = assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
-                MethodInfo findWorkshopModsMethod = modOrganizerType.GetMethod("FindWorkshopMods", BindingFlags.NonPublic | BindingFlags.Static);
+                Type modOrganizerType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
+                MethodInfo findWorkshopModsMethod = modOrganizerType.GetMethod("FindAllMods", BindingFlags.NonPublic | BindingFlags.Static);
 
-                var workshopMods = (IReadOnlyList<object>)findWorkshopModsMethod.Invoke(null, null);
+                var workshopModsArray = findWorkshopModsMethod.Invoke(null, null) as Array;
+                if (workshopModsArray == null)
+                {
+                    Log.Warn("FindAllMods returned null.");
+                    return [];
+                }
 
-                // Sort workshop mods by clean name
-                var sortedMods = workshopMods.ToList();
+                List<object> sortedMods = [.. workshopModsArray];
+
+                // Remove duplicates by clean name
+                var unique = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                sortedMods.RemoveAll(mod => !unique.Add(GetCleanName(mod)));
+
+                // Sort mods by clean name
                 sortedMods.Sort((a, b) =>
                 {
-                    // Get clean names for comparison
                     string nameA = GetCleanName(a);
                     string nameB = GetCleanName(b);
                     return string.Compare(nameA, nameB, StringComparison.OrdinalIgnoreCase);
                 });
 
-                Log.Info("Found " + sortedMods.Count + " workshop mods.");
+                Log.Info("Found " + sortedMods.Count + " mods.");
                 return sortedMods;
             }
-            catch
+            catch (Exception ex)
             {
-                Log.Warn("An error occurred while retrieving workshop mods.");
+                Log.Warn($"An error occurred while retrieving workshop mods: {ex.Message}");
             }
             return [];
         }
@@ -342,7 +330,7 @@ namespace ModHelper.UI.Elements
             return (string)displayNameField.GetValue(mod);
         }
 
-        private Texture2D GetModIconFromAllMods(object TmodFile)
+        private static Texture2D GetModIconFromAllMods(object TmodFile)
         {
             try
             {
@@ -397,16 +385,21 @@ namespace ModHelper.UI.Elements
             return tmod;
         }
 
-        private object getLocalModName(object mod)
+        private static object getLocalModName(object mod)
         {
             Type localModType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.LocalMod");
 
             FieldInfo Name = localModType.GetField("Name", BindingFlags.Public | BindingFlags.Instance);
+            if (mod == null || Name == null)
+            {
+                Log.Warn("getLocalModName: mod or Name is null.");
+                return string.Empty;
+            }
             object name = Name.GetValue(mod);
             return name;
         }
 
-        private object getLastModified(object mod)
+        private static object getLastModified(object mod)
         {
             Type localModType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.LocalMod");
 

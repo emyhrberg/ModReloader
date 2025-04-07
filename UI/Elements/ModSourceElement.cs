@@ -96,7 +96,7 @@ namespace ModHelper.UI.Elements
             if (isModEnabled)
             {
                 // hoverText = $"Open {internalNameFolderName} config";
-                ModConfigIcon modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalNameFolderName, hover: $"Open {internalNameFolderName} config");
+                ModConfigIcon modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalNameFolderName, hover: $"Open {internalNameFolderName} config", cleanModName: cleanModName);
                 float size = 22f;
                 modConfigIcon.MaxHeight.Set(size, 0f);
                 modConfigIcon.MaxWidth.Set(size, 0f);
@@ -120,33 +120,15 @@ namespace ModHelper.UI.Elements
                                           Color.Red;
 
             // add last modified text
-            // Replace the existing UIText implementation with:
             ModSourceLastBuiltText lastModifiedText = new(lastModified);
             lastModifiedText.Left.Set(60, 0);
             lastModifiedText.VAlign = 1f;
             Append(lastModifiedText);
 
-
-
             // checkbox icon
             checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Add {internalNameFolderName} to reload");
             checkbox.Left.Set(def - dist * 3, 1f);
             Append(checkbox);
-
-            // if this is the current mod, add checkmark
-            // bool isCurrentModToReload = Conf.C.ModToReload == internalNameFolderName;
-            // if (isCurrentModToReload)
-            // {
-            //     checkbox.SetCheckState(true);
-
-            //     // add initial mod
-            //     if (!ModsToReload.modsToReload.Contains(internalNameFolderName))
-            //     {
-            //         Log.Info($"Added {internalNameFolderName} to ModsToReload.");
-            //         ModsToReload.modsToReload.Add(internalNameFolderName);
-            //     }
-            // }
-
 
             // reload icon
             ModReloadIcon modReloadIcon = new(Ass.ModReload.Value, internalNameFolderName, "Reload " + internalNameFolderName);
@@ -163,39 +145,5 @@ namespace ModHelper.UI.Elements
             projectIcon.Left.Set(def, 1f);
             Append(projectIcon);
         }
-        private static string ConvertLastModifiedToTimeAgo(DateTime lastModified)
-        {
-            TimeSpan timeAgo = DateTime.Now - lastModified;
-            if (timeAgo.TotalSeconds < 60)
-            {
-                return $"{timeAgo.Seconds} seconds ago";
-            }
-            else if (timeAgo.TotalMinutes < 2)
-            {
-                return $"{timeAgo.Minutes} minute ago";
-            }
-            else if (timeAgo.TotalMinutes < 60)
-            {
-                return $"{timeAgo.Minutes} minutes ago";
-            }
-            else if (timeAgo.TotalHours < 2)
-            {
-                return $"{timeAgo.Hours} hour ago";
-            }
-            else if (timeAgo.TotalHours < 24)
-            {
-                return $"{timeAgo.Hours} hours ago";
-            }
-            else if (timeAgo.TotalDays < 2)
-            {
-                return $"{timeAgo.Days} day ago";
-            }
-            else
-            {
-                return $"{timeAgo.Days} days ago";
-            }
-        }
-
-
     }
 }

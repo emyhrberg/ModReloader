@@ -87,7 +87,7 @@ namespace ModHelper.UI.Elements
                 // Add ModConfigIcon to enabled mods IF they have a config.
                 // if (ModLoader.GetMod(internalModName).GetConfig(internalModName) != null)
                 // {
-                modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalModName, hover: $"Open {internalModName} config");
+                modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalName, hover: $"Open {cleanModName} config", cleanModName: cleanModName);
                 modConfigIcon.VAlign = 0.5f;
                 modConfigIcon.MaxHeight.Set(size, 0f);
                 modConfigIcon.MaxWidth.Set(size, 0f);
@@ -110,7 +110,7 @@ namespace ModHelper.UI.Elements
             }
 
             // Mod InfoIcon
-            modInfoIcon = new(texture: Ass.ModInfo, modPath: internalModName, hover: $"Open {internalModName} info", modDescription: modDescription, modCleanName: cleanModName);
+            modInfoIcon = new(texture: Ass.ModInfo, modPath: internalModName, hover: $"Open {cleanModName} info", modDescription: modDescription, modCleanName: cleanModName);
             modInfoIcon.VAlign = 0.5f;
             modInfoIcon.MaxHeight.Set(size, 0f);
             modInfoIcon.MaxWidth.Set(size, 0f);

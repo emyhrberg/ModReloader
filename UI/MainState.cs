@@ -69,11 +69,19 @@ namespace ModHelper.UI
             // Add buttons
 
             if (Conf.C.Buttons.ShowModsButton)
+            {
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
+                modsButton.AssociatedPanel = modsPanel;
+                modsPanel = AddPanel<ModsPanel>();
+                modsPanel.AssociatedButton = modsButton;
+            }
 
             if (Conf.C.Buttons.ShowModSourcesButton)
             {
                 modSourcesButton = AddButton<ModSourcesButton>(Ass.ButtonModSources, "Build", "Mod Sources", hoverTextDescription: "Manage mod sources and reload");
+                modSourcesButton.AssociatedPanel = modSourcesPanel;
+                modSourcesPanel = AddPanel<ModSourcesPanel>();
+                modSourcesPanel.AssociatedButton = modSourcesButton;
             }
 
             // Initialize reload SP and MP buttons
@@ -97,17 +105,6 @@ namespace ModHelper.UI
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
             // Add the panels (invisible by default)
-            modsPanel = AddPanel<ModsPanel>();
-            modSourcesPanel = AddPanel<ModSourcesPanel>();
-
-            // Associate buttons with panels so we can highlight the buttons with open panels 
-            // And close 
-            modsPanel.AssociatedButton = modsButton;
-            modSourcesPanel.AssociatedButton = modSourcesButton;
-
-            // Associate panels with buttons
-            modsButton.AssociatedPanel = modsPanel;
-            modSourcesButton.AssociatedPanel = modSourcesPanel;
 
             // Temporary debug text for player name, who am I, and frame rate
             if (Conf.C.ShowDebugText)

@@ -25,12 +25,14 @@ namespace ModHelper.UI.Elements
         private string hover;
         public bool isConfigOpen = false;
         public string modName;
+        private string cleanModName;
 
-        public ModConfigIcon(Asset<Texture2D> texture, string modPath, string hover = "") : base(texture)
+        public ModConfigIcon(Asset<Texture2D> texture, string modPath, string hover = "", string cleanModName = "") : base(texture)
         {
             tex = texture;
             this.hover = hover;
             this.modName = System.IO.Path.GetFileName(modPath);
+            this.cleanModName = cleanModName;
 
             float size = 23f;
             MaxHeight.Set(size, 0f);
@@ -43,7 +45,7 @@ namespace ModHelper.UI.Elements
 
         public void SetStateToClosed()
         {
-            hover = $"Open {modName} config";
+            hover = $"Open {cleanModName} config";
             tex = Ass.ConfigOpen;
             // Main.NewText("Closing config for " + modName, new Color(226, 57, 39));
             Main.menuMode = 0;
@@ -59,7 +61,7 @@ namespace ModHelper.UI.Elements
 
         public void SetStateToOpen()
         {
-            hover = $"Close {modName} config";
+            hover = $"Close {cleanModName} config";
             isConfigOpen = true;
             Main.playerInventory = false;
             tex = Ass.ConfigClose;
@@ -191,8 +193,7 @@ namespace ModHelper.UI.Elements
                 // If we detected the config was closed manually
                 if (configClosed)
                 {
-                    hover = $"Open {modName} config";
-                    isConfigOpen = false;
+                    SetStateToClosed();
                 }
             }
         }
