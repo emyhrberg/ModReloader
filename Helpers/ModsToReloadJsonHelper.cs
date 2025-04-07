@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Terraria;
@@ -18,12 +19,23 @@ namespace ModHelper.Helpers
 
         public static void WriteModsToReload(List<string> modsToReload)
         {
+            // Remove duplicates before writing
+            List<string> uniqueMods = modsToReload.Distinct().ToList();
+
+            // If we removed duplicates, update the original list
+            if (uniqueMods.Count != modsToReload.Count)
+            {
+                modsToReload.Clear();
+                modsToReload.AddRange(uniqueMods);
+                Log.Info($"Removed {modsToReload.Count - uniqueMods.Count} duplicate mod entries");
+            }
+
             string filePath = Utilities.GetModHelperFolderPath("ModsToReload.json");
             try
             {
                 Utilities.LockingFile(filePath, (reader, writer) =>
                 {
-                    string json = JsonConvert.SerializeObject(modsToReload, Formatting.Indented);
+                    string json = JsonConvert.SerializeObject(uniqueMods, Formatting.Indented);
                     writer.BaseStream.SetLength(0);  // Clears the file
                     writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start
                     writer.Write(json);
@@ -38,7 +50,7 @@ namespace ModHelper.Helpers
 
         public static List<string> ReadModsToReload()
         {
-            string filePath = Utilities.GetModHelperFolderPath("ModsToReload.json"); 
+            string filePath = Utilities.GetModHelperFolderPath("ModsToReload.json");
             try
             {
                 if (File.Exists(filePath))

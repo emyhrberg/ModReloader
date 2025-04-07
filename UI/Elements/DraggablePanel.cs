@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ModHelper.UI.Buttons;
 using Terraria;
@@ -21,7 +22,6 @@ namespace ModHelper.UI.Elements
         public CustomTitlePanel TitlePanel;
 
         // Dragging
-        public bool Draggable = false;
         public bool IsDragging;
         protected bool dragging;
         protected Vector2 dragOffset;
@@ -60,6 +60,12 @@ namespace ModHelper.UI.Elements
         #region Update
         public override void Update(GameTime gameTime)
         {
+            if (!Conf.C.AllowDraggingPanels)
+            {
+                IsDragging = false;
+                return;
+            }
+
             if (CustomSliderBase.IsAnySliderLocked)
             {
                 IsDragging = false;
@@ -76,7 +82,7 @@ namespace ModHelper.UI.Elements
 
             base.Update(gameTime);
 
-            if (Draggable & dragging)
+            if (dragging)
             {
                 float dragDistance = Vector2.Distance(new Vector2(Main.mouseX, Main.mouseY), mouseDownPos);
                 if (dragDistance > DragThreshold)

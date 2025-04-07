@@ -217,8 +217,23 @@ namespace ModHelper.Common.Systems.Menus
             Main.LoadWorlds();
 
             // Select player and world based on json
-            var player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
-            var world = Main.WorldList[ClientDataJsonHelper.WorldID];
+            int playerID = ClientDataJsonHelper.PlayerID;
+            int worldID = ClientDataJsonHelper.WorldID;
+
+            var player = Main.PlayerList.FirstOrDefault();
+            var world = Main.WorldList.FirstOrDefault();
+
+            if (playerID == -1 || worldID == -1)
+            {
+                Log.Error("PlayerID or WorldID is -1. Cannot autoload.");
+                // if we return here, we cause a "crash" or "stuck" in loading.
+            }
+            else
+            {
+                // all ok, continue.
+                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+                world = Main.WorldList[ClientDataJsonHelper.WorldID];
+            }
 
             Log.Info("HostMultiplayer. Found player: " + player.Name + ", world: " + world.Name);
 

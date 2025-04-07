@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
@@ -89,6 +90,10 @@ namespace ModHelper.UI.Elements
             // and the mouse is actually over the custom hover zone:
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
+                if (!Conf.C.ShowTooltips)
+                {
+                    return;
+                }
                 UICommon.TooltipMouseText(hover);
             }
         }

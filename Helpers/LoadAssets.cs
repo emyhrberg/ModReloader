@@ -9,7 +9,7 @@ namespace ModHelper.Helpers
     /// To add a new asset, simply add a new field like:
     /// public static Asset<Texture2D> MyAsset;
     /// </summary>
-    public class AssetHelper : ModSystem
+    public class LoadAssets : ModSystem
     {
         public override void Load()
         {
@@ -37,6 +37,8 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ModReload; // 22x22
         public static Asset<Texture2D> ModCheck; // 22x22
         public static Asset<Texture2D> ModUncheck; // 22x22
+        public static Asset<Texture2D> ConfigOpen; // 36x36
+        public static Asset<Texture2D> ConfigClose; // 36x36
 
         // Bool for checking if assets are loaded
         public static bool Initialized { get; set; }

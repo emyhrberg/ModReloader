@@ -149,8 +149,8 @@ namespace ModHelper.Helpers
                 string path = Logging.LogPath;
                 string fileName = Path.GetFileName(path);
 
-                Log.Info($"Opening {fileName}");
-                Main.NewText("Opening " + fileName);
+                Log.Info($"Open {fileName}");
+                Main.NewText("Open " + fileName);
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)

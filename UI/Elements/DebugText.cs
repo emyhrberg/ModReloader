@@ -26,7 +26,7 @@ namespace ModHelper.UI.Elements
             TextOriginY = 0f;
 
             // Arbitrary size, should use ChatManager.GetStringSize() instead
-            Width.Set(220, 0);
+            Width.Set(150, 0);
             Height.Set(20 * 4 + 10, 0); // 20 * 3 for 3 lines of text
         }
 
@@ -34,14 +34,14 @@ namespace ModHelper.UI.Elements
         {
             //always call base! otherwise IsMouseHovering wont work
             base.MouseOver(evt);
-            TextColor = Color.Yellow;
+            // TextColor = Color.Yellow;
         }
 
         public override void MouseOut(UIMouseEvent evt)
         {
             //always call base! otherwise IsMouseHovering wont work
             base.MouseOut(evt);
-            TextColor = Color.White;
+            // TextColor = Color.White;
         }
 
         public override void LeftClick(UIMouseEvent evt)
@@ -49,21 +49,11 @@ namespace ModHelper.UI.Elements
             // base.LeftClick(evt);
 
             // Open client log
-            Log.OpenClientLog();
+            // Log.OpenClientLog();
         }
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // toggle conf option
-            Conf.C.SizeDebugText = Conf.C.SizeDebugText switch
-            {
-                "Off" => "Small",
-                "Small" => "Medium",
-                "Medium" => "Large",
-                "Large" => "Off",
-                _ => "Off"
-            };
-            Conf.Save();
 
             // Active = !Active;
 
@@ -100,19 +90,10 @@ namespace ModHelper.UI.Elements
             // $"\n{netmode} ({fileName})" +
             // $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
 
-            string text = $"{playerName} ({whoAmI}) ({fileName})" +
+            string text = $"{playerName} ({whoAmI})" +
                 $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
 
-            float size = Conf.C.SizeDebugText switch
-            {
-                "Small" => 0.7f,
-                "Medium" => 0.9f,
-                "Large" => 1.1f,
-                "Off" => 0f,
-                _ => 0f
-            };
-
-            SetText(text, size, large: false);
+            SetText(text, 0.9f, large: false);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

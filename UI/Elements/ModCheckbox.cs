@@ -33,7 +33,8 @@ namespace ModHelper.UI.Elements
             MaxWidth.Set(size, 0f);
             Width.Set(size, 0f);
             Height.Set(size, 0f);
-            VAlign = 0.5f;
+            VAlign = 1.0f;
+            Top.Set(6, 0);
 
             // check if this mod is the current mod to reload in the config. if so, check it.
             // if (Conf.C.ModToReload == modSourcePathString)
@@ -81,7 +82,7 @@ namespace ModHelper.UI.Elements
             {
                 string internalFolderNameFromMod = Path.GetFileName(mod.modPath);
                 Log.Info("clicked on mod: " + modSourcePathString);
-                Log.Info("checking mod: " + internalFolderNameFromMod);
+                // Log.Info("checking mod: " + internalFolderNameFromMod);
 
                 if (internalFolderNameFromMod == modSourcePathString)
                 {
@@ -132,7 +133,7 @@ namespace ModHelper.UI.Elements
                     }
 
                     // Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
-                    Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));
+                    // Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));
 
                     // Write to json file
                     ModsToReloadJsonHelper.WriteModsToReload(ReloadUtilities.ModsToReload);
@@ -145,8 +146,6 @@ namespace ModHelper.UI.Elements
         {
             // base.Draw(sb);
 
-            Top.Set(-0, 0f);
-
             if (isChecked)
             {
                 DrawHelper.DrawProperScale(sb, this, check, scale: 1.0f);
@@ -158,6 +157,10 @@ namespace ModHelper.UI.Elements
 
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
+                if (!Conf.C.ShowTooltips)
+                {
+                    return;
+                }
                 UICommon.TooltipMouseText(hover);
             }
         }

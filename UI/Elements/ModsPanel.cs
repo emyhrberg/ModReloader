@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
@@ -26,7 +27,7 @@ namespace ModHelper.UI.Elements
         private UIElement topContainer;
 
         // enabled mods
-        private readonly List<ModElement> enabledMods = [];
+        public readonly List<ModElement> enabledMods = [];
 
         // disabled mods
         private List<ModElement> allMods = [];
@@ -40,7 +41,7 @@ namespace ModHelper.UI.Elements
         {
             AddPadding(20f);
 
-            Active = true; // show by default for testing
+            // Active = true; // show by default for testing
 
             // we add this to UIlist, so it will be positioned by uiList
             topContainer = new() // top pos for enable all, disable all, and searchbox
@@ -52,7 +53,8 @@ namespace ModHelper.UI.Elements
             searchbox = new Searchbox("Type to search");
             searchbox.Width.Set(200, 0f);
             searchbox.Height.Set(35, 0f);
-            searchbox.Left.Set(5, 0f); // Place at the left edge
+            searchbox.Left.Set(10, 0f); // Place at the left edge
+            searchbox.Top.Set(5, 0);
 
             // On text change event
             searchbox.OnTextChanged += () =>
@@ -78,21 +80,25 @@ namespace ModHelper.UI.Elements
                 updateNeeded = true;
             };
 
-            // Create and configure the "Enable All" header.
-            HeaderElement enableAll = new HeaderElement("Enable All", leftClick: EnableAllMods, hover: "Enable all mods", color: Color.Green, HAlign: 0.5f);
-            enableAll.Width.Set(100, 0f);
-            enableAll.Height.Set(20, 0f);
-            enableAll.Top.Set(-5, 0);
-            enableAll.HAlign = 0.92f;
-            topContainer.Append(enableAll);
+            // Create and configure the "Enable All" panel.
+            EnableDisableAllPanel enableAllPanel = new EnableDisableAllPanel(
+                color: Color.Green,
+                text: "Enable All",
+                hover: "Enable all mods",
+                onClick: EnableAllMods
+            );
+            enableAllPanel.Top.Set(-5, 0);
+            topContainer.Append(enableAllPanel);
 
-            // Create and configure the "Disable All" header.
-            HeaderElement disableAll = new HeaderElement("Disable All", leftClick: DisableAllMods, hover: "Disable all mods", color: ColorHelper.CalamityRed, HAlign: 0.5f);
-            disableAll.Width.Set(100, 0f);
-            disableAll.Height.Set(20, 0f);
-            disableAll.HAlign = 0.92f;
-            disableAll.Top.Set(25, 0);
-            topContainer.Append(disableAll);
+            // Create and configure the "Disable All" panel.
+            EnableDisableAllPanel disableAllPanel = new EnableDisableAllPanel(
+                color: ColorHelper.CalamityRed,
+                text: "Disable All",
+                hover: "Disable all mods",
+                onClick: DisableAllMods
+            );
+            disableAllPanel.Top.Set(25, 0);
+            topContainer.Append(disableAllPanel);
 
             // Now, add the horizontal container to the UIList.
             uiList.Add(topContainer);
@@ -123,7 +129,8 @@ namespace ModHelper.UI.Elements
             // add all mods that match the current filter
             List<ModElement> filteredMods = [];
 
-            List<ModElement> allAndEnabledMods = allMods.Concat(enabledMods).ToList(); // Combine all mods into one list
+            // using enabledMods first with the concat()!
+            List<ModElement> allAndEnabledMods = enabledMods.Concat(allMods).ToList(); // Combine all mods into one list
             foreach (ModElement modElement in allAndEnabledMods)
             {
                 // Check if the mod name contains the current filter string
@@ -133,9 +140,41 @@ namespace ModHelper.UI.Elements
                     filteredMods.Add(modElement);
                 }
             }
-            Log.Info("found " + filteredMods.Count + " mods matching filter: " + currentFilter);
+
+            // Log.Info("found " + filteredMods.Count + " mods matching filter: " + currentFilter);
+
+            // add panel to show how many mods were found
+            if (searchbox.currentString != "" && Conf.C.ShowNumberOfModsFiltered)
+            {
+                string numberOfModsFound = $"{filteredMods.Count} mods filtered";
+                ModsFoundPanel modsFoundPanel = new(numberOfModsFound);
+                uiList.Add(modsFoundPanel);
+                AddPadding(3f);
+            }
+            else
+            {
+                filteredMods.Clear();
+                // if no filter, add enabled mods first
+                if (string.IsNullOrEmpty(currentFilter))
+                {
+                    foreach (ModElement modElement in enabledMods)
+                    {
+                        filteredMods.Add(modElement);
+                    }
+                }
+                // add all mods that are not enabled
+                foreach (ModElement modElement in allMods)
+                {
+                    filteredMods.Add(modElement);
+                }
+                uiList.AddRange(filteredMods);
+                AddPadding(3f);
+                return;
+            }
+
+            // Add the filtered mods to the UIList
             uiList.AddRange(filteredMods);
-            AddPadding(3f);
+            AddPadding(3f); // a little extra padding at the end
         }
 
         public override void Update(GameTime gameTime)

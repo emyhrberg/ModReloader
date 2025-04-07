@@ -25,10 +25,11 @@ namespace ModHelper.Common.Configs
 
         [Header("DebugText")]
 
-        [DrawTicks]
-        [OptionStrings(["Off", "Small", "Medium", "Large"])]
-        [DefaultValue("Medium")]
-        public string SizeDebugText;
+        [DefaultValue(true)]
+        public bool ShowDebugText = true;
+
+        [DefaultValue(true)]
+        public bool ShowDebugActions = true;
 
         [Header("Improvements")]
         [DefaultValue(true)]
@@ -51,14 +52,14 @@ namespace ModHelper.Common.Configs
 
         [Header("Misc")]
 
-        [DefaultValue(true)]
-        public bool AllowMultiplePanelsOpenSimultaneously = true;
+        [DefaultValue(false)]
+        public bool AllowMultiplePanelsOpenSimultaneously = false;
 
         [DefaultValue(true)]
         public bool AllowDraggingPanels = true;
 
-        [DefaultValue(true)]
-        public bool ResetPanelPositionWhenToggling = true;
+        [DefaultValue(false)]
+        public bool ResetPanelPositionWhenToggling = false;
 
         [DefaultValue(false)]
         public bool ShowSearchboxBlinker = false;
@@ -66,6 +67,17 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool RightClickBuildButtonToGoToModSources = true;
 
+        [DefaultValue(true)]
+        public bool ShowNumberOfModsFiltered = true;
+
+        [DefaultValue(true)]
+        public bool ShowTooltips = true;
+
+        [DefaultValue(true)]
+        public bool ShowIconsWhenHovering = true;
+
+        [DefaultValue(true)]
+        public bool AlwaysUpdateBuiltAgo = true;
 
         // ------------------------------------------------------
         // ON CHANGED CONFIG
@@ -77,11 +89,110 @@ namespace ModHelper.Common.Configs
         {
             base.OnChanged();
 
+            // Save panel states before any recreation
+            var activePanels = SavePanelStates();
+            var activeConfig = SaveOpenConfig();
+
+            // Only recreate MainState once
             RecreateMainstate();
-            ReopenPreviousOpenPanel();
+
+            // Restore panel states
+            RestorePanelStates(activePanels);
+            RestoreOpenConfig(activeConfig);
+
             UpdateExceptionState();
         }
 
+        private string SaveOpenConfig()
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys != null && sys.mainState != null)
+            {
+                foreach (var panel in sys.mainState.AllPanels)
+                {
+                    if (panel is DraggablePanel draggablePanel && draggablePanel.GetActive())
+                    {
+                        // check the ModsPanel, ModsElement, ModConfigIcons
+                        if (draggablePanel is ModsPanel modsPanel)
+                        {
+                            foreach (var mod in modsPanel.enabledMods)
+                            {
+                                if (mod.modConfigIcon.isConfigOpen)
+                                {
+                                    // Save the mod name or any identifier you want to use
+                                    return mod.modConfigIcon.modName;
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+            return "";
+        }
+
+        private void RestoreOpenConfig(string nameOfModWithOpenConfig)
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys != null && sys.mainState != null)
+            {
+                foreach (var panel in sys.mainState.AllPanels)
+                {
+                    if (panel is DraggablePanel draggablePanel && draggablePanel.GetActive())
+                    {
+                        // check the ModsPanel, ModsElement, ModConfigIcons
+                        if (draggablePanel is ModsPanel modsPanel)
+                        {
+                            foreach (var mod in modsPanel.enabledMods)
+                            {
+                                if (mod.internalName == nameOfModWithOpenConfig)
+                                {
+                                    mod.modConfigIcon.SetStateToOpen();
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        private Dictionary<Type, bool> SavePanelStates()
+        {
+            var activePanels = new Dictionary<Type, bool>();
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys != null && sys.mainState != null)
+            {
+                foreach (var panel in sys.mainState.AllPanels)
+                {
+                    if (panel is DraggablePanel draggablePanel)
+                    {
+                        activePanels[draggablePanel.GetType()] = panel.GetActive();
+                    }
+                }
+            }
+
+            return activePanels;
+        }
+
+        private void RestorePanelStates(Dictionary<Type, bool> activePanels)
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys != null && sys.mainState != null && activePanels != null)
+            {
+                foreach (var panel in sys.mainState.AllPanels)
+                {
+                    if (activePanels.TryGetValue(panel.GetType(), out bool isActive))
+                    {
+                        panel.SetActive(isActive);
+                        panel.AssociatedButton.ParentActive = isActive;
+                    }
+                }
+            }
+        }
+
+        // Keep this simple
         private void RecreateMainstate()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -90,39 +201,6 @@ namespace ModHelper.Common.Configs
                 sys.OnWorldLoad();
             }
         }
-
-        private void ReopenPreviousOpenPanel()
-        {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (sys != null && sys.mainState != null)
-            {
-                // Check active panels to re-create them
-                var activePanels = new Dictionary<Type, bool>();
-                foreach (var panel in sys.mainState.AllPanels)
-                {
-                    if (panel is DraggablePanel draggablePanel)
-                    {
-                        activePanels[draggablePanel.GetType()] = panel.GetActive();
-                    }
-                }
-
-                // Log all active panels in one line
-                // Log.Info("Active panels: " + string.Join(", ", activePanels.Keys));
-
-                // Create a new MainState (reset everything)
-                sys.OnWorldLoad();
-
-                // Restore active panels (so we dont lose them)
-                foreach (var panel in sys.mainState.AllPanels)
-                {
-                    if (activePanels.TryGetValue(panel.GetType(), out bool isActive))
-                    {
-                        panel.SetActive(isActive);
-                    }
-                }
-            }
-        }
-
         private static void UpdateExceptionState()
         {
             // Only try to remove the button if ImproveExceptionMenu is disabled and the hook class exists
@@ -138,6 +216,7 @@ namespace ModHelper.Common.Configs
                 }
             }
         }
+
     }
 
     public class Buttons
@@ -147,11 +226,11 @@ namespace ModHelper.Common.Configs
         // [DefaultValue(70)]
         // public float ButtonSize;
 
-        [DefaultValue(true)]
-        public bool ShowOptionsButton = true;
+        // [DefaultValue(true)]
+        // public bool ShowOptionsButton = true;
 
-        [DefaultValue(true)]
-        public bool ShowUIButton = true;
+        // [DefaultValue(true)]
+        // public bool ShowUIButton = true;
 
         [DefaultValue(true)]
         public bool ShowModsButton = true;

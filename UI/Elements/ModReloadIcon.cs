@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
@@ -24,7 +25,8 @@ namespace ModHelper.UI.Elements
             MaxWidth.Set(size, 0f);
             Width.Set(size, 0f);
             Height.Set(size, 0f);
-            VAlign = 0.5f;
+            VAlign = 1.0f;
+            Top.Set(6, 0);
         }
 
         public async override void LeftClick(UIMouseEvent evt)
@@ -50,6 +52,10 @@ namespace ModHelper.UI.Elements
 
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
+                if (!Conf.C.ShowTooltips)
+                {
+                    return;
+                }
                 UICommon.TooltipMouseText(hover);
             }
         }

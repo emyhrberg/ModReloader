@@ -74,11 +74,11 @@ namespace ModHelper.UI
             string logPath = Path.GetFileName(Logging.LogPath);
 
             // Add buttons
-            if (Conf.C.Buttons.ShowOptionsButton)
-                optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options");
+            // if (Conf.C.Buttons.ShowOptionsButton)
+            // optionsButton = AddButton<OptionsButton>(Ass.ButtonOptions, "Options", "Options");
 
-            if (Conf.C.Buttons.ShowUIButton)
-                uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
+            // if (Conf.C.Buttons.ShowUIButton)
+            // uiButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UI Playground", hoverTextDescription: "Right click to toggle all UIElements");
 
             if (Conf.C.Buttons.ShowModsButton)
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Manage mods to toggle");
@@ -109,29 +109,37 @@ namespace ModHelper.UI
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
             // Add the panels (invisible by default)
-            optionsPanel = AddPanel<OptionsPanel>();
+            // optionsPanel = AddPanel<OptionsPanel>();
+            // uiPanel = AddPanel<UIElementPanel>();
             modsPanel = AddPanel<ModsPanel>();
-            uiPanel = AddPanel<UIElementPanel>();
             modSourcesPanel = AddPanel<ModSourcesPanel>();
 
             // Associate buttons with panels so we can highlight the buttons with open panels 
             // And close 
-            optionsPanel.AssociatedButton = optionsButton;
-            uiPanel.AssociatedButton = uiButton;
+            // optionsPanel.AssociatedButton = optionsButton;
+            // uiPanel.AssociatedButton = uiButton;
             modsPanel.AssociatedButton = modsButton;
             modSourcesPanel.AssociatedButton = modSourcesButton;
 
             // Associate panels with buttons
-            optionsButton.AssociatedPanel = optionsPanel;
-            uiButton.AssociatedPanel = uiPanel;
+            // optionsButton.AssociatedPanel = optionsPanel;
+            // uiButton.AssociatedPanel = uiPanel;
             modsButton.AssociatedPanel = modsPanel;
             modSourcesButton.AssociatedPanel = modSourcesPanel;
 
             // Temporary debug text for player name, who am I, and frame rate
-            if (Conf.C.SizeDebugText != "Off")
+            if (Conf.C.ShowDebugText)
             {
-                DebugText debugText = new(text: "");
+                // Add debug text to the main state
+                DebugText debugText = new("");
                 Append(debugText);
+            }
+
+            if (Conf.C.ShowDebugActions)
+            {
+                // Add debug actions to the main state
+                DebugActionContainer debugActions = new();
+                Append(debugActions);
             }
         }
         #endregion

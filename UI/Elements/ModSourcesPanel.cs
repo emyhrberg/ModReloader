@@ -18,7 +18,7 @@ namespace ModHelper.UI.Elements
         public ModSourcesPanel() : base(title: "Mod Sources", scrollbarEnabled: true)
         {
             // Active = true; // uncomment to show the panel by default
-            AddPadding(5);
+            AddPadding(20);
             ConstructModSources();
         }
         #endregion

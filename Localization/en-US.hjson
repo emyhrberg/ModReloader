@@ -102,6 +102,36 @@ Mods: {
 					Label: Right Click Build Button To Go To Mod Sources
 					Tooltip: ""
 				}
+
+				ShowNumberOfModsFiltered: {
+					Label: Show Number Of Mods Filtered
+					Tooltip: ""
+				}
+
+				ShowTooltips: {
+					Label: Show Tooltips
+					Tooltip: ""
+				}
+
+				ShowDebugActions: {
+					Label: Show Debug Actions
+					Tooltip: ""
+				}
+
+				ShowDebugText: {
+					Label: Show Debug Text
+					Tooltip: ""
+				}
+
+				ShowIconsWhenHovering: {
+					Label: Show Icons When Hovering
+					Tooltip: ""
+				}
+
+				AlwaysUpdateBuiltAgo: {
+					Label: Always Update Built Ago
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

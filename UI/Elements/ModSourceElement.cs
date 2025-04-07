@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
@@ -30,7 +31,7 @@ namespace ModHelper.UI.Elements
         {
             // size and position
             Width.Set(-35f, 1f);
-            Height.Set(30, 0);
+            Height.Set(30 * 2, 0);
             Left.Set(5, 0);
 
             // last modified
@@ -81,6 +82,10 @@ namespace ModHelper.UI.Elements
                 }
             }
 
+            // distances for icons
+            float def = -22f;
+            float dist = 27f;
+
             // mod name
             // modSourcePathString = Path.GetFileName(modPath);
             cleanModName = cleanName;
@@ -90,17 +95,38 @@ namespace ModHelper.UI.Elements
             string hoverText = internalNameFolderName;
             if (isModEnabled)
             {
-                hoverText = $"Open {internalNameFolderName} config";
+                // hoverText = $"Open {internalNameFolderName} config";
+                ModConfigIcon modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalNameFolderName, hover: $"Open {internalNameFolderName} config");
+                float size = 22f;
+                modConfigIcon.MaxHeight.Set(size, 0f);
+                modConfigIcon.MaxWidth.Set(size, 0f);
+                modConfigIcon.Width.Set(size, 0f);
+                modConfigIcon.Height.Set(size, 0f);
+                modConfigIcon.Top.Set(-22, 0); // custom top
+                modConfigIcon.Left.Set(def, 1f);
+                Append(modConfigIcon);
             }
 
-            ModTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, clickToOpenConfig: isModEnabled);
-            modNameText.Left.Set(30, 0);
-            modNameText.VAlign = 0.5f;
+            ModTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, textSize: 0.45f, large: true);
+            modNameText.Left.Set(60, 0);
+            modNameText.Top.Set(-3, 0);
+            modNameText.VAlign = 0f;
             Append(modNameText);
 
-            // distances for icons
-            float def = -22f;
-            float dist = 27f;
+            TimeSpan timeAgo = DateTime.Now - lastModified;
+            Color timeColor = timeAgo.TotalSeconds < 60 ? new Color(5, 230, 55) :
+                                          timeAgo.TotalMinutes < 60 ? new Color(5, 230, 55) :
+                                          timeAgo.TotalHours < 24 ? Color.Orange :
+                                          Color.Red;
+
+            // add last modified text
+            // Replace the existing UIText implementation with:
+            ModSourceLastBuiltText lastModifiedText = new(lastModified);
+            lastModifiedText.Left.Set(60, 0);
+            lastModifiedText.VAlign = 1f;
+            Append(lastModifiedText);
+
+
 
             // checkbox icon
             checkbox = new(Ass.ModUncheck.Value, modSourcePathString: internalNameFolderName, $"Add {internalNameFolderName} to reload");
@@ -137,5 +163,39 @@ namespace ModHelper.UI.Elements
             projectIcon.Left.Set(def, 1f);
             Append(projectIcon);
         }
+        private static string ConvertLastModifiedToTimeAgo(DateTime lastModified)
+        {
+            TimeSpan timeAgo = DateTime.Now - lastModified;
+            if (timeAgo.TotalSeconds < 60)
+            {
+                return $"{timeAgo.Seconds} seconds ago";
+            }
+            else if (timeAgo.TotalMinutes < 2)
+            {
+                return $"{timeAgo.Minutes} minute ago";
+            }
+            else if (timeAgo.TotalMinutes < 60)
+            {
+                return $"{timeAgo.Minutes} minutes ago";
+            }
+            else if (timeAgo.TotalHours < 2)
+            {
+                return $"{timeAgo.Hours} hour ago";
+            }
+            else if (timeAgo.TotalHours < 24)
+            {
+                return $"{timeAgo.Hours} hours ago";
+            }
+            else if (timeAgo.TotalDays < 2)
+            {
+                return $"{timeAgo.Days} day ago";
+            }
+            else
+            {
+                return $"{timeAgo.Days} days ago";
+            }
+        }
+
+
     }
 }

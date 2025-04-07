@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
@@ -21,6 +22,7 @@ namespace ModHelper.UI.Elements
         public ModEnabledIcon modIcon;
         private State state = State.Enabled; // enabled by default
         private Texture2D icon;
+        public ModConfigIcon modConfigIcon;
 
         // Actions
         // private Action leftClick;
@@ -70,15 +72,30 @@ namespace ModHelper.UI.Elements
             if (icon == null)
             {
                 // "Enabled Mods"
-                ModTitleText modNameText = new(text: cleanModName, hover: $"Open {internalModName} config", internalModName: internalModName, clickToOpenConfig: true);
-                modNameText.Left.Set(30, 0);
+                ModTitleText modNameText = new(text: cleanModName, hover: internalModName, internalModName: internalModName);
+                modNameText.Left.Set(65, 0); // 25 left of icon1, 25 left of config, 5+5 padding=60+5 padding
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
+
+                // Add ModConfigIcon to enabled mods IF they have a config.
+                // if (ModLoader.GetMod(internalModName).GetConfig(internalModName) != null)
+                // {
+                modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalModName, hover: $"Open {internalModName} config");
+                modConfigIcon.VAlign = 0.5f;
+                float size = 25f;
+                modConfigIcon.MaxHeight.Set(size, 0f);
+                modConfigIcon.MaxWidth.Set(size, 0f);
+                modConfigIcon.Width.Set(size, 0f);
+                modConfigIcon.Height.Set(size, 0f);
+                modConfigIcon.Top.Set(-1, 0); // custom top
+                modConfigIcon.Left.Set(30, 0); // 25 to left of icon + 5 padding
+                Append(modConfigIcon);
+                // }
             }
             else
             {
                 // "All Mods"
-                ModTitleText modNameText = new(text: cleanModName, internalModName: internalModName, hover: $"{internalModName}", clickToOpenConfig: false);
+                ModTitleText modNameText = new(text: cleanModName, internalModName: internalModName, hover: $"{internalModName}");
                 modNameText.Left.Set(30, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
@@ -94,8 +111,15 @@ namespace ModHelper.UI.Elements
         {
             // check if we also clicked the config, then we shouldnt execute the left click action.
             // this was wonky and worked but was laggy ??? evt.Target sucks ???
-            if (icon == null && evt.Target is ModTitleText modTitleText && modTitleText.clickToOpenConfig)
+            // if (icon == null && evt.Target is ModTitleText modTitleText && modTitleText.clickToOpenConfig)
+            // {
+            //     return;
+            // }
+
+            // First, check if the click target is the ModConfigIcon or any of its children
+            if (evt.Target is ModConfigIcon modConfigIcon)
             {
+                // If clicked on config icon, don't proceed with mod toggling
                 return;
             }
 

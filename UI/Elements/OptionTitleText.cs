@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
@@ -42,6 +43,10 @@ namespace ModHelper.UI.Elements
 
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
+                if (!Conf.C.ShowTooltips)
+                {
+                    return;
+                }
                 UICommon.TooltipMouseText(hover);
             }
         }

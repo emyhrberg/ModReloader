@@ -35,8 +35,6 @@ namespace ModHelper.UI.Elements
             Left.Set(-20, 0f);
             BackgroundColor = ColorHelper.DarkBluePanel;
 
-            Draggable = true; // maybe change this later when u fix sliders
-
             // Create a new list
             uiList = new UIList
             {
@@ -176,7 +174,7 @@ namespace ModHelper.UI.Elements
             // last, draw the hover texture
             foreach (var element in uiList._items.ToList())
             {
-                if (element is ModElement modElement)
+                if (element is ModElement modElement && Conf.C.ShowIconsWhenHovering)
                 {
                     var icon = modElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.updatedTex != null)
@@ -187,10 +185,12 @@ namespace ModHelper.UI.Elements
                 }
                 else if (element is ModSourcesElement modSourcesElement)
                 {
+                    return;
+                    // do nothing for now since i updated these with bigger icons
                     var icon = modSourcesElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.tex != null)
                     {
-                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2);
+                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 2, Main.mouseY - icon.Height.Pixels * 2);
                         spriteBatch.Draw(icon.tex, mousePos, Color.White);
 
                         // Determine the color based on the time ago

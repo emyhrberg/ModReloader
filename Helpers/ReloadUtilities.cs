@@ -73,19 +73,19 @@ namespace ModHelper.Helpers
                 var modSourcesPanel = sys?.mainState?.modSourcesPanel;
 
                 // Disable all other panels
-                if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
+                // if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
+                // {
+                if (allPanels != null)
                 {
-                    if (allPanels != null)
+                    foreach (var p in allPanels?.Except([modSourcesPanel]))
                     {
-                        foreach (var p in allPanels?.Except([modSourcesPanel]))
+                        if (p != modSourcesPanel && p.GetActive())
                         {
-                            if (p != modSourcesPanel && p.GetActive())
-                            {
-                                p?.SetActive(false);
-                            }
+                            p?.SetActive(false);
                         }
                     }
                 }
+                // }
 
                 // Set the mods panel active
                 modSourcesPanel?.SetActive(true);
@@ -99,16 +99,16 @@ namespace ModHelper.Helpers
                 }
 
                 // Disable World, Log, UI, Mods buttons
-                if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
+                // if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
+                // {
+                foreach (var button in sys.mainState.AllButtons)
                 {
-                    foreach (var button in sys.mainState.AllButtons)
+                    if (button is UIElementButton || button is OptionsButton || button is ModsButton)
                     {
-                        if (button is UIElementButton || button is OptionsButton || button is ModsButton)
-                        {
-                            button.ParentActive = false;
-                        }
+                        button.ParentActive = false;
                     }
                 }
+                // }
 
                 return false;
             }

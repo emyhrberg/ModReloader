@@ -16,7 +16,7 @@ namespace ModHelper.UI.Elements
         {
             tex = texture;
 
-            float size = 25f;
+            float size = 50f;
             MaxHeight.Set(size, 0f);
             MaxWidth.Set(size, 0f);
             Width.Set(size, 0f);
