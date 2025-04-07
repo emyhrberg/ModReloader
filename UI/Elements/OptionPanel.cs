@@ -33,7 +33,7 @@ namespace ModHelper.UI.Elements
             Height.Set(460f, 0f);
             Top.Set(-70, 0f);
             Left.Set(-20, 0f);
-            BackgroundColor = ColorHelper.DarkBluePanel;
+            BackgroundColor = ColorHelper.SuperDarkBluePanel;
 
             // Create a new list
             uiList = new UIList

@@ -75,11 +75,12 @@ namespace ModHelper.UI.Elements
             // this is because we send the icon in the constructor for unloaded mods.
             // so we should not allow the user to click on it.
             // so we send no hover option
+            float size = 25f;
             if (icon == null)
             {
                 // "Enabled Mods"
                 ModTitleText modNameText = new(text: cleanModName, hover: internalModName, internalModName: internalModName);
-                modNameText.Left.Set(65, 0); // 25 left of icon1, 25 left of config, 5+5 padding=60+5 padding
+                modNameText.Left.Set(95, 0); // 25 left of icon1, 25 left of config, 5+5 padding=60+5 padding
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
 
@@ -87,14 +88,13 @@ namespace ModHelper.UI.Elements
                 // if (ModLoader.GetMod(internalModName).GetConfig(internalModName) != null)
                 // {
                 modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalModName, hover: $"Open {internalModName} config");
-                float size = 25f;
                 modConfigIcon.VAlign = 0.5f;
                 modConfigIcon.MaxHeight.Set(size, 0f);
                 modConfigIcon.MaxWidth.Set(size, 0f);
                 modConfigIcon.Width.Set(size, 0f);
                 modConfigIcon.Height.Set(size, 0f);
                 modConfigIcon.Top.Set(-1, 0); // custom top
-                modConfigIcon.Left.Set(30, 0); // 25 to left of icon + 5 padding
+                modConfigIcon.Left.Set(60, 0); // 25 to left of icon + 5 padding
                 Append(modConfigIcon);
                 // }
             }
@@ -106,18 +106,19 @@ namespace ModHelper.UI.Elements
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
 
-                // Mod InfoIcon
-                modInfoIcon = new(texture: Ass.ModInfo, modPath: internalModName, hover: $"Open {internalModName} info", modDescription: modDescription);
-                float size = 25f;
-                modInfoIcon.VAlign = 0.5f;
-                modInfoIcon.MaxHeight.Set(size, 0f);
-                modInfoIcon.MaxWidth.Set(size, 0f);
-                modInfoIcon.Width.Set(size, 0f);
-                modInfoIcon.Height.Set(size, 0f);
-                modInfoIcon.Top.Set(-1, 0); // custom top
-                modInfoIcon.Left.Set(30, 0); // 25 to left of icon + 5 padding
-                Append(modInfoIcon);
+
             }
+
+            // Mod InfoIcon
+            modInfoIcon = new(texture: Ass.ModInfo, modPath: internalModName, hover: $"Open {internalModName} info", modDescription: modDescription, modCleanName: cleanModName);
+            modInfoIcon.VAlign = 0.5f;
+            modInfoIcon.MaxHeight.Set(size, 0f);
+            modInfoIcon.MaxWidth.Set(size, 0f);
+            modInfoIcon.Width.Set(size, 0f);
+            modInfoIcon.Height.Set(size, 0f);
+            modInfoIcon.Top.Set(-1, 0); // custom top
+            modInfoIcon.Left.Set(30, 0); // 25 to left of icon + 5 padding
+            Append(modInfoIcon);
 
             // enabled text.
             // if no icon, its an enabled mod, so we manually add the left click action.

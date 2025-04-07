@@ -42,7 +42,7 @@ namespace ModHelper.Common.BuilderToggles
             // Play appropriate sound
             if (sys.mainState.AreButtonsShowing)
             {
-                sound = SoundID.MenuTick;
+                sound = SoundID.MenuClose;
             }
             else
             {

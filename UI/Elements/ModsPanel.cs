@@ -202,9 +202,13 @@ namespace ModHelper.UI.Elements
             var mods = ModLoader.Mods.Skip(1);//ignore the built in Modloader mod
             foreach (Mod mod in mods)
             {
+                string description = GetLoadedModDescription(mod);
+
+                Log.Info("modname: " + mod.Name + " Description: " + description);
+
                 // you could change this to send the "clean name"
                 // this is where we set the text of the mod element
-                ModElement modElement = new(mod.DisplayNameClean, mod.Name);
+                ModElement modElement = new(mod.DisplayNameClean, mod.Name, modDescription: description);
                 uiList.Add(modElement);
                 enabledMods.Add(modElement);
                 AddPadding(3);
@@ -223,7 +227,7 @@ namespace ModHelper.UI.Elements
                 string internalName = mod.ToString();
                 string description = GetLocalModDescription(mod);
                 string short_desc = description.Length > 50 ? description.Substring(0, 50) + "..." : description;
-                Log.Info("Mod name: " + cleanName + " InternalName: " + internalName + " Description: " + short_desc);
+                // Log.Info("Mod name: " + cleanName + " InternalName: " + internalName + " Description: " + short_desc);
 
                 // Skip mods that are already in the enabled mods list
                 // to avoid duplicates.
@@ -257,6 +261,47 @@ namespace ModHelper.UI.Elements
 
         #region Helpers for getting mod lists
         // Note: Lots of reflection is used here, so be careful with error handling.
+
+        private string GetLoadedModDescription(Mod mod)
+        {
+            try
+            {
+                // For loaded mods, you can try to access the description through the Mod instance
+                // First approach: Try to get the description through reflection
+                Type modType = mod.GetType();
+                FieldInfo propertiesField = modType.GetField("properties", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                if (propertiesField != null)
+                {
+                    object buildProperties = propertiesField.GetValue(mod);
+                    if (buildProperties != null)
+                    {
+                        Type buildPropertiesType = buildProperties.GetType();
+                        FieldInfo descriptionField = buildPropertiesType.GetField("description", BindingFlags.Instance | BindingFlags.Public);
+
+                        if (descriptionField != null)
+                        {
+                            return (string)descriptionField.GetValue(buildProperties) ?? string.Empty;
+                        }
+                    }
+                }
+
+                // Second approach: Check if the mod has ModContent with a description
+                // This might be specific to your mod structure
+                if (mod.DisplayName != null)
+                {
+                    // As a fallback, use the display name if no description is available
+                    return $"A mod named {mod.DisplayName}.";
+                }
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"GetLoadedModDescription: Exception occurred - {ex}");
+                return string.Empty;
+            }
+        }
 
         // Helper method to get all workshop mods
         private static List<object> GetAllWorkshopMods()
@@ -370,7 +415,7 @@ namespace ModHelper.UI.Elements
             return lastModified;
         }
 
-        private string GetLocalModDescription(object localMod)
+        private static string GetLocalModDescription(object localMod)
         {
             try
             {

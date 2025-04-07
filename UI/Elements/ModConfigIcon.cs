@@ -7,7 +7,9 @@ using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.UI;
@@ -67,6 +69,8 @@ namespace ModHelper.UI.Elements
         public override void LeftClick(UIMouseEvent evt)
         {
             base.LeftClick(evt);
+
+            SoundEngine.PlaySound(SoundID.MenuClose);
 
             if (isConfigOpen)
             {

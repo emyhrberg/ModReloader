@@ -24,13 +24,15 @@ namespace ModHelper.UI.Elements
         public bool isInfoOpen = false;
         public string modName;
         private string modDescription;
+        private string modCleanName;
 
-        public ModInfoIcon(Asset<Texture2D> texture, string modPath, string hover = "", string modDescription = "") : base(texture)
+        public ModInfoIcon(Asset<Texture2D> texture, string modPath, string hover = "", string modDescription = "", string modCleanName = "") : base(texture)
         {
             tex = texture;
             this.hover = hover;
             this.modName = System.IO.Path.GetFileName(modPath);
             this.modDescription = modDescription;
+            this.modCleanName = modCleanName;
 
             float size = 23f;
             MaxHeight.Set(size, 0f);
@@ -72,8 +74,9 @@ namespace ModHelper.UI.Elements
 
             // Log.Info("Mod description: " + modDescription);
 
-            ModInfoUI.instance.CurrentModDescription = this.modDescription;
-            IngameFancyUI.OpenUIState(ModInfoUI.instance);
+            ModInfoState.instance.CurrentModDescription = this.modDescription;
+            ModInfoState.instance.modDisplayName = modCleanName;
+            IngameFancyUI.OpenUIState(ModInfoState.instance);
 
             if (isInfoOpen)
             {
