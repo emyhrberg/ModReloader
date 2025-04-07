@@ -137,6 +137,11 @@ Mods: {
 					Label: Toggle On Click Entire Element
 					Tooltip: ""
 				}
+
+				AutoFocusSearchBox: {
+					Label: Auto Focus Search Box
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {
@@ -171,6 +176,27 @@ Mods: {
 					Label: Show Mod Sources Button
 					Tooltip: ""
 				}
+			}
+		}
+
+		BuilderToggles: {
+			ToggleUIBuildersToggle: {
+				OnText: Mods.ModHelper.BuilderToggles.ToggleUIBuildersToggle.OnText
+				OffText: Mods.ModHelper.BuilderToggles.ToggleUIBuildersToggle.OffText
+			}
+
+			MainStateBuilderToggle: {
+				OnText: Mod Helper On
+				OffText: Mod Helper Off
+			}
+		}
+
+		UI: {
+			ExampleFullscreenUI: {
+				Header: Mods.ModHelper.UI.ExampleFullscreenUI.Header
+				Description: Mods.ModHelper.UI.ExampleFullscreenUI.Description
+				Nothing: Mods.ModHelper.UI.ExampleFullscreenUI.Nothing
+				IsSet: Mods.ModHelper.UI.ExampleFullscreenUI.IsSet
 			}
 		}
 	}

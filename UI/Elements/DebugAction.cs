@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
@@ -31,6 +32,16 @@ namespace ModHelper.UI.Elements
             //always call base! otherwise IsMouseHovering wont work
             base.MouseOver(evt);
             TextColor = Color.Yellow;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            if (IsMouseHovering)
+            {
+                Main.LocalPlayer.mouseInterface = true; // this is needed to make the mouse not interact with the game world
+            }
+
+            base.Update(gameTime);
         }
 
         public override void MouseOut(UIMouseEvent evt)

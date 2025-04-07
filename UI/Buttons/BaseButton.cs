@@ -299,7 +299,7 @@ namespace ModHelper.UI.Buttons
                 associatedPanel.SetActive(true);
 
                 // Special handling for Mods panel - focus searchbox
-                if (this is ModsButton && associatedPanel is ModsPanel modsPanel)
+                if (this is ModsButton && associatedPanel is ModsPanel modsPanel && Conf.C.AutoFocusSearchBox)
                 {
                     modsPanel.searchbox?.Focus();
                 }

@@ -10,7 +10,6 @@ using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 using Terraria.UI;
 using static ModHelper.UI.Elements.OptionElement;
@@ -81,7 +80,7 @@ namespace ModHelper.UI.Elements
             };
 
             // Create and configure the "Enable All" panel.
-            EnableDisableAllPanel enableAllPanel = new EnableDisableAllPanel(
+            EnableDisableAllPanel enableAllPanel = new(
                 color: Color.Green,
                 text: "Enable All",
                 hover: "Enable all mods",
@@ -91,7 +90,7 @@ namespace ModHelper.UI.Elements
             topContainer.Append(enableAllPanel);
 
             // Create and configure the "Disable All" panel.
-            EnableDisableAllPanel disableAllPanel = new EnableDisableAllPanel(
+            EnableDisableAllPanel disableAllPanel = new(
                 color: ColorHelper.CalamityRed,
                 text: "Disable All",
                 hover: "Disable all mods",
@@ -222,6 +221,9 @@ namespace ModHelper.UI.Elements
                 // Get the clean name using reflection for the LocalMod mod.
                 string cleanName = GetCleanName(mod);
                 string internalName = mod.ToString();
+                string description = GetLocalModDescription(mod);
+                string short_desc = description.Length > 50 ? description.Substring(0, 50) + "..." : description;
+                Log.Info("Mod name: " + cleanName + " InternalName: " + internalName + " Description: " + short_desc);
 
                 // Skip mods that are already in the enabled mods list
                 // to avoid duplicates.
@@ -240,7 +242,8 @@ namespace ModHelper.UI.Elements
                 ModElement modElement = new(
                     cleanModName: cleanName,
                     internalModName: internalName,
-                    icon: modIcon
+                    icon: modIcon,
+                    modDescription: description
                     );
 
                 modElement.SetState(State.Disabled);
@@ -365,6 +368,84 @@ namespace ModHelper.UI.Elements
             FieldInfo Name = localModType.GetField("lastModified", BindingFlags.Public | BindingFlags.Instance);
             object lastModified = Name.GetValue(mod);
             return lastModified;
+        }
+
+        private string GetLocalModDescription(object localMod)
+        {
+            try
+            {
+                if (localMod == null)
+                {
+                    Log.Warn("GetLocalModDescription: localMod is null.");
+                    return string.Empty;
+                }
+
+                Type localModType = localMod.GetType();
+                object buildPropertiesInstance = null;
+
+                // First try to get 'properties' as a property.
+                var propertiesProp = localModType.GetProperty("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (propertiesProp != null)
+                {
+                    buildPropertiesInstance = propertiesProp.GetValue(localMod);
+                }
+                else
+                {
+                    // Fallback: try getting 'properties' as a field.
+                    FieldInfo propertiesField = localModType.GetField("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (propertiesField != null)
+                    {
+                        buildPropertiesInstance = propertiesField.GetValue(localMod);
+                    }
+                    else
+                    {
+                        Log.Warn("GetLocalModDescription: Could not find the 'properties' member in LocalMod.");
+                        return string.Empty;
+                    }
+                }
+
+                if (buildPropertiesInstance == null)
+                {
+                    Log.Warn("GetLocalModDescription: LocalMod.properties is null.");
+                    return string.Empty;
+                }
+
+                // Now get the description from BuildProperties.
+                Type buildPropertiesType = buildPropertiesInstance.GetType();
+                string description = null;
+
+                // Try as a property.
+                var descriptionProp = buildPropertiesType.GetProperty("description", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (descriptionProp != null)
+                {
+                    description = descriptionProp.GetValue(buildPropertiesInstance) as string;
+                }
+                else
+                {
+                    // Fallback: try as a field.
+                    FieldInfo descriptionField = buildPropertiesType.GetField("description", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (descriptionField != null)
+                    {
+                        description = descriptionField.GetValue(buildPropertiesInstance) as string;
+                    }
+                    else
+                    {
+                        Log.Warn("GetLocalModDescription: Could not find the 'description' member in BuildProperties.");
+                        return string.Empty;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(description))
+                {
+                    Log.Info("GetLocalModDescription: Description is empty for LocalMod: " + localMod.ToString());
+                }
+                return description ?? string.Empty;
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"GetLocalModDescription: Exception occurred - {ex}");
+                return string.Empty;
+            }
         }
 
         #endregion

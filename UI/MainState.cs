@@ -190,6 +190,11 @@ namespace ModHelper.UI
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!AreButtonsShowing)
+            {
+                return;
+            }
+
             // draw everything in the main state
             base.Draw(spriteBatch);
 
@@ -321,6 +326,11 @@ namespace ModHelper.UI
 
         public override void Update(GameTime gameTime)
         {
+            if (!AreButtonsShowing)
+            {
+                return;
+            }
+
             base.Update(gameTime);
 
             if (dragging)

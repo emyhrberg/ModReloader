@@ -167,19 +167,22 @@ namespace ModHelper.UI.Elements
             float textScale = 0.9f; // Adjust this value to resize the text
 
             // Draw outline
-            Color outlineColor = Color.Black;
-            Vector2[] offsets =
+            if (!string.IsNullOrEmpty(currentString))
             {
-                new(-1, -1),
-                new(1, -1),
-                new (-1, 1),
-                new(1, 1)
-            };
+                // Draw outline only if there are actual characters to display (not just the blinker)
+                Color outlineColor = Color.Black;
+                Vector2[] offsets =
+                [
+                    new(-1, -1),
+                    new(1, -1),
+                    new(-1, 1),
+                    new(1, 1)
+                ];
 
-            foreach (var offset in offsets)
-            {
-                // Draw outline text
-                spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+                foreach (var offset in offsets)
+                {
+                    spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+                }
             }
 
             // Draw text

@@ -82,6 +82,9 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool ToggleOnClickEntireElement = false;
 
+        [DefaultValue(false)]
+        public bool AutoFocusSearchBox = false;
+
         // ------------------------------------------------------
         // ON CHANGED CONFIG
         // This is a risky method that sometimes causes bugs due to the way it's run kinda frequently.

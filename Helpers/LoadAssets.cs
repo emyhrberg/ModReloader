@@ -39,6 +39,7 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ModUncheck; // 22x22
         public static Asset<Texture2D> ConfigOpen; // 36x36
         public static Asset<Texture2D> ConfigClose; // 36x36
+        public static Asset<Texture2D> ModInfo; // 36x36
 
         // Bool for checking if assets are loaded
         public static bool Initialized { get; set; }

@@ -23,7 +23,11 @@ namespace ModHelper.UI.Elements
         public ModEnabledIcon modIcon;
         private State state = State.Enabled; // enabled by default
         private Texture2D icon;
+
         public ModConfigIcon modConfigIcon;
+        public ModInfoIcon modInfoIcon;
+
+        private string modDescription;
 
         // Actions
         // private Action leftClick;
@@ -39,11 +43,12 @@ namespace ModHelper.UI.Elements
         }
 
         // Constructor
-        public ModElement(string cleanModName, string internalModName = "", Texture2D icon = null, Action leftClick = null, Action rightClick = null)
+        public ModElement(string cleanModName, string internalModName = "", Texture2D icon = null, Action leftClick = null, Action rightClick = null, string modDescription = "")
         {
             this.cleanModName = cleanModName;
             this.internalName = internalModName;
             this.icon = icon;
+            this.modDescription = modDescription;
 
             // this.leftClick = leftClick;
             // this.rightClick = rightClick;
@@ -82,8 +87,8 @@ namespace ModHelper.UI.Elements
                 // if (ModLoader.GetMod(internalModName).GetConfig(internalModName) != null)
                 // {
                 modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalModName, hover: $"Open {internalModName} config");
-                modConfigIcon.VAlign = 0.5f;
                 float size = 25f;
+                modConfigIcon.VAlign = 0.5f;
                 modConfigIcon.MaxHeight.Set(size, 0f);
                 modConfigIcon.MaxWidth.Set(size, 0f);
                 modConfigIcon.Width.Set(size, 0f);
@@ -97,9 +102,21 @@ namespace ModHelper.UI.Elements
             {
                 // "All Mods"
                 ModTitleText modNameText = new(text: cleanModName, internalModName: internalModName, hover: $"{internalModName}");
-                modNameText.Left.Set(30, 0);
+                modNameText.Left.Set(60, 0);
                 modNameText.VAlign = 0.5f;
                 Append(modNameText);
+
+                // Mod InfoIcon
+                modInfoIcon = new(texture: Ass.ModInfo, modPath: internalModName, hover: $"Open {internalModName} info", modDescription: modDescription);
+                float size = 25f;
+                modInfoIcon.VAlign = 0.5f;
+                modInfoIcon.MaxHeight.Set(size, 0f);
+                modInfoIcon.MaxWidth.Set(size, 0f);
+                modInfoIcon.Width.Set(size, 0f);
+                modInfoIcon.Height.Set(size, 0f);
+                modInfoIcon.Top.Set(-1, 0); // custom top
+                modInfoIcon.Left.Set(30, 0); // 25 to left of icon + 5 padding
+                Append(modInfoIcon);
             }
 
             // enabled text.
