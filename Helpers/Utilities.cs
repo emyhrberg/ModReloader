@@ -9,7 +9,7 @@ namespace ModHelper.Helpers
     //Class basically for universal helping functions
     internal static class Utilities
     {
-        public static int ProcessID => System.Environment.ProcessId;
+        public static int ProcessID => Environment.ProcessId;
 
         public static int FindPlayerId()
         {

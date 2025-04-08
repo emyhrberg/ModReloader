@@ -201,7 +201,7 @@ namespace ModHelper.Common.Systems.Menus
             }
 
             // Reload the selected mod
-            await ReloadUtilities.MainReload();
+            await ReloadUtilities.SinglePlayerReload();
         }
 
         private static void HostMultiplayer()

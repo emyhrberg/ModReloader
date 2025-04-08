@@ -41,7 +41,7 @@ namespace ModHelper.UI.Elements
             // Conf.C.ModToReload = internalModName;
             // Conf.Save();
 
-            await ReloadUtilities.MainReload();
+            await ReloadUtilities.SinglePlayerReload();
         }
 
         public override void Draw(SpriteBatch spriteBatch)

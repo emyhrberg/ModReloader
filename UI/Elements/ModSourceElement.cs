@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;

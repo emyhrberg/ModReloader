@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
-using Terraria;
 
 namespace ModHelper.Helpers
 {
@@ -18,7 +16,7 @@ namespace ModHelper.Helpers
 
         public static void WriteButtonsPosition(Vector2 buttonsPosition)
         {
-            string filePath = Utilities.GetModHelperFolderPath("ButtonsPosition.json"); 
+            string filePath = Utilities.GetModHelperFolderPath("ButtonsPosition.json");
             try
             {
                 Utilities.LockingFile(filePath, (reader, writer) =>

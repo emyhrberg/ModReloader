@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
@@ -8,8 +6,6 @@ using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -93,7 +89,7 @@ namespace ModHelper.UI.Elements
             {
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
