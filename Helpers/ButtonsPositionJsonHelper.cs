@@ -34,6 +34,7 @@ namespace ModHelper.Helpers
             }
         }
 
+
         public static Vector2 ReadButtonsPosition()
         {
             string filePath = Utilities.GetModHelperFolderPath("ButtonsPosition.json");
