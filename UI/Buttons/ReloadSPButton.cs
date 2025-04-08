@@ -33,7 +33,7 @@ namespace ModHelper.UI.Buttons
                 return;
             }
 
-            await ReloadUtilities.MainReload();
+            await ReloadUtilities.SinglePlayerReload();
         }
     }
 }
