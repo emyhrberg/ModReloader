@@ -21,7 +21,7 @@ namespace ModHelper.UI.Elements
         // 12 is minus the padding of a panel
         protected float currentTop = 35 - 12;
 
-        public UIList uiList;
+        protected UIList uiList;
         protected UIScrollbar scrollbar;
         protected bool scrollbarEnabled = true;
 
@@ -70,7 +70,7 @@ namespace ModHelper.UI.Elements
             if (scrollbarEnabled) Append(scrollbar);
         }
 
-        public UIElement AddPadding(float padding = 20f)
+        protected UIElement AddPadding(float padding = 20f)
         {
             // Create a basic UIElement to act as a spacer instead of using HeaderElement
             UIElement paddingElement = new();

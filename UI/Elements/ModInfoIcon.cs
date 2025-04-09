@@ -70,7 +70,8 @@ namespace ModHelper.UI.Elements
 
             // Log.Info("Mod description: " + modDescription);
 
-            ModInfoState.instance.SetModInfo(modDescription, modCleanName, modName);
+            ModInfoState.instance.CurrentModDescription = this.modDescription;
+            ModInfoState.instance.modDisplayName = modCleanName;
             IngameFancyUI.OpenUIState(ModInfoState.instance);
 
             if (isInfoOpen)
