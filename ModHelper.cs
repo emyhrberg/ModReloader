@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using Basic.Reference.Assemblies;
 using dnlib.DotNet;
 using dnlib.DotNet.Writer;
@@ -9,12 +15,6 @@ using ModHelper.Helpers;
 using ModHelper.PacketHandlers;
 using ModHelper.Publicizier;
 using MonoMod.RuntimeDetour;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
@@ -120,7 +120,7 @@ namespace ModHelper
 
                         // adding IACT to the top of the file
                         src = src
-                            .Prepend(SyntaxFactory.ParseSyntaxTree(asmAttr, parseOptions)) // має бути першим!
+                            .Prepend(SyntaxFactory.ParseSyntaxTree(asmAttr, parseOptions)) // пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ!
                             .Append(SyntaxFactory.ParseSyntaxTree(attrDecl, parseOptions));
 
                         var comp = CSharpCompilation.Create(name, src, refs, options);
@@ -135,7 +135,7 @@ namespace ModHelper
                         RoslynCompileHook?.Dispose();
                         return results.Diagnostics.Where(d => d.Severity >= DiagnosticSeverity.Warning).ToArray();
                     }
-                   catch (Exception)
+                    catch (Exception)
                     {
                         Log.Error("RoslynCompileHook error!");
                         RoslynCompileHook?.Dispose();
@@ -145,7 +145,6 @@ namespace ModHelper
                 });
             GC.SuppressFinalize(RoslynCompileHook);
 
-            //LocalMod[] l = [];
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
