@@ -4,3 +4,4 @@ version = 0.1
 side = client
 hideCode = false
 buildIgnore = Assets\Old*, icon.psd
+dllReferences = dnlib
