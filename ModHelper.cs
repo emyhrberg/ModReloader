@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
@@ -47,10 +48,54 @@ namespace ModHelper
             RoslynCompileHook = new Hook(roslynCompileMethod,
                 (RoslynCompileDelegate orig, string name, List<string> references, string[] files, string[] preprocessorSymbols, bool allowUnsafe, out byte[] code, out byte[] pdb) =>
                 {
+                    Log.Info("RoslynCompileHook called");
                     try
                     {
-                        Log.Info("RoslynCompileHook called");
-                        //Diagnostic[] r = orig(name, references, files, preprocessorSymbols, allowUnsafe, out code, out pdb);
+                        Log.Info($"Trying to find csproj file");
+                        string csprojFile = CompilerUtilities.FindProjectFile(name, files);
+
+                        if (!System.IO.File.Exists(csprojFile))
+                        {
+                            throw new Exception($"No csproj found in {csprojFile}");
+                        }
+
+                        Log.Info($"File found {csprojFile}");
+
+                        var doc = XDocument.Load(csprojFile);
+                        XNamespace ns = doc.Root!.Name.Namespace;
+
+                        var referencesToPublicize = doc.Descendants(ns + "Publicize")
+                                                  .Select(e => e.Attribute("Include")?.Value).ToList();
+
+                        if (referencesToPublicize.Count == 0)
+                        {
+                            throw new Exception($"No Publicize references found in {Path.GetFileName(csprojFile)}");
+                        }
+
+                        Log.Info($"Publicize references found in {Path.GetFileName(csprojFile)}: {string.Join(", ", referencesToPublicize)}");
+
+                        Dictionary<string, string> dllsToPublicize = CompilerUtilities.FindReferencePaths(references, referencesToPublicize);
+
+                        var publicizedModReferences = new List<PortableExecutableReference>();
+
+                        foreach (var r in referencesToPublicize)
+                        {
+                            using ModuleDef module = ModuleDefMD.Load(dllsToPublicize[r]);
+                            Log.Info(PublicizeAssemblies.PublicizeAssembly(module) ? $"Module {r} is changed!" : $"Something wrong with module {r}");
+
+                            var writerOptions = new ModuleWriterOptions(module)
+                            {
+                                MetadataOptions = new MetadataOptions(MetadataFlags.KeepOldMaxStack),
+                                Logger = DummyLogger.NoThrowInstance
+                            };
+
+                            MemoryStream modDefStream = new MemoryStream();
+                            module.Write(modDefStream, writerOptions);
+
+                            publicizedModReferences.Add(MetadataReference.CreateFromImage(modDefStream.ToArray()));
+
+                            Log.Info($"Publicized references count: {publicizedModReferences.Count()}");
+                        }
 
                         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                 assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
@@ -61,52 +106,19 @@ namespace ModHelper
 
                         var emitOptions = new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb);
 
-                        //Where magic happens
-
-                        var tmlReference = references.FirstOrDefault(s => Path.GetFileNameWithoutExtension(s) == "tModLoader");
-
-                        if (tmlReference != null)
-                        {
-                            references.Remove(tmlReference);
-                        }
-
-                        foreach (var reference in references)
-                        {
-                            Log.Info("Raw Reference: " + reference);
-                        }
-
-                        using ModuleDef module = ModuleDefMD.Load(tmlReference);
-                        Log.Info(PublicizeAssemblies.PublicizeAssembly(module) ? "Module is changed!" : "Someething wrong with module");
-
-                        var writerOptions = new ModuleWriterOptions(module)
-                        {
-                            // Writing the module sometime fails without this flag due to how it was originally compiled.
-                            // https://github.com/krafs/Publicizer/issues/42
-                            MetadataOptions = new MetadataOptions(MetadataFlags.KeepOldMaxStack),
-                            Logger = DummyLogger.NoThrowInstance
-                        };
-
-                        MemoryStream modDefStream = new MemoryStream();
-                        module.Write(modDefStream, writerOptions);
-
-                        // 2. 
-                        var modReference = MetadataReference.CreateFromImage(modDefStream.ToArray());
-
                         var refs = references.Select(s => MetadataReference.CreateFromFile(s));
                         refs = refs.Concat(Net80.References.All);
 
-                        refs = refs.Append(modReference);
-
-                        foreach (var reference in refs)
-                        {
-                            Log.Info("True Reference: " + reference.FilePath);
-                        }
+                        // Adding references to the publicized mod
+                        refs = refs.Concat(publicizedModReferences);
 
 
                         var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(System.IO.File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
 
                         // IACT 1
-                        const string asmAttr = @"[assembly: System.Runtime.CompilerServices.IgnoresAccessChecksTo(""tModLoader"")]";
+                        var asmAttrs = string.Join(Environment.NewLine,
+                        referencesToPublicize.Select(name =>
+                            $@"[assembly: System.Runtime.CompilerServices.IgnoresAccessChecksTo(""{name}"")]"));
 
                         // IACT 2
                         const string attrDecl = @"
@@ -115,12 +127,11 @@ namespace ModHelper
                             internal sealed class IgnoresAccessChecksToAttribute : System.Attribute {
                                 public IgnoresAccessChecksToAttribute(string assemblyName) {}
                             }
-                        }
-                        ";
+                        }";
 
                         // adding IACT to the top of the file
                         src = src
-                            .Prepend(SyntaxFactory.ParseSyntaxTree(asmAttr, parseOptions)) // має бути першим!
+                            .Prepend(SyntaxFactory.ParseSyntaxTree(asmAttrs, parseOptions))
                             .Append(SyntaxFactory.ParseSyntaxTree(attrDecl, parseOptions));
 
                         var comp = CSharpCompilation.Create(name, src, refs, options);
@@ -135,13 +146,13 @@ namespace ModHelper
                         RoslynCompileHook?.Dispose();
                         return results.Diagnostics.Where(d => d.Severity >= DiagnosticSeverity.Warning).ToArray();
                     }
-                   catch (Exception)
+                    catch (Exception ex)
                     {
-                        Log.Error("RoslynCompileHook error!");
+                        Log.Error($"RoslynCompileHook error: {ex.Message}");
+                        var r = orig(name, references, files, preprocessorSymbols, allowUnsafe, out code, out pdb);
                         RoslynCompileHook?.Dispose();
-                        throw;
+                        return r;
                     }
-
                 });
             GC.SuppressFinalize(RoslynCompileHook);
 
