@@ -17,10 +17,15 @@ namespace ModHelper.Common.Configs
 
         [Header("Reload")]
 
+        [DrawTicks]
+        [OptionStrings(["Default", "Publicizer"])]
+        [DefaultValue("Default")]
+        public string Compiler;
+
         [DefaultValue(true)]
         public bool AutoJoinWorld;
 
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool SaveWorldBeforeReloading;
 
         [Header("DebugText")]

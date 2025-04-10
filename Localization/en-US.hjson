@@ -11,6 +11,7 @@ Mods: {
 					DebugText: Debug Text
 					Buttons: Buttons
 					Misc: Misc
+					Compile: Compile Header
 				}
 
 				ModToReload: {
@@ -18,8 +19,8 @@ Mods: {
 					Tooltip: Enter the mod to be built and reloaded upon executing reload
 				}
 
-				SaveWorldBeforeReloading: {
-					Label: Save World Before Reloading
+				SaveWorldBeforeExitWorld: {
+					Label: Save World Before Exit World
 					Tooltip: Choose whether to save the player and world when executing reload
 				}
 
@@ -142,20 +143,25 @@ Mods: {
 					Label: Auto Focus Search Box
 					Tooltip: ""
 				}
+
+				Compiler: {
+					Label: Compiler
+					Tooltip:
+						'''
+						      Default will compile as normal.
+						      Publicizer allows direct access to private members in tModLoader
+						      
+						'''
+				}
+
+				SaveWorldBeforeReloading: {
+					Tooltip: ""
+					Label: Save World Before Reloading
+				}
 			}
 
 			Buttons: {
 				Tooltip: Show or hide buttons
-
-				ShowOptionsButton: {
-					Label: Show Options Button
-					Tooltip: ""
-				}
-
-				ShowUIButton: {
-					Label: Show UI Button
-					Tooltip: ""
-				}
 
 				ShowModsButton: {
 					Label: Show Mods Button
@@ -181,8 +187,8 @@ Mods: {
 
 		BuilderToggles: {
 			ToggleUIBuildersToggle: {
-				OnText: Mods.ModHelper.BuilderToggles.ToggleUIBuildersToggle.OnText
-				OffText: Mods.ModHelper.BuilderToggles.ToggleUIBuildersToggle.OffText
+				OnText: Mod Helper On
+				OffText: Mod Helper Off
 			}
 
 			MainStateBuilderToggle: {

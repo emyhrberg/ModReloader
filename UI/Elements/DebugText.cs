@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -5,6 +6,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements
@@ -89,7 +91,10 @@ namespace ModHelper.UI.Elements
             // $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
 
             string text = $"{playerName} ({whoAmI})" +
-                $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
+                $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)" +
+                $"\nDebugger: {Debugger.IsAttached}" +
+                $"\nPID: {Process.GetCurrentProcess().Id}";
+
 
             SetText(text, 0.9f, large: false);
         }

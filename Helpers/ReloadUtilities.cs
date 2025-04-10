@@ -82,8 +82,6 @@ namespace ModHelper.Helpers
             }
 
             ModNetHandler.RefreshServer.SendReloadMP(255, -1, Conf.C.SaveWorldBeforeReloading);
-
-
         }
 
         public static async Task MultiPlayerMajorReload()
@@ -338,7 +336,7 @@ namespace ModHelper.Helpers
                     //UILoadMods loadMods = Terraria.ModLoader.UI.Interface.loadMods;
 
                     typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
-                    
+
 
                     using (var pipeClient = new NamedPipeClientStream(".", ReloadUtilities.pipeName, PipeDirection.InOut))
                     {

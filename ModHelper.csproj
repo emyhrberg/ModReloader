@@ -13,6 +13,5 @@
 		<PackageReference Include="dnlib" Version="4.4.0" />
 		<PackageReference Include="Krafs.Publicizer" PrivateAssets="true" Version="2.2.1" />
 		<Publicize Include="tModLoader" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
-
 	</ItemGroup>
 </Project>

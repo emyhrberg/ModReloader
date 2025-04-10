@@ -1,12 +1,12 @@
-﻿using ModHelper.Helpers;
-using Mono.CompilerServices.SymbolWriter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Writer;
+using ModHelper.Helpers;
+using Mono.CompilerServices.SymbolWriter;
 
 namespace ModHelper.Publicizier
 {
@@ -109,18 +109,18 @@ namespace ModHelper.Publicizier
                 }
 
 
-                    bool isCompilerGeneratedType = IsCompilerGenerated(typeDef);
-                    if (isCompilerGeneratedType)
-                    {
-                        continue;
-                    }
+                bool isCompilerGeneratedType = IsCompilerGenerated(typeDef);
+                if (isCompilerGeneratedType)
+                {
+                    continue;
+                }
 
-                    if (AssemblyEditor.PublicizeType(typeDef))
-                    {
-                        publicizedAnyMemberInAssembly = true;
-                        publicizedTypesCount++;
-                    }
-                
+                if (AssemblyEditor.PublicizeType(typeDef))
+                {
+                    publicizedAnyMemberInAssembly = true;
+                    publicizedTypesCount++;
+                }
+
             }
 
             Log.Info("Publicized types: " + publicizedTypesCount);
