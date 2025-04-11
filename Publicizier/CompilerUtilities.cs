@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ModHelper.Publicizier;
 public static class CompilerUtilities
@@ -71,17 +73,17 @@ public static class CompilerUtilities
         return results;
     }
 
-    public static string? FindProjectFile(string name, string[] files)
+    public static string FindCsprojFile(string name, string[] files)
     {
-        // Знаходимо шлях до найкоротшого .cs файлу
+        // 1. Find the shortest path of a .cs files
         string shortestPath = files.OrderBy(f => f.Count(c => c == Path.DirectorySeparatorChar)).FirstOrDefault()
             ?? throw new Exception("No .cs files found.");
 
-        string? currentDirectory = Path.GetDirectoryName(shortestPath);
+        string currentDirectory = Path.GetDirectoryName(shortestPath);
         if (currentDirectory == null)
             throw new Exception("Cannot determine directory.");
 
-        // 1. Перевіряємо чи ім'я папки відповідає імені мода
+        // 2. Check if the current directory matches the mod name
         string currentFolderName = Path.GetFileName(currentDirectory);
         if (string.Equals(currentFolderName, name, StringComparison.OrdinalIgnoreCase))
         {
@@ -91,10 +93,10 @@ public static class CompilerUtilities
             return expectedCsproj;
         }
 
-        // 2. Шукаємо всі підпапки, що відповідають імені мода (включаючи вкладені)
+        // 3. Check if the current directory is a subdirectory of the mod name
         var matchingDirectories = Directory.GetDirectories(currentDirectory, name, SearchOption.AllDirectories);
 
-        // Перевіряємо всі знайдені підпапки, у порядку спадання глибини
+        // 4. Checking all directories under the current directory that match the mod name
         foreach (var dir in matchingDirectories.OrderByDescending(d => d.Count(c => c == Path.DirectorySeparatorChar)))
         {
             string expectedCsproj = Path.Combine(dir, name + ".csproj");
@@ -107,6 +109,27 @@ public static class CompilerUtilities
 
 
         throw new FileNotFoundException($"Could not find a {name}.csproj file.");
+    }
+
+    // Create a hash of the file using MD5
+    public static string ComputeHash(string filePath)
+    {
+        using var algorithm = MD5.Create();
+        using var stream = File.OpenRead(filePath);
+        byte[] computedHash = algorithm.ComputeHash(stream);
+        var sb = new StringBuilder();
+        foreach (byte b in computedHash)
+        {
+            sb.Append($"{b:X2}");
+        }
+        string hexadecimalHash = sb.ToString();
+        return hexadecimalHash;
+    }
+
+    // TODO: create a better folder management system
+    public static string GetPRFolderPath(string fileName)
+    {
+        return Utilities.GetFolderPath("ModHelper/PublicizedReferences", fileName);
     }
 
 }

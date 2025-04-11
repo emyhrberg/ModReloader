@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Xml.Linq;
 using Terraria;
 using Terraria.ModLoader;
@@ -51,52 +52,81 @@ namespace ModHelper
                     Log.Info("RoslynCompileHook called");
                     try
                     {
-                        Log.Info($"Trying to find csproj file");
-                        string csprojFile = CompilerUtilities.FindProjectFile(name, files);
-
+                        // Find the csproj file
+                        string csprojFile = CompilerUtilities.FindCsprojFile(name, files);
                         if (!System.IO.File.Exists(csprojFile))
                         {
                             throw new Exception($"No csproj found in {csprojFile}");
                         }
+                        Log.Info($"Found csproj file: {csprojFile}");
 
-                        Log.Info($"File found {csprojFile}");
-
+                        // Load the csproj file and find the Publicize references
                         var doc = XDocument.Load(csprojFile);
                         XNamespace ns = doc.Root!.Name.Namespace;
-
                         var referencesToPublicize = doc.Descendants(ns + "Publicize")
                                                   .Select(e => e.Attribute("Include")?.Value).ToList();
-
                         if (referencesToPublicize.Count == 0)
                         {
-                            throw new Exception($"No Publicize references found in {Path.GetFileName(csprojFile)}");
+                            throw new Exception($"No Publicized mod references found in {Path.GetFileName(csprojFile)}");
                         }
+                        Log.Info($"Publicize mod references found in {Path.GetFileName(csprojFile)}: {string.Join(", ", referencesToPublicize)}");
 
-                        Log.Info($"Publicize references found in {Path.GetFileName(csprojFile)}: {string.Join(", ", referencesToPublicize)}");
+                        // Finding the dlls to publicize
+                        Dictionary<string, string> dllPathsToPublicize = CompilerUtilities.FindReferencePaths(references, referencesToPublicize);
 
-                        Dictionary<string, string> dllsToPublicize = CompilerUtilities.FindReferencePaths(references, referencesToPublicize);
-
+                        // Publicizing (or reading from files) the dlls
                         var publicizedModReferences = new List<PortableExecutableReference>();
-
                         foreach (var r in referencesToPublicize)
                         {
-                            using ModuleDef module = ModuleDefMD.Load(dllsToPublicize[r]);
-                            Log.Info(PublicizeAssemblies.PublicizeAssembly(module) ? $"Module {r} is changed!" : $"Something wrong with module {r}");
-
-                            var writerOptions = new ModuleWriterOptions(module)
+                            // Check if the dll path is valid
+                            if (!dllPathsToPublicize.ContainsKey(r))
                             {
-                                MetadataOptions = new MetadataOptions(MetadataFlags.KeepOldMaxStack),
-                                Logger = DummyLogger.NoThrowInstance
-                            };
+                                Log.Warn($"Failed to find {r}");
+                                continue;
+                            }
 
-                            MemoryStream modDefStream = new MemoryStream();
-                            module.Write(modDefStream, writerOptions);
+                            // Compute the hash and filename of the publicized dll path
+                            var hash = CompilerUtilities.ComputeHash(dllPathsToPublicize[r]);
+                            var filePath = CompilerUtilities.GetPRFolderPath($"{r}.{hash}.dll");
 
-                            publicizedModReferences.Add(MetadataReference.CreateFromImage(modDefStream.ToArray()));
+                            // Check if the publicized dll already exists
+                            if (System.IO.File.Exists(filePath))
+                            {
+                                Log.Info($"Publicized mod reference {r} already exists, loading from {Path.GetFileName(filePath)}");
 
-                            Log.Info($"Publicized references count: {publicizedModReferences.Count()}");
+                                // Loading the publicized dll
+                                var publicizedModReference = MetadataReference.CreateFromFile(filePath);
+                                publicizedModReferences.Add(publicizedModReference);
+                            }
+                            else
+                            {
+                                Log.Info($"Publicizing mod reference {r} to {Path.GetFileName(filePath)}");
+
+                                // Creating a module
+                                using ModuleDef module = ModuleDefMD.Load(dllPathsToPublicize[r]);
+
+                                // Publicizing the module
+                                bool moduleChanged = PublicizeAssemblies.PublicizeAssembly(module);
+                                Log.Info(moduleChanged ? $"Module {r} is changed!" : $"Module {r} isn't changed!");
+
+                                // Writing the publicized dll to a file
+                                var writerOptions = new ModuleWriterOptions(module)
+                                {
+                                    MetadataOptions = new MetadataOptions(MetadataFlags.KeepOldMaxStack),
+                                    Logger = DummyLogger.NoThrowInstance
+                                };
+                                Utilities.LockingFile(filePath, (reader, writer) =>
+                                {
+                                    module.Write(writer.BaseStream, writerOptions);
+                                });
+
+                                // Loading the publicized dll
+                                var publicizedModReference = MetadataReference.CreateFromFile(filePath);
+                                publicizedModReferences.Add(publicizedModReference);
+                            }
                         }
 
+                        // Normal RoslynCompiler method
                         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                 assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
                 optimizationLevel: preprocessorSymbols.Contains("DEBUG") ? OptimizationLevel.Debug : OptimizationLevel.Release,
@@ -111,7 +141,6 @@ namespace ModHelper
 
                         // Adding references to the publicized mod
                         refs = refs.Concat(publicizedModReferences);
-
 
                         var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(System.IO.File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
 
@@ -149,6 +178,8 @@ namespace ModHelper
                     catch (Exception ex)
                     {
                         Log.Error($"RoslynCompileHook error: {ex.Message}");
+
+                        // Start the original method
                         var r = orig(name, references, files, preprocessorSymbols, allowUnsafe, out code, out pdb);
                         RoslynCompileHook?.Dispose();
                         return r;
@@ -156,7 +187,7 @@ namespace ModHelper
                 });
             GC.SuppressFinalize(RoslynCompileHook);
 
-            //LocalMod[] l = [];
+            LocalMod[] l = [];
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
