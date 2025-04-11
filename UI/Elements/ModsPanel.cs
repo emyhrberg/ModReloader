@@ -23,13 +23,13 @@ namespace ModHelper.UI.Elements
     {
         // top container for enable all, disable all, and searchbox
         public Searchbox searchbox;
-        private readonly UIElement topContainer;
+        public readonly UIElement topContainer;
 
         // enabled mods
         public readonly List<ModElement> enabledMods = [];
 
         // disabled mods
-        private readonly List<ModElement> allMods = [];
+        public readonly List<ModElement> allMods = [];
 
         // filter state
         private string currentFilter = "";
@@ -212,7 +212,7 @@ namespace ModHelper.UI.Elements
                 // Only add mod if its in the enabled mods list
                 if (!currEnabledMods.Any(m => m.Name == internalName))
                 {
-                    Log.Info("Skipping mod " + internalName + " as it is not enabled.");
+                    // Log.Info("Skipping mod " + internalName + " as it is not enabled.");
                     continue;
                 }
 
@@ -253,7 +253,7 @@ namespace ModHelper.UI.Elements
                 // to avoid duplicates.
                 if (enabledMods.Any(modElement => modElement.internalName == internalName))
                 {
-                    Log.Info("Skipping mod " + cleanName + " as it is already enabled.");
+                    // Log.Info("Skipping mod " + cleanName + " as it is already enabled.");
                     continue;
                 }
 

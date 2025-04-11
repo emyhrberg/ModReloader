@@ -15,6 +15,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
@@ -81,7 +82,6 @@ namespace ModHelper.Common.Systems.Menus
             {
                 ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f),
                 ("Join Singleplayer", JoinSingleplayer, 1.02f),
-                ("Join Multiplayer", JoinMultiplayer, 1.02f),
                 ("Start Server", StartServer, 1.02f),
                 ("Start Client", StartClient, 1.02f),
                 ("Open Log", Log.OpenClientLog, 1.02f),
@@ -91,6 +91,7 @@ namespace ModHelper.Common.Systems.Menus
                 (" ", null, 1.15f), // empty line
                 ($"Cotlim Is The Best", null, 1.15f),
                 ("Host Multiplayer", HostMultiplayer, 1.02f),
+                ("Join Multiplayer", JoinMultiplayer, 1.02f),
             };
 
             foreach (var (text, action, scale) in menuOptions)
@@ -321,18 +322,37 @@ namespace ModHelper.Common.Systems.Menus
         private static void JoinMultiplayer()
         {
             // Simply join localhost, easy.
-            Log.Info("EnterMultiplayerWorld() called!");
+            Log.Info("EnterMultiplayerWorld() called!!");
             Main.LoadPlayers();
 
             if (Main.PlayerList.Count == 0)
                 throw new Exception("No players found.");
 
-            // Getting Player and World from ClientDataHandler
-            var player = Main.PlayerList.FirstOrDefault();
-
+            // Get Player
             // TODO check if player is already in server and if so, join with a different player.
+            // var player = Main.PlayerList.FirstOrDefault();
 
-            Main.SelectPlayer(player);
+            // select random player for now from playerlist
+            // var random = new Random();
+            // var player = Main.PlayerList[random.Next(Main.PlayerList.Count)];
+
+            // Get a list of active players in the server
+            List<Player> activePlayers = Main.player.Where(p => p != null && p.active).ToList();
+
+            // Get a list of all player file data
+            // Select the first player that is not already in the active players list
+            foreach (var p in Main.PlayerList)
+            {
+                Player player = p.Player;
+
+                if (!activePlayers.Contains(player))
+                {
+                    // Found a player that is not already in the active players list
+                    Log.Info($"Found player: {player.name}");
+                    // Select Player
+                    Main.SelectPlayer(p);
+                }
+            }
 
             // Play the selected world in multiplayer mode
             // Connect to server IP

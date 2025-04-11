@@ -158,6 +158,11 @@ Mods: {
 					Tooltip: ""
 					Label: Save World Before Reloading
 				}
+
+				RightClickButtonToExitWorld: {
+					Label: Right Click Button To Exit World
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

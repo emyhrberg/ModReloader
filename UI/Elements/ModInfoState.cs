@@ -5,9 +5,12 @@ using Microsoft.Xna.Framework;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
+using Terraria.Social.Steam;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements
@@ -22,7 +25,7 @@ namespace ModHelper.UI.Elements
 
         // Add these fields to your ModInfoState class:
         private string modInternalName;
-        private object publishedFileId; // Will store the ModPubId_t
+        private string workshopURL;
 
         // elements
         private UIPanel descriptionContainer;
@@ -90,7 +93,7 @@ namespace ModHelper.UI.Elements
                     messageBoxType,
                     BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null,
-                    new object[] { "" },
+                    [""],
                     null
                 );
 
@@ -149,8 +152,9 @@ namespace ModHelper.UI.Elements
             {
                 Width = { Percent = 0.333f },
                 Height = { Pixels = 40f },
-                Left = { Percent = 0.333f }
+                Left = { Percent = 0.333f },
             }.WithFadedMouseOver();
+            steamButton.OnLeftClick += SteamButton_OnLeftClick;
             bottomContainer.Append(steamButton);
 
             var deleteButton = new UITextPanel<string>("Delete")
@@ -159,7 +163,41 @@ namespace ModHelper.UI.Elements
                 Height = { Pixels = 40f },
                 Left = { Percent = 0.666f }
             }.WithFadedMouseOver();
+            deleteButton.OnLeftClick += DeleteButton_OnLeftClick;
             bottomContainer.Append(deleteButton);
+        }
+
+        // Add this method to find the workshop ID
+        private void GetAndSetWorkshopURL()
+        {
+            Log.Info("Finding workshop ID for mod: " + modInternalName);
+
+            // // Get the Mod instance for the current mod
+            // // This only works for enabled mods.
+            // LocalMod[] mods = ModOrganizer.FindAllMods();
+            // LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
+            // TmodFile modFile = mod.modFile;
+
+
+            // if (mod != null)
+            // {
+            //     // Use the correct signature for GetPublishIdLocal
+            //     if (WorkshopHelper.GetPublishIdLocal(modFile, out ulong publishId))
+            //     {
+            //         Log.Info("Found publish ID: " + publishId);
+            //         // Set the workshop URL using the publish ID
+            //         workshopURL = $"https://steamcommunity.com/sharedfiles/filedetails/?id={publishId}";
+            //     }
+            //     else
+            //     {
+            //         // Set a default message if not found
+            //         workshopURL = null;
+            //     }
+            // }
+            // else
+            // {
+            //     workshopURL = null;
+            // }
         }
 
         public override void OnActivate()
@@ -175,6 +213,86 @@ namespace ModHelper.UI.Elements
             {
                 titlePanel.SetText($"Mod Info: {modDisplayName}");
             }
+
+            // Try to find the workshop ID for this mod
+            GetAndSetWorkshopURL();
+        }
+
+        private void DeleteButton_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
+        {
+            // Get the mod
+            // LocalMod[] mods = ModOrganizer.FindAllMods();
+            // LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
+
+            // Delete the mod
+            // ModOrganizer.DeleteMod(mod);
+
+            // TODO update the UIList of mods. Call FilterItem
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            RebuildModLists(sys.mainState.modsPanel); // YES, it works! (atleast i tested deleting one mod and it rebuilt properly)
+
+            // now we close the panel and write to Main.newText
+            IngameFancyUI.Close();
+            Main.NewText($"Deleted mod: {modDisplayName}", Color.Orange);
+        }
+
+        private static void RebuildModLists(ModsPanel panel)
+        {
+            // Clear entire UIList 
+            panel.uiList.Clear();
+
+            // Add initial top container and padding
+            panel.AddPadding(20f);
+            panel.uiList.Add(panel.topContainer);
+            panel.AddPadding(20f);
+
+            // Clear existing lists
+            panel.enabledMods.Clear();
+            panel.allMods.Clear();
+
+            // Call your existing construction methods
+            typeof(ModsPanel).GetMethod("ConstructEnabledMods",
+                BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(panel, null);
+
+            typeof(ModsPanel).GetMethod("ConstructAllMods",
+                BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(panel, null);
+
+            // Ensure everything is properly displayed
+            panel.Recalculate();
+        }
+
+        private void SteamButton_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
+        {
+            if (string.IsNullOrEmpty(workshopURL))
+            {
+                Main.NewText($"Failed to open workshop page for {modDisplayName}.", Color.Orange);
+                return;
+            }
+
+            // Use Terraria's built-in URL opener
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = workshopURL,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                Main.NewText($"Failed to open workshop page: {ex.Message}", Color.Red);
+            }
+            Main.NewText("Opening workshop page...", Color.Green);
+        }
+
+        // Update ModInfoIcon to pass the modName:
+        public void SetModInfo(string description, string displayName, string internalName)
+        {
+            CurrentModDescription = description;
+            modDisplayName = displayName;
+            modInternalName = internalName;
         }
 
         private void BackButton_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)

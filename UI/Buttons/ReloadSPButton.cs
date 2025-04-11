@@ -35,5 +35,29 @@ namespace ModHelper.UI.Buttons
 
             await ReloadUtilities.SinglePlayerReload();
         }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            if (!Conf.C.RightClickButtonToExitWorld)
+            {
+                return;
+            }
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick)
+            {
+                return;
+            }
+
+            if (Conf.C.SaveWorldBeforeReloading)
+            {
+                WorldGen.SaveAndQuit();
+            }
+            else
+            {
+                WorldGen.JustQuit();
+            }
+            Main.menuMode = 10001;
+        }
     }
 }

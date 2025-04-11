@@ -18,7 +18,6 @@ namespace ModHelper.UI.Elements
         private OptionIcon optionIcon;
         private OptionTitleText optionTitleText;
         private Action leftClick;
-        private Action rightClick;
 
         public enum State
         {
@@ -27,7 +26,7 @@ namespace ModHelper.UI.Elements
         }
         private State state = State.Disabled;
 
-        public OptionElement(Action leftClick, string text, string hover = "", Action rightClick = null)
+        public OptionElement(Action leftClick, string text, string hover = "")
         {
             this.leftClick = leftClick;
             this.text = text;
@@ -59,13 +58,6 @@ namespace ModHelper.UI.Elements
         {
             this.state = state;
             enabledText.SetTextState(state);
-        }
-
-        public override void RightClick(UIMouseEvent evt)
-        {
-            base.RightClick(evt);
-
-            rightClick?.Invoke();
         }
 
         public override void LeftClick(UIMouseEvent evt)

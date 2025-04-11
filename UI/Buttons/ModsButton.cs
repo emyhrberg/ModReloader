@@ -1,5 +1,9 @@
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ReLogic.Content;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace ModHelper.UI.Buttons
 {
@@ -17,5 +21,29 @@ namespace ModHelper.UI.Buttons
 
         protected override int FrameWidth => 60;
         protected override int FrameHeight => 58;
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            if (!Conf.C.RightClickButtonToExitWorld)
+            {
+                return;
+            }
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.isClick)
+            {
+                return;
+            }
+
+            if (Conf.C.SaveWorldBeforeReloading)
+            {
+                WorldGen.SaveAndQuit();
+            }
+            else
+            {
+                WorldGen.JustQuit();
+            }
+            Main.menuMode = 10001;
+        }
     }
 }

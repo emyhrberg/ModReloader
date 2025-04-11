@@ -70,7 +70,7 @@ namespace ModHelper.Common.Configs
         public bool ShowSearchboxBlinker = false;
 
         [DefaultValue(true)]
-        public bool RightClickBuildButtonToGoToModSources = true;
+        public bool RightClickButtonToExitWorld = true;
 
         [DefaultValue(true)]
         public bool ShowNumberOfModsFiltered = true;
