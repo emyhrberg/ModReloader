@@ -78,31 +78,36 @@ namespace ModHelper.Common.Systems.Menus
             }
 
             // Menu options with corresponding actions
-            var menuOptions = new (string Text, Action Action, float scale)[]
+            var menuOptions = new(string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f),
-                ("Join Singleplayer", JoinSingleplayer, 1.02f),
-                ("Start Server", StartServer, 1.02f),
-                ("Start Client", StartClient, 1.02f),
-                ("Open Log", Log.OpenClientLog, 1.02f),
-                ("Clear Log", Log.ClearClientLog, 1.02f),
-                ("Open config", OpenConfig, 1.02f),
-                ("Reload", async () => await ReloadSelectedMod(), 1.02f),
-                (" ", null, 1.15f), // empty line
-                ($"Cotlim Is The Best", null, 1.15f),
-                ("Host Multiplayer", HostMultiplayer, 1.02f),
-                ("Join Multiplayer", JoinMultiplayer, 1.02f),
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helper, the best mod for modding!"),
+                ("Join Singleplayer", JoinSingleplayer, 1.02f, "Enter a singleplayer world with last selected player and world"),
+                ("Start Server", StartServer, 1.02f, "Starts a server instance with cmd"),
+                ("Start Client", StartClient, 1.02f, "Starts another tML instance with cmd"),
+                ("Open Log", Log.OpenClientLog, 1.02f, "Opens the client.log of this client"),
+                ("Clear Log", Log.ClearClientLog, 1.02f, "Clears the client.log of this client"),
+                ("Open config", OpenConfig, 1.02f, "Open the Mod Helper config to change settings"),
+                ("Reload", async () => await ReloadSelectedMod(), 1.02f, "Reload the selected mod (see in-game)"),
+                (" ", null, 1.15f, ""), // empty line
+                ($"Cotlim Is The Best", null, 1.15f, "He really is!"),
+                ("Host Multiplayer", HostMultiplayer, 1.02f, "Start a multiplayer world with last selected player and world"),
+                ("Join Multiplayer", JoinMultiplayer, 1.02f, "Enter the multiplayer world with first available player"),
             };
 
-            foreach (var (text, action, scale) in menuOptions)
+            foreach (var (text, action, scale, tooltip) in menuOptions)
             {
                 // Measure text
                 Vector2 size = FontAssets.MouseText.Value.MeasureString(text) * 0.9f;
+                size.Y *= 1.2f; // Increase the Y size by 50%
+                Vector2 hoverSize = new Vector2(size.X, size.Y * 1.26f);
                 // Check if mouse is hovering it
-                bool hovered = Main.MouseScreen.Between(drawPos, drawPos + size);
+                bool hovered = Main.MouseScreen.Between(drawPos, drawPos + hoverSize);
 
                 if (hovered)
                 {
+                    // Draw tooltip
+                    DrawHelper.DrawMainMenuTooltipPanel(tooltip);
+
                     Main.LocalPlayer.mouseInterface = true;
                     // Click
                     if (Main.mouseLeft && Main.mouseLeftRelease && action != null)
@@ -126,6 +131,14 @@ namespace ModHelper.Common.Systems.Menus
                 DrawOutlinedStringOnMenu(Main.spriteBatch, FontAssets.MouseText.Value, text, drawPos, textColor,
                     rotation: 0f, origin: Vector2.Zero, scale: scale, effects: SpriteEffects.None, layerDepth: 0f,
                     alphaMult: alpha);
+
+                // Draw debug
+                //Texture2D debugTex = TextureAssets.MagicPixel.Value;
+                //Main.spriteBatch.Draw(
+                //    debugTex,
+                //    new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)hoverSize.X, (int)hoverSize.Y),
+                //    Color.Red * 0.5f // Semi-transparent red.
+                //);
 
                 // Move down for the next line
                 drawPos.Y += size.Y + 8f;
@@ -354,6 +367,8 @@ namespace ModHelper.Common.Systems.Menus
                 }
             }
 
+            Main.SelectPlayer(Main.PlayerList.FirstOrDefault(p => !Main.player.Contains(p.Player)));
+
             // Play the selected world in multiplayer mode
             // Connect to server IP
             Ping pingSender = new();
@@ -468,7 +483,7 @@ namespace ModHelper.Common.Systems.Menus
 
                 // Draw text
                 spriteBatch.DrawString(font, text, position + new Vector2(offX, offY),
-                    color, rotation, origin, scale, effects, layerDepth);
+                color, rotation, origin, scale, effects, layerDepth);
             }
         }
         #endregion

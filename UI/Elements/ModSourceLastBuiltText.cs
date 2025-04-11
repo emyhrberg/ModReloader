@@ -12,7 +12,7 @@ namespace ModHelper.UI.Elements
     {
         private readonly DateTime lastModified;
 
-        public ModSourceLastBuiltText(DateTime lastModified, float textScale = 0.8f, bool large = false)
+        public ModSourceLastBuiltText(DateTime lastModified, float textScale = 1.0f, bool large = false)
             : base(FormatTimeAgoText(lastModified), textScale, large)
         {
             this.lastModified = lastModified;

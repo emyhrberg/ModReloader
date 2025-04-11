@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
@@ -12,9 +14,96 @@ namespace ModHelper.Helpers
     public static class DrawHelper
     {
         /// <summary>
+        /// Draw a tooltip panel at a hardcoded position in the main menu
+        /// </summary>
+        public static void DrawMainMenuTooltipPanel(string text)
+        {
+            // Hardcoded panel position and size.
+            // (108, Main.screenHeight/2 + 60) is used as the base text position.
+            // The panel is 200x50, centered on that point.
+            Vector2 basePos = new Vector2(108, Main.screenHeight / 2f + 60);
+            int width = 300;
+            int height = 70;
+            Rectangle tooltipRect = new Rectangle((int)basePos.X - 100, (int)basePos.Y - 25, width, height);
+
+            // Draw background panel.
+            Color darkBlue = UICommon.DefaultUIBlue;
+            Utils.DrawInvBG(Main.spriteBatch, tooltipRect, darkBlue);
+
+            DynamicSpriteFont font = FontAssets.MouseText.Value;
+            float scale = 0.9f;
+
+            // Set horizontal padding (total available width is panel width minus twice the padding)
+            int pad = 5;
+            float maxTextWidth = tooltipRect.Width - pad * 2;
+
+            // Wrap the text into at most two lines.
+            // If the whole text fits within the maxTextWidth, it stays on one line.
+            // Otherwise, a simple word wrap moves extra words to the next line.
+            List<string> lines = new List<string>();
+            string[] words = text.Split(' ');
+            string currentLine = "";
+
+            foreach (string word in words)
+            {
+                // If adding the next word exceeds the available width, push the line.
+                string testLine = string.IsNullOrEmpty(currentLine) ? word : currentLine + " " + word;
+                if (ChatManager.GetStringSize(font, testLine, Vector2.One).X * scale > maxTextWidth)
+                {
+                    // If nothing is in currentLine, force the word in (in case a word is too long)
+                    if (string.IsNullOrEmpty(currentLine))
+                        currentLine = word;
+                    lines.Add(currentLine);
+                    currentLine = word;
+                    if (lines.Count == 2) // Limit to two lines.
+                        break;
+                }
+                else
+                {
+                    currentLine = testLine;
+                }
+            }
+            if (lines.Count < 2 && !string.IsNullOrEmpty(currentLine))
+                lines.Add(currentLine);
+
+            // If more words remain and we've already created two lines, you might want to append ellipsis.
+            if (lines.Count == 2 && words.Length > lines[0].Split(' ').Length + lines[1].Split(' ').Length)
+            {
+                lines[1] = lines[1].TrimEnd() + "...";
+            }
+
+            // Draw each line centered horizontally in the panel.
+            // We'll vertically center the text block inside the panel.
+            float totalTextHeight = 0;
+            List<Vector2> sizes = new List<Vector2>();
+            foreach (string line in lines)
+            {
+                Vector2 size = ChatManager.GetStringSize(font, line, Vector2.One) * scale;
+                sizes.Add(size);
+                totalTextHeight += size.Y;
+            }
+
+            // If there are two lines, add a small gap.
+            int gap = lines.Count > 1 ? 2 : 0;
+            totalTextHeight += gap;
+
+            // Starting Y position so the text block is vertically centered in the panel.
+            float startY = tooltipRect.Y + (tooltipRect.Height - totalTextHeight) / 2f;
+            for (int i = 0; i < lines.Count; i++)
+            {
+                Vector2 size = sizes[i];
+                // Center the line horizontally within the panel.
+                float xPos = tooltipRect.X + (tooltipRect.Width - size.X) / 2f;
+                float yPos = startY;
+                Utils.DrawBorderString(Main.spriteBatch, lines[i], new Vector2(xPos, yPos), Color.White, scale);
+                startY += size.Y + gap;
+            }
+        }
+
+        /// <summary>
         /// Draws a tooltip panel just above a BaseButton element.
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(this UIElement element, string text, string tooltip, int yOffset = 0)
+        /*public static void DrawMainMenuTooltipPanel(this UIElement element, string text, string tooltip, int yOffset = 0)
         {
             int pad = 6;
             DynamicSpriteFont font = FontAssets.MouseText.Value;
@@ -59,7 +148,7 @@ namespace ModHelper.Helpers
                 Utils.DrawBorderString(Main.spriteBatch, tooltip, tooltipPos, Color.LightGray, 0.9f);
             }
         }
-
+        */
         /// <summary>
         /// Draws a tooltip panel just above a BaseButton element.
         /// </summary>
