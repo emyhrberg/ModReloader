@@ -28,6 +28,8 @@ namespace ModHelper.UI.Elements
         protected const float DragThreshold = 3f; // very low threshold for dragging
         protected Vector2 mouseDownPos;
 
+        public ResizeIcon resizeButton;
+
         // Size
         protected static float PANEL_WIDTH = 350f;
 
@@ -69,12 +71,19 @@ namespace ModHelper.UI.Elements
             if (!Active)
                 return;
 
+            base.Update(gameTime);
+
+            // If resize dragging.
+            if (resizeButton.draggingResize)
+            {
+                IsDragging = false;
+                return;
+            }
+
             if (ContainsPoint(Main.MouseScreen))
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
-
-            base.Update(gameTime);
 
             if (dragging)
             {

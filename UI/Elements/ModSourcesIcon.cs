@@ -12,7 +12,7 @@ namespace ModHelper.UI.Elements
 
         public bool IsHovered => IsMouseHovering;
 
-        public ModSourcesIcon(Texture2D texture, DateTime lastModified) : base(texture)
+        public ModSourcesIcon(Texture2D texture, DateTime lastModified = default) : base(texture)
         {
             tex = texture;
 

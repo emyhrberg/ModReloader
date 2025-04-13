@@ -21,7 +21,7 @@ namespace ModHelper.Helpers
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
             // The panel is 200x50, centered on that point.
-            Vector2 basePos = new Vector2(108, Main.screenHeight / 2f + 60);
+            Vector2 basePos = new Vector2(108, Main.screenHeight / 2f - 55);
             int width = 300;
             int height = 70;
             Rectangle tooltipRect = new Rectangle((int)basePos.X - 100, (int)basePos.Y - 25, width, height);

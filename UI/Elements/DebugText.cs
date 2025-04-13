@@ -17,9 +17,9 @@ namespace ModHelper.UI.Elements
 
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
-            TextColor = Color.White;
+            TextColor = Color.Gray;
             VAlign = 0.99f;
-            HAlign = 0.04f;
+            HAlign = 0.01f;
 
             // start text at top left corner of its element
             TextOriginX = 0f;
@@ -79,22 +79,16 @@ namespace ModHelper.UI.Elements
 
             string netmode = Main.netMode switch
             {
-                NetmodeID.SinglePlayer => "Singleplayer",
-                NetmodeID.MultiplayerClient => "Multiplayer",
+                NetmodeID.SinglePlayer => "SP",
+                NetmodeID.MultiplayerClient => "SP",
                 _ => "Unknown"
             };
 
             string fileName = Path.GetFileName(Logging.LogPath);
 
-            // string text = $"{playerName} ({whoAmI})" +
-            // $"\n{netmode} ({fileName})" +
-            // $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)";
-
-            string text = $"{playerName} ({whoAmI})" +
-                $"\n{fps}fps {ups}ups ({Main.upTimerMax:0.0}ms)" +
-                $"\nDebugger: {Debugger.IsAttached}" +
-                $"\nPID: {Process.GetCurrentProcess().Id}";
-
+            string text = $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
+            text += $"\n{fps}fps {ups}ups ({Main.upTimerMax:0}ms)";
+            text += $"\nDebug: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
 
             SetText(text, 0.9f, large: false);
         }

@@ -55,7 +55,8 @@ namespace ModHelper.UI.Elements
             {
                 scrollbar = new()
                 {
-                    Height = { Percent = 1f, Pixels = -35 - 12 },
+                    // MaxHeight = something // may be needed at some point
+                    Height = { Percent = 1f, Pixels = -35 - 12 - 35 }, // -35 for header, -12 for padding, -35 for resize icon
                     HAlign = 1f,
                     VAlign = 0f,
                     Left = { Pixels = 5 }, // scrollbar has 20 width
@@ -66,8 +67,42 @@ namespace ModHelper.UI.Elements
 
             // Set the scrollbar to the list
             Append(uiList);
+
             if (scrollbarEnabled) uiList.SetScrollbar(scrollbar);
             if (scrollbarEnabled) Append(scrollbar);
+
+            // Resize
+            resizeButton = new(Ass.Resize);
+            resizeButton.OnDragY += offsetY =>
+            {
+                float oldHeight = Height.Pixels;
+                float newHeight = oldHeight + offsetY;
+                float maxHeight = 180f;
+
+                // Clamp max height
+                if (newHeight > 1000f || newHeight < maxHeight)
+                {
+                    return;
+                }
+
+                // Clamp min height
+                // if (newHeight < 200f)
+                // newHeight = 200f;
+
+                // Resize: Set new heights!
+                Height.Set(newHeight, 0f);
+                uiList.Height.Set(newHeight - 35, 0f);
+                // scrollbar.Height.Set(newHeight - -35 - 12 - 35 - 35, 0f);
+
+                // Set new top offsets
+                float topOffset = newHeight - oldHeight;
+                Top.Pixels += topOffset;
+                // ItemsGrid.Top.Pixels -= topOffset;
+                // Scrollbar.Top.Pixels -= topOffset;
+
+                Recalculate();
+            };
+            Append(resizeButton);
         }
 
         public UIElement AddPadding(float padding = 20f)
@@ -93,6 +128,14 @@ namespace ModHelper.UI.Elements
             if (!Active)
                 return;
 
+            // Bring this panel to the front by reordering in the parent.
+            if (this.Parent != null)
+            {
+                UIElement parent = this.Parent;
+                parent.RemoveChild(this);
+                parent.Append(this);
+            }
+
             // this drag code needs to be here because we override some stuff above.
             // so OptionPanel needs to have its own LeftMouseDown method
             // and call base.LeftMouseDown(evt) to make it work properly.
@@ -108,7 +151,8 @@ namespace ModHelper.UI.Elements
             // first draw everything in the panel
             base.Draw(spriteBatch);
 
-            // last, draw the hover texture
+            // last, draw the hover texture. but only if conc.c.modsview is small
+            // DONT DRAW !
             foreach (var element in uiList._items.ToList())
             {
                 if (element is ModElement modElement && Conf.C.ShowIconsWhenHovering)
@@ -116,8 +160,8 @@ namespace ModHelper.UI.Elements
                     var icon = modElement.modIcon;
                     if (icon != null && icon.IsHovered && icon.updatedTex != null)
                     {
-                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2);
-                        spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
+                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2); // !!!!!!!!!
+                        // spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
                     }
                 }
                 else if (element is ModSourcesElement modSourcesElement)
@@ -165,6 +209,12 @@ namespace ModHelper.UI.Elements
                 // Reset panel position
                 Top.Set(-70, 0f);
                 Left.Set(-20, 0f);
+
+                if (this is ModSourcesPanel && Conf.C.AllowMultiplePanelsOpenSimultaneously)
+                {
+                    Left.Set(-20 - 350 - 20, 0f); // -20 for padding, -350 for the size of the panel, -20 for padding
+                }
+
                 Recalculate();
             }
 

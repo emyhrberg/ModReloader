@@ -150,7 +150,7 @@ namespace ModHelper.Helpers
                 string fileName = Path.GetFileName(path);
 
                 Log.Info($"Open {fileName}");
-                Main.NewText("Open " + fileName);
+                Main.NewText("Opening " + fileName);
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)

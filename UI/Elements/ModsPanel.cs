@@ -25,6 +25,11 @@ namespace ModHelper.UI.Elements
         public Searchbox searchbox;
         public readonly UIElement topContainer;
 
+        // filters
+        public readonly ModFilterChangeView modChangeView; // filter mods view image button
+        public readonly ModFilterEnabled modFilterEnabled; // filter enabled mods button
+        public readonly ModFilterSideButton modFilterSide; // filter mod side button
+
         // enabled mods
         public readonly List<ModElement> enabledMods = [];
 
@@ -38,7 +43,7 @@ namespace ModHelper.UI.Elements
         #region Constructor
         public ModsPanel() : base(title: "Manage Mods", scrollbarEnabled: true)
         {
-            AddPadding(20f);
+            AddPadding(10f);
 
             // Active = true; // show by default for testing
 
@@ -53,7 +58,7 @@ namespace ModHelper.UI.Elements
             searchbox.Width.Set(200, 0f);
             searchbox.Height.Set(35, 0f);
             searchbox.Left.Set(10, 0f); // Place at the left edge
-            searchbox.Top.Set(5, 0);
+            searchbox.Top.Set(20, 0);
 
             // On text change event
             searchbox.OnTextChanged += () =>
@@ -78,6 +83,24 @@ namespace ModHelper.UI.Elements
                 currentFilter = string.Empty;
                 updateNeeded = true;
             };
+
+            // Add filter mods view image button
+            modChangeView = new(Ass.FilterViewSize);
+            modChangeView.Left.Set(10, 0);
+            modChangeView.Top.Set(-6, 0);
+            topContainer.Append(modChangeView);
+
+            // Add filter enabled mods button
+            modFilterEnabled = new(Ass.FilterEnabled);
+            modFilterEnabled.Left.Set(10 + 23 + 5, 0);
+            modFilterEnabled.Top.Set(-6, 0);
+            topContainer.Append(modFilterEnabled);
+
+            // Add filter mod side button
+            modFilterSide = new(Ass.FilterModSide);
+            modFilterSide.Left.Set(10 + 23 * 2 + 5 * 2, 0);
+            modFilterSide.Top.Set(-6, 0);
+            topContainer.Append(modFilterSide);
 
             // Create and configure the "Enable All" panel.
             EnableDisableAllPanel enableAllPanel = new(
@@ -115,63 +138,66 @@ namespace ModHelper.UI.Elements
         /// <summary>
         /// Clears the uiList, removes all elements, and adds the mods that match the current filter.
         /// </summary>
-        private void FilterMods()
+        public void FilterMods()
         {
-            // Clear all elements except the first one in the UIList
+            // Clear all elements from the UIList.
             uiList.Clear();
 
-            // re-add the first element (the top container)
-            AddPadding(20f);
+            // Re-add the top container and padding.
+            AddPadding(10f);
             uiList.Add(topContainer);
             AddPadding(20f);
 
-            // add all mods that match the current filter
-            List<ModElement> filteredMods = [];
+            // Prepare the list that will hold filtered mod elements.
+            List<ModElement> filteredMods = new List<ModElement>();
 
-            // using enabledMods first with the concat()!
-            List<ModElement> allAndEnabledMods = enabledMods.Concat(allMods).ToList(); // Combine all mods into one list
-            foreach (ModElement modElement in allAndEnabledMods)
+            // Combine enabled and disabled mods into one list.
+            List<ModElement> allModsCombined = enabledMods.Concat(allMods).ToList();
+
+            foreach (ModElement modElement in allModsCombined)
             {
-                // Check if the mod name contains the current filter string
-                if (modElement.cleanModName.Contains(currentFilter, StringComparison.OrdinalIgnoreCase))
+                // 1. Check if the mod name contains the current filter string (ignoring case).
+                //    (When currentFilter is empty, this always returns true.)
+                bool matchSearch = modElement.cleanModName.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
+
+                // 2. Check if the mod should be included based on the Enabled/Disabled filter.
+                bool matchEnabledDisabled = true;
+                if (modFilterEnabled.currentEnabledDisabledView == ModFilterEnabled.ModFilterEnabledDisabled.Enabled)
                 {
-                    // Add the mod element to the UIList
-                    filteredMods.Add(modElement);
+                    matchEnabledDisabled = modElement.GetState() == State.Enabled;
                 }
-            }
-
-            // Log.Info("found " + filteredMods.Count + " mods matching filter: " + currentFilter);
-
-            // add panel to show how many mods were found
-            if (searchbox.currentString != "" && Conf.C.ShowNumberOfModsFiltered)
-            {
-                string numberOfModsFound = $"{filteredMods.Count} mods filtered";
-                ModsFoundPanel modsFoundPanel = new(numberOfModsFound);
-                uiList.Add(modsFoundPanel);
-                AddPadding(3f);
-            }
-            else
-            {
-                filteredMods.Clear();
-                // if no filter, add enabled mods first
-                if (string.IsNullOrEmpty(currentFilter))
+                else if (modFilterEnabled.currentEnabledDisabledView == ModFilterEnabled.ModFilterEnabledDisabled.Disabled)
                 {
-                    foreach (ModElement modElement in enabledMods)
-                    {
-                        filteredMods.Add(modElement);
-                    }
+                    matchEnabledDisabled = modElement.GetState() == State.Disabled;
                 }
-                // add all mods that are not enabled
-                foreach (ModElement modElement in allMods)
+
+                // 3. Check if the mod matches the current mod side filter.
+                //    Compare the mod's side string to the filter's value,
+                //    or always pass if the filter is set to "All".
+                bool matchSide = modFilterSide.currentModSideFilter == ModFilterSideButton.ModFilterSide.All ||
+                    string.Equals(modElement.side, modFilterSide.currentModSideFilter.ToString(), StringComparison.OrdinalIgnoreCase);
+
+                if (matchSearch && matchEnabledDisabled && matchSide)
                 {
                     filteredMods.Add(modElement);
                 }
-                uiList.AddRange(filteredMods);
-                AddPadding(3f);
-                return;
             }
 
-            // Add the filtered mods to the UIList
+            // Always add a ModsFoundPanel displaying the number of mods filtered.
+            string numberOfModsFound = $"{filteredMods.Count} mods filtered";
+            ModsFoundPanel modsFoundPanel = new ModsFoundPanel(numberOfModsFound);
+            uiList.Add(modsFoundPanel);
+            AddPadding(3f);
+
+            // If no search text is provided, order the mods so that enabled ones come first.
+            if (string.IsNullOrEmpty(currentFilter))
+            {
+                filteredMods = filteredMods
+                    .OrderBy(mod => mod.GetState() == State.Enabled ? 0 : 1)
+                    .ToList();
+            }
+
+            // Add all the filtered mod elements to the UIList.
             uiList.AddRange(filteredMods);
             AddPadding(3f); // a little extra padding at the end
         }
@@ -197,7 +223,7 @@ namespace ModHelper.UI.Elements
 
         #region Constructing mod lists
 
-        private void ConstructEnabledMods()
+        public void ConstructEnabledMods()
         {
             // a list of all mods that are enabled
             var currEnabledMods = ModLoader.Mods.Skip(1); // (skip 1 to ignore tml mod)
@@ -209,33 +235,47 @@ namespace ModHelper.UI.Elements
             {
                 string internalName = localMod.ToString();
 
-                // Only add mod if its in the enabled mods list
+                // Only add mod if it's in the enabled mods list
                 if (!currEnabledMods.Any(m => m.Name == internalName))
                 {
                     // Log.Info("Skipping mod " + internalName + " as it is not enabled.");
                     continue;
                 }
 
+                // Check if the mod is already in the enabledMods list to avoid duplicates
+                if (enabledMods.Any(modElement => modElement.internalModName == internalName))
+                {
+                    // Log.Info("Skipping mod " + internalName + " as it is already in the enabled mods list.");
+                    continue;
+                }
+
                 // Get the mod of Mod instance
                 Mod currMod = ModLoader.GetMod(internalName);
+
+                // Log.Info("Adding mod " + internalName + " version " + currMod.Version + " to enabled mods.");
 
                 // Get the clean name using reflection for the LocalMod mod.
                 string cleanName = GetCleanName(localMod);
                 string description = GetLocalModDescription(localMod);
 
-                //     // you could change this to send the "clean name"
-                //     // this is where we set the text of the mod element
+                // Create and add the mod element
                 ModElement modElement = new(
                     cleanModName: currMod.DisplayNameClean,
                     internalModName: currMod.Name,
-                    modDescription: description);
+                    modDescription: description,
+                    version: currMod.Version.ToString(),
+                    side: currMod.Side.ToString()
+                );
+
+                // Apply filtering: 1) mod side and 2) enabled
+
                 uiList.Add(modElement);
                 enabledMods.Add(modElement);
-                AddPadding(3);
+                // AddPadding(3);
             }
         }
 
-        private void ConstructAllMods()
+        public void ConstructAllMods()
         {
             List<object> sortedMods = FindAllMods();
 
@@ -251,7 +291,7 @@ namespace ModHelper.UI.Elements
 
                 // Skip mods that are already in the enabled mods list
                 // to avoid duplicates.
-                if (enabledMods.Any(modElement => modElement.internalName == internalName))
+                if (enabledMods.Any(modElement => modElement.internalModName == internalName))
                 {
                     // Log.Info("Skipping mod " + cleanName + " as it is already enabled.");
                     continue;
@@ -264,23 +304,30 @@ namespace ModHelper.UI.Elements
 
                 Texture2D modIcon = GetModIconFromAllMods(tmod);
 
+                // try get mod version. if fails, just write empty string.
+                string version = GetLocalModVersion(mod);
+                // Log.Info("Mod version: " + version);
+                string side = GetLocalModSide(mod);
+
                 ModElement modElement = new(
                     cleanModName: cleanName,
                     internalModName: internalName,
                     icon: modIcon,
-                    modDescription: description
+                    modDescription: description,
+                    version: version,
+                    side: side
                     );
 
                 modElement.SetState(State.Disabled);
                 uiList.Add(modElement);
                 allMods.Add(modElement);
-                AddPadding(3);
+                // AddPadding(3);
             }
         }
 
         #endregion
 
-        #region Helpers for getting mod lists
+        #region Helpers mod lists
         // Note: Lots of reflection is used here, so be careful with error handling.
 
         // Helper method to get all workshop mods
@@ -486,6 +533,153 @@ namespace ModHelper.UI.Elements
             }
         }
 
+        private static string GetLocalModVersion(object localMod)
+        {
+            if (localMod == null)
+            {
+                Log.Warn("GetLocalModVersion: localMod is null.");
+                return string.Empty;
+            }
+
+            try
+            {
+                // Attempt to retrieve the 'properties' member from LocalMod.
+                var localModType = localMod.GetType();
+                object propertiesInstance = null;
+
+                // First, try to get it as a field.
+                FieldInfo propertiesField = localModType.GetField("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (propertiesField != null)
+                {
+                    propertiesInstance = propertiesField.GetValue(localMod);
+                }
+                else
+                {
+                    // Fallback: try as a property.
+                    PropertyInfo propertiesProp = localModType.GetProperty("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (propertiesProp != null)
+                    {
+                        propertiesInstance = propertiesProp.GetValue(localMod);
+                    }
+                }
+
+                if (propertiesInstance == null)
+                {
+                    Log.Warn("GetLocalModVersion: Could not retrieve the 'properties' member from the LocalMod.");
+                    return string.Empty;
+                }
+
+                // Now try to obtain the 'version' member from the BuildProperties instance.
+                var propertiesType = propertiesInstance.GetType();
+                object versionObj = null;
+
+                // First, attempt as a property.
+                PropertyInfo versionProp = propertiesType.GetProperty("version", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (versionProp != null)
+                {
+                    versionObj = versionProp.GetValue(propertiesInstance);
+                }
+                else
+                {
+                    // Fallback to a field.
+                    FieldInfo versionField = propertiesType.GetField("version", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (versionField != null)
+                    {
+                        versionObj = versionField.GetValue(propertiesInstance);
+                    }
+                    else
+                    {
+                        Log.Warn("GetLocalModVersion: Could not find a 'version' property or field in BuildProperties.");
+                        return string.Empty;
+                    }
+                }
+
+                if (versionObj == null)
+                {
+                    Log.Warn("GetLocalModVersion: The 'version' value retrieved is null.");
+                    return string.Empty;
+                }
+
+                return versionObj.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"GetLocalModVersion: Exception occurred - {ex}");
+                return string.Empty;
+            }
+        }
+
+        private static string GetLocalModSide(object localMod)
+        {
+            if (localMod == null)
+            {
+                Log.Warn("GetLocalModSide: localMod is null.");
+                return string.Empty;
+            }
+
+            try
+            {
+                // Attempt to retrieve the 'properties' member from LocalMod.
+                var localModType = localMod.GetType();
+                object propertiesInstance = null;
+
+                // First, try to get it as a field.
+                FieldInfo propertiesField = localModType.GetField("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (propertiesField != null)
+                {
+                    propertiesInstance = propertiesField.GetValue(localMod);
+                }
+                else
+                {
+                    // Fallback: try as a property.
+                    PropertyInfo propertiesProp = localModType.GetProperty("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (propertiesProp != null)
+                    {
+                        propertiesInstance = propertiesProp.GetValue(localMod);
+                    }
+                }
+
+                if (propertiesInstance == null)
+                {
+                    Log.Warn("GetLocalModSide: Could not retrieve the 'properties' member from the LocalMod.");
+                    return string.Empty;
+                }
+
+                // Now try to obtain the internal 'ModSide' member from the BuildProperties instance.
+                var propertiesType = propertiesInstance.GetType();
+                object sideObject = null;
+
+                // Try as a property first
+                PropertyInfo sideProp = propertiesType.GetProperty("side", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (sideProp != null)
+                {
+                    sideObject = sideProp.GetValue(propertiesInstance);
+                }
+                else
+                {
+                    // Fallback to a field
+                    FieldInfo sideField = propertiesType.GetField("side", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    if (sideField != null)
+                    {
+                        sideObject = sideField.GetValue(propertiesInstance);
+                    }
+                }
+
+                if (sideObject == null)
+                {
+                    Log.Warn("GetLocalModSide: The 'side' value retrieved is null.");
+                    return "Both"; // Default value if we can't determine
+                }
+
+                return sideObject.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"GetLocalModSide: Exception occurred - {ex}");
+                return string.Empty;
+            }
+        }
+
         #endregion
 
         #region Toggle all methods
@@ -498,7 +692,7 @@ namespace ModHelper.UI.Elements
             foreach (ModElement modElement in combinedMods)
             {
                 modElement.SetState(State.Enabled);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+                string internalName = modElement.internalModName; // Assuming InternalName is a property of ModElement
 
                 // Use reflection to call SetModEnabled on internalModName
                 var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
@@ -514,7 +708,7 @@ namespace ModHelper.UI.Elements
             foreach (ModElement modElement in combinedMods)
             {
                 modElement.SetState(State.Disabled);
-                string internalName = modElement.internalName; // Assuming InternalName is a property of ModElement
+                string internalName = modElement.internalModName; // Assuming InternalName is a property of ModElement
 
                 // Use reflection to call SetModEnabled on internalModName
                 var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);

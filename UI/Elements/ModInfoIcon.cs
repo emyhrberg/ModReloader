@@ -41,7 +41,7 @@ namespace ModHelper.UI.Elements
 
         public void SetStateToClosed()
         {
-            hover = $"Open {modName} info";
+            hover = $"More Info";
             tex = Ass.ConfigOpen;
             // Main.NewText("Closing config for " + modName, new Color(226, 57, 39));
             Main.menuMode = 0;

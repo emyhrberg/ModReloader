@@ -7,11 +7,16 @@
 	<PropertyGroup>
 		<LangVersion>preview</LangVersion>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Reference Include="dnlib">
+	    <HintPath>lib\dnlib.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 
 	<!-- References -->
-	<ItemGroup>
+	<!-- <ItemGroup>
 		<PackageReference Include="dnlib" Version="4.4.0" />
 		<PackageReference Include="Krafs.Publicizer" PrivateAssets="true" Version="2.2.1" />
 		<Publicize Include="tModLoader" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
-	</ItemGroup>
+	</ItemGroup> -->
 </Project>

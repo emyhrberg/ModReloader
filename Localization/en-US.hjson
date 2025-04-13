@@ -163,6 +163,11 @@ Mods: {
 					Label: Right Click Button To Exit World
 					Tooltip: ""
 				}
+
+				ModsView: {
+					Tooltip: ""
+					Label: Mods View
+				}
 			}
 
 			Buttons: {

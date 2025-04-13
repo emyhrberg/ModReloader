@@ -41,6 +41,11 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ConfigClose; // 36x36
         public static Asset<Texture2D> ModInfo; // 36x36
 
+        // Filters
+        public static Asset<Texture2D> FilterEnabled; // 32x32*3 (3 vertical images spritesheet)
+        public static Asset<Texture2D> FilterModSide; // 32x32*3 (3 vertical images spritesheet)
+        public static Asset<Texture2D> FilterViewSize; // 32x32*2 (2 vertical images spritesheet)
+
         // Bool for checking if assets are loaded
         public static bool Initialized { get; set; }
 

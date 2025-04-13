@@ -1,5 +1,7 @@
 using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Debug;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -17,8 +19,8 @@ namespace ModHelper.UI.Elements
 
         public DebugActionContainer()
         {
-            VAlign = 0.89f;
-            HAlign = 0.04f;
+            VAlign = 0.87f;
+            HAlign = 0.01f;
 
             Top.Set(30, 0);
 
@@ -36,7 +38,24 @@ namespace ModHelper.UI.Elements
 
             button2 = new DebugAction($"Clear log", 30, Log.ClearClientLog);
             Append(button2);
+
+            button3 = new DebugAction($"Toggle god", 60, () => ToggleGod());
+            Append(button3);
         }
+
+        private void ToggleGod()
+        {
+            DebugGod.GodEnabled = !DebugGod.GodEnabled;
+            if (DebugGod.GodEnabled)
+            {
+                Main.NewText("God mode: ON", Color.Green);
+            }
+            else
+            {
+                Main.NewText("God mode: OFF", Color.OrangeRed);
+            }
+        }
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {

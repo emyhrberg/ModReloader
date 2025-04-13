@@ -22,10 +22,10 @@ namespace ModHelper.Common.Configs
         [DefaultValue("Default")]
         public string Compiler;
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool AutoJoinWorld;
 
-        [DefaultValue(true)]
+        [DefaultValue(false)]
         public bool SaveWorldBeforeReloading;
 
         [Header("DebugText")]
@@ -66,14 +66,11 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool ResetPanelPositionWhenToggling = false;
 
-        [DefaultValue(false)]
-        public bool ShowSearchboxBlinker = false;
+        [DefaultValue(true)]
+        public bool ShowSearchboxBlinker = true;
 
         [DefaultValue(true)]
         public bool RightClickButtonToExitWorld = true;
-
-        [DefaultValue(true)]
-        public bool ShowNumberOfModsFiltered = true;
 
         [DefaultValue(true)]
         public bool ShowTooltips = true;
@@ -89,6 +86,11 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(false)]
         public bool AutoFocusSearchBox = false;
+
+        [DrawTicks]
+        [OptionStrings(["Small", "Large"])]
+        [DefaultValue("Large")]
+        public string ModsView;
 
         // ------------------------------------------------------
         // ON CHANGED CONFIG
@@ -156,7 +158,7 @@ namespace ModHelper.Common.Configs
                         {
                             foreach (var mod in modsPanel.enabledMods)
                             {
-                                if (mod.internalName == nameOfModWithOpenConfig)
+                                if (mod.internalModName == nameOfModWithOpenConfig)
                                 {
                                     mod.modConfigIcon.SetStateToOpen();
                                 }

@@ -98,7 +98,7 @@ namespace ModHelper.Common.Systems.Menus
             {
                 // Measure text
                 Vector2 size = FontAssets.MouseText.Value.MeasureString(text) * 0.9f;
-                size.Y *= 1.2f; // Increase the Y size by 50%
+                size.Y *= 0.9f; // Increase the Y size by 50%
                 Vector2 hoverSize = new Vector2(size.X, size.Y * 1.26f);
                 // Check if mouse is hovering it
                 bool hovered = Main.MouseScreen.Between(drawPos, drawPos + hoverSize);
@@ -133,15 +133,13 @@ namespace ModHelper.Common.Systems.Menus
                     alphaMult: alpha);
 
                 // Draw debug
-                //Texture2D debugTex = TextureAssets.MagicPixel.Value;
-                //Main.spriteBatch.Draw(
-                //    debugTex,
+                //Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, 
                 //    new Rectangle((int)drawPos.X, (int)drawPos.Y, (int)hoverSize.X, (int)hoverSize.Y),
                 //    Color.Red * 0.5f // Semi-transparent red.
                 //);
 
                 // Move down for the next line
-                drawPos.Y += size.Y + 8f;
+                drawPos.Y += size.Y + 6f;
             }
         }
         #endregion

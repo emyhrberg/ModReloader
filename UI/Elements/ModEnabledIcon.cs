@@ -14,12 +14,16 @@ namespace ModHelper.UI.Elements
 
         private Texture2D icon;
 
-        public ModEnabledIcon(Texture2D tex, string internalModName = "", Texture2D icon = null) : base(tex)
+        public ModEnabledIcon(Texture2D tex, string internalModName = "", Texture2D icon = null, bool large = false) : base(tex)
         {
             this.icon = icon;
             this.internalModName = internalModName;
 
             float size = 25f;
+            if (large)
+            {
+                size *= 2f; // double size for large icon
+            }
             MaxHeight.Set(size, 0f);
             MaxWidth.Set(size, 0f);
             Width.Set(size, 0f);

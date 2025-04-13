@@ -95,7 +95,7 @@ namespace ModHelper.UI.Elements
             if (isModEnabled)
             {
                 // hoverText = $"Open {internalNameFolderName} config";
-                ModConfigIcon modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalNameFolderName, hover: $"Open {internalNameFolderName} config", cleanModName: cleanModName);
+                ModConfigIcon modConfigIcon = new(texture: Ass.ConfigOpen, modPath: internalNameFolderName, hover: $"Open config", cleanModName: cleanModName);
                 float size = 22f;
                 modConfigIcon.MaxHeight.Set(size, 0f);
                 modConfigIcon.MaxWidth.Set(size, 0f);

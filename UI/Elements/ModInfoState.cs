@@ -242,7 +242,7 @@ namespace ModHelper.UI.Elements
             panel.uiList.Clear();
 
             // Add initial top container and padding
-            panel.AddPadding(20f);
+            panel.AddPadding(10f);
             panel.uiList.Add(panel.topContainer);
             panel.AddPadding(20f);
 
@@ -250,14 +250,8 @@ namespace ModHelper.UI.Elements
             panel.enabledMods.Clear();
             panel.allMods.Clear();
 
-            // Call your existing construction methods
-            typeof(ModsPanel).GetMethod("ConstructEnabledMods",
-                BindingFlags.Instance | BindingFlags.NonPublic)
-                .Invoke(panel, null);
-
-            typeof(ModsPanel).GetMethod("ConstructAllMods",
-                BindingFlags.Instance | BindingFlags.NonPublic)
-                .Invoke(panel, null);
+            panel.ConstructEnabledMods();
+            panel.ConstructAllMods();
 
             // Ensure everything is properly displayed
             panel.Recalculate();

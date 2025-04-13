@@ -45,7 +45,9 @@ namespace ModHelper.UI.Elements
 
         public void SetStateToClosed()
         {
-            hover = $"Open {cleanModName} config";
+            hover = $"Open config";
+            // hover = $"Open {cleanModName} config";
+
             tex = Ass.ConfigOpen;
             // Main.NewText("Closing config for " + modName, new Color(226, 57, 39));
             Main.menuMode = 0;
@@ -61,7 +63,9 @@ namespace ModHelper.UI.Elements
 
         public void SetStateToOpen()
         {
-            hover = $"Close {cleanModName} config";
+            // hover = $"Close {cleanModName} config";
+            hover = $"Close config";
+
             isConfigOpen = true;
             Main.playerInventory = false;
             tex = Ass.ConfigClose;
