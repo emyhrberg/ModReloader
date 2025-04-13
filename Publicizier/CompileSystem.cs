@@ -64,18 +64,24 @@ namespace ModHelper.Publicizier
                         {
                             throw new Exception($"No csproj found in {csprojFile}");
                         }
-                        Log.Info($"Found csproj file: {csprojFile}");
+                        else
+                        {
+                            Log.Info($"Found csproj file: {csprojFile}");
+                        }
 
-                        // Load the csproj file and find the Publicize references
+                        // Load the csproj file and find the Publicize references and their context
                         var doc = XDocument.Load(csprojFile);
-                        XNamespace ns = doc.Root!.Name.Namespace;
-                        var referencesToPublicize = doc.Descendants(ns + "Publicize")
-                                                  .Select(e => e.Attribute("Include")?.Value).ToList();
+                        var assemblyContexts = CompilerUtilities.GetPublicizerAssemblyContexts(doc);
+                        var referencesToPublicize = assemblyContexts.Keys.ToList();
+
                         if (referencesToPublicize.Count == 0)
                         {
                             throw new Exception($"No Publicized mod references found in {Path.GetFileName(csprojFile)}");
                         }
-                        Log.Info($"Publicize mod references found in {Path.GetFileName(csprojFile)}: {string.Join(", ", referencesToPublicize)}");
+                        else
+                        {
+                            Log.Info($"Publicize mod references found in {Path.GetFileName(csprojFile)}: {string.Join(", ", referencesToPublicize)}");
+                        }
 
                         // Finding the dlls to publicize
                         Dictionary<string, string> dllPathsToPublicize = CompilerUtilities.FindReferencePaths(references, referencesToPublicize);
@@ -87,12 +93,16 @@ namespace ModHelper.Publicizier
                             // Check if the dll path is valid
                             if (!dllPathsToPublicize.ContainsKey(r))
                             {
-                                Log.Warn($"Failed to find {r}");
+                                Log.Error($"Failed to find {r} in references!");
                                 continue;
                             }
 
+                            // Get the assembly context and dll path
+                            var assemblyContext = assemblyContexts[r];
+                            var dllPath = dllPathsToPublicize[r];
+
                             // Compute the hash and filename of the publicized dll path
-                            var hash = CompilerUtilities.ComputeHash(dllPathsToPublicize[r]);
+                            var hash = CompilerUtilities.ComputeHash(dllPath, assemblyContext);
                             var filePath = CompilerUtilities.GetPRFolderPath($"{r}.{hash}.dll");
 
                             // Check if the publicized dll already exists
@@ -112,8 +122,16 @@ namespace ModHelper.Publicizier
                                 using ModuleDef module = ModuleDefMD.Load(dllPathsToPublicize[r]);
 
                                 // Publicizing the module
-                                bool moduleChanged = PublicizeAssemblies.PublicizeAssembly(module);
-                                Log.Info(moduleChanged ? $"Module {r} is changed!" : $"Module {r} isn't changed!");
+                                bool moduleChanged = PublicizeAssemblies.PublicizeAssembly(module, assemblyContext);
+                                if (moduleChanged)
+                                {
+                                    Log.Info($"Module {r} is changed!");
+                                }
+                                else
+                                {
+                                    Log.Info($"Module {r} isn't changed!");
+                                    continue;
+                                }
 
                                 // Writing the publicized dll to a file
                                 var writerOptions = new ModuleWriterOptions(module)
@@ -178,17 +196,14 @@ namespace ModHelper.Publicizier
                         code = peStream.ToArray();
                         pdb = pdbStream.ToArray();
 
-                        //RoslynCompileHook?.Dispose();
                         return results.Diagnostics.Where(d => d.Severity >= DiagnosticSeverity.Warning).ToArray();
                     }
                     catch (Exception ex)
                     {
                         Log.Error($"RoslynCompileHook error: {ex.Message}");
 
-                        // Start the original method
-                        var r = orig(name, references, files, preprocessorSymbols, allowUnsafe, out code, out pdb);
-                        //RoslynCompileHook?.Dispose();
-                        return r;
+                        // Return the original method
+                        return orig(name, references, files, preprocessorSymbols, allowUnsafe, out code, out pdb);
                     }
                 });
             GC.SuppressFinalize(RoslynCompileHook);

@@ -7,6 +7,8 @@ using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace ModHelper.Publicizier;
 public static class CompilerUtilities
@@ -112,17 +114,46 @@ public static class CompilerUtilities
     }
 
     // Create a hash of the file using MD5
-    public static string ComputeHash(string filePath)
+    internal static string ComputeHash(string assemblyPath, PublicizerAssemblyContext assemblyContext)
+    {
+        var sb = new StringBuilder();
+        sb.Append(assemblyContext.AssemblyName);
+        sb.Append(assemblyContext.IncludeCompilerGeneratedMembers);
+        sb.Append(assemblyContext.IncludeVirtualMembers);
+        sb.Append(assemblyContext.ExplicitlyPublicizeAssembly);
+        sb.Append(assemblyContext.ExplicitlyDoNotPublicizeAssembly);
+        foreach (string publicizePattern in assemblyContext.PublicizeMemberPatterns)
+        {
+            sb.Append(publicizePattern);
+        }
+        foreach (string doNotPublicizePattern in assemblyContext.DoNotPublicizeMemberPatterns)
+        {
+            sb.Append(doNotPublicizePattern);
+        }
+        if (assemblyContext.PublicizeMemberRegexPattern is not null)
+        {
+            sb.Append(assemblyContext.PublicizeMemberRegexPattern.ToString());
+        }
+
+        byte[] patternBytes = Encoding.UTF8.GetBytes(sb.ToString());
+        byte[] assemblyBytes = File.ReadAllBytes(assemblyPath);
+        byte[] allBytes = assemblyBytes.Concat(patternBytes).ToArray();
+
+        return ComputeHash(allBytes);
+    }
+
+    private static string ComputeHash(byte[] bytes)
     {
         using var algorithm = MD5.Create();
-        using var stream = File.OpenRead(filePath);
-        byte[] computedHash = algorithm.ComputeHash(stream);
+
+        byte[] computedHash = algorithm.ComputeHash(bytes);
         var sb = new StringBuilder();
         foreach (byte b in computedHash)
         {
             sb.Append($"{b:X2}");
         }
         string hexadecimalHash = sb.ToString();
+
         return hexadecimalHash;
     }
 
@@ -130,6 +161,85 @@ public static class CompilerUtilities
     public static string GetPRFolderPath(string fileName)
     {
         return Utilities.GetFolderPath("ModHelper/PublicizedReferences", fileName);
+    }
+
+    public static Dictionary<string, PublicizerAssemblyContext> GetPublicizerAssemblyContexts(XDocument csproj)
+    {
+        var contexts = new Dictionary<string, PublicizerAssemblyContext>();
+        XNamespace ns = csproj.Root!.Name.Namespace;
+
+        var publicizeElements = csproj.Descendants(ns + "Publicize");
+        var doNotPublicizeElements = csproj.Descendants(ns + "DoNotPublicize");
+
+        foreach (var elem in publicizeElements)
+        {
+            string? itemSpec = elem.Attribute("Include")?.Value;
+            if (string.IsNullOrEmpty(itemSpec)) continue;
+
+            int index = itemSpec.IndexOf(':');
+            bool isAssemblyPattern = index == -1;
+            string assemblyName = isAssemblyPattern ? itemSpec : itemSpec[..index];
+
+            if (!contexts.TryGetValue(assemblyName, out var assemblyContext))
+            {
+                assemblyContext = new PublicizerAssemblyContext(assemblyName);
+                contexts.Add(assemblyName, assemblyContext);
+            }
+
+            if (isAssemblyPattern)
+            {
+                assemblyContext.IncludeCompilerGeneratedMembers =
+                    bool.TryParse(elem.Attribute("IncludeCompilerGeneratedMembers")?.Value, out var icgm) && icgm;
+                assemblyContext.IncludeVirtualMembers =
+                    bool.TryParse(elem.Attribute("IncludeVirtualMembers")?.Value, out var ivm) && ivm;
+                assemblyContext.ExplicitlyPublicizeAssembly = true;
+                var pattern = elem.Attribute("MemberPattern")?.Value;
+                if (!string.IsNullOrEmpty(pattern))
+                {
+                    assemblyContext.PublicizeMemberRegexPattern = new Regex(pattern);
+                }
+
+                Log.Info($"Publicize: {itemSpec}, virtual members: {assemblyContext.IncludeVirtualMembers}, " +
+                         $"compiler-generated members: {assemblyContext.IncludeCompilerGeneratedMembers}, " +
+                         $"member pattern: {assemblyContext.PublicizeMemberRegexPattern}");
+            }
+            else
+            {
+                string memberPattern = itemSpec[(index + 1)..];
+                assemblyContext.PublicizeMemberPatterns.Add(memberPattern);
+                Log.Info($"Publicize: {itemSpec}");
+            }
+        }
+
+        foreach (var elem in doNotPublicizeElements)
+        {
+            string? itemSpec = elem.Attribute("Include")?.Value;
+            if (string.IsNullOrEmpty(itemSpec)) continue;
+
+            int index = itemSpec.IndexOf(':');
+            bool isAssemblyPattern = index == -1;
+            string assemblyName = isAssemblyPattern ? itemSpec : itemSpec[..index];
+
+            if (!contexts.TryGetValue(assemblyName, out var assemblyContext))
+            {
+                assemblyContext = new PublicizerAssemblyContext(assemblyName);
+                contexts.Add(assemblyName, assemblyContext);
+            }
+
+            if (isAssemblyPattern)
+            {
+                assemblyContext.ExplicitlyDoNotPublicizeAssembly = true;
+            }
+            else
+            {
+                string memberPattern = itemSpec[(index + 1)..];
+                assemblyContext.DoNotPublicizeMemberPatterns.Add(memberPattern);
+            }
+
+            Log.Info($"DoNotPublicize: {itemSpec}");
+        }
+
+        return contexts;
     }
 
 }

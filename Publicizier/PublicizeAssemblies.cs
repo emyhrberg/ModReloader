@@ -12,12 +12,9 @@ namespace ModHelper.Publicizier
 {
     internal class PublicizeAssemblies
     {
-        public static bool PublicizeAssembly(ModuleDef module)
+        public static bool PublicizeAssembly(ModuleDef module, PublicizerAssemblyContext assemblyContext)
         {
             bool publicizedAnyMemberInAssembly = false;
-
-            bool includeVirtual = false; // Include virtual members in the publicization process
-
             var doNotPublicizePropertyMethods = new HashSet<MethodDef>();
 
             int publicizedTypesCount = 0;
@@ -25,6 +22,7 @@ namespace ModHelper.Publicizier
             int publicizedMethodsCount = 0;
             int publicizedFieldsCount = 0;
 
+            // TYPES
             foreach (TypeDef? typeDef in module.GetTypes())
             {
                 doNotPublicizePropertyMethods.Clear();
@@ -32,24 +30,71 @@ namespace ModHelper.Publicizier
                 bool publicizedAnyMemberInType = false;
                 string typeName = typeDef.ReflectionFullName;
 
-                bool explicitlyDoNotPublicizeType = false; //assemblyContext.DoNotPublicizeMemberPatterns.Contains(typeName);
+                bool explicitlyDoNotPublicizeType = assemblyContext.DoNotPublicizeMemberPatterns.Contains(typeName);
 
                 // PROPERTIES
                 foreach (PropertyDef? propertyDef in typeDef.Properties)
                 {
                     string propertyName = $"{typeName}.{propertyDef.Name}";
 
-                    bool isCompilerGeneratedProperty = IsCompilerGenerated(propertyDef);
-                    if (isCompilerGeneratedProperty)
+                    bool explicitlyDoNotPublicizeProperty = assemblyContext.DoNotPublicizeMemberPatterns.Contains(propertyName);
+                    if (explicitlyDoNotPublicizeProperty)
+                    {
+                        if (propertyDef.GetMethod is MethodDef getter)
+                        {
+                            doNotPublicizePropertyMethods.Add(getter);
+                        }
+                        if (propertyDef.SetMethod is MethodDef setter)
+                        {
+                            doNotPublicizePropertyMethods.Add(setter);
+                        }
+                        Log.Info($"Explicitly ignoring property: {propertyName}");
+                        continue;
+                    }
+
+                    bool explicitlyPublicizeProperty = assemblyContext.PublicizeMemberPatterns.Contains(propertyName);
+                    if (explicitlyPublicizeProperty)
+                    {
+                        if (AssemblyEditor.PublicizeProperty(propertyDef))
+                        {
+                            publicizedAnyMemberInType = true;
+                            publicizedAnyMemberInAssembly = true;
+                            publicizedPropertiesCount++;
+                            Log.Info($"Explicitly publicizing property: {propertyName}");
+                        }
+                        continue;
+                    }
+
+                    if (explicitlyDoNotPublicizeType)
                     {
                         continue;
                     }
 
-                    if (AssemblyEditor.PublicizeProperty(propertyDef, includeVirtual))
+                    if (assemblyContext.ExplicitlyDoNotPublicizeAssembly)
                     {
-                        publicizedAnyMemberInType = true;
-                        publicizedAnyMemberInAssembly = true;
-                        publicizedPropertiesCount++;
+                        continue;
+                    }
+
+                    if (assemblyContext.ExplicitlyPublicizeAssembly)
+                    {
+                        bool isCompilerGeneratedProperty = IsCompilerGenerated(propertyDef);
+                        if (isCompilerGeneratedProperty && !assemblyContext.IncludeCompilerGeneratedMembers)
+                        {
+                            continue;
+                        }
+
+                        bool isRegexPatternMatch = assemblyContext.PublicizeMemberRegexPattern?.IsMatch(propertyName) ?? true;
+                        if (!isRegexPatternMatch)
+                        {
+                            continue;
+                        }
+
+                        if (AssemblyEditor.PublicizeProperty(propertyDef, assemblyContext.IncludeVirtualMembers))
+                        {
+                            publicizedAnyMemberInType = true;
+                            publicizedAnyMemberInAssembly = true;
+                            publicizedPropertiesCount++;
+                        }
                     }
                 }
 
@@ -64,17 +109,56 @@ namespace ModHelper.Publicizier
                         continue;
                     }
 
-                    bool isCompilerGeneratedMethod = IsCompilerGenerated(methodDef);
-                    if (isCompilerGeneratedMethod)
+                    bool explicitlyDoNotPublicizeMethod = assemblyContext.DoNotPublicizeMemberPatterns.Contains(methodName);
+                    if (explicitlyDoNotPublicizeMethod)
+                    {
+                        Log.Info($"Explicitly ignoring method: {methodName}");
+                        continue;
+                    }
+
+                    bool explicitlyPublicizeMethod = assemblyContext.PublicizeMemberPatterns.Contains(methodName);
+                    if (explicitlyPublicizeMethod)
+                    {
+                        if (AssemblyEditor.PublicizeMethod(methodDef))
+                        {
+                            publicizedAnyMemberInType = true;
+                            publicizedAnyMemberInAssembly = true;
+                            publicizedMethodsCount++;
+                            Log.Info($"Explicitly publicizing method: {methodName}");
+                        }
+                        continue;
+                    }
+
+                    if (explicitlyDoNotPublicizeType)
                     {
                         continue;
                     }
 
-                    if (AssemblyEditor.PublicizeMethod(methodDef, includeVirtual))
+                    if (assemblyContext.ExplicitlyDoNotPublicizeAssembly)
                     {
-                        publicizedAnyMemberInType = true;
-                        publicizedAnyMemberInAssembly = true;
-                        publicizedMethodsCount++;
+                        continue;
+                    }
+
+                    if (assemblyContext.ExplicitlyPublicizeAssembly)
+                    {
+                        bool isCompilerGeneratedMethod = IsCompilerGenerated(methodDef);
+                        if (isCompilerGeneratedMethod && !assemblyContext.IncludeCompilerGeneratedMembers)
+                        {
+                            continue;
+                        }
+
+                        bool isRegexPatternMatch = assemblyContext.PublicizeMemberRegexPattern?.IsMatch(methodName) ?? true;
+                        if (!isRegexPatternMatch)
+                        {
+                            continue;
+                        }
+
+                        if (AssemblyEditor.PublicizeMethod(methodDef, assemblyContext.IncludeVirtualMembers))
+                        {
+                            publicizedAnyMemberInType = true;
+                            publicizedAnyMemberInAssembly = true;
+                            publicizedMethodsCount++;
+                        }
                     }
                 }
 
@@ -83,19 +167,57 @@ namespace ModHelper.Publicizier
                 {
                     string fieldName = $"{typeName}.{fieldDef.Name}";
 
-                    bool isCompilerGeneratedField = IsCompilerGenerated(fieldDef);
-                    if (isCompilerGeneratedField)
+                    bool explicitlyDoNotPublicizeField = assemblyContext.DoNotPublicizeMemberPatterns.Contains(fieldName);
+                    if (explicitlyDoNotPublicizeField)
+                    {
+                        Log.Info($"Explicitly ignoring field: {fieldName}");
+                        continue;
+                    }
+
+                    bool explicitlyPublicizeField = assemblyContext.PublicizeMemberPatterns.Contains(fieldName);
+                    if (explicitlyPublicizeField)
+                    {
+                        if (AssemblyEditor.PublicizeField(fieldDef))
+                        {
+                            publicizedAnyMemberInType = true;
+                            publicizedAnyMemberInAssembly = true;
+                            publicizedFieldsCount++;
+                            Log.Info($"Explicitly publicizing field: {fieldName}");
+                        }
+                        continue;
+                    }
+
+                    if (explicitlyDoNotPublicizeType)
                     {
                         continue;
                     }
 
-                    if (AssemblyEditor.PublicizeField(fieldDef))
+                    if (assemblyContext.ExplicitlyDoNotPublicizeAssembly)
                     {
-                        publicizedAnyMemberInType = true;
-                        publicizedAnyMemberInAssembly = true;
-                        publicizedFieldsCount++;
+                        continue;
                     }
 
+                    if (assemblyContext.ExplicitlyPublicizeAssembly)
+                    {
+                        bool isCompilerGeneratedField = IsCompilerGenerated(fieldDef);
+                        if (isCompilerGeneratedField && !assemblyContext.IncludeCompilerGeneratedMembers)
+                        {
+                            continue;
+                        }
+
+                        bool isRegexPatternMatch = assemblyContext.PublicizeMemberRegexPattern?.IsMatch(fieldName) ?? true;
+                        if (!isRegexPatternMatch)
+                        {
+                            continue;
+                        }
+
+                        if (AssemblyEditor.PublicizeField(fieldDef))
+                        {
+                            publicizedAnyMemberInType = true;
+                            publicizedAnyMemberInAssembly = true;
+                            publicizedFieldsCount++;
+                        }
+                    }
                 }
 
                 if (publicizedAnyMemberInType)
@@ -108,19 +230,49 @@ namespace ModHelper.Publicizier
                     continue;
                 }
 
+                if (explicitlyDoNotPublicizeType)
+                {
+                    Log.Info($"Explicitly ignoring type: {typeName}");
+                    continue;
+                }
 
-                bool isCompilerGeneratedType = IsCompilerGenerated(typeDef);
-                if (isCompilerGeneratedType)
+                bool explicitlyPublicizeType = assemblyContext.PublicizeMemberPatterns.Contains(typeName);
+                if (explicitlyPublicizeType)
+                {
+                    if (AssemblyEditor.PublicizeType(typeDef))
+                    {
+                        publicizedAnyMemberInAssembly = true;
+                        publicizedTypesCount++;
+                        Log.Info($"Explicitly publicizing type: {typeName}");
+                    }
+                    continue;
+                }
+
+                if (assemblyContext.ExplicitlyDoNotPublicizeAssembly)
                 {
                     continue;
                 }
 
-                if (AssemblyEditor.PublicizeType(typeDef))
+                if (assemblyContext.ExplicitlyPublicizeAssembly)
                 {
-                    publicizedAnyMemberInAssembly = true;
-                    publicizedTypesCount++;
-                }
+                    bool isCompilerGeneratedType = IsCompilerGenerated(typeDef);
+                    if (isCompilerGeneratedType && !assemblyContext.IncludeCompilerGeneratedMembers)
+                    {
+                        continue;
+                    }
 
+                    bool isRegexPatternMatch = assemblyContext.PublicizeMemberRegexPattern?.IsMatch(typeName) ?? true;
+                    if (!isRegexPatternMatch)
+                    {
+                        continue;
+                    }
+
+                    if (AssemblyEditor.PublicizeType(typeDef))
+                    {
+                        publicizedAnyMemberInAssembly = true;
+                        publicizedTypesCount++;
+                    }
+                }
             }
 
             Log.Info("Publicized types: " + publicizedTypesCount);
