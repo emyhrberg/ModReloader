@@ -4,7 +4,7 @@
     {
         FreshClient,
         SinglePlayer,
-        MPMain,
+        MPMajor,
         MPMinor,
     }
 }

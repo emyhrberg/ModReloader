@@ -321,7 +321,7 @@ namespace ModHelper.UI.Buttons
         {
             // base update
             base.Update(gameTime);
-
+            
             // disable item use if the button is hovered
             if (ContainsPoint(Main.MouseScreen))
             {

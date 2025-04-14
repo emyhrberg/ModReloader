@@ -253,7 +253,7 @@ namespace ModHelper.Common.Systems.Menus
             Main.ActiveWorldFileData = world;
 
             // Main.menuMode = 889; // host & play menu
-            Main.menuMode = 30; // enter password menu
+            Main.instance.OnSubmitServerPassword("");
         }
 
         private static void StartClient()

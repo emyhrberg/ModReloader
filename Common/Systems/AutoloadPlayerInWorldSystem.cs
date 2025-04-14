@@ -53,6 +53,10 @@ namespace ModHelper.Common.Systems
                     // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
                     onSuccessfulLoad += EnterSingleplayerWorld;
                 }
+                else if (ClientDataJsonHelper.ClientMode == ClientMode.MPMajor || ClientDataJsonHelper.ClientMode == ClientMode.MPMinor)
+                {
+                    onSuccessfulLoad += EnterMultiplayerWorld; 
+                }
 
                 // TODO multiplayer here.
 
@@ -112,6 +116,45 @@ namespace ModHelper.Common.Systems
             // Show the custom load screen
             CustomLoadWorld.Show(world.Name);
             // }
+        }
+
+        private void EnterMultiplayerWorld()
+        {
+            Log.Info("EnterMultiplayerWorld() called!");
+
+            // Loading lists of Players
+            Main.LoadPlayers();
+
+            if (Main.PlayerList.Count == 0)
+                throw new Exception("No players found.");
+
+            // getting playerID and worldID and print
+            Log.Info("PlayerID: " + ClientDataJsonHelper.PlayerID);
+
+            int playerID = ClientDataJsonHelper.PlayerID;
+
+            var player = Main.PlayerList.FirstOrDefault();
+
+            if (playerID == -1)
+            {
+                Log.Error("PlayerID is -1. Cannot autoload.");
+                // if we return here, we cause a "crash" or "stuck" in loading.
+            }
+            else
+            {
+                // all ok, continue.
+                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+            }
+
+            Main.SelectPlayer(player);
+            Log.Info($"Autoload using ClientDataHandler. Starting game with Player: {player.Name}");
+
+
+            Netplay.SetRemoteIP("127.0.0.1");
+            Main.autoPass = true;
+            Main.statusText = Lang.menu[8].Value;
+            Netplay.StartTcpClient();
+            Main.menuMode = 10;
         }
     }
 }

@@ -157,7 +157,7 @@ namespace ModHelper.PacketHandlers
 
             if (Main.netMode == NetmodeID.Server)
             {
-                ModPacket packet = GetPacket(RefreshMajorClient);
+                ModPacket packet = GetPacket(RefreshMinorClient);
                 packet.Send(toWho, ignoreWho);
             }
         }
