@@ -557,6 +557,7 @@ namespace ModHelper.Helpers
                                     throw ex.InnerException!;
                                 }
                             }
+                            actionAfterBuild?.Invoke();
                         }),
                         true
                     ]);
@@ -566,9 +567,6 @@ namespace ModHelper.Helpers
                     throw ex.InnerException!;
                 }
 
-            }).ContinueWith(t =>
-            {
-                actionAfterBuild?.Invoke(); // Execute custom action after the method finishes
             });
         }
 
