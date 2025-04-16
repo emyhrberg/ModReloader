@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using dnlib.DotNet;
-using dnlib.DotNet.Writer;
 using ModHelper.Helpers;
-using Mono.CompilerServices.SymbolWriter;
 
 namespace ModHelper.Publicizier
 {

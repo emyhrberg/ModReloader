@@ -15,7 +15,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
@@ -78,7 +77,7 @@ namespace ModHelper.Common.Systems.Menus
             }
 
             // Menu options with corresponding actions
-            var menuOptions = new(string Text, Action Action, float scale, string tooltip)[]
+            var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
                 ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helper, the best mod for modding!"),
                 ("Join Singleplayer", JoinSingleplayer, 1.02f, "Enter a singleplayer world with last selected player and world"),

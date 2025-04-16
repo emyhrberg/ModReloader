@@ -55,7 +55,7 @@ namespace ModHelper.Common.Systems
                 }
                 else if (ClientDataJsonHelper.ClientMode == ClientMode.MPMajor || ClientDataJsonHelper.ClientMode == ClientMode.MPMinor)
                 {
-                    onSuccessfulLoad += EnterMultiplayerWorld; 
+                    onSuccessfulLoad += EnterMultiplayerWorld;
                 }
 
                 // TODO multiplayer here.

@@ -1,6 +1,5 @@
 using System.IO;
 using ModHelper.PacketHandlers;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace ModHelper

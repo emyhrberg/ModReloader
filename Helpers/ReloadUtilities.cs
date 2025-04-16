@@ -20,7 +20,6 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
-using Terraria.ModLoader.UI;
 using Terraria.Social;
 namespace ModHelper.Helpers
 {
@@ -29,12 +28,14 @@ namespace ModHelper.Helpers
         // Global list of all the mods that should be built and reloaded when a reload is executed
         public static List<string> ModsToReload = [];
 
-        private const string pipeName = "ModHelperReloadPipe";
+        private static int clientsCountInServer;
+
+        private const string pipeNameBeforeRebuild = "ModHelperReloadPipeBeforeRebuild";
 
         private const string pipeNameAfterRebuild = "ModHelperReloadPipeAfterRebuild";
 
         /// <summary>
-        /// Main function to build and reload all the mods in the ModsToReload list.
+        /// Main function to build and reload all the mods in the ModsToReload list for Singleplayer.
         /// </summary>
         public static async Task SinglePlayerReload()
         {
@@ -49,7 +50,7 @@ namespace ModHelper.Helpers
             }
 
             // Another null check for modstoreload, check if modsources contains any mod
-            if (!CheckThatModExists())
+            if (!CheckThatModsExists())
             {
                 Main.NewText("No mods were existing with that/those names. Please check the mod names and try again.");
                 Log.Warn("No mods were found to reload.");
@@ -65,6 +66,11 @@ namespace ModHelper.Helpers
             BuildAndReloadMods();
         }
 
+        /// <summary>
+        /// Main function to build and reload all the mods in the ModsToReload list for Multiplayer.<br/>
+        /// It sends a packet to the server to inform about reloading mod in multiplayer.
+        /// </summary>
+        /// <returns></returns>
         public static async Task MultiPlayerMainReload()
         {
             // Log.Info("mods to reload 2: " + string.Join(", ", ReloadHelper.ModsToReload));
@@ -78,7 +84,7 @@ namespace ModHelper.Helpers
             }
 
             // Another null check for modstoreload, check if modsources contains any mod
-            if (!CheckThatModExists())
+            if (!CheckThatModsExists())
             {
                 Main.NewText("No mods were existing with that/those names. Please check the mod names and try again.");
                 Log.Warn("No mods were found to reload.");
@@ -92,7 +98,6 @@ namespace ModHelper.Helpers
                 // Exit the game.
                 await ExitWorld();
 
-
                 CreateServerAfterUnloadHook(ClientDataJsonHelper.WorldID);
 
                 // Mod was found, we can Reload
@@ -100,37 +105,42 @@ namespace ModHelper.Helpers
             }
             else
             {
+                clientsCountInServer = Main.player.Where((p) => p.active).Count() - 1;
                 // Prepare client. Use singleplayer by default for now.
                 ModNetHandler.RefreshServer.SendReloadMP(255, -1, Conf.C.SaveWorldBeforeReloading);
             }
         }
 
+        /// <summary>
+        /// Function to build and reload all the mods in the ModsToReload list for MajorMP client.<br/>
+        /// It waits for all clients to finish unloading and then rebuilds the mods.<br/>
+        /// After rebuilding, it allows all clients to reload the mods.
+        /// </summary>
+        /// <returns></returns>
         public static async Task MultiPlayerMajorReload()
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
+                // Prepare client data
                 PrepareClient(clientMode: ClientMode.MPMajor);
-            
+
                 // Exit the game.
                 await ExitWorld();
 
                 // Kill the server process
                 Main.tServer?.Kill();
 
-                // Get how many clients are connected
-                int clientCount = Main.player.Where((p) => p.active).Count() - 1;
-
                 // Create a list of pipes for clients
                 List<NamedPipeServerStream> clients = new List<NamedPipeServerStream>();
                 List<Task<string?>> clientResponses = new List<Task<string?>>();
 
-                Log.Info($"Waiting for {clientCount} clients...");
+                Log.Info($"Waiting for {clientsCountInServer} clients...");
 
                 // Wait for conecting all clients
-                for (int i = 0; i < clientCount; i++)
+                for (int i = 0; i < clientsCountInServer; i++)
                 {
                     // Creating pipe for each client
-                    var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.InOut, clientCount);
+                    var pipeServer = new NamedPipeServerStream(pipeNameBeforeRebuild, PipeDirection.InOut, clientsCountInServer);
                     GC.SuppressFinalize(pipeServer);
 
                     // Wait for connection
@@ -138,15 +148,6 @@ namespace ModHelper.Helpers
                     clients.Add(pipeServer);
                     Log.Info($"Client {i + 1} connected!");
                 }
-
-
-                // Wait for all clients to finish unloading
-                foreach (var client in clients)
-                {
-                    clientResponses.Add(ReadPipeMessage(client));
-                }
-
-                await Task.WhenAll(clientResponses);
 
                 // Dispose of all clients
                 foreach (var client in clients)
@@ -161,13 +162,13 @@ namespace ModHelper.Helpers
 
                     // After building - reload all other clients
                     List<NamedPipeServerStream> clientsAfterRebuild = new List<NamedPipeServerStream>();
-                    Log.Info($"Waiting for {clientCount} clients...");
+                    Log.Info($"Waiting for {clientsCountInServer} clients...");
 
                     // Wait for conecting all clients
-                    for (int i = 0; i < clientCount; i++)
+                    for (int i = 0; i < clientsCountInServer; i++)
                     {
                         // Creating pipe for each client
-                        var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut, clientCount);
+                        var pipeServer = new NamedPipeServerStream(ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut, clientsCountInServer);
                         GC.SuppressFinalize(pipeServer);
 
                         // Wait for connection
@@ -188,73 +189,87 @@ namespace ModHelper.Helpers
             }
         }
 
+        /// <summary>
+        /// Function to build and reload all the mods in the ModsToReload list for MinorMP client.<br/>
+        /// It starts to reload the mods and then waits for the MajorMP client to finish unloading and then rebuilds the mods.<br/>
+        /// </summary>
+        /// <returns></returns>
+        public static async Task MultiPlayerMinorReload()
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                // Prepare client data
+                PrepareClient(ClientMode.MPMinor);
+
+                // Exit the game.
+                await ExitWorld();
+
+                // Kill the server process (just in case)
+                Main.tServer?.Kill();
+
+                // Creating a hook for Unload to wait for the major client to rebuild mod(s)
+                Hook hookForUnload = null;
+                hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
+                {
+                    var logger = LogManager.GetLogger("MODHELPER_UNLOAD");
+
+                    bool o = orig();
+
+                    object loadMods = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface").GetField("loadMods", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+
+                    //UILoadMods loadMods = Terraria.ModLoader.UI.Interface.loadMods;
+
+                    typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
+
+
+                    using (var pipeClient = new NamedPipeClientStream(".", pipeNameBeforeRebuild, PipeDirection.InOut))
+                    {
+                        logger.Info($"Waiting for main client");
+                        pipeClient.Connect();
+                    }
+
+                    logger.Info("Wait to continue loading");
+
+                    using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
+                    pipeClientafterRebuild.Connect();
+
+                    logger.Info("Clearing modsDirCache");
+
+                    var cache = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+
+                    if (cache is IDictionary dictionary)
+                    {
+                        dictionary.Clear(); // Clears the dictionary without needing LocalMod type
+                        Console.WriteLine("Cache cleared successfully.");
+                    }
+
+                    logger.Info("Loading mods");
+
+                    hookForUnload?.Dispose();
+
+                    return o;
+                });
+
+                //stops GC from deleting it
+                GC.SuppressFinalize(hookForUnload);
+
+                ReloadMods();
+            }
+        }
+
+        /// <summary>
+        /// Sets up a hook for creating a server after unloading the mods.
+        /// </summary>
+        /// <param name="worldIdToLoad">ID of the world to load.</param>
         private static void CreateServerAfterUnloadHook(int worldIdToLoad)
         {
             Hook hookForUnload = null;
 
             hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
             {
-                var logger = LogManager.GetLogger("SQUID");
+                var logger = LogManager.GetLogger("MODHELPER_UNLOAD");
 
                 bool o = orig();
-
-                /*
-                var modOrganizerType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
-                var findModsMethod = modOrganizerType.GetMethod("FindMods", BindingFlags.NonPublic | BindingFlags.Static);
-
-                if (findModsMethod != null)
-                {
-                    var localMods = findModsMethod.Invoke(null, new object[] { true });
-
-                    if (localMods is IEnumerable modsEnumerable)
-                    {
-                        var targetMod = modsEnumerable.Cast<object>()
-                            .FirstOrDefault(mod =>
-                            {
-                                Type modType = mod.GetType();
-                                var nameProperty = modType.GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
-                                return nameProperty?.GetValue(mod)?.ToString() == "ModHelper";
-                            });
-
-                        if (targetMod != null)
-                        {
-                            // Get `modFile` field from `LocalMod`
-                            Type localModType = targetMod.GetType();
-                            var modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
-                            var modFileInstance = modFileField?.GetValue(targetMod);
-
-                            if (modFileInstance != null)
-                            {
-                                // Get `Hash` property from `TmodFile`
-                                Type tmodFileType = modFileInstance.GetType();
-                                var hashProperty = tmodFileType.GetProperty("Hash", BindingFlags.Public | BindingFlags.Instance);
-                                var hashValue = hashProperty?.GetValue(modFileInstance) as byte[];
-
-                                if (hashValue != null)
-                                {
-                                    logger.Info("Hash: " + BitConverter.ToString(hashValue));
-                                    foreach (var client in clientsAfterRebuild)
-                                    {
-                                        using BinaryWriter writer = new BinaryWriter(client);
-                                        writer.Write(hashValue[0]);
-                                    }
-                                }
-                                else
-                                {
-                                    logger.Info("Hash property not found or is null.");
-                                }
-                            }
-                            else
-                            {
-                                logger.Info("modFile is null.");
-                            }
-                        }
-                        else
-                        {
-                            logger.Info("Mod not found.");
-                        }
-                    }
-                }*/
 
                 try
                 {
@@ -264,7 +279,7 @@ namespace ModHelper.Helpers
                         throw new Exception("No worlds found.");
 
                     // Getting Player and World from ClientDataHandler
-                    var world = Main.WorldList[worldIdToLoad];
+                    Main.ActiveWorldFileData = Main.WorldList[worldIdToLoad];
 
                     string text = "-autoshutdown -password \"" + Main.ConvertToSafeArgument(Netplay.ServerPassword) + "\" -lang " + Language.ActiveCulture.LegacyId;
                     if (Platform.IsLinux)
@@ -314,71 +329,10 @@ namespace ModHelper.Helpers
             });
         }
 
-        public static async Task MultiPlayerMinorReload()
-        {
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                PrepareClient(ClientMode.MPMinor);
-
-                await ExitWorld();
-
-                Hook hookForUnload = null;
-
-                hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
-                {
-                    var logger = LogManager.GetLogger("SQUID");
-
-                    bool o = orig();
-
-                    object loadMods = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.Interface").GetField("loadMods", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-
-                    //UILoadMods loadMods = Terraria.ModLoader.UI.Interface.loadMods;
-
-                    typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.UI.UILoadMods").GetMethod("SetProgressText", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(loadMods, ["Waiting for main client", "Waiting for main client"]);
-
-
-                    using (var pipeClient = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut))
-                    {
-                        logger.Info($"Waiting for main client");
-                        pipeClient.Connect();
-
-                        using var writer = new StreamWriter(pipeClient) { AutoFlush = true };
-                        writer.WriteLine("Im here and ready to reload!");
-                    }
-
-                    logger.Info("Wait to continue loading");
-
-                    using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
-                    pipeClientafterRebuild.Connect();
-                    /*
-                    using BinaryReader reader = new BinaryReader(pipeClientafterRebuild);
-                    int number = reader.ReadByte();
-                    logger.Info($"Number from hash: {number}");
-                    */
-                    logger.Info("Clearing modsDirCache");
-
-                    var cache = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-
-                    if (cache is IDictionary dictionary)
-                    {
-                        dictionary.Clear(); // Clears the dictionary without needing LocalMod type
-                        Console.WriteLine("Cache cleared successfully.");
-                    }
-
-                    logger.Info("Loading mods");
-
-                    hookForUnload?.Dispose();
-
-                    return o;
-                });
-
-                //stops GC from deleting it
-                GC.SuppressFinalize(hookForUnload);
-
-                ReloadMod();
-            }
-        }
-
+        /// <summary>
+        /// Prepares the client data for the reload process.
+        /// </summary>
+        /// <param name="clientMode"></param>
         private static void PrepareClient(ClientMode clientMode)
         {
             ClientDataJsonHelper.ClientMode = clientMode;
@@ -443,12 +397,19 @@ namespace ModHelper.Helpers
             return true;
         }
 
-        private static void ReloadMod()
+        /// <summary>
+        /// Bruh just read the name of the function
+        /// </summary>
+        private static void ReloadMods()
         {
             // Going to reload mod menu(that automaticly invokes reload)
             Main.menuMode = 10002;
         }
 
+        /// <summary>
+        /// Exits the world and saves it if needed.
+        /// </summary>
+        /// <returns></returns>
         private static Task ExitWorld()
         {
             // We cant exit any world if in the main menu, so we just return a completed task
@@ -474,7 +435,11 @@ namespace ModHelper.Helpers
             }
         }
 
-        private static bool CheckThatModExists()
+        /// <summary>
+        /// Checks if the mods to reload are in the mod sources.
+        /// </summary>
+        /// <returns>True, if at least one mod was found in the mod sources</returns>
+        private static bool CheckThatModsExists()
         {
             Type modCompileType = typeof(Main).Assembly.GetType("Terraria.ModLoader.Core.ModCompile");
             MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
@@ -493,6 +458,11 @@ namespace ModHelper.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Builds and reloads the mods in the ModsToReload list.<br/>
+        /// After building, it invokes the actionAfterBuild action if provided.
+        /// </summary>
+        /// <param name="actionAfterBuild">Action to invoke after building the mods.</param>
         private static void BuildAndReloadMods(Action actionAfterBuild = null)
         {
             // 1. Getting Assembly
@@ -568,23 +538,6 @@ namespace ModHelper.Helpers
                 }
 
             });
-        }
-
-        private static Task ExitAndKillServer()
-        {
-            // Sending packet to server to inform about reloading mod in multiplayer
-            ModNetHandler.RefreshServer.SendReloadMP(255, Main.myPlayer, Conf.C.SaveWorldBeforeReloading);
-
-            // idk if that needed for exiting server, but maybe we need to save player data idk
-            var tcs = new TaskCompletionSource();
-            WorldGen.SaveAndQuit(tcs.SetResult);
-            return tcs.Task;
-        }
-
-        private static async Task<string?> ReadPipeMessage(NamedPipeServerStream pipe)
-        {
-            using StreamReader reader = new StreamReader(pipe);
-            return await reader.ReadLineAsync();
         }
     }
 }

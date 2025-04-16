@@ -169,19 +169,19 @@ namespace ModHelper.UI.Elements
             // Draw outline
             //if (!string.IsNullOrEmpty(currentString))
             //{
-                Color outlineColor = Color.Black;
-                Vector2[] offsets =
-                [
-                    new(-1, -1),
+            Color outlineColor = Color.Black;
+            Vector2[] offsets =
+            [
+                new(-1, -1),
                     new(1, -1),
                     new(-1, 1),
                     new(1, 1)
-                ];
+            ];
 
-                foreach (var offset in offsets)
-                {
-                    spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
-                }
+            foreach (var offset in offsets)
+            {
+                spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+            }
             //}
 
             // Draw text
