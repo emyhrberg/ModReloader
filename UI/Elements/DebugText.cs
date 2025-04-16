@@ -49,7 +49,7 @@ namespace ModHelper.UI.Elements
             text += $"ID: {whoAmI}, Mode: {netmode}, Log: {logFilePath} \n";
             text += $"Debugger: {Debugger.IsAttached}, PID: {System.Environment.ProcessId} \n";
             text += $"{fps}fps {ups}ups ({Main.upTimerMax:0}ms)\n";
-            text += "TEST999";
+            text += "TEST";
 
             SetText(text, 0.9f, large: false);
         }
