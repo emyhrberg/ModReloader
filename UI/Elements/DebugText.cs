@@ -6,19 +6,15 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Core;
-using Terraria.UI;
 
 namespace ModHelper.UI.Elements
 {
     public class DebugText : UIText
     {
-        private bool Active = true;
-
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
-            TextColor = Color.Gray;
-            VAlign = 0.99f;
+            TextColor = Color.White;
+            VAlign = 0.95f;
             HAlign = 0.01f;
 
             // start text at top left corner of its element
@@ -30,48 +26,11 @@ namespace ModHelper.UI.Elements
             Height.Set(20 * 4 + 10, 0); // 20 * 3 for 3 lines of text
         }
 
-        public override void MouseOver(UIMouseEvent evt)
-        {
-            //always call base! otherwise IsMouseHovering wont work
-            base.MouseOver(evt);
-            // TextColor = Color.Yellow;
-        }
-
-        public override void MouseOut(UIMouseEvent evt)
-        {
-            //always call base! otherwise IsMouseHovering wont work
-            base.MouseOut(evt);
-            // TextColor = Color.White;
-        }
-
-        public override void LeftClick(UIMouseEvent evt)
-        {
-            // base.LeftClick(evt);
-
-            // Open client log
-            // Log.OpenClientLog();
-        }
-
-        public override void RightClick(UIMouseEvent evt)
-        {
-
-            // Active = !Active;
-
-            // if (Active)
-            // {
-            // Main.NewText("Showing debug text", Color.White);
-            // }
-            // else
-            // {
-            // Main.NewText("Hiding debug text", Color.White);
-            // }
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            // update the text to show playername, whoAmI, and FPS
+            // get stuff to show
             string playerName = Main.LocalPlayer.name;
             int whoAmI = Main.myPlayer;
             int fps = Main.frameRate;
@@ -80,40 +39,29 @@ namespace ModHelper.UI.Elements
             string netmode = Main.netMode switch
             {
                 NetmodeID.SinglePlayer => "SP",
-                NetmodeID.MultiplayerClient => "SP",
-                _ => "Unknown"
+                NetmodeID.MultiplayerClient => "MP",
+                _ => "Unknown Mode"
             };
 
-            string fileName = Path.GetFileName(Logging.LogPath);
+            string logFilePath = Path.GetFileName(Logging.LogPath);
 
-            string text = $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
-            text += $"\n{fps}fps {ups}ups ({Main.upTimerMax:0}ms)";
-            text += $"\nDebug: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
+            string text = $"Plr: {playerName}, Wld: {Main.ActiveWorldFileData.Name} \n";
+            text += $"ID: {whoAmI}, Mode: {netmode}, Log: {logFilePath} \n";
+            text += $"Debugger: {Debugger.IsAttached}, PID: {System.Environment.ProcessId} \n";
+            text += $"{fps}fps {ups}ups ({Main.upTimerMax:0}ms)\n";
+            text += "TEST999";
 
             SetText(text, 0.9f, large: false);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (!Active)
-            {
-                return;
-            }
-
-            // also, if chat is open, hide the text
+            // if chat is open, dont draw the text
             if (Main.drawingPlayerChat)
             {
                 return;
             }
-
             base.Draw(spriteBatch);
-
-            if (IsMouseHovering)
-            {
-                Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                string fileName = Path.GetFileName(Logging.LogPath);
-                //Main.hoverItemName = $"Left click to open {fileName}\nRight click to hide text";
-            }
         }
     }
 }

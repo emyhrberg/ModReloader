@@ -1,5 +1,3 @@
-using System.IO;
-using ModHelper.PacketHandlers;
 using Terraria.ModLoader;
 
 namespace ModHelper
@@ -14,11 +12,6 @@ namespace ModHelper
         public override void Load()
         {
             Instance = this;
-        }
-
-        public override void HandlePacket(BinaryReader reader, int whoAmI)
-        {
-            ModNetHandler.HandlePacket(reader, whoAmI);
         }
     }
 }
