@@ -128,7 +128,6 @@ namespace ModHelper.Helpers
                 await ExitWorld();
 
                 // Kill the server process
-                Main.tServer?.Kill();
                 Main.tServer?.WaitForExit();
 
                 // Create a list of pipes for clients
@@ -206,7 +205,6 @@ namespace ModHelper.Helpers
                 await ExitWorld();
 
                 // Kill the server process (just in case)
-                Main.tServer?.Kill();
                 Main.tServer?.WaitForExit();
 
                 // Creating a hook for Unload to wait for the major client to rebuild mod(s)
