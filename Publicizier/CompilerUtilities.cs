@@ -13,13 +13,19 @@ using System.Xml.Linq;
 namespace ModHelper.Publicizier;
 public static class CompilerUtilities
 {
-    public static Dictionary<string, string?> FindReferencePaths(List<string> references, List<string> targetNames)
+    /// <summary>
+    /// Finds the paths of references based on their names.
+    /// </summary>
+    /// <param name="referencePaths">List of reference paths</param>
+    /// <param name="referenceNames">List of reference names to find</param>
+    /// <returns>Dictionary with reference names as keys and their paths as values</returns>
+    public static Dictionary<string, string?> FindReferencePaths(List<string> referencePaths, List<string> referenceNames)
     {
         var results = new Dictionary<string, string?>();
-        var remainingToFind = new HashSet<string>(targetNames);
+        var remainingToFind = new HashSet<string>(referenceNames);
 
         // 1. Trying to find by filename
-        foreach (var reference in references)
+        foreach (var reference in referencePaths)
         {
             var filename = Path.GetFileNameWithoutExtension(reference);
             if (remainingToFind.Contains(filename))
@@ -32,11 +38,12 @@ public static class CompilerUtilities
         }
 
         // 2. Trying to find by inner AssemblyName
+        // NEVER TESTED!!!
         if (remainingToFind.Count > 0)
         {
-            foreach (var reference in references)
+            foreach (var reference in referencePaths)
             {
-                if (results.ContainsValue(reference)) continue; // вже знайдено
+                if (results.ContainsValue(reference)) continue;
 
                 try
                 {
@@ -61,11 +68,12 @@ public static class CompilerUtilities
                 }
                 catch
                 {
-                    // not a valid .dll or corrupted, ignore
+                    Log.Warn("Failed to read PE file: " + reference);
                 }
             }
         }
 
+        // 3. Logging the failures
         foreach (var missing in remainingToFind)
         {
             results[missing] = null;
@@ -75,6 +83,14 @@ public static class CompilerUtilities
         return results;
     }
 
+    /// <summary>
+    /// Finds the .csproj file based on the mod name and the list of .cs files.
+    /// </summary>
+    /// <param name="name">Mod name</param>
+    /// <param name="files">List of .cs files</param>
+    /// <returns>Path to the .csproj file</returns>
+    /// <exception cref="Exception"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
     public static string FindCsprojFile(string name, string[] files)
     {
         // 1. Find the shortest path of a .cs files
@@ -113,7 +129,12 @@ public static class CompilerUtilities
         throw new FileNotFoundException($"Could not find a {name}.csproj file.");
     }
 
-    // Create a hash of the file using MD5
+    /// <summary>
+    /// Computes a hash for the assembly based on its path and the publicizer assembly context.
+    /// </summary>
+    /// <param name="assemblyPath">Path to the assembly</param>
+    /// <param name="assemblyContext">Assembly context containing publicize settings</param>
+    /// <returns>Hash string</returns>
     internal static string ComputeHash(string assemblyPath, PublicizerAssemblyContext assemblyContext)
     {
         var sb = new StringBuilder();
@@ -142,6 +163,11 @@ public static class CompilerUtilities
         return ComputeHash(allBytes);
     }
 
+    /// <summary>
+    /// Computes a hash for the given byte array using MD5.
+    /// </summary>
+    /// <param name="bytes">Array of bytes to hash</param>
+    /// <returns>Hash string</returns>
     private static string ComputeHash(byte[] bytes)
     {
         using var algorithm = MD5.Create();
@@ -157,12 +183,22 @@ public static class CompilerUtilities
         return hexadecimalHash;
     }
 
-    // TODO: create a better folder management system
+    /// <summary>
+    /// Gets the file path in the PublicizedReferences folder.
+    /// </summary>
+    /// <param name="fileName">Name of the file</param>
+    /// <returns>Path to the file in the PublicizedReferences folder</returns>
     public static string GetPRFolderPath(string fileName)
     {
+        // TODO: create a better folder management system
         return Utilities.GetFolderPath("ModHelper/PublicizedReferences", fileName);
     }
 
+    /// <summary>
+    /// Gets the publicizer assembly contexts from the .csproj file.
+    /// </summary>
+    /// <param name="csproj">Path to the .csproj file</param>
+    /// <returns>Dictionary with assembly names as keys and their contexts as values</returns>
     public static Dictionary<string, PublicizerAssemblyContext> GetPublicizerAssemblyContexts(XDocument csproj)
     {
         var contexts = new Dictionary<string, PublicizerAssemblyContext>();

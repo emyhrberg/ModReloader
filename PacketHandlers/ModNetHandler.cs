@@ -8,16 +8,21 @@ namespace ModHelper.PacketHandlers
         public const byte RefreshingServer = 1;
         internal static RefreshServerPacketHandler RefreshServer = new(RefreshingServer);
 
-        public static void HandlePacket(BinaryReader r, int fromWho)
+        /// <summary>
+        /// Handles the incoming packets.
+        /// </summary>
+        /// <param name="reader">Reader to read the packet data.</param>
+        /// <param name="fromWho">Index of the player who sent the packet.</param>
+        public static void HandlePacket(BinaryReader reader, int fromWho)
         {
             // Here we read the packet type and call the appropriate handler
-            switch (r.ReadByte())
+            switch (reader.ReadByte())
             {
                 case RefreshingServer:
-                    RefreshServer.HandlePacket(r, fromWho);
+                    RefreshServer.HandlePacket(reader, fromWho);
                     break;
                 default:
-                    Log.Warn("Unknown packet type: " + r.ReadByte());
+                    Log.Warn("Unknown packet type: " + reader.ReadByte());
                     break;
             }
         }

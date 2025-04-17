@@ -8,9 +8,8 @@ namespace ModHelper.Helpers
 {
     public static class ClientDataJsonHelper
     {
-        //Function that handles writing info that shoud survive modlreload
-
-        private static bool flagIsReaded = false; // Used to check if the values are readed
+        // Flag to check if the values are readed
+        private static bool flagIsReaded = false;
 
         public static ClientMode ClientMode
         {
@@ -40,6 +39,9 @@ namespace ModHelper.Helpers
             set;
         } = -1;
 
+        /// <summary>
+        /// Checks if the values need to be read from the file.
+        /// </summary>
         private static void CheckIfNeedsToReadValues()
         {
             if (!flagIsReaded)
@@ -49,6 +51,9 @@ namespace ModHelper.Helpers
             }
         }
 
+        /// <summary>
+        /// Writes the client data to a JSON file.
+        /// </summary>
         public static void WriteData()
         {
             if (Main.dedServ)
@@ -91,6 +96,11 @@ namespace ModHelper.Helpers
             });
         }
 
+        /// <summary>
+        /// Writes the list of client data to a file.
+        /// </summary>
+        /// <param name="listJson"></param>
+        /// <param name="writer"></param>
         private static void WriteListToFile(List<ClientDataJson> listJson, StreamWriter writer)
         {
             var jsonOptions = new JsonSerializerOptions { WriteIndented = true };
@@ -101,6 +111,9 @@ namespace ModHelper.Helpers
             writer.Flush();
         }
 
+        /// <summary>
+        /// Reads the client data from a JSON file.
+        /// </summary>
         public static void ReadData()
         {
             if (Main.dedServ)
@@ -133,6 +146,11 @@ namespace ModHelper.Helpers
             });
         }
 
+        /// <summary>
+        /// Reads the list of client data from a JSON file.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
         private static List<ClientDataJson> GetListFromJson(StreamReader reader)
         {
             List<ClientDataJson> listJson = new List<ClientDataJson>();

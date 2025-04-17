@@ -12,4 +12,12 @@ namespace ModHelper.Helpers
         public int PlayerID { get; set; }
         public int WorldID { get; set; }
     }
+
+    public enum ClientMode
+    {
+        FreshClient,
+        SinglePlayer,
+        MPMajor,
+        MPMinor,
+    }
 }

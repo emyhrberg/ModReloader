@@ -5,8 +5,16 @@ using ModHelper.Helpers;
 
 namespace ModHelper.Publicizier
 {
+    // Almost all of this code are taken from Krafs.Publicizer
+    // https://github.com/krafs/Publicizer
     internal class PublicizeAssemblies
     {
+        /// <summary>
+        /// Publicizes the assembly members based on the provided context.
+        /// </summary>
+        /// <param name="module">Assembly module to be publicized.</param>
+        /// <param name="assemblyContext">Context containing publicize settings.</param>
+        /// <returns>True if any member was publicized; otherwise, false.</returns>
         public static bool PublicizeAssembly(ModuleDef module, PublicizerAssemblyContext assemblyContext)
         {
             bool publicizedAnyMemberInAssembly = false;
@@ -277,6 +285,12 @@ namespace ModHelper.Publicizier
 
             return publicizedAnyMemberInAssembly;
         }
+
+        /// <summary>
+        /// Checks if the member is compiler generated.
+        /// </summary>
+        /// <param name="memberDef">Member definition to check.</param>
+        /// <returns>True if the member is compiler generated; otherwise, false.</returns>
         private static bool IsCompilerGenerated(IHasCustomAttribute memberDef)
         {
             return memberDef.CustomAttributes.Any(x => x.TypeFullName == "System.Runtime.CompilerServices.CompilerGeneratedAttribute");

@@ -11,15 +11,11 @@ namespace ModHelper.PacketHandlers
     internal class RefreshServerPacketHandler : BasePacketHandler
     {
         public const byte ReloadMP = 1;
-        public const byte PrepareMinorClients = 2;
-        public const byte AnswerFromMinorClients = 3;
-        public const byte RefreshMajorClient = 4;
-        public const byte RefreshMinorClient = 5;
+        public const byte RefreshMajorClient = 2;
+        public const byte RefreshMinorClient = 3;
         public RefreshServerPacketHandler(byte handlerType) : base(handlerType) { }
 
         // Only for server:
-        private int clientsLeftToSendAnswer = 0;
-        private bool isRefreshMajorClientSent = false;
         private byte majorClient = 0;
         private bool shouldServerBeSaved = false;
 
@@ -30,12 +26,6 @@ namespace ModHelper.PacketHandlers
             {
                 case ReloadMP:
                     ReceiveReloadMP(reader, fromWho);
-                    break;
-                case PrepareMinorClients:
-                    ReceivePrepareMinorClients(reader, fromWho);
-                    break;
-                case AnswerFromMinorClients:
-                    ReceiveAnswerFromMinorClients(reader, fromWho);
                     break;
                 case RefreshMajorClient:
                     ReceiveRefreshMajorClient(reader, fromWho);
@@ -68,61 +58,11 @@ namespace ModHelper.PacketHandlers
             {
                 shouldServerBeSaved = reader.ReadBoolean();
                 majorClient = (byte)fromWho;
-                clientsLeftToSendAnswer = Main.player.Where((p) => p.active).Count() - 1;
-                isRefreshMajorClientSent = false;
 
-                SendPrepareMinorClients(-1, majorClient);
-            }
-        }
+                Netplay.SaveOnServerExit = shouldServerBeSaved;
 
-        //Server:
-        public void SendPrepareMinorClients(int toWho, int ignoreWho)
-        {
-            Log.Info($"Sending PrepareMinorClients to {toWho} from {Main.myPlayer}");
-
-            if (Main.netMode == NetmodeID.Server)
-            {
-                ModPacket packet = GetPacket(PrepareMinorClients);
-                packet.Send(toWho, ignoreWho); // fromWho is Major MP client
-            }
-        }
-
-        //Minor MP client:
-        public void ReceivePrepareMinorClients(BinaryReader reader, int fromWho)
-        {
-            Log.Info($"Receiving PrepareMinorClients to {Main.myPlayer} from {fromWho}");
-
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                SendAnswerFromMinorClients(fromWho, -1);
-            }
-        }
-
-        //Minor MP client:
-        public void SendAnswerFromMinorClients(int toWho, int ignoreWho)
-        {
-            Log.Info($"Sending AnswerFromMinorClients to {toWho} from {Main.myPlayer}");
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                ModPacket packet = GetPacket(AnswerFromMinorClients);
-                packet.Send(toWho, ignoreWho);
-            }
-        }
-
-        //Server:
-        public void ReceiveAnswerFromMinorClients(BinaryReader reader, int fromWho)
-        {
-            Log.Info($"Receiving AnswerFromMinorClients to {Main.myPlayer} from {fromWho}");
-
-            if (Main.netMode == NetmodeID.Server)
-            {
-                clientsLeftToSendAnswer--;
-                if (clientsLeftToSendAnswer <= 0 && !isRefreshMajorClientSent)
-                {
-                    isRefreshMajorClientSent = true;
-                    SendRefreshMajorClient(majorClient, -1);
-                    SendRefreshMinorClient(-1, majorClient);
-                }
+                SendRefreshMajorClient(majorClient, -1);
+                SendRefreshMinorClient(-1, majorClient);
             }
         }
 

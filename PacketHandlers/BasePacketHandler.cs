@@ -12,16 +12,23 @@ namespace ModHelper.PacketHandlers
         // The type of the packet handler. This is used to identify the packet handler.
         internal byte HandlerType { get; set; }
 
+        /// <summary>
+        /// Method to handle the packet.
+        /// </summary>
+        /// <param name="reader">Reader to read the packet data.</param>
+        /// <param name="fromWho">Index of the player who sent the packet.</param>
         public abstract void HandlePacket(BinaryReader reader, int fromWho);
 
-        // Constructor for the packet handler.
         protected BasePacketHandler(byte handlerType)
         {
             HandlerType = handlerType;
         }
 
-        // This is the packet that will be sent to the client and server.
-        // It will be used to send data to the client and server.
+        /// <summary>
+        /// Method to get the packet with the specified packet type.
+        /// </summary>
+        /// <param name="packetType">The type of the packet.</param>
+        /// <returns>Returns the ModPacket.</returns>
         protected ModPacket GetPacket(byte packetType)
         {
             var p = ModContent.GetInstance<ModHelper>().GetPacket();

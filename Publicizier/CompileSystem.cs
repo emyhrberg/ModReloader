@@ -37,18 +37,6 @@ namespace ModHelper.Publicizier
         // that uses Publicizer to modify the assembly before compilation.
         public override void Load()
         {
-            /* No longer needed! (it checks csproj file anyway)
-             
-            if (Conf.C != null && Conf.C.Compiler == "Publicizer")
-            {
-                Log.Info("Publicizer is selected as compiler!");
-            }
-            else
-            {
-                Log.Info("Default compiler is selected!");
-                return;
-            }
-            */
             Assembly tModLoaderAssembly = typeof(Main).Assembly;
             Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
             MethodInfo roslynCompileMethod = modCompileType.GetMethod("RoslynCompile", BindingFlags.NonPublic | BindingFlags.Static);
@@ -60,7 +48,7 @@ namespace ModHelper.Publicizier
                     {
                         // Find the csproj file
                         string csprojFile = CompilerUtilities.FindCsprojFile(name, files);
-                        if (!System.IO.File.Exists(csprojFile))
+                        if (!File.Exists(csprojFile))
                         {
                             throw new Exception($"No csproj found in {csprojFile}");
                         }
@@ -72,7 +60,7 @@ namespace ModHelper.Publicizier
                         // Load the csproj file and find the Publicize references and their context
                         var doc = XDocument.Load(csprojFile);
                         var assemblyContexts = CompilerUtilities.GetPublicizerAssemblyContexts(doc);
-                        var referencesToPublicize = assemblyContexts.Keys.ToList();
+                        var referencesToPublicize = assemblyContexts.Keys.ToHashSet().ToList();
 
                         if (referencesToPublicize.Count == 0)
                         {
@@ -106,7 +94,7 @@ namespace ModHelper.Publicizier
                             var filePath = CompilerUtilities.GetPRFolderPath($"{r}.{hash}.dll");
 
                             // Check if the publicized dll already exists
-                            if (System.IO.File.Exists(filePath))
+                            if (File.Exists(filePath))
                             {
                                 Log.Info($"Publicized mod reference {r} already exists, loading from {Path.GetFileName(filePath)}");
 
@@ -207,8 +195,6 @@ namespace ModHelper.Publicizier
                     }
                 });
             GC.SuppressFinalize(RoslynCompileHook);
-
-            LocalMod[] l = [];
         }
 
         public override void Unload()
