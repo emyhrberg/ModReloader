@@ -15,7 +15,6 @@ using System.Text;
 using System.Xml.Linq;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Core;
 
 namespace ModHelper.Publicizier
 {

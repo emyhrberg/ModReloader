@@ -106,7 +106,7 @@ namespace ModHelper.Common.Systems
             // Select the player and world
             Main.SelectPlayer(player);
             Main.ActiveWorldFileData = world;
-            
+
             // Ensure the world's file path is valid
             if (string.IsNullOrEmpty(world.Path))
             {

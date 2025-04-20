@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using ModHelper.Helpers;
 using Terraria;
@@ -37,7 +36,7 @@ namespace ModHelper.PacketHandlers
         }
 
         //Major MP client:
-        public void SendReloadMP(int toWho, int ignoreWho, bool shouldSevrerBeSaved)
+        public void SendReloadMP(int toWho, int ignoreWho, bool shouldSevrerBeSaved, bool onlyReload)
         {
             Log.Info($"Sending ReloadMP to {toWho} from {Main.myPlayer}");
 
@@ -45,6 +44,7 @@ namespace ModHelper.PacketHandlers
             {
                 ModPacket packet = GetPacket(ReloadMP);
                 packet.Write(shouldSevrerBeSaved);
+                packet.Write(onlyReload);
                 packet.Send(toWho, ignoreWho);
             }
         }
@@ -57,23 +57,27 @@ namespace ModHelper.PacketHandlers
             if (Main.netMode == NetmodeID.Server)
             {
                 shouldServerBeSaved = reader.ReadBoolean();
+                bool onlyReload = reader.ReadBoolean();
                 majorClient = (byte)fromWho;
 
                 Netplay.SaveOnServerExit = shouldServerBeSaved;
 
-                SendRefreshMajorClient(majorClient, -1);
-                SendRefreshMinorClient(-1, majorClient);
+                SendRefreshMajorClient(majorClient, -1, Environment.ProcessId);
+                SendRefreshMinorClient(-1, majorClient, onlyReload);
+
+                Netplay.Disconnect = true;
             }
         }
 
         //Server:
-        public void SendRefreshMajorClient(int toWho, int ignoreWho)
+        public void SendRefreshMajorClient(int toWho, int ignoreWho, int serverPID)
         {
             Log.Info($"Sending RefreshMajorClient to {toWho} from {Main.myPlayer}");
 
             if (Main.netMode == NetmodeID.Server)
             {
                 ModPacket packet = GetPacket(RefreshMajorClient);
+                packet.Write(serverPID);
                 packet.Send(toWho, ignoreWho);
             }
         }
@@ -82,22 +86,23 @@ namespace ModHelper.PacketHandlers
         public void ReceiveRefreshMajorClient(BinaryReader reader, int fromWho)
         {
             Log.Info($"Receiving RefreshMajorClient to {Main.myPlayer} from {fromWho}");
-
+            int serverPID = reader.ReadInt32();
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 Log.Info("Reloading major MP client");
-                Task.Run(ReloadUtilities.MultiPlayerMajorReload);
+                Task.Run(() => ReloadUtilities.MultiPlayerMajorReload(serverPID));
             }
         }
 
         //Server:
-        public void SendRefreshMinorClient(int toWho, int ignoreWho)
+        public void SendRefreshMinorClient(int toWho, int ignoreWho, bool onlyReload)
         {
             Log.Info($"Sending RefreshMinorClient to {toWho} from {Main.myPlayer}");
 
             if (Main.netMode == NetmodeID.Server)
             {
                 ModPacket packet = GetPacket(RefreshMinorClient);
+                packet.Write(onlyReload);
                 packet.Send(toWho, ignoreWho);
             }
         }
@@ -107,10 +112,12 @@ namespace ModHelper.PacketHandlers
         {
             Log.Info($"Receiving RefreshMinorClient to {Main.myPlayer} from {fromWho}");
 
+            bool onlyReload = reader.ReadBoolean();
+
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 Log.Info("Reloading minor MP client");
-                Task.Run(ReloadUtilities.MultiPlayerMinorReload);
+                Task.Run(() => ReloadUtilities.MultiPlayerMinorReload(onlyReload));
             }
         }
     }

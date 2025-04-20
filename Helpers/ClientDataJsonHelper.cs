@@ -156,8 +156,6 @@ namespace ModHelper.Helpers
             List<ClientDataJson> listJson = new List<ClientDataJson>();
             string jsonString = reader.ReadToEnd();
 
-            Log.Info($"Reading from file: " + jsonString);
-
             if (string.IsNullOrEmpty(jsonString))
             {
                 listJson = [];

@@ -3,7 +3,6 @@ using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ReLogic.Content;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -27,13 +26,9 @@ namespace ModHelper.UI.Buttons
                 return;
             }
 
-            if (Main.netMode != NetmodeID.SinglePlayer)
-            {
-                Main.NewText("This button can only be used in Singleplayer mode.");
-                return;
-            }
-
             await ReloadUtilities.SinglePlayerReload();
+
+
         }
 
         public override void RightClick(UIMouseEvent evt)
