@@ -85,6 +85,7 @@ namespace ModHelper.UI.Elements
                     return;
                 }
 
+
                 // Clamp min height
                 // if (newHeight < 200f)
                 // newHeight = 200f;
