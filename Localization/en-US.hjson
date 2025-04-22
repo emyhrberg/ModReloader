@@ -12,6 +12,7 @@ Mods: {
 					Buttons: Buttons
 					Misc: Misc
 					Compile: Compile Header
+					Changes: Changes Header
 				}
 
 				ModToReload: {
@@ -167,6 +168,11 @@ Mods: {
 				ModsView: {
 					Tooltip: ""
 					Label: Mods View
+				}
+
+				ImproveDebugText: {
+					Label: Improve Debug Text
+					Tooltip: ""
 				}
 			}
 

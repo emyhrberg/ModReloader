@@ -4,7 +4,7 @@ using Terraria.UI;
 
 namespace ModHelper.Common.Systems.Menus
 {
-    public class CustomLoadWorld : UIState
+    public class LoadWorldState : UIState
     {
         private static UIText centeredText;
 
@@ -20,15 +20,15 @@ namespace ModHelper.Common.Systems.Menus
             Append(centeredText);
         }
 
-        public static CustomLoadWorld Show(string worldName = "")
+        public static LoadWorldState Show(string worldName = "")
         {
             // Create instance
-            var screen = new CustomLoadWorld();
+            var screen = new LoadWorldState();
             // Switch to a custom menuMode
             Main.menuMode = 888;
             // Activate this UI
             Main.MenuUI.SetState(screen);
-            centeredText.SetText($"Loading world: {worldName}...");
+            centeredText.SetText($"Loading world: {worldName}..");
             return screen;
         }
     }

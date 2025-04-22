@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
@@ -106,18 +107,17 @@ namespace ModHelper.UI
             // Add the panels (invisible by default)
 
             // Temporary debug text for player name, who am I, and frame rate
-            if (Conf.C.ShowDebugText)
+            if (Conf.C.ImproveDebugText)
             {
                 // Add debug text to the main state
                 DebugText debugText = new("");
                 Append(debugText);
-            }
 
-            if (Conf.C.ShowDebugActions)
-            {
-                // Add debug actions to the main state
-                DebugActionContainer debugActions = new();
-                Append(debugActions);
+                string logFileName = Path.GetFileName(Logging.LogPath);
+                DebugAction openLog = new("Open log, ", $"Open {logFileName}", Log.OpenClientLog);
+                DebugAction clearLog = new("Clear log", $"Clear {logFileName}", Log.ClearClientLog, left: 81f);
+                Append(openLog);
+                Append(clearLog);
             }
         }
         #endregion

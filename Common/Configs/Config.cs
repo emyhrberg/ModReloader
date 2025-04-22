@@ -28,21 +28,21 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool SaveWorldBeforeReloading;
 
-        [Header("DebugText")]
+        //[Header("DebugText")]
+
+        //[DefaultValue(true)]
+        //public bool ShowDebugText = true;
+
+        [Header("Changes")]
 
         [DefaultValue(true)]
-        public bool ShowDebugText = true;
+        public bool ImproveDebugText = true;
 
         [DefaultValue(true)]
-        public bool ShowDebugActions = true;
-
-        [Header("Improvements")]
-        [DefaultValue(true)]
-        public bool ImproveMainMenu;
+        public bool ImproveMainMenu = true;
 
         [DefaultValue(true)]
-        public bool ImproveExceptionMenu;
-
+        public bool ImproveExceptionMenu = true;
 
         // show by default, since its easier to modify ingame for the user like this.
         // [Expand(false, false)]
@@ -75,8 +75,8 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool ShowTooltips = true;
 
-        [DefaultValue(true)]
-        public bool ShowIconsWhenHovering = true;
+        //[DefaultValue(true)]
+        //public bool ShowIconsWhenHovering = true;
 
         [DefaultValue(true)]
         public bool AlwaysUpdateBuiltAgo = true;
@@ -86,11 +86,6 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(false)]
         public bool AutoFocusSearchBox = false;
-
-        [DrawTicks]
-        [OptionStrings(["Small", "Large"])]
-        [DefaultValue("Large")]
-        public string ModsView;
 
         // ------------------------------------------------------
         // ON CHANGED CONFIG
@@ -221,7 +216,7 @@ namespace ModHelper.Common.Configs
             {
                 try
                 {
-                    ExceptionHookv2.RemoveCopyButtonFromErrorUI();
+                    ExceptionHook.RemoveCopyButtonFromErrorUI();
                 }
                 catch
                 {
@@ -254,8 +249,8 @@ namespace ModHelper.Common.Configs
         [DefaultValue(true)]
         public bool ShowReloadButton = true;
 
-        [DefaultValue(false)]
-        public bool ShowReloadMPButton = false;
+        [DefaultValue(true)]
+        public bool ShowReloadMPButton = true;
     }
 
     public static class Conf

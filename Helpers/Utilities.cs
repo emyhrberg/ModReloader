@@ -101,7 +101,7 @@ namespace ModHelper.Helpers
                 string folderPath = Path.Combine(Main.SavePath, folderName);
                 Directory.CreateDirectory(folderPath); // Ensure the directory exists
                 string filePath = Path.Combine(folderPath, fileName);
-                Log.Info("Found save path: " + filePath);
+                //Log.Info("Found save path: " + filePath);
                 return filePath;
             }
             catch (Exception ex)

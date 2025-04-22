@@ -6,7 +6,9 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
+using Terraria.Social.Steam;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements
@@ -168,32 +170,31 @@ namespace ModHelper.UI.Elements
         {
             Log.Info("Finding workshop ID for mod: " + modInternalName);
 
-            // // Get the Mod instance for the current mod
-            // // This only works for enabled mods.
-            // LocalMod[] mods = ModOrganizer.FindAllMods();
-            // LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
-            // TmodFile modFile = mod.modFile;
+            // Get the Mod instance for the current mod
+            // This only works for enabled mods.
+            LocalMod[] mods = ModOrganizer.FindAllMods();
+            LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
+            TmodFile modFile = mod.modFile;
 
-
-            // if (mod != null)
-            // {
-            //     // Use the correct signature for GetPublishIdLocal
-            //     if (WorkshopHelper.GetPublishIdLocal(modFile, out ulong publishId))
-            //     {
-            //         Log.Info("Found publish ID: " + publishId);
-            //         // Set the workshop URL using the publish ID
-            //         workshopURL = $"https://steamcommunity.com/sharedfiles/filedetails/?id={publishId}";
-            //     }
-            //     else
-            //     {
-            //         // Set a default message if not found
-            //         workshopURL = null;
-            //     }
-            // }
-            // else
-            // {
-            //     workshopURL = null;
-            // }
+            if (mod != null)
+            {
+                // Use the correct signature for GetPublishIdLocal
+                if (WorkshopHelper.GetPublishIdLocal(modFile, out ulong publishId))
+                {
+                    Log.Info("Found publish ID: " + publishId);
+                    // Set the workshop URL using the publish ID
+                    workshopURL = $"https://steamcommunity.com/sharedfiles/filedetails/?id={publishId}";
+                }
+                else
+                {
+                    // Set a default message if not found
+                    workshopURL = null;
+                }
+            }
+            else
+            {
+                workshopURL = null;
+            }
         }
 
         public override void OnActivate()
@@ -217,11 +218,11 @@ namespace ModHelper.UI.Elements
         private void DeleteButton_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
         {
             // Get the mod
-            // LocalMod[] mods = ModOrganizer.FindAllMods();
-            // LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
+             LocalMod[] mods = ModOrganizer.FindAllMods();
+             LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
 
             // Delete the mod
-            // ModOrganizer.DeleteMod(mod);
+             ModOrganizer.DeleteMod(mod);
 
             // TODO update the UIList of mods. Call FilterItem
             MainSystem sys = ModContent.GetInstance<MainSystem>();

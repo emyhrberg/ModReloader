@@ -17,7 +17,7 @@ namespace ModHelper.Common.Systems.Menus
     /// This should work by dynamically changing the visibility based on the config value.
     /// (As opposed to the old version which hooked into its own state and appended continously.)
     /// </summary>
-    public class ExceptionHookv2 : ModSystem
+    public class ExceptionHook : ModSystem
     {
         // Variables
         private static UITextPanel<string> copyButton;

@@ -21,7 +21,7 @@ namespace ModHelper.UI.Elements
             Large
         }
 
-        public ModView currentModView = ModView.Large; // Default to large view
+        public ModView currentModView = ModView.Large; // Default to small view
 
         public ModFilterChangeView(Asset<Texture2D> tex) : base(tex)
         {
@@ -33,6 +33,11 @@ namespace ModHelper.UI.Elements
 
             // set texture
             this.tex = tex;
+        }
+
+        public void ForceLarge()
+        {
+            currentModView = ModView.Large;
         }
 
         public override void LeftClick(UIMouseEvent evt)

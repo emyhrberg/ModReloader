@@ -10,8 +10,10 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Core;
 using Terraria.UI;
 using static ModHelper.UI.Elements.OptionElement;
+using static Terraria.Localization.NetworkText;
 
 namespace ModHelper.UI.Elements
 {
@@ -87,6 +89,9 @@ namespace ModHelper.UI.Elements
             modChangeView = new(Ass.FilterViewSize);
             modChangeView.Left.Set(10, 0);
             modChangeView.Top.Set(-6, 0);
+            modChangeView.ForceLarge();
+            modChangeView.LeftClick(new UIMouseEvent(modChangeView, UserInterface.ActiveInstance.MousePosition));
+            Log.Info("aaa");
             topContainer.Append(modChangeView);
 
             // Add filter enabled mods button
@@ -227,10 +232,17 @@ namespace ModHelper.UI.Elements
             // a list of all mods that are enabled
             var currEnabledMods = ModLoader.Mods.Skip(1); // (skip 1 to ignore tml mod)
 
-            List<object> sortedMods = FindAllMods();
+            //List<object> sortedMods = FindAllMods();
+            // NEW
+            LocalMod[] sortedMods = ModOrganizer.FindMods(logDuplicates: true);
+            var unique = sortedMods
+    .GroupBy(m => m.Name, StringComparer.OrdinalIgnoreCase)
+    .Select(g => g.OrderByDescending(m => m.lastModified).First())   // newest copy
+    .ToArray();
+
 
             // Get all mods the user has installed via reflection
-            foreach (var localMod in sortedMods) // "localMod" is of type LocalMod
+            foreach (var localMod in unique) // "localMod" is of type LocalMod
             {
                 string internalName = localMod.ToString();
 

@@ -118,7 +118,7 @@ namespace ModHelper.Common.Systems
             WorldGen.playWorld();
 
             // Show the custom load screen
-            CustomLoadWorld.Show(world.Name);
+            LoadWorldState.Show(world.Name);
         }
 
         /// <summary>

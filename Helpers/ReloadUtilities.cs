@@ -122,7 +122,7 @@ namespace ModHelper.Helpers
                 BuildOrReloadMods();
                 return;
             }
-            else if(Main.netMode == NetmodeID.MultiplayerClient)
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 clientsCountInServer = Main.player.Where((p) => p.active).Count() - 1;
 
@@ -347,10 +347,10 @@ namespace ModHelper.Helpers
                     // TML options
                     text += $@" -modpath ""{ModOrganizer.modPath}""";
 
-                    if (Program.LaunchParameters.TryGetValue("-tmlsavedirectory", out var tmlsavedirectory))
-                        text += $@" -tmlsavedirectory ""{tmlsavedirectory}""";
-                    else if (Program.LaunchParameters.TryGetValue("-savedirectory", out var savedirectory))
-                        text += $@" -savedirectory ""{savedirectory}""";
+                    // if (Program.LaunchParameters.TryGetValue("-tmlsavedirectory", out var tmlsavedirectory))
+                    // text += $@" -tmlsavedirectory ""{tmlsavedirectory}""";
+                    // else if (Program.LaunchParameters.TryGetValue("-savedirectory", out var savedirectory))
+                    // text += $@" -savedirectory ""{savedirectory}""";
 
                     if (Main.showServerConsole)
                         text += " -showserverconsole";

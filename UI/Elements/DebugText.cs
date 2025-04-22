@@ -2,7 +2,9 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Helpers;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,10 +15,11 @@ namespace ModHelper.UI.Elements
     public class DebugText : UIText
     {
         private bool Active = true;
+        private object drawPos;
 
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
-            TextColor = Color.Gray;
+            TextColor = Color.White;
             VAlign = 0.99f;
             HAlign = 0.01f;
 
@@ -51,24 +54,12 @@ namespace ModHelper.UI.Elements
             // Log.OpenClientLog();
         }
 
-        public override void RightClick(UIMouseEvent evt)
-        {
-
-            // Active = !Active;
-
-            // if (Active)
-            // {
-            // Main.NewText("Showing debug text", Color.White);
-            // }
-            // else
-            // {
-            // Main.NewText("Hiding debug text", Color.White);
-            // }
-        }
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            VAlign = 1.00f;
+            HAlign = 0.005f;
 
             // update the text to show playername, whoAmI, and FPS
             string playerName = Main.LocalPlayer.name;
@@ -79,21 +70,30 @@ namespace ModHelper.UI.Elements
             string netmode = Main.netMode switch
             {
                 NetmodeID.SinglePlayer => "SP",
-                NetmodeID.MultiplayerClient => "SP",
+                NetmodeID.MultiplayerClient => "MP",
                 _ => "Unknown"
             };
 
-            string fileName = Path.GetFileName(Logging.LogPath);
+            string logFileName = Path.GetFileName(Logging.LogPath);
 
-            string text = $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
+            string text = "";
+            text += $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
+            text += $"\nDebugger: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
             text += $"\n{fps}fps {ups}ups ({Main.upTimerMax:0}ms)";
-            text += $"\nDebug: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
+
+            //Main.instance.Window.Title = " += PID HERE? FOR EASY DEBUG INFO";
 
             SetText(text, 0.9f, large: false);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // draw debug hitbox
+            //DrawHelper.DrawDebugHitbox(this, Color.Green);
+
+            Top.Set(-42, 0);
+            Height.Set(20 * 4 + 10, 0);
+
             if (!Active)
             {
                 return;

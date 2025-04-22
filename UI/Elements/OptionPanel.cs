@@ -154,51 +154,52 @@ namespace ModHelper.UI.Elements
 
             // last, draw the hover texture. but only if conc.c.modsview is small
             // DONT DRAW !
-            foreach (var element in uiList._items.ToList())
-            {
-                if (element is ModElement modElement && Conf.C.ShowIconsWhenHovering)
-                {
-                    var icon = modElement.modIcon;
-                    if (icon != null && icon.IsHovered && icon.updatedTex != null)
-                    {
-                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2); // !!!!!!!!!
-                        // spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
-                    }
-                }
-                else if (element is ModSourcesElement modSourcesElement)
-                {
-                    return;
-                    // do nothing for now since i updated these with bigger icons
-                    var icon = modSourcesElement.modIcon;
-                    if (icon != null && icon.IsHovered && icon.tex != null)
-                    {
-                        Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 2, Main.mouseY - icon.Height.Pixels * 2);
-                        spriteBatch.Draw(icon.tex, mousePos, Color.White);
+            
+            //foreach (var element in uiList._items.ToList())
+            //{
+            //    if (element is ModElement modElement && Conf.C.ShowIconsWhenHovering)
+            //    {
+            //        var icon = modElement.modIcon;
+            //        if (icon != null && icon.IsHovered && icon.updatedTex != null)
+            //        {
+            //            Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 4, Main.mouseY - icon.Height.Pixels * 2); // !!!!!!!!!
+            //            // spriteBatch.Draw(icon.updatedTex, mousePos, Color.White);
+            //        }
+            //    }
+            //    else if (element is ModSourcesElement modSourcesElement)
+            //    {
+            //        return;
+            //        // do nothing for now since i updated these with bigger icons
+            //        var icon = modSourcesElement.modIcon;
+            //        if (icon != null && icon.IsHovered && icon.tex != null)
+            //        {
+            //            Vector2 mousePos = new(Main.mouseX - icon.Width.Pixels * 2, Main.mouseY - icon.Height.Pixels * 2);
+            //            spriteBatch.Draw(icon.tex, mousePos, Color.White);
 
-                        // Determine the color based on the time ago
-                        TimeSpan timeAgo = DateTime.Now - icon.lastModified;
-                        Color timeColor = timeAgo.TotalSeconds < 60 ? new Color(5, 230, 55) :
-                                          timeAgo.TotalMinutes < 60 ? new Color(5, 230, 55) :
-                                          timeAgo.TotalHours < 24 ? Color.Orange :
-                                          Color.Red;
+            //            // Determine the color based on the time ago
+            //            TimeSpan timeAgo = DateTime.Now - icon.lastModified;
+            //            Color timeColor = timeAgo.TotalSeconds < 60 ? new Color(5, 230, 55) :
+            //                              timeAgo.TotalMinutes < 60 ? new Color(5, 230, 55) :
+            //                              timeAgo.TotalHours < 24 ? Color.Orange :
+            //                              Color.Red;
 
-                        // string builtAgo = ConvertLastModifiedToTimeAgo(icon.lastModified);
+            //            // string builtAgo = ConvertLastModifiedToTimeAgo(icon.lastModified);
 
-                        // if (!string.IsNullOrEmpty(builtAgo))
-                        // {
-                        // Utils.DrawBorderString(
-                        // spriteBatch,
-                        // text: $"Built {builtAgo}",
-                        // new Vector2(mousePos.X + icon.Width.Pixels, mousePos.Y - 10),
-                        // timeColor,
-                        // scale: 1.0f,
-                        // 0.5f,
-                        // 0.5f
-                        // );
-                        // }    
-                    }
-                }
-            }
+            //            // if (!string.IsNullOrEmpty(builtAgo))
+            //            // {
+            //            // Utils.DrawBorderString(
+            //            // spriteBatch,
+            //            // text: $"Built {builtAgo}",
+            //            // new Vector2(mousePos.X + icon.Width.Pixels, mousePos.Y - 10),
+            //            // timeColor,
+            //            // scale: 1.0f,
+            //            // 0.5f,
+            //            // 0.5f
+            //            // );
+            //            // }    
+            //        }
+            //    }
+            //}
         }
 
         #region Reset position

@@ -75,22 +75,41 @@ namespace ModHelper.Common.Systems.Menus
             {
                 drawPos.Y = Main.screenHeight / 2f - 74;
             }
+            string fileName = Path.GetFileName(Logging.LogPath);
+
+            List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
+
+            string reloadHoverMods;
+            if (modsToReloadFromJson == null || modsToReloadFromJson.Count == 0)
+            {
+                reloadHoverMods = "No mods selected";
+            }
+            else
+            {
+                reloadHoverMods = string.Join(", ", modsToReloadFromJson);
+            }
 
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helper, the best mod for modding!"),
-                ("Join Singleplayer", JoinSingleplayer, 1.02f, "Enter a singleplayer world with last selected player and world"),
-                ("Start Server", StartServer, 1.02f, "Starts a server instance with cmd"),
-                ("Start Client", StartClient, 1.02f, "Starts another tML instance with cmd"),
-                ("Open Log", Log.OpenClientLog, 1.02f, "Opens the client.log of this client"),
-                ("Clear Log", Log.ClearClientLog, 1.02f, "Clears the client.log of this client"),
-                ("Open config", OpenConfig, 1.02f, "Open the Mod Helper config to change settings"),
-                ("Reload", async () => await ReloadSelectedMod(), 1.02f, "Reload the selected mod (see in-game)"),
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers main menu! Join worlds, change options, reload, etc..."),
+                ("Open config", OpenConfig, 1.02f, "Click to open the Mod Helper config and change settings"),
+                ("Reload", async () => await ReloadSelectedMod(), 1.02f, $"Reload {reloadHoverMods}"),
                 (" ", null, 1.15f, ""), // empty line
-                ($"Cotlim Is The Best", null, 1.15f, "He really is!"),
+
+                ($"Options", null, 1.15f, "General options for testing"),
+                ("Start Server", StartServer, 1.02f, "Starts a server instance with cmd-line"),
+                ("Start Client", StartClient, 1.02f, "Starts another tML instance with cmd-line in addition to this one"),
+                ("Open Log", Log.OpenClientLog, 1.02f, $"Click to open the {fileName} of this client"),
+                ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
+                (" ", null, 1.15f, ""), // empty line
+                ($"Singleplayer", null, 1.15f, "Quickly join a world"),
+                ("Join Singleplayer", JoinSingleplayer, 1.02f, "Enter a singleplayer world with last selected player and world"),
+                (" ", null, 1.15f, ""), // empty line
+                ($"Multiplayer", null, 1.15f, "Options for entering and testing multiple clients"),
                 ("Host Multiplayer", HostMultiplayer, 1.02f, "Start a multiplayer world with last selected player and world"),
-                ("Join Multiplayer", JoinMultiplayer, 1.02f, "Enter the multiplayer world with first available player"),
+                ("Join Multiplayer", JoinMultiplayer, 1.02f, "Enter the multiplayer world with first available player (server required)"),
+
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)
@@ -436,7 +455,7 @@ namespace ModHelper.Common.Systems.Menus
             WorldGen.playWorld(); // Play the selected world in singleplayer
 
             // show loading screen
-            CustomLoadWorld.Show(world.Name);
+            LoadWorldState.Show(world.Name);
         }
 
         #endregion

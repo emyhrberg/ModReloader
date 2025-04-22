@@ -13,6 +13,21 @@ namespace ModHelper.Helpers
 {
     public static class DrawHelper
     {
+        public static void DrawDebugHitbox(this UIElement element, Color color=default)
+        {
+            if (color == default)
+            {
+                color = Color.Red * 0.5f;
+            }
+
+            CalculatedStyle dims = element.GetDimensions();
+            Vector2 pos = dims.Position();
+            Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value,
+                new Rectangle((int)pos.X, (int)pos.Y, (int)dims.Width, (int)dims.Height),
+                color * 0.5f // Semi-transparent red.
+            );
+        }
+
         /// <summary>
         /// Draw a tooltip panel at a hardcoded position in the main menu
         /// </summary>
@@ -21,13 +36,14 @@ namespace ModHelper.Helpers
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
             // The panel is 200x50, centered on that point.
-            Vector2 basePos = new Vector2(108, Main.screenHeight / 2f - 55);
+            Vector2 basePos = new Vector2(108, Main.screenHeight / 2f);
             int width = 300;
             int height = 70;
-            Rectangle tooltipRect = new Rectangle((int)basePos.X - 100, (int)basePos.Y - 25, width, height);
+            int yOffset = -50;
+            Rectangle tooltipRect = new Rectangle((int)basePos.X - 100, (int)basePos.Y - yOffset, width, height);
 
             // Draw background panel.
-            Color darkBlue = UICommon.DefaultUIBlue;
+            Color darkBlue = ColorHelper.DarkBluePanel;
             Utils.DrawInvBG(Main.spriteBatch, tooltipRect, darkBlue);
 
             DynamicSpriteFont font = FontAssets.MouseText.Value;
