@@ -197,6 +197,16 @@ Mods: {
 					Label: Show Mod Sources Button
 					Tooltip: ""
 				}
+
+				ShowLogButton: {
+					Label: Show Log Button
+					Tooltip: ""
+				}
+
+				ShowUIElementButton: {
+					Label: Show U I Element Button
+					Tooltip: ""
+				}
 			}
 		}
 

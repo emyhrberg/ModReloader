@@ -19,11 +19,13 @@ namespace ModHelper.Helpers
 
     public static class Ass
     {
-        // Buttons
+        // Helper buttons
         public static Asset<Texture2D> Button;
         public static Asset<Texture2D> ButtonNoOutline;
         public static Asset<Texture2D> ButtonHighlight;
-        public static Asset<Texture2D> ButtonOptions;
+
+        // Button sprites
+        public static Asset<Texture2D> ButtonLog;
         public static Asset<Texture2D> ButtonUI;
         public static Asset<Texture2D> ButtonReloadSP;
         public static Asset<Texture2D> ButtonReloadMP;

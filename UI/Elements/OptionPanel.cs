@@ -106,6 +106,8 @@ namespace ModHelper.UI.Elements
             Append(resizeButton);
         }
 
+        #region add stuff
+
         public UIElement AddPadding(float padding = 20f)
         {
             // Create a basic UIElement to act as a spacer instead of using HeaderElement
@@ -115,6 +117,39 @@ namespace ModHelper.UI.Elements
             uiList.Add(paddingElement);
             return paddingElement;
         }
+
+        protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "")
+        {
+            HeaderElement headerElement = new(title, hover);
+            headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke();
+            uiList.Add(headerElement);
+            return headerElement;
+        }
+        protected SliderPanel AddSlider(string title, float min, float max, float defaultValue, Action<float> onValueChanged = null, float? increment = null, float textSize = 1f, string hover = "", Action leftClickText = null, Action rightClickText = null, Func<float, string> valueFormatter = null)
+        {
+            SliderPanel sliderPanel = new(title, min, max, defaultValue, onValueChanged, increment, textSize, hover, leftClickText, rightClickText, valueFormatter);
+            uiList.Add(sliderPanel);
+            AddPadding(3);
+            return sliderPanel;
+        }
+
+        protected OptionElement AddOption(string text, Action leftClick, string hover = "", Action rightClick = null, float padding = 3f)
+        {
+            OptionElement option = new(leftClick, text, hover);
+            uiList.Add(option);
+            AddPadding(padding);
+            return option;
+        }
+
+        protected ActionOption AddAction(Action leftClick, string text, string hover, Action rightClick = null, float textSize = 0.4f, float padding = 5f)
+        {
+            ActionOption actionOption = new(leftClick, text, hover, rightClick);
+            uiList.Add(actionOption);
+            AddPadding(padding);
+            return actionOption;
+        }
+
+        #endregion
 
         public override void Update(GameTime gameTime)
         {
@@ -154,7 +189,7 @@ namespace ModHelper.UI.Elements
 
             // last, draw the hover texture. but only if conc.c.modsview is small
             // DONT DRAW !
-            
+
             //foreach (var element in uiList._items.ToList())
             //{
             //    if (element is ModElement modElement && Conf.C.ShowIconsWhenHovering)

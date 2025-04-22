@@ -251,6 +251,12 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowReloadMPButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowLogButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowUIElementButton = true;
     }
 
     public static class Conf

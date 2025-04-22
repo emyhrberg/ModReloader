@@ -9,6 +9,7 @@ using ModHelper.UI.Buttons;
 using ModHelper.UI.Elements;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -21,18 +22,24 @@ namespace ModHelper.UI
         public ModSourcesButton modSourcesButton;
         public ReloadSPButton reloadSPButton;
         public ReloadMPButton reloadMPButton;
+        public LogButton logButton;
+        public UIElementButton uiEleButton;
 
         // Panels
         public ModsPanel modsPanel;
         public ModSourcesPanel modSourcesPanel;
-        public List<DraggablePanel> AllPanels = [];
+        public LogPanel logPanel;
+        public UIElementPanel uiElementPanel;
 
-        // Buttons
+        // More
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
         public float ButtonSize = 70f;
         public float TextSize = 0.9f;
         public float offset = 0; // START offset for first button position relative to center
+
+        // Lists
         public List<BaseButton> AllButtons = [];
+        public List<DraggablePanel> AllPanels = [];
 
         private Dictionary<float, float> buttonTextSizes = new()
         {
@@ -68,13 +75,31 @@ namespace ModHelper.UI
 
             // Add buttons
 
+            if (Conf.C.Buttons.ShowLogButton)
+            {
+                logButton = AddButton<LogButton>(Ass.ButtonLog, "Log", "Manage Log", hoverTextDescription: "Toggle log levels");
+                logPanel = AddPanel<LogPanel>();
+                logButton.AssociatedPanel = logPanel;
+                logPanel.AssociatedButton = logButton;
+            }
+
+            if (Conf.C.Buttons.ShowUIElementButton)
+            {
+                uiEleButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "Manage UIElements", "Right click to toggle all");
+                uiElementPanel = AddPanel<UIElementPanel>();
+                uiElementPanel.AssociatedButton = uiEleButton;
+                uiEleButton.AssociatedPanel = uiElementPanel;
+            }
+
             if (Conf.C.Buttons.ShowModsButton)
             {
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
-                modsButton.AssociatedPanel = modsPanel;
                 modsPanel = AddPanel<ModsPanel>();
+                modsButton.AssociatedPanel = modsPanel;
                 modsPanel.AssociatedButton = modsButton;
             }
+
+
 
             if (Conf.C.Buttons.ShowModSourcesButton)
             {

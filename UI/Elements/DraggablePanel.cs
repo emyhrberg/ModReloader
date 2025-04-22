@@ -68,6 +68,12 @@ namespace ModHelper.UI.Elements
                 return;
             }
 
+            if (CustomSliderBase.IsAnySliderLocked)
+            {
+                IsDragging = false;
+                return;
+            }
+
             if (!Active)
                 return;
 
