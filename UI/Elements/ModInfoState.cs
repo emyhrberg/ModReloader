@@ -218,11 +218,19 @@ namespace ModHelper.UI.Elements
         private void DeleteButton_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
         {
             // Get the mod
-             LocalMod[] mods = ModOrganizer.FindAllMods();
-             LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
+            LocalMod[] mods = ModOrganizer.FindAllMods();
+            LocalMod mod = Array.Find(mods, m => m.Name.Equals(modInternalName, StringComparison.OrdinalIgnoreCase));
+
+            // check if null, return
+            if (mod == null)
+            {
+                Log.Error("Failed to find mod: " + modDisplayName);
+                Main.NewText($"Failed to find mod: {modDisplayName}", Color.Orange);
+                return;
+            }
 
             // Delete the mod
-             ModOrganizer.DeleteMod(mod);
+            ModOrganizer.DeleteMod(mod);
 
             // TODO update the UIList of mods. Call FilterItem
             MainSystem sys = ModContent.GetInstance<MainSystem>();

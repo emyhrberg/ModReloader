@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -47,8 +48,6 @@ namespace ModHelper.UI.Elements
             BorderColor = Color.Black;
 
             // more:
-            Width.Set(200, 0f);
-            Height.Set(35, 0f);
             BackgroundColor = Color.White;
             BorderColor = Color.Black;
 
@@ -84,8 +83,29 @@ namespace ModHelper.UI.Elements
             }
         }
 
+        // public override bool ContainsPoint(Vector2 point)
+        // {
+        //     // Use the panel’s actual dimensions (outer or inner as you prefer):
+        //     CalculatedStyle dims = GetInnerDimensions();
+        //     Rectangle hitbox = dims.ToRectangle();
+
+        //     // Inflate by 50% on each axis:
+        //     hitbox.Inflate(hitbox.Width / 2, hitbox.Height / 2);
+
+        //     return hitbox.Contains((int)point.X, (int)point.Y);
+        // }
+
         public override void Update(GameTime gameTime)
         {
+            // if (IsMouseHovering)
+            // {
+            //     Log.Info("Mouse is hovering over searchbox");
+            // }
+            // else
+            // {
+            //     Log.Info("Not hovering over searchbox");
+            // }
+
             Vector2 MousePosition = new(Main.mouseX, Main.mouseY);
             if (!ContainsPoint(MousePosition) && (Main.mouseLeft || Main.mouseRight)) //This solution is fine, but we need a way to cleanly "unload" a UIElement
             {
@@ -119,6 +139,9 @@ namespace ModHelper.UI.Elements
 
             // Draw panel
             base.DrawSelf(spriteBatch);
+
+            // draw debug
+            // DrawHelper.DrawDebugHitbox(this, Color.Red);
 
             if (focused)
             {

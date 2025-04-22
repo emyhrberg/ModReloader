@@ -2,9 +2,7 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -15,7 +13,6 @@ namespace ModHelper.UI.Elements
     public class DebugText : UIText
     {
         private bool Active = true;
-        private object drawPos;
 
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
@@ -109,7 +106,7 @@ namespace ModHelper.UI.Elements
 
             if (IsMouseHovering)
             {
-                Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
+                // Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
                 string fileName = Path.GetFileName(Logging.LogPath);
                 //Main.hoverItemName = $"Left click to open {fileName}\nRight click to hide text";
             }

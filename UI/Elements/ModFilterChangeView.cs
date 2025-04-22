@@ -85,6 +85,7 @@ namespace ModHelper.UI.Elements
 
             // Ensure everything is properly displayed
             panel.Recalculate();
+            panel.FilterMods();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -116,7 +117,8 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering && Conf.C.ShowTooltips)
             {
                 // Show the current enum
-                UICommon.TooltipMouseText(currentModView.ToString());
+                string tip = $"Mod View: {currentModView.ToString()}";
+                UICommon.TooltipMouseText(tip);
             }
         }
 

@@ -75,7 +75,8 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering && Conf.C.ShowTooltips)
             {
                 // Show the current enum
-                UICommon.TooltipMouseText(currentModSideFilter.ToString());
+                string tip = $"Filter: {currentModSideFilter.ToString()}";
+                UICommon.TooltipMouseText(tip);
             }
         }
 

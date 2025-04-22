@@ -13,7 +13,6 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.UI;
 using static ModHelper.UI.Elements.OptionElement;
-using static Terraria.Localization.NetworkText;
 
 namespace ModHelper.UI.Elements
 {
@@ -91,7 +90,6 @@ namespace ModHelper.UI.Elements
             modChangeView.Top.Set(-6, 0);
             modChangeView.ForceLarge();
             modChangeView.LeftClick(new UIMouseEvent(modChangeView, UserInterface.ActiveInstance.MousePosition));
-            Log.Info("aaa");
             topContainer.Append(modChangeView);
 
             // Add filter enabled mods button
@@ -134,6 +132,7 @@ namespace ModHelper.UI.Elements
             ConstructEnabledMods();
             ConstructAllMods();
             AddPadding(3f);
+            FilterMods(); // needed to show the ModsFoundPanel at the start?
         }
         #endregion // end of constructor
 
@@ -153,7 +152,7 @@ namespace ModHelper.UI.Elements
             AddPadding(20f);
 
             // Prepare the list that will hold filtered mod elements.
-            List<ModElement> filteredMods = new List<ModElement>();
+            List<ModElement> filteredMods = [];
 
             // Combine enabled and disabled mods into one list.
             List<ModElement> allModsCombined = enabledMods.Concat(allMods).ToList();
@@ -232,17 +231,12 @@ namespace ModHelper.UI.Elements
             // a list of all mods that are enabled
             var currEnabledMods = ModLoader.Mods.Skip(1); // (skip 1 to ignore tml mod)
 
-            //List<object> sortedMods = FindAllMods();
-            // NEW
-            LocalMod[] sortedMods = ModOrganizer.FindMods(logDuplicates: true);
-            var unique = sortedMods
-    .GroupBy(m => m.Name, StringComparer.OrdinalIgnoreCase)
-    .Select(g => g.OrderByDescending(m => m.lastModified).First())   // newest copy
-    .ToArray();
+            IReadOnlyList<LocalMod> sortedMods = ModOrganizer.FindAllMods();
 
+            sortedMods = sortedMods.OrderBy(mod => mod.DisplayNameClean).ToList();
 
             // Get all mods the user has installed via reflection
-            foreach (var localMod in unique) // "localMod" is of type LocalMod
+            foreach (LocalMod localMod in sortedMods) // "localMod" is of type LocalMod
             {
                 string internalName = localMod.ToString();
 
@@ -266,8 +260,10 @@ namespace ModHelper.UI.Elements
                 // Log.Info("Adding mod " + internalName + " version " + currMod.Version + " to enabled mods.");
 
                 // Get the clean name using reflection for the LocalMod mod.
-                string cleanName = GetCleanName(localMod);
-                string description = GetLocalModDescription(localMod);
+                // string cleanName = GetCleanName(localMod);
+                // string description = GetLocalModDescription(localMod);
+                string cleanName = localMod.DisplayNameClean;
+                string description = localMod.properties.description ?? string.Empty;
 
                 // Create and add the mod element
                 ModElement modElement = new(
@@ -288,15 +284,19 @@ namespace ModHelper.UI.Elements
 
         public void ConstructAllMods()
         {
-            List<object> sortedMods = FindAllMods();
+            IReadOnlyList<LocalMod> sortedMods = ModOrganizer.FindWorkshopMods();
+
+            // sort them by clean name
+            sortedMods = sortedMods.OrderBy(mod => mod.DisplayNameClean).ToList();
 
             // Get all mods the user has installed via reflection
-            foreach (var mod in sortedMods) // "mod" is of type LocalMod
+            foreach (LocalMod mod in sortedMods) // "mod" is of type LocalMod
             {
                 // Get the clean name using reflection for the LocalMod mod.
-                string cleanName = GetCleanName(mod);
+                string cleanName = mod.DisplayNameClean;
                 string internalName = mod.ToString();
-                string description = GetLocalModDescription(mod);
+                // string description = GetLocalModDescription(mod);
+                string description = mod.properties.description;
                 string short_desc = description.Length > 50 ? description.Substring(0, 50) + "..." : description;
                 // Log.Info("Mod name: " + cleanName + " InternalName: " + internalName + " Description: " + short_desc);
 
@@ -311,14 +311,13 @@ namespace ModHelper.UI.Elements
                 // Log.Info("InternalName: " + internalName + " CleanName: " + cleanName);
 
                 // We want to pass the LocalMod's TmodFile to GetModIconFromAllMods
-                object tmod = getTmodFile(mod);
-
+                TmodFile tmod = mod.modFile;
                 Texture2D modIcon = GetModIconFromAllMods(tmod);
 
                 // try get mod version. if fails, just write empty string.
-                string version = GetLocalModVersion(mod);
+                string version = mod.properties.version.ToString() ?? string.Empty;
                 // Log.Info("Mod version: " + version);
-                string side = GetLocalModSide(mod);
+                string side = mod.properties.side.ToString() ?? string.Empty;
 
                 ModElement modElement = new(
                     cleanModName: cleanName,
@@ -341,46 +340,6 @@ namespace ModHelper.UI.Elements
         #region Helpers mod lists
         // Note: Lots of reflection is used here, so be careful with error handling.
 
-        // Helper method to get all workshop mods
-        private static List<object> FindAllMods()
-        {
-            // Get all mods the user has installed via reflection
-            try
-            {
-                Type modOrganizerType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer");
-                MethodInfo findWorkshopModsMethod = modOrganizerType.GetMethod("FindAllMods", BindingFlags.NonPublic | BindingFlags.Static);
-
-                var workshopModsArray = findWorkshopModsMethod.Invoke(null, null) as Array;
-                if (workshopModsArray == null)
-                {
-                    Log.Warn("FindAllMods returned null.");
-                    return [];
-                }
-
-                List<object> sortedMods = [.. workshopModsArray];
-
-                // Remove duplicates by clean name
-                var unique = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                sortedMods.RemoveAll(mod => !unique.Add(GetCleanName(mod)));
-
-                // Sort mods by clean name
-                sortedMods.Sort((a, b) =>
-                {
-                    string nameA = GetCleanName(a);
-                    string nameB = GetCleanName(b);
-                    return string.Compare(nameA, nameB, StringComparison.OrdinalIgnoreCase);
-                });
-
-                Log.Info("Found " + sortedMods.Count + " mods.");
-                return sortedMods;
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"An error occurred while retrieving workshop mods: {ex.Message}");
-            }
-            return [];
-        }
-
         // Helper method to get clean name from a mod object
         private static string GetCleanName(object mod)
         {
@@ -388,307 +347,32 @@ namespace ModHelper.UI.Elements
             return (string)displayNameField.GetValue(mod);
         }
 
-        private static Texture2D GetModIconFromAllMods(object TmodFile)
+        private static Texture2D GetModIconFromAllMods(TmodFile tmodFile)
         {
             try
             {
-                // Check if the file exists
-                MethodInfo hasFileMethod = TmodFile.GetType().GetMethod("HasFile", BindingFlags.Public | BindingFlags.Instance);
-                bool hasIcon = (bool)hasFileMethod.Invoke(TmodFile, ["icon.png"]);
-                if (!hasIcon)
+                // Check if the file contains "icon.png"
+                if (!tmodFile.HasFile("icon.png"))
                 {
                     Log.Warn("The TmodFile does not have an icon.");
                     return null;
                 }
 
-                // Retrieve the Open method (no parameters).
-                MethodInfo openMethod = TmodFile.GetType().GetMethod("Open", BindingFlags.Public | BindingFlags.Instance);
+                // Open the file and retrieve the stream for "icon.png"
+                using (tmodFile.Open())
+                using (Stream stream = tmodFile.GetStream("icon.png", true))
+                {
+                    Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(stream, ".png", AssetRequestMode.ImmediateLoad);
 
-                // Retrieve the GetStream method that takes a string and a bool.
-                MethodInfo getStreamMethod = TmodFile.GetType().GetMethod(
-                    "GetStream",
-                    BindingFlags.Public | BindingFlags.Instance,
-                    null,
-                    [typeof(string), typeof(bool)],
-                    null
-                );
-
-                // Use a nested using block so both the open result and the stream are disposed.
-                using var openResult = openMethod.Invoke(TmodFile, []) as IDisposable;
-
-                // Get the stream for "icon.png". Note we pass both parameters.
-                using Stream s = (Stream)getStreamMethod.Invoke(TmodFile, ["icon.png", true]);
-
-                Asset<Texture2D> iconTexture = Main.Assets.CreateUntracked<Texture2D>(s, ".png", AssetRequestMode.ImmediateLoad);
-
-                // note: Probably MUST be immediateLoad, otherwise it doesnt show up.
-
-                // Log.Info("Successfully loaded icon from TmodFile.");
-                return iconTexture.Value;
+                    // Log.Info("Successfully loaded icon from TmodFile.");
+                    return iconTexture.Value;
+                }
             }
             catch (Exception ex)
             {
-                Log.Info("Error while retrieving icon from TmodFile via reflection: " + ex);
+                Log.Info("Error while retrieving icon from TmodFile: " + ex);
             }
             return null;
-        }
-
-        private object getTmodFile(object mod)
-        {
-            Assembly assembly = typeof(ModLoader).Assembly;
-            Type localModType = assembly.GetType("Terraria.ModLoader.Core.LocalMod");
-
-            FieldInfo modFileField = localModType.GetField("modFile", BindingFlags.Public | BindingFlags.Instance);
-            object tmod = modFileField.GetValue(mod);
-            return tmod;
-        }
-
-        private static object getLocalModName(object mod)
-        {
-            Type localModType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.LocalMod");
-
-            FieldInfo Name = localModType.GetField("Name", BindingFlags.Public | BindingFlags.Instance);
-            if (mod == null || Name == null)
-            {
-                Log.Warn("getLocalModName: mod or Name is null.");
-                return string.Empty;
-            }
-            object name = Name.GetValue(mod);
-            return name;
-        }
-
-        private static object getLastModified(object mod)
-        {
-            Type localModType = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.LocalMod");
-
-            FieldInfo Name = localModType.GetField("lastModified", BindingFlags.Public | BindingFlags.Instance);
-            object lastModified = Name.GetValue(mod);
-            return lastModified;
-        }
-
-        private static string GetLocalModDescription(object localMod)
-        {
-            try
-            {
-                if (localMod == null)
-                {
-                    Log.Warn("GetLocalModDescription: localMod is null.");
-                    return string.Empty;
-                }
-
-                Type localModType = localMod.GetType();
-                object buildPropertiesInstance = null;
-
-                // First try to get 'properties' as a property.
-                var propertiesProp = localModType.GetProperty("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (propertiesProp != null)
-                {
-                    buildPropertiesInstance = propertiesProp.GetValue(localMod);
-                }
-                else
-                {
-                    // Fallback: try getting 'properties' as a field.
-                    FieldInfo propertiesField = localModType.GetField("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (propertiesField != null)
-                    {
-                        buildPropertiesInstance = propertiesField.GetValue(localMod);
-                    }
-                    else
-                    {
-                        Log.Warn("GetLocalModDescription: Could not find the 'properties' member in LocalMod.");
-                        return string.Empty;
-                    }
-                }
-
-                if (buildPropertiesInstance == null)
-                {
-                    Log.Warn("GetLocalModDescription: LocalMod.properties is null.");
-                    return string.Empty;
-                }
-
-                // Now get the description from BuildProperties.
-                Type buildPropertiesType = buildPropertiesInstance.GetType();
-                string description = null;
-
-                // Try as a property.
-                var descriptionProp = buildPropertiesType.GetProperty("description", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (descriptionProp != null)
-                {
-                    description = descriptionProp.GetValue(buildPropertiesInstance) as string;
-                }
-                else
-                {
-                    // Fallback: try as a field.
-                    FieldInfo descriptionField = buildPropertiesType.GetField("description", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (descriptionField != null)
-                    {
-                        description = descriptionField.GetValue(buildPropertiesInstance) as string;
-                    }
-                    else
-                    {
-                        Log.Warn("GetLocalModDescription: Could not find the 'description' member in BuildProperties.");
-                        return string.Empty;
-                    }
-                }
-
-                if (string.IsNullOrEmpty(description))
-                {
-                    Log.Info("GetLocalModDescription: Description is empty for LocalMod: " + localMod.ToString());
-                }
-                return description ?? string.Empty;
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"GetLocalModDescription: Exception occurred - {ex}");
-                return string.Empty;
-            }
-        }
-
-        private static string GetLocalModVersion(object localMod)
-        {
-            if (localMod == null)
-            {
-                Log.Warn("GetLocalModVersion: localMod is null.");
-                return string.Empty;
-            }
-
-            try
-            {
-                // Attempt to retrieve the 'properties' member from LocalMod.
-                var localModType = localMod.GetType();
-                object propertiesInstance = null;
-
-                // First, try to get it as a field.
-                FieldInfo propertiesField = localModType.GetField("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (propertiesField != null)
-                {
-                    propertiesInstance = propertiesField.GetValue(localMod);
-                }
-                else
-                {
-                    // Fallback: try as a property.
-                    PropertyInfo propertiesProp = localModType.GetProperty("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (propertiesProp != null)
-                    {
-                        propertiesInstance = propertiesProp.GetValue(localMod);
-                    }
-                }
-
-                if (propertiesInstance == null)
-                {
-                    Log.Warn("GetLocalModVersion: Could not retrieve the 'properties' member from the LocalMod.");
-                    return string.Empty;
-                }
-
-                // Now try to obtain the 'version' member from the BuildProperties instance.
-                var propertiesType = propertiesInstance.GetType();
-                object versionObj = null;
-
-                // First, attempt as a property.
-                PropertyInfo versionProp = propertiesType.GetProperty("version", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (versionProp != null)
-                {
-                    versionObj = versionProp.GetValue(propertiesInstance);
-                }
-                else
-                {
-                    // Fallback to a field.
-                    FieldInfo versionField = propertiesType.GetField("version", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (versionField != null)
-                    {
-                        versionObj = versionField.GetValue(propertiesInstance);
-                    }
-                    else
-                    {
-                        Log.Warn("GetLocalModVersion: Could not find a 'version' property or field in BuildProperties.");
-                        return string.Empty;
-                    }
-                }
-
-                if (versionObj == null)
-                {
-                    Log.Warn("GetLocalModVersion: The 'version' value retrieved is null.");
-                    return string.Empty;
-                }
-
-                return versionObj.ToString();
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"GetLocalModVersion: Exception occurred - {ex}");
-                return string.Empty;
-            }
-        }
-
-        private static string GetLocalModSide(object localMod)
-        {
-            if (localMod == null)
-            {
-                Log.Warn("GetLocalModSide: localMod is null.");
-                return string.Empty;
-            }
-
-            try
-            {
-                // Attempt to retrieve the 'properties' member from LocalMod.
-                var localModType = localMod.GetType();
-                object propertiesInstance = null;
-
-                // First, try to get it as a field.
-                FieldInfo propertiesField = localModType.GetField("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (propertiesField != null)
-                {
-                    propertiesInstance = propertiesField.GetValue(localMod);
-                }
-                else
-                {
-                    // Fallback: try as a property.
-                    PropertyInfo propertiesProp = localModType.GetProperty("properties", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (propertiesProp != null)
-                    {
-                        propertiesInstance = propertiesProp.GetValue(localMod);
-                    }
-                }
-
-                if (propertiesInstance == null)
-                {
-                    Log.Warn("GetLocalModSide: Could not retrieve the 'properties' member from the LocalMod.");
-                    return string.Empty;
-                }
-
-                // Now try to obtain the internal 'ModSide' member from the BuildProperties instance.
-                var propertiesType = propertiesInstance.GetType();
-                object sideObject = null;
-
-                // Try as a property first
-                PropertyInfo sideProp = propertiesType.GetProperty("side", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (sideProp != null)
-                {
-                    sideObject = sideProp.GetValue(propertiesInstance);
-                }
-                else
-                {
-                    // Fallback to a field
-                    FieldInfo sideField = propertiesType.GetField("side", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    if (sideField != null)
-                    {
-                        sideObject = sideField.GetValue(propertiesInstance);
-                    }
-                }
-
-                if (sideObject == null)
-                {
-                    Log.Warn("GetLocalModSide: The 'side' value retrieved is null.");
-                    return "Both"; // Default value if we can't determine
-                }
-
-                return sideObject.ToString();
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"GetLocalModSide: Exception occurred - {ex}");
-                return string.Empty;
-            }
         }
 
         #endregion
@@ -705,9 +389,7 @@ namespace ModHelper.UI.Elements
                 modElement.SetState(State.Enabled);
                 string internalName = modElement.internalModName; // Assuming InternalName is a property of ModElement
 
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, true]);
+                ModLoader.SetModEnabled(internalName, true);
             }
         }
 
@@ -720,10 +402,7 @@ namespace ModHelper.UI.Elements
             {
                 modElement.SetState(State.Disabled);
                 string internalName = modElement.internalModName; // Assuming InternalName is a property of ModElement
-
-                // Use reflection to call SetModEnabled on internalModName
-                var setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
-                setModEnabled?.Invoke(null, [internalName, false]);
+                ModLoader.SetModEnabled(internalName, false);
             }
         }
 

@@ -11,7 +11,6 @@ Mods: {
 					DebugText: Debug Text
 					Buttons: Buttons
 					Misc: Misc
-					Compile: Compile Header
 					Changes: Changes Header
 				}
 

@@ -1,12 +1,15 @@
 using System;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
+using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
+using Terraria.UI.Chat;
 using static ModHelper.UI.Elements.ModFilterChangeView;
 using static ModHelper.UI.Elements.OptionElement;
 
@@ -91,13 +94,25 @@ namespace ModHelper.UI.Elements
             // mod name
             if (large)
             {
-                if (cleanModName.Length > 30)
-                    cleanModName = string.Concat(cleanModName.AsSpan(0, 30), "...");
+                Vector2 stringSize = FontAssets.MouseText.Value.MeasureString(cleanModName);
+                float maxWidth = 235;
+                if (stringSize.X > maxWidth)
+                {
+                    cleanModName = TruncateToWidth(cleanModName, FontAssets.MouseText.Value, maxWidth);
+                }
             }
             else
             {
-                if (cleanModName.Length > 20)
-                    cleanModName = string.Concat(cleanModName.AsSpan(0, 20), "...");
+                Vector2 stringSize = FontAssets.MouseText.Value.MeasureString(cleanModName);
+                float maxWidth = 160;
+                if (stringSize.X > maxWidth)
+                {
+                    cleanModName = TruncateToWidth(cleanModName, FontAssets.MouseText.Value, maxWidth);
+                }
+
+                // OLD
+                // if (cleanModName.Length > 15)
+                // cleanModName = string.Concat(cleanModName.AsSpan(0, 15), "...");
             }
 
             // if icon is not null, it means the mod is not loaded.
@@ -195,6 +210,24 @@ namespace ModHelper.UI.Elements
                 enabledText.VAlign = 1.0f;
             }
             Append(enabledText);
+        }
+
+        private static string TruncateToWidth(string text, DynamicSpriteFont font, float maxWidth)
+        {
+            const string ellipsis = "…";
+            if (font.MeasureString(text).X <= maxWidth)
+                return text;
+
+            // Remove one char at a time until it fits
+            for (int len = text.Length - 1; len > 0; len--)
+            {
+                string candidate = text.Substring(0, len) + ellipsis;
+                if (font.MeasureString(candidate).X <= maxWidth)
+                    return candidate;
+            }
+
+            // Fallback to just ellipsis
+            return ellipsis;
         }
 
         public override void LeftClick(UIMouseEvent evt)

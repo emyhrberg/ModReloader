@@ -75,7 +75,8 @@ namespace ModHelper.UI.Elements
             if (IsMouseHovering && Conf.C.ShowTooltips)
             {
                 // Show the current enum
-                UICommon.TooltipMouseText(currentEnabledDisabledView.ToString());
+                string tip = $"Filter: {currentEnabledDisabledView.ToString()}";
+                UICommon.TooltipMouseText(tip);
             }
         }
 

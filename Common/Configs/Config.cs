@@ -57,8 +57,8 @@ namespace ModHelper.Common.Configs
 
         [Header("Misc")]
 
-        [DefaultValue(false)]
-        public bool AllowMultiplePanelsOpenSimultaneously = false;
+        [DefaultValue(true)]
+        public bool AllowMultiplePanelsOpenSimultaneously = true;
 
         [DefaultValue(true)]
         public bool AllowDraggingPanels = true;
