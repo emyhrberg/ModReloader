@@ -22,27 +22,27 @@ namespace ModHelper.Common.Configs
         [DefaultValue("Default")]
         public string Compiler;
 
-        [DefaultValue(false)]
-        public bool AutoJoinWorld;
+        [DefaultValue(true)]
+        public bool AutoJoinWorld = true;
 
         [DefaultValue(false)]
-        public bool SaveWorldBeforeReloading;
+        public bool SaveWorldBeforeReloading = false;
 
         //[Header("DebugText")]
 
         //[DefaultValue(true)]
         //public bool ShowDebugText = true;
 
-        [Header("Changes")]
+        [Header("Add")]
 
         [DefaultValue(true)]
-        public bool ImproveDebugText = true;
+        public bool AddDebugText = true;
 
         [DefaultValue(true)]
-        public bool ImproveMainMenu = true;
+        public bool AddMainMenu = true;
 
         [DefaultValue(true)]
-        public bool ImproveExceptionMenu = true;
+        public bool AddExceptionMenu = true;
 
         // show by default, since its easier to modify ingame for the user like this.
         // [Expand(false, false)]
@@ -56,6 +56,9 @@ namespace ModHelper.Common.Configs
         public Buttons Buttons = new();
 
         [Header("Misc")]
+
+        [DefaultValue(true)]
+        public bool EnterWorldSuperMode = true;
 
         [DefaultValue(true)]
         public bool AllowMultiplePanelsOpenSimultaneously = true;
@@ -74,9 +77,6 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowTooltips = true;
-
-        //[DefaultValue(true)]
-        //public bool ShowIconsWhenHovering = true;
 
         [DefaultValue(true)]
         public bool AlwaysUpdateBuiltAgo = true;
@@ -212,7 +212,7 @@ namespace ModHelper.Common.Configs
         private static void UpdateExceptionState()
         {
             // Only try to remove the button if ImproveExceptionMenu is disabled and the hook class exists
-            if (Conf.C != null && !Conf.C.ImproveExceptionMenu)
+            if (Conf.C != null && !Conf.C.AddExceptionMenu)
             {
                 try
                 {
@@ -257,6 +257,9 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowUIElementButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowPlayerButton = true;
     }
 
     public static class Conf

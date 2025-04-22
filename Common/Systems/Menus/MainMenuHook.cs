@@ -25,7 +25,7 @@ namespace ModHelper.Common.Systems.Menus
     {
         public override void Load()
         {
-            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            if (Conf.C != null && !Conf.C.AddMainMenu)
             {
                 Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not hooking into Main Menu.");
                 return;
@@ -36,7 +36,7 @@ namespace ModHelper.Common.Systems.Menus
         public override void Unload()
         {
             // Unload the hook
-            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            if (Conf.C != null && !Conf.C.AddMainMenu)
             {
                 Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not unloading the hook into Main Menu.");
                 return;
@@ -57,7 +57,7 @@ namespace ModHelper.Common.Systems.Menus
             if (Main.menuMode != 0) return;
 
             // Check the config
-            if (Conf.C != null && !Conf.C.ImproveMainMenu)
+            if (Conf.C != null && !Conf.C.AddMainMenu)
             {
                 // Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not drawing menu options.");
                 return;

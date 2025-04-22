@@ -24,12 +24,14 @@ namespace ModHelper.UI
         public ReloadMPButton reloadMPButton;
         public LogButton logButton;
         public UIElementButton uiEleButton;
+        public PlayerButton playerButton;
 
         // Panels
         public ModsPanel modsPanel;
         public ModSourcesPanel modSourcesPanel;
         public LogPanel logPanel;
         public UIElementPanel uiElementPanel;
+        public PlayerPanel playerPanel;
 
         // More
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
@@ -75,9 +77,17 @@ namespace ModHelper.UI
 
             // Add buttons
 
+            if (Conf.C.Buttons.ShowPlayerButton)
+            {
+                playerButton = AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Player options", "Right click to toggle god mode");
+                playerPanel = AddPanel<PlayerPanel>();
+                playerButton.AssociatedPanel = playerPanel;
+                playerPanel.AssociatedButton = playerButton;
+            }
+
             if (Conf.C.Buttons.ShowLogButton)
             {
-                logButton = AddButton<LogButton>(Ass.ButtonLog, "Log", "Manage Log", hoverTextDescription: "Toggle log levels");
+                logButton = AddButton<LogButton>(Ass.ButtonLog, "Log", "Manage log", hoverTextDescription: "Toggle log levels");
                 logPanel = AddPanel<LogPanel>();
                 logButton.AssociatedPanel = logPanel;
                 logPanel.AssociatedButton = logButton;
@@ -132,7 +142,7 @@ namespace ModHelper.UI
             // Add the panels (invisible by default)
 
             // Temporary debug text for player name, who am I, and frame rate
-            if (Conf.C.ImproveDebugText)
+            if (Conf.C.AddMainMenu)
             {
                 // Add debug text to the main state
                 DebugText debugText = new("");

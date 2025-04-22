@@ -27,6 +27,7 @@ namespace ModHelper.UI.Elements
             AddAction(Log.OpenClientLog, "Open Client Log", $"Click to open {clientPath}");
             AddAction(Log.OpenServerLog, "Open Server Log", "Click to open server.log");
             AddAction(Log.ClearClientLog, "Clear Log", $"Clear the {clientPath} file");
+            AddPadding();
 
             AddHeader(title: "Game Path",
                 onLeftClick: Log.OpenEnabledJsonFolder,

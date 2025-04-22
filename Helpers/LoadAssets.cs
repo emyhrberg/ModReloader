@@ -25,6 +25,7 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ButtonHighlight;
 
         // Button sprites
+        public static Asset<Texture2D> ButtonPlayer;
         public static Asset<Texture2D> ButtonLog;
         public static Asset<Texture2D> ButtonUI;
         public static Asset<Texture2D> ButtonReloadSP;

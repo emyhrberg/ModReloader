@@ -11,7 +11,8 @@ Mods: {
 					DebugText: Debug Text
 					Buttons: Buttons
 					Misc: Misc
-					Changes: Changes Header
+					Changes: Changes
+					Add: Add Header
 				}
 
 				ModToReload: {
@@ -173,6 +174,26 @@ Mods: {
 					Label: Improve Debug Text
 					Tooltip: ""
 				}
+
+				AddDebugText: {
+					Label: Add Debug Text
+					Tooltip: ""
+				}
+
+				AddMainMenu: {
+					Label: Add Main Menu
+					Tooltip: ""
+				}
+
+				AddExceptionMenu: {
+					Label: Add Exception Menu
+					Tooltip: ""
+				}
+
+				EnterWorldSuperMode: {
+					Label: Enter World Super Mode
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {
@@ -207,6 +228,11 @@ Mods: {
 					Label: Show U I Element Button
 					Tooltip: ""
 				}
+
+				ShowPlayerButton: {
+					Label: Show Player Button
+					Tooltip: ""
+				}
 			}
 		}
 
@@ -228,6 +254,13 @@ Mods: {
 				Description: Mods.ModHelper.UI.ExampleFullscreenUI.Description
 				Nothing: Mods.ModHelper.UI.ExampleFullscreenUI.Nothing
 				IsSet: Mods.ModHelper.UI.ExampleFullscreenUI.IsSet
+			}
+		}
+
+		Items: {
+			GodGlowDyeItem: {
+				DisplayName: God Glow Dye Item
+				Tooltip: ""
 			}
 		}
 	}
