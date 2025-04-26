@@ -63,7 +63,7 @@ namespace ModHelper.PacketHandlers
 
                 Netplay.SaveOnServerExit = shouldServerBeSaved;
 
-                SendRefreshMajorClient(majorClient, -1, Environment.ProcessId);
+                SendRefreshMajorClient(majorClient, -1, Environment.ProcessId, Utilities.FindWorldId());
                 SendRefreshMinorClient(-1, majorClient, onlyReload);
 
                 Netplay.Disconnect = true;
@@ -71,7 +71,7 @@ namespace ModHelper.PacketHandlers
         }
 
         //Server:
-        public void SendRefreshMajorClient(int toWho, int ignoreWho, int serverPID)
+        public void SendRefreshMajorClient(int toWho, int ignoreWho, int serverPID, int serverWorldID)
         {
             Log.Info($"Sending RefreshMajorClient to {toWho} from {Main.myPlayer} " +
                 $"serverPID: {serverPID}");
@@ -80,6 +80,7 @@ namespace ModHelper.PacketHandlers
             {
                 ModPacket packet = GetPacket(RefreshMajorClient);
                 packet.Write(serverPID);
+                packet.Write(serverWorldID);
                 packet.Send(toWho, ignoreWho);
             }
         }
@@ -89,10 +90,11 @@ namespace ModHelper.PacketHandlers
         {
             Log.Info($"Receiving RefreshMajorClient to {Main.myPlayer} from {fromWho}");
             int serverPID = reader.ReadInt32();
+            int serverWorldID = reader.ReadInt32();
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 Log.Info("Reloading major MP client");
-                Task.Run(() => ReloadUtilities.MultiPlayerMajorReload(serverPID));
+                Task.Run(() => ReloadUtilities.MultiPlayerMajorReload(serverPID, serverWorldID));
             }
         }
 

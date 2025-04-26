@@ -137,12 +137,12 @@ namespace ModHelper.Helpers
         /// After rebuilding, it allows all clients to reload the mods.
         /// </summary>
         /// <returns></returns>
-        public static async Task MultiPlayerMajorReload(int serverPID)
+        public static async Task MultiPlayerMajorReload(int serverPID, int serverWorldID)
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 // Prepare client data
-                PrepareClient(clientMode: ClientMode.MPMajor);
+                PrepareClient(ClientMode.MPMajor, Utilities.FindPlayerId(), serverWorldID);
 
                 // Exit the game.
                 await ExitWorld();
@@ -385,9 +385,14 @@ namespace ModHelper.Helpers
         /// <param name="clientMode"></param>
         private static void PrepareClient(ClientMode clientMode)
         {
+            PrepareClient(clientMode, Utilities.FindPlayerId(), Utilities.FindWorldId());
+        }
+
+        private static void PrepareClient(ClientMode clientMode, int playerID, int worldID)
+        {
             ClientDataJsonHelper.ClientMode = clientMode;
-            ClientDataJsonHelper.PlayerID = Utilities.FindPlayerId();
-            ClientDataJsonHelper.WorldID = Utilities.FindWorldId();
+            ClientDataJsonHelper.PlayerID = playerID;
+            ClientDataJsonHelper.WorldID = worldID;
             Log.Info("set player and worldid to " + ClientDataJsonHelper.PlayerID + " and " + ClientDataJsonHelper.WorldID);
         }
 
