@@ -181,6 +181,7 @@ namespace ModHelper.Helpers
                     // Wait for the server to exit
                     try
                     {
+                        Log.Info("Waiting for server to exit...");
                         Process.GetProcessById(serverPID)?.WaitForExit();
                     }
                     catch (ArgumentException)
@@ -192,34 +193,36 @@ namespace ModHelper.Helpers
                     {
                         Log.Warn($"Server process with PID {serverPID} is not running.");
                     }
-
-                    BuildAndReloadMods(() =>
+                    finally
                     {
-                        Log.Info("Mod Builded");
-
-                        // After building - reload all other clients
-                        List<NamedPipeServerStream> clientsAfterRebuild = new List<NamedPipeServerStream>();
-                        Log.Info($"Waiting for {clientsCountInServer} clients...");
-
-                        // Wait for conecting all clients
-                        for (int i = 0; i < clientsCountInServer; i++)
+                        BuildAndReloadMods(() =>
                         {
-                            // Creating pipe for each client
-                            var pipeServer = new NamedPipeServerStream(pipeNameAfterRebuild, PipeDirection.InOut, clientsCountInServer);
-                            GC.SuppressFinalize(pipeServer);
+                            Log.Info("Mod Builded");
 
-                            // Wait for connection
-                            pipeServer.WaitForConnection();
-                            clientsAfterRebuild.Add(pipeServer);
-                            Log.Info($"Client {i + 1} connected after building!");
-                        }
+                            // After building - reload all other clients
+                            List<NamedPipeServerStream> clientsAfterRebuild = new List<NamedPipeServerStream>();
+                            Log.Info($"Waiting for {clientsCountInServer} clients...");
 
-                        foreach (var client in clientsAfterRebuild)
-                        {
-                            client.Close();
-                            client.Dispose();
-                        }
-                    });
+                            // Wait for conecting all clients
+                            for (int i = 0; i < clientsCountInServer; i++)
+                            {
+                                // Creating pipe for each client
+                                var pipeServer = new NamedPipeServerStream(pipeNameAfterRebuild, PipeDirection.InOut, clientsCountInServer);
+                                GC.SuppressFinalize(pipeServer);
+
+                                // Wait for connection
+                                pipeServer.WaitForConnection();
+                                clientsAfterRebuild.Add(pipeServer);
+                                Log.Info($"Client {i + 1} connected after building!");
+                            }
+
+                            foreach (var client in clientsAfterRebuild)
+                            {
+                                client.Close();
+                                client.Dispose();
+                            }
+                        });
+                    }
                 }
                 else
                 {
@@ -273,16 +276,6 @@ namespace ModHelper.Helpers
 
                         using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
                         pipeClientafterRebuild.Connect();
-
-                        logger.Info("Clearing modsDirCache");
-
-                        var cache = typeof(ModLoader).Assembly.GetType("Terraria.ModLoader.Core.ModOrganizer").GetField("modsDirCache", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-
-                        if (cache is IDictionary dictionary)
-                        {
-                            dictionary.Clear(); // Clears the dictionary without needing LocalMod type
-                            Console.WriteLine("Cache cleared successfully.");
-                        }
 
                         logger.Info("Loading mods");
 

@@ -38,7 +38,8 @@ namespace ModHelper.PacketHandlers
         //Major MP client:
         public void SendReloadMP(int toWho, int ignoreWho, bool shouldSevrerBeSaved, bool onlyReload)
         {
-            Log.Info($"Sending ReloadMP to {toWho} from {Main.myPlayer}");
+            Log.Info($"Sending ReloadMP to {toWho} from {Main.myPlayer} " +
+                $"shouldSevrerBeSaved: {shouldSevrerBeSaved}, onlyReload: {onlyReload}");
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
@@ -72,7 +73,8 @@ namespace ModHelper.PacketHandlers
         //Server:
         public void SendRefreshMajorClient(int toWho, int ignoreWho, int serverPID)
         {
-            Log.Info($"Sending RefreshMajorClient to {toWho} from {Main.myPlayer}");
+            Log.Info($"Sending RefreshMajorClient to {toWho} from {Main.myPlayer} " +
+                $"serverPID: {serverPID}");
 
             if (Main.netMode == NetmodeID.Server)
             {
