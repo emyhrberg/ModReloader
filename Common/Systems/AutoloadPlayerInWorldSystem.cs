@@ -66,46 +66,90 @@ namespace ModHelper.Common.Systems
         /// <summary>
         /// Enters the singleplayer world using the ClientDataHandler.
         /// </summary>
-        /// <exception cref="Exception"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        private void EnterSingleplayerWorld()
+        public static void EnterSingleplayerWorld()
         {
-            Log.Info("EnterSingleplayerWorld() called!");
+            Log.Info("Entering SP World");
 
-            // Loading lists of Players and Worlds
-            Main.LoadWorlds();
+            // Select the player and world
+            SelectPlayerAndWorld();
+
+            // Play the selected world in singleplayer
+            WorldGen.playWorld();
+
+            // Show the custom load screen
+            LoadWorldState.Show(Main.ActiveWorldFileData.Name);
+        }
+
+        /// <summary>
+        /// Joins the multiplayer server using the ClientDataHandler.
+        /// </summary>
+        public static void EnterMultiplayerWorld()
+        {
+            Log.Info("Entering MP World");
+
+            // Select the player and world
+            SelectPlayerAndWorld();
+
+            // Join the server (code taken from Main.instance.OnSubmitServerPassword())
+            Netplay.SetRemoteIP("127.0.0.1");
+            Main.autoPass = true;
+            Main.statusText = Lang.menu[8].Value;
+            Netplay.StartTcpClient();
+            Main.menuMode = 10;
+        }
+
+        /// <summary>
+        /// Hosts the multiplayer world using the ClientDataHandler.
+        /// </summary>
+        public static void HostMultiplayerWorld()
+        {
+            Log.Info("Hosting MP World");
+
+            // Select the player and world
+            SelectPlayerAndWorld();
+
+            // Host the server
+            Main.instance.OnSubmitServerPassword("");
+        }
+
+        /// <summary>
+        /// Selects the player and world based on the ClientDataHandler.
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
+        private static void SelectPlayerAndWorld()
+        {
             Main.LoadPlayers();
+            if (Main.PlayerList == null || Main.PlayerList.Count == 0)
+            {
+                Log.Error("No players found after loading players.");
+                return;
+            }
 
-            // Check if there are any players or worlds available
-            if (Main.PlayerList.Count == 0 || Main.WorldList.Count == 0)
-                throw new Exception("No players or worlds found.");
+            Main.LoadWorlds();
+            if (Main.WorldList == null || Main.WorldList.Count == 0)
+            {
+                Log.Error("No worlds found after loading worlds.");
+                return;
+            }
 
-            // Getting playerID and worldID and print
-            Log.Info("PlayerID: " + ClientDataJsonHelper.PlayerID + ", WorldID: " + ClientDataJsonHelper.WorldID);
-
+            // Select player and world based on json
             int playerID = ClientDataJsonHelper.PlayerID;
             int worldID = ClientDataJsonHelper.WorldID;
 
-            // Select default player and world if IDs are invalid
-            var player = Main.PlayerList.FirstOrDefault();
-            var world = Main.WorldList.FirstOrDefault();
+            var player = Main.PlayerList[Conf.C.DefaultPlayer];
+            var world = Main.WorldList[Conf.C.DefaultWorld];
 
             if (playerID == -1 || worldID == -1)
             {
                 Log.Error("PlayerID or WorldID is -1. Cannot autoload.");
+                // if we return here, we cause a "crash" or "stuck" in loading.
             }
             else
             {
-                // Set the player and world based on the IDs
+                // all ok, continue.
                 player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
                 world = Main.WorldList[ClientDataJsonHelper.WorldID];
             }
-
-            Log.Info($"Autoload using ClientDataHandler. Starting game with Player: {player.Name}, World: {world.Name}");
-
-            // Select the player and world
-            Main.SelectPlayer(player);
-            Main.ActiveWorldFileData = world;
 
             // Ensure the world's file path is valid
             if (string.IsNullOrEmpty(world.Path))
@@ -114,57 +158,10 @@ namespace ModHelper.Common.Systems
                 throw new ArgumentNullException(nameof(world.Path), "World path cannot be null or empty.");
             }
 
-            // Play the selected world in singleplayer
-            WorldGen.playWorld();
+            Log.Info("HostMultiplayer. Found player: " + player.Name + ", world: " + world.Name);
 
-            // Show the custom load screen
-            LoadWorldState.Show(world.Name);
-        }
-
-        /// <summary>
-        /// Joins the multiplayer server using the ClientDataHandler.
-        /// </summary>
-        /// <exception cref="Exception"></exception>
-        private void EnterMultiplayerWorld()
-        {
-            Log.Info("EnterMultiplayerWorld() called!");
-
-            // Loading lists of Players
-            Main.LoadPlayers();
-
-            // Check if there are any players available
-            if (Main.PlayerList.Count == 0)
-                throw new Exception("No players found.");
-
-            // Getting playerID and print
-            Log.Info("PlayerID: " + ClientDataJsonHelper.PlayerID);
-
-            int playerID = ClientDataJsonHelper.PlayerID;
-
-            // Select default player if ID is invalid
-            var player = Main.PlayerList.FirstOrDefault();
-
-            if (playerID == -1)
-            {
-                Log.Error("PlayerID is -1. Cannot autoload.");
-            }
-            else
-            {
-                // Set the player based on the ID
-                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
-            }
-
-            Log.Info($"Autoload using ClientDataHandler. Starting game with Player: {player.Name}");
-
-            // Select the player
             Main.SelectPlayer(player);
-
-            // Join the server (code taken from Main.instance.OnSubmitServerPassword())
-            Netplay.SetRemoteIP("127.0.0.1");
-            Main.autoPass = true;
-            Main.statusText = Lang.menu[8].Value;
-            Netplay.StartTcpClient();
-            Main.menuMode = 10;
+            Main.ActiveWorldFileData = world;
         }
     }
 }

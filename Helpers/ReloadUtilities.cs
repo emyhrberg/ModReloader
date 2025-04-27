@@ -27,7 +27,7 @@ namespace ModHelper.Helpers
     public static class ReloadUtilities
     {
         // Global list of all the mods that should be built and reloaded when a reload is executed
-        public static List<string> ModsToReload = [];
+        public static HashSet<string> ModsToReload = [];
 
         private static int clientsCountInServer;
 

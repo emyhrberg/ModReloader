@@ -8,23 +8,26 @@ namespace ModHelper.Helpers
 {
     public static class ModsToReloadJsonHelper
     {
-        /// <summary>
-        /// A helper class to manage configuration settings for the mod.
-        /// Writes a json file of some settings to the mod folder.
-        /// Reads the json file to apply some settings to the mod.
-        /// Example: Conf.C.ButtonsPosition
-        /// </summary>
+        /// <summary>  
+        /// A helper class to manage configuration settings for the mod.  
+        /// Writes a json file of some settings to the mod folder.  
+        /// Reads the json file to apply some settings to the mod.  
+        /// Example: Conf.C.ButtonsPosition  
+        /// </summary>  
 
-        public static void WriteModsToReload(List<string> modsToReload)
+        public static void WriteModsToReload(HashSet<string> modsToReload)
         {
-            // Remove duplicates before writing
+            // Remove duplicates before writing  
             List<string> uniqueMods = modsToReload.Distinct().ToList();
 
-            // If we removed duplicates, update the original list
+            // If we removed duplicates, update the original list  
             if (uniqueMods.Count != modsToReload.Count)
             {
                 modsToReload.Clear();
-                modsToReload.AddRange(uniqueMods);
+                foreach (var mod in uniqueMods)
+                {
+                    modsToReload.Add(mod);
+                }
                 Log.Info($"Removed {modsToReload.Count - uniqueMods.Count} duplicate mod entries");
             }
 
@@ -34,8 +37,8 @@ namespace ModHelper.Helpers
                 Utilities.LockingFile(filePath, (reader, writer) =>
                 {
                     string json = JsonConvert.SerializeObject(uniqueMods, Formatting.Indented);
-                    writer.BaseStream.SetLength(0);  // Clears the file
-                    writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start
+                    writer.BaseStream.SetLength(0);  // Clears the file  
+                    writer.BaseStream.Seek(0, SeekOrigin.Begin); // Move to start  
                     writer.Write(json);
                     writer.Flush();
                 });
@@ -59,23 +62,23 @@ namespace ModHelper.Helpers
                         string json = reader.ReadToEnd();
                         data = JsonConvert.DeserializeObject<List<string>>(json);
                     });
-                    // Use default if deserialization returns zero vector (or you could check here further)
+                    // Use default if deserialization returns zero vector (or you could check here further)  
                     if (data == default)
                     {
-                        return [];
+                        return new List<string>();
                     }
                     return data;
                 }
                 else
                 {
                     Log.Error("ModsToReload file not found.");
-                    return [];
+                    return new List<string>();
                 }
             }
             catch (Exception ex)
             {
                 Log.Error($"Failed to read from ModsToReload file: {ex.Message}");
-                return [];
+                return new List<string>();
             }
         }
     }

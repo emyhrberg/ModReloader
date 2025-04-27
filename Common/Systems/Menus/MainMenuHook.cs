@@ -104,11 +104,11 @@ namespace ModHelper.Common.Systems.Menus
                 ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
                 (" ", null, 1.15f, ""), // empty line
                 ($"Singleplayer", null, 1.15f, "Quickly join a world"),
-                ("Join Singleplayer", JoinSingleplayer, 1.02f, "Enter a singleplayer world with last selected player and world"),
+                ("Join Singleplayer", AutoloadPlayerInWorldSystem.EnterSingleplayerWorld, 1.02f, "Enter a singleplayer world with last selected player and world"),
                 (" ", null, 1.15f, ""), // empty line
                 ($"Multiplayer", null, 1.15f, "Options for entering and testing multiple clients"),
-                ("Host Multiplayer", HostMultiplayer, 1.02f, "Start a multiplayer world with last selected player and world"),
-                ("Join Multiplayer", JoinMultiplayer, 1.02f, "Enter the multiplayer world with first available player (server required)"),
+                ("Host Multiplayer", AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, "Start a multiplayer world with last selected player and world"),
+                ("Join Multiplayer", AutoloadPlayerInWorldSystem.EnterMultiplayerWorld, 1.02f, "Enter the multiplayer world with first available player (server required)"),
 
             };
 
@@ -234,46 +234,6 @@ namespace ModHelper.Common.Systems.Menus
             await ReloadUtilities.SinglePlayerReload();
         }
 
-        private static void HostMultiplayer()
-        {
-            // First, always load players and worlds
-            // LoadPlayers() creates a crash with index out of range
-            Main.LoadPlayers();
-            if (Main.PlayerList == null || Main.PlayerList.Count == 0)
-            {
-                Log.Error("No players found after loading players.");
-                return;
-            }
-            Main.LoadWorlds();
-
-            // Select player and world based on json
-            int playerID = ClientDataJsonHelper.PlayerID;
-            int worldID = ClientDataJsonHelper.WorldID;
-
-            var player = Main.PlayerList.FirstOrDefault();
-            var world = Main.WorldList.FirstOrDefault();
-
-            if (playerID == -1 || worldID == -1)
-            {
-                Log.Error("PlayerID or WorldID is -1. Cannot autoload.");
-                // if we return here, we cause a "crash" or "stuck" in loading.
-            }
-            else
-            {
-                // all ok, continue.
-                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
-                world = Main.WorldList[ClientDataJsonHelper.WorldID];
-            }
-
-            Log.Info("HostMultiplayer. Found player: " + player.Name + ", world: " + world.Name);
-
-            Main.SelectPlayer(player);
-            Main.ActiveWorldFileData = world;
-
-            // Main.menuMode = 889; // host & play menu
-            Main.instance.OnSubmitServerPassword("");
-        }
-
         private static void StartClient()
         {
             try
@@ -348,6 +308,7 @@ namespace ModHelper.Common.Systems.Menus
             }
         }
 
+        [Obsolete("Just use EnterMultiplayerWorld")]
         private static void JoinMultiplayer()
         {
             // Simply join localhost, easy.
@@ -423,6 +384,7 @@ namespace ModHelper.Common.Systems.Menus
             }
         }
 
+        [Obsolete("Just use EnterSinglePlayer")]
         private static void JoinSingleplayer()
         {
             Log.Info("JoinSingleplayer() called!");

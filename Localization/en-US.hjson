@@ -194,6 +194,21 @@ Mods: {
 					Label: Enter World Super Mode
 					Tooltip: ""
 				}
+
+				Player: {
+					Label: Player
+					Tooltip: ""
+				}
+
+				DefaultPlayer: {
+					Label: Default Player
+					Tooltip: ""
+				}
+
+				DefaultWorld: {
+					Label: Default World
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {
