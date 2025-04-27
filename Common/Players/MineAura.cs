@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -38,9 +39,14 @@ namespace ModHelper.Common.Players
                     // We'll also mine vertically from -mineRange..mineRange
                     for (int offsetY = -mineRange; offsetY <= mineRange; offsetY++)
                     {
-                        int x = tileX + offsetX * Player.direction;
-                        int y = tileY + offsetY;
-                        KillTileAndWall(x, y);
+                        if (Math.Pow(offsetX, 2) + Math.Pow(offsetY, 2) <= Math.Pow(mineRange, 2))
+                        {
+                            int x = tileX + offsetX * Player.direction;
+                            int y = tileY + offsetY;
+                            KillTileAndWall(x, y);
+                        }
+                        else
+                            continue;
                     }
                 }
             }
@@ -53,9 +59,14 @@ namespace ModHelper.Common.Players
                 {
                     for (int offsetY = 1; offsetY <= mineRange; offsetY++)
                     {
-                        int x = tileX + offsetX;
-                        int y = tileY - offsetY;
-                        KillTileAndWall(x, y);
+                        if (Math.Pow(offsetX, 2) + Math.Pow(offsetY, 2) <= Math.Pow(mineRange, 2))
+                        {
+                            int x = tileX + offsetX;
+                            int y = tileY - offsetY;
+                            KillTileAndWall(x, y);
+                        }
+                        else
+                            continue;
                     }
                 }
             }
@@ -68,9 +79,14 @@ namespace ModHelper.Common.Players
                 {
                     for (int offsetY = 1; offsetY <= mineRange; offsetY++)
                     {
-                        int x = tileX + offsetX;
-                        int y = tileY + offsetY;
-                        KillTileAndWall(x, y);
+                        if (Math.Pow(offsetX, 2) + Math.Pow(offsetY, 2) <= Math.Pow(mineRange, 2))
+                        {
+                            int x = tileX + offsetX;
+                            int y = tileY + offsetY;
+                            KillTileAndWall(x, y);
+                        }
+                        else
+                            continue;
                     }
                 }
             }
