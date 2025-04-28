@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-using ModHelper.UI.Elements;
+using ModHelper.UI;
 using ModHelper.UI.Elements.AbstractElements;
 using Terraria;
 using Terraria.GameContent;

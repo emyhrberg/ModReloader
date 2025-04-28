@@ -3,7 +3,7 @@ using System.IO;
 using ModHelper.Common.Systems;
 using ModHelper.Common.Systems.SpawnRate;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements;
+using ModHelper.UI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

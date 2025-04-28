@@ -7,7 +7,7 @@ using ModHelper.Common.Systems;
 using ModHelper.Common.Systems.SpawnRate;
 using ModHelper.Helpers;
 using ModHelper.PacketHandlers;
-using ModHelper.UI.Elements;
+using ModHelper.UI;
 using ModHelper.UI.Elements.AbstractElements;
 using Terraria;
 using Terraria.ID;

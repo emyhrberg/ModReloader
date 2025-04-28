@@ -8,7 +8,7 @@ using ModHelper.Common.Systems.MainMenu;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements.AbstractElements;
 using ModHelper.UI.Elements.ConfigElements;
-using ModHelper.UI.Elements.ModElements;
+using ModHelper.UI.ModElements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 

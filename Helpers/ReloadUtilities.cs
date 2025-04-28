@@ -12,7 +12,7 @@ using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.PacketHandlers;
 using ModHelper.UI.Elements.AbstractElements;
-using ModHelper.UI.Elements.ModElements;
+using ModHelper.UI.ModElements;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
 using Terraria;

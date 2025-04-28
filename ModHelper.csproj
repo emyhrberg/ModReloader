@@ -20,10 +20,4 @@
 		<PackageReference Include="Krafs.Publicizer" PrivateAssets="true" Version="2.2.1" />
 		<Publicize Include="tModLoader" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="UI\Elements\LogElements\" />
-	  <Folder Include="UI\Elements\PlayerElements\" />
-	  <Folder Include="UI\Elements\ReloadElements\" />
-	  <Folder Include="UI\Main\" />
-	</ItemGroup>
 </Project>

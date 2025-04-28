@@ -1,8 +1,6 @@
 using System.IO;
-using ModHelper.Common.Players;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements;
-using ModHelper.UI.Elements.SpawnerElements;
+using ModHelper.UI.SpawnerElements;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
