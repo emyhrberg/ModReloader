@@ -1,4 +1,4 @@
-namespace ModHelper.Common.Systems
+namespace ModHelper.Common.Systems.SpawnRate
 {
     public static class SpawnRateMultiplier
     {

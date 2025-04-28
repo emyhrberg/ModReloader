@@ -2,7 +2,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.Menus
+namespace ModHelper.Common.Systems.MainMenu
 {
     public class LoadWorldState : UIState
     {

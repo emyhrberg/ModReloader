@@ -17,6 +17,9 @@ namespace ModHelper.UI
 {
     public class MainState : UIState
     {
+        // Collapse
+        public Collapse collapse;
+
         // Buttons
         public ModsButton modsButton;
         public ModSourcesButton modSourcesButton;
@@ -25,6 +28,9 @@ namespace ModHelper.UI
         public LogButton logButton;
         public UIElementButton uiEleButton;
         public PlayerButton playerButton;
+        public WorldButton worldButton;
+        public ItemButton itemButton;
+        public NPCButton npcButton;
 
         // Panels
         public ModsPanel modsPanel;
@@ -32,6 +38,9 @@ namespace ModHelper.UI
         public LogPanel logPanel;
         public UIElementPanel uiElementPanel;
         public PlayerPanel playerPanel;
+        public WorldPanel worldPanel;
+        public ItemSpawner itemSpawner;
+        public NPCSpawner npcSpawner;
 
         // More
         public bool AreButtonsShowing = true; // flag to toggle all buttons on/off using the toggle button
@@ -77,12 +86,36 @@ namespace ModHelper.UI
 
             // Add buttons
 
+            if (Conf.C.Buttons.ShowItemsButton)
+            {
+                itemButton = AddButton<ItemButton>(Ass.ButtonItems, "Item", "Spawn Items", "");
+                itemSpawner = AddPanel<ItemSpawner>();
+                itemButton.AssociatedPanel = itemSpawner;
+                itemSpawner.AssociatedButton = itemButton;
+            }
+
+            if (Conf.C.Buttons.ShowNPCButton)
+            {
+                npcButton = AddButton<NPCButton>(Ass.ButtonNPC, "NPC", "Spawn NPCs", "");
+                npcSpawner = AddPanel<NPCSpawner>();
+                npcButton.AssociatedPanel = npcSpawner;
+                npcSpawner.AssociatedButton = npcButton;
+            }
+
             if (Conf.C.Buttons.ShowPlayerButton)
             {
                 playerButton = AddButton<PlayerButton>(Ass.ButtonPlayer, "Player", "Player options", "Right click to toggle god mode");
                 playerPanel = AddPanel<PlayerPanel>();
                 playerButton.AssociatedPanel = playerPanel;
                 playerPanel.AssociatedButton = playerButton;
+            }
+
+            if (Conf.C.Buttons.ShowWorldButton)
+            {
+                worldButton = AddButton<WorldButton>(Ass.ButtonWorld, "World", "World options", "Right click to toggle time freeze");
+                worldPanel = AddPanel<WorldPanel>();
+                worldButton.AssociatedPanel = worldPanel;
+                worldPanel.AssociatedButton = worldButton;
             }
 
             if (Conf.C.Buttons.ShowLogButton)
@@ -139,7 +172,9 @@ namespace ModHelper.UI
             if (Conf.C.Buttons.ShowReloadMPButton)
                 reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
 
-            // Add the panels (invisible by default)
+            // Add collapse button on top
+            collapse = new(Ass.CollapseDown, Ass.CollapseUp, Ass.CollapseLeft, Ass.CollapseRight);
+            Append(collapse);
 
             // Temporary debug text for player name, who am I, and frame rate
             if (Conf.C.AddMainMenu)
@@ -149,7 +184,7 @@ namespace ModHelper.UI
                 Append(debugText);
 
                 string logFileName = Path.GetFileName(Logging.LogPath);
-                DebugAction openLog = new("Open log, ", $"Open {logFileName}", Log.OpenClientLog);
+                DebugAction openLog = new("Open log, ", $"Open {logFileName}", Conf.C.OpenLogType == "File" ? Log.OpenClientLog : Log.OpenLogFolder);
                 DebugAction clearLog = new("Clear log", $"Clear {logFileName}", Log.ClearClientLog, left: 81f);
                 Append(openLog);
                 Append(clearLog);

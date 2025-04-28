@@ -1,9 +1,6 @@
-using Microsoft.Xna.Framework;
-using ModHelper.Helpers;
-using Terraria;
 using Terraria.ModLoader;
 
-namespace ModHelper.Common.Systems
+namespace ModHelper.Common.Systems.SpawnRate
 {
     // Make this class a ModSystem to leverage tModLoader's built-in synchronization
     public class SpawnRateSystem : ModSystem

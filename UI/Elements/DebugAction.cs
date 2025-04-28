@@ -18,9 +18,9 @@ namespace ModHelper.UI.Elements
         private bool Active = true;
         private string hover = "";
         private Action action;
-        private float left;
+        private float leftOffset;
 
-        public DebugAction(string text, string hover = "", Action action = null, float left=0f) : base(text, textScale: 0.9f, large: false)
+        public DebugAction(string text, string hover = "", Action action = null, float left = 0f) : base(text, textScale: 0.9f, large: false)
         {
             TextColor = Color.White;
 
@@ -35,7 +35,7 @@ namespace ModHelper.UI.Elements
 
             this.hover = hover;
             this.action = action;
-            this.left = left;
+            this.leftOffset = left;
         }
 
         public override void MouseOver(UIMouseEvent evt)
@@ -78,7 +78,7 @@ namespace ModHelper.UI.Elements
                 return;
             }
 
-            if (left == 81)
+            if (leftOffset == 81)
             {
                 Left.Set(73, 0);
                 //DrawHelper.DrawDebugHitbox(this, Color.Orange);
@@ -90,7 +90,7 @@ namespace ModHelper.UI.Elements
 
             VAlign = 1.00f;
             HAlign = 0.005f;
-            Top.Set(0,0);
+            Top.Set(0, 0);
 
             // also, if chat is open, hide the text
             if (Main.drawingPlayerChat)

@@ -80,11 +80,11 @@ namespace ModHelper.UI.Elements
             base.Update(gameTime);
 
             // If resize dragging.
-            if (resizeButton.draggingResize)
-            {
-                IsDragging = false;
-                return;
-            }
+            //if (resizeButton?.draggingResize)
+            //{
+            //    IsDragging = false;
+            //    return;
+            //}
 
             if (ContainsPoint(Main.MouseScreen))
             {

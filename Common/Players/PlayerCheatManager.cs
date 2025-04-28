@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
+using ModHelper.Common.Systems.SpawnRate;
 using ModHelper.Helpers;
 using ModHelper.PacketHandlers;
 using ModHelper.UI;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using ModHelper.Common.Systems.Menus;
+using ModHelper.Common.Systems.MainMenu;
 using ModHelper.Helpers;
 using ModHelper.UI;
 using ModHelper.UI.ConfigElements;
@@ -29,11 +29,6 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool SaveWorldBeforeReloading = false;
 
-        //[Header("DebugText")]
-
-        //[DefaultValue(true)]
-        //public bool ShowDebugText = true;
-
         [Header("Add")]
 
         [DefaultValue(true)]
@@ -56,6 +51,11 @@ namespace ModHelper.Common.Configs
         // show by default, since its easier to modify ingame for the user like this.
         // [Expand(false, false)]
         [Header("Buttons")]
+
+        [DrawTicks]
+        [OptionStrings(["Left", "Bottom", "Off"])]
+        [DefaultValue("Right")]
+        public string Collapse;
 
         [DrawTicks]
         [OptionStrings(["Left", "Right"])]
@@ -95,6 +95,14 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(false)]
         public bool AutoFocusSearchBox = false;
+
+        [DefaultValue(false)]
+        public bool MapTeleportAllowed = false;
+
+        [DrawTicks]
+        [OptionStrings(["File", "Folder"])]
+        [DefaultValue("File")]
+        public string OpenLogType = "File";
 
         // ------------------------------------------------------
         // ON CHANGED CONFIG
@@ -269,6 +277,15 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool ShowPlayerButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowWorldButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowItemsButton = true;
+
+        [DefaultValue(true)]
+        public bool ShowNPCButton = true;
     }
 
     public static class Conf

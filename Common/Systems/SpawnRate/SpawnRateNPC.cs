@@ -1,7 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace ModHelper.Common.Systems
+namespace ModHelper.Common.Systems.SpawnRate
 {
     public class SpawnRateNPC : GlobalNPC
     {

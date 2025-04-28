@@ -209,6 +209,11 @@ Mods: {
 					Label: Default World
 					Tooltip: ""
 				}
+
+				OpenLogType: {
+					Label: Open Log Type
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {
@@ -246,6 +251,21 @@ Mods: {
 
 				ShowPlayerButton: {
 					Label: Show Player Button
+					Tooltip: ""
+				}
+
+				ShowWorldButton: {
+					Label: Show World Button
+					Tooltip: ""
+				}
+
+				ShowItemsButton: {
+					Label: Show Items Button
+					Tooltip: ""
+				}
+
+				ShowNPCButton: {
+					Label: Show N P C Button
 					Tooltip: ""
 				}
 			}

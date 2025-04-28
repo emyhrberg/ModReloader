@@ -19,7 +19,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.Menus
+namespace ModHelper.Common.Systems.MainMenu
 {
     public class MainMenuHook : ModSystem
     {
@@ -100,7 +100,7 @@ namespace ModHelper.Common.Systems.Menus
                 ($"Options", null, 1.15f, "General options for testing"),
                 ("Start Server", StartServer, 1.02f, "Starts a server instance with cmd-line"),
                 ("Start Client", StartClient, 1.02f, "Starts another tML instance with cmd-line in addition to this one"),
-                ("Open Log", Log.OpenClientLog, 1.02f, $"Click to open the {fileName} of this client"),
+                ("Open Log", Conf.C.OpenLogType == "File" ? Log.OpenClientLog : Log.OpenLogFolder, 1.02f, $"Click to open the {fileName} of this client"),
                 ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
                 (" ", null, 1.15f, ""), // empty line
                 ($"Singleplayer", null, 1.15f, "Quickly join a world"),

@@ -32,6 +32,9 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ButtonReloadMP;
         public static Asset<Texture2D> ButtonMods;
         public static Asset<Texture2D> ButtonModSources;
+        public static Asset<Texture2D> ButtonWorld;
+        public static Asset<Texture2D> ButtonNPC;
+        public static Asset<Texture2D> ButtonItems;
 
         // Misc
         public static Asset<Texture2D> Resize;
@@ -43,6 +46,37 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ConfigOpen; // 36x36
         public static Asset<Texture2D> ConfigClose; // 36x36
         public static Asset<Texture2D> ModInfo; // 36x36
+        public static Asset<Texture2D> Arrow;
+
+        // Collapse
+        public static Asset<Texture2D> CollapseUp;
+        public static Asset<Texture2D> CollapseDown;
+        public static Asset<Texture2D> CollapseLeft;
+        public static Asset<Texture2D> CollapseRight;
+
+        // Filter buttons
+        public static Asset<Texture2D> FilterBG;
+        public static Asset<Texture2D> FilterBGActive;
+        public static Asset<Texture2D> FilterBGActiveModSort;
+        public static Asset<Texture2D> FilterAll;
+        public static Asset<Texture2D> FilterMelee;
+        public static Asset<Texture2D> FilterRanged;
+        public static Asset<Texture2D> FilterMagic;
+        public static Asset<Texture2D> FilterSummon;
+        public static Asset<Texture2D> FilterArmor;
+        public static Asset<Texture2D> FilterVanity;
+        public static Asset<Texture2D> FilterAccessories;
+        public static Asset<Texture2D> FilterPotion;
+        public static Asset<Texture2D> FilterPlaceables;
+        public static Asset<Texture2D> FilterTown;
+        public static Asset<Texture2D> FilterMisc;
+        public static Asset<Texture2D> FilterMob;
+        public static Asset<Texture2D> SortID;
+        public static Asset<Texture2D> SortValue;
+        public static Asset<Texture2D> SortRarity;
+        public static Asset<Texture2D> SortName;
+        public static Asset<Texture2D> SortDamage;
+        public static Asset<Texture2D> SortDefense;
 
         // Filters
         public static Asset<Texture2D> FilterEnabled; // 32x32*3 (3 vertical images spritesheet)

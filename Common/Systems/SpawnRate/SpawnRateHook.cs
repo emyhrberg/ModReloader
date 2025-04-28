@@ -3,7 +3,7 @@ using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace ModHelper.Common.Systems
+namespace ModHelper.Common.Systems.SpawnRate
 {
     public class SpawnRateHook : ModSystem
     {
