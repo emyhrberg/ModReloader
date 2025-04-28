@@ -4,9 +4,10 @@ using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Players;
 using ModHelper.Helpers;
+using ModHelper.UI.Elements.AbstractElements;
 using Terraria;
 using Terraria.ID;
-using static ModHelper.UI.Elements.OptionElement;
+using static ModHelper.UI.Elements.AbstractElements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {

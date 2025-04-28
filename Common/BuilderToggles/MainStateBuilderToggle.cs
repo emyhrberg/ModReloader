@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.UI;
+using ModHelper.Common.Systems;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;

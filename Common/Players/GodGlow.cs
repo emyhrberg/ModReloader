@@ -130,7 +130,7 @@ namespace ModHelper.Common.Players
             PlayerDrawLayers.DrawPlayer_extra_TorsoPlus(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_01_2_JimsCloak(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_extra_TorsoMinus(ref drawInfo);
-            PlayerDrawLayers.DrawPlayer_02_MountBehindPlayer(ref drawInfo);
+            //PlayerDrawLayers.DrawPlayer_02_MountBehindPlayer(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_03_Carpet(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_03_PortableStool(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_extra_TorsoPlus(ref drawInfo);
@@ -144,7 +144,7 @@ namespace ModHelper.Common.Players
             PlayerDrawLayers.DrawPlayer_extra_TorsoPlus(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_08_1_Tails(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_extra_TorsoMinus(ref drawInfo);
-            PlayerDrawLayers.DrawPlayer_09_Wings(ref drawInfo);
+            //PlayerDrawLayers.DrawPlayer_09_Wings(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_extra_TorsoPlus(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_01_BackHair(ref drawInfo);
             PlayerDrawLayers.DrawPlayer_10_BackAcc(ref drawInfo);

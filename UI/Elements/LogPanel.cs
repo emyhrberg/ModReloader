@@ -7,6 +7,7 @@ using log4net.Core;
 using log4net.Repository.Hierarchy;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
+using ModHelper.UI.Elements.AbstractElements;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

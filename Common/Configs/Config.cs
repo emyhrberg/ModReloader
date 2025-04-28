@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using ModHelper.Common.Systems;
 using ModHelper.Common.Systems.MainMenu;
+
 using ModHelper.Helpers;
-using ModHelper.UI;
-using ModHelper.UI.ConfigElements;
-using ModHelper.UI.Elements;
+using ModHelper.UI.Elements.AbstractElements;
+using ModHelper.UI.Elements.ConfigElements;
+using ModHelper.UI.Elements.ModElements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -29,6 +31,14 @@ namespace ModHelper.Common.Configs
         [DefaultValue(false)]
         public bool SaveWorldBeforeReloading = false;
 
+        [CustomModConfigItem(typeof(PlayerPicker))]
+        [DefaultValue(0)]
+        public int DefaultPlayer = 0;
+
+        [CustomModConfigItem(typeof(WorldPicker))]
+        [DefaultValue(0)]
+        public int DefaultWorld = 0;
+
         [Header("Add")]
 
         [DefaultValue(true)]
@@ -39,14 +49,6 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool AddExceptionMenu = true;
-
-        [CustomModConfigItem(typeof(PlayerPicker))]
-        [DefaultValue(0)]
-        public int DefaultPlayer = 0;
-
-        [CustomModConfigItem(typeof(WorldPicker))]
-        [DefaultValue(0)]
-        public int DefaultWorld = 0;
 
         // show by default, since its easier to modify ingame for the user like this.
         // [Expand(false, false)]

@@ -8,21 +8,40 @@ namespace ModHelper.PacketHandlers
         public const byte RefreshingServer = 1;
         internal static RefreshServerPacketHandler RefreshServer = new(RefreshingServer);
 
-        /// <summary>
-        /// Handles the incoming packets.
-        /// </summary>
-        /// <param name="reader">Reader to read the packet data.</param>
-        /// <param name="fromWho">Index of the player who sent the packet.</param>
-        public static void HandlePacket(BinaryReader reader, int fromWho)
+        public const byte GodMode = 2;
+        internal static GodPacketHandler GodModePacketHandler = new(GodMode);
+
+        public const byte TimePacket = 3;
+        internal static TimePacketHandler TimePacketHandler = new(TimePacket);
+
+        public const byte SpawnRatePacket = 4;
+        internal static SpawnRatePacketHandler SpawnRatePacketHandler = new(SpawnRatePacket);
+
+        public const byte NPCSpawnPacket = 5;
+        internal static NPCSpawnPacketHandler NPCSpawnPacketHandler = new(NPCSpawnPacket);
+
+        public static void HandlePacket(BinaryReader r, int fromWho)
         {
             // Here we read the packet type and call the appropriate handler
-            switch (reader.ReadByte())
+            switch (r.ReadByte())
             {
                 case RefreshingServer:
-                    RefreshServer.HandlePacket(reader, fromWho);
+                    RefreshServer.HandlePacket(r, fromWho);
+                    break;
+                case GodMode:
+                    GodModePacketHandler.HandlePacket(r, fromWho);
+                    break;
+                case TimePacket:
+                    TimePacketHandler.HandlePacket(r, fromWho);
+                    break;
+                case SpawnRatePacket:
+                    SpawnRatePacketHandler.HandlePacket(r, fromWho);
+                    break;
+                case NPCSpawnPacket:
+                    NPCSpawnPacketHandler.HandlePacket(r, fromWho);
                     break;
                 default:
-                    Log.Warn("Unknown packet type: " + reader.ReadByte());
+                    Log.Warn("Unknown packet type: " + r.ReadByte());
                     break;
             }
         }

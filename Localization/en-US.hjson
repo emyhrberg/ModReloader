@@ -214,6 +214,16 @@ Mods: {
 					Label: Open Log Type
 					Tooltip: ""
 				}
+
+				Collapse: {
+					Label: Collapse
+					Tooltip: ""
+				}
+
+				MapTeleportAllowed: {
+					Label: Map Teleport Allowed
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

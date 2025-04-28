@@ -4,13 +4,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using ModHelper.Common.Systems;
 using ModHelper.Common.Systems.SpawnRate;
+using ModHelper.Common.Systems.WorldSystem;
 using ModHelper.Helpers;
+using ModHelper.UI.Elements.AbstractElements;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ID;
-using static ModHelper.UI.Elements.OptionElement;
+using Terraria.ModLoader;
+using static ModHelper.UI.Elements.AbstractElements.OptionElement;
 
 namespace ModHelper.UI.Elements
 {
@@ -136,8 +138,9 @@ namespace ModHelper.UI.Elements
                 max: 1f,
                 onValueChanged: UpdateTownNpcSlider,
                 increment: 1f,
-                hover: "Set the number of town NPCs",
-                textSize: 0.9f
+                hover: "Click to add a town NPC, drag to remove them",
+                textSize: 0.9f,
+                leftClickText: AddRandomTownNpc
             );
             AddPadding();
 
@@ -183,6 +186,12 @@ namespace ModHelper.UI.Elements
             AddAction(saveWorld, "Save World", $"Save the current world file as '{worldName}'\nRight click to open folder", rightClick: () => OpenFolder(Main.ActiveWorldFileData.Path));
 
             AddAction(TryStopInvasion, "Stop Invasion", "Stop the current invasion if one is in progress", rightClick: () => Main.NewText("No right click action"));
+
+            // KGRSystem
+            AddOption(
+                text: "Keep Game Running",
+                leftClick: () => KeepGameRunningSystem.KeepRunning = !KeepGameRunningSystem.KeepRunning,
+                hover: "Keep the game running even when not in focus");
         }
         #endregion // end of constructor
 
@@ -408,6 +417,52 @@ namespace ModHelper.UI.Elements
             }
         }
 
+        private List<string> existingNpcs = []; // Example storage for added NPCs
+
+        private void AddRandomTownNpc()
+        {
+            // List of NPCs in the order they should be added
+            List<string> npcOrder =
+            [
+                "Guide",
+                "Merchant",
+                "Nurse",
+                "Demolitionist",
+                "Dye Trader",
+                "Angler",
+                "Zoologist",
+                "Dryad",
+                "Painter",
+                "Golfer",
+                "Arms Dealer",
+                "Tavernkeep",
+                "Stylist",
+                "Goblin Tinkerer",
+                "Witch Doctor",
+                "Clothier",
+                "Mechanic",
+                "Party Girl",
+                "Wizard",
+                "Tax Collector",
+                "Truffle",
+                "Pirate",
+                "Steampunker",
+                "Cyborg",
+                "Santa Claus",
+                "Princess"
+            ];
+
+            foreach (var npc in npcOrder)
+            {
+                if (!existingNpcs.Contains(npc))
+                {
+                    existingNpcs.Add(npc);
+                    Console.WriteLine($"Added NPC: {npc}");
+                    return; // Add only one NPC and exit
+                }
+            }
+        }
+
         private int GetTownNpcCount() => Main.npc.Where(npc => npc.active && npc.townNPC).Count();
 
         #endregion
@@ -525,7 +580,7 @@ namespace ModHelper.UI.Elements
                 spawnRateSlider.optionTitle.hover = $"Spawn Rate: {SpawnRateHook.StoredSpawnRate} (number of frames between spawn attempts)\nMax Spawns: {SpawnRateHook.StoredMaxSpawns} (max number of enemies in the world)";
 
                 // Update rain slider text
-                if (!CustomSliderBase.IsAnySliderLocked)
+                if (!SliderBase.IsAnySliderLocked)
                 {
                     // Clamp the rain rate to our desired range
                     float clampedRainRate = MathHelper.Clamp(Main.maxRaining, 0f, 1f);
@@ -533,7 +588,7 @@ namespace ModHelper.UI.Elements
                 }
 
                 // Update wind slider text
-                if (!CustomSliderBase.IsAnySliderLocked)
+                if (!SliderBase.IsAnySliderLocked)
                 {
                     // Clamp the wind speed to our desired range
                     float clampedWindSpeed = MathHelper.Clamp(Main.windSpeedCurrent, -1.2f, 1.2f);
@@ -578,7 +633,7 @@ namespace ModHelper.UI.Elements
                 }
 
                 // Update the town NPC count
-                if (!CustomSliderBase.IsAnySliderLocked)
+                if (!SliderBase.IsAnySliderLocked)
                 {
                     // Slider is not being used, update the max value
                     townNpcSlider.UpdateSliderMax(GetTownNpcCount());
