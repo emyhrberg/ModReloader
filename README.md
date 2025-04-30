@@ -9,6 +9,13 @@
 
 ModHelper is the ultimate Terraria testing tool for modders and players who want full control.
 
+  <p align="center">
+    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3408391079">Workshop Page</a>
+    &middot;
+    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3408391079">Bug Report</a>
+  </p>
+</div>
+
 ## Features:
 
 🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
@@ -49,6 +56,7 @@ Copy Exception Demo:
 https://i.imgur.com/XeTf3KX.png
 
 Multiplayer And Server Reload is in an experimental state but here are the steps:
+
 1. Right click the green reload button to toggle and show the red reload button.
 2. Click the red reload button to start a server and join it.
 3. Launch a second client.
