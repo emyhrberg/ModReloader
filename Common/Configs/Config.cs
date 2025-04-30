@@ -20,11 +20,6 @@ namespace ModHelper.Common.Configs
 
         [Header("Reload")]
 
-        [DrawTicks]
-        [OptionStrings(["Default", "Publicizer"])]
-        [DefaultValue("Default")]
-        public string Compiler;
-
         [DefaultValue(true)]
         public bool AutoJoinWorld = true;
 
@@ -100,6 +95,9 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(false)]
         public bool MapTeleportAllowed = false;
+
+        [DefaultValue(false)]
+        public bool Publicizer = false;
 
         [DrawTicks]
         [OptionStrings(["File", "Folder"])]
@@ -248,17 +246,6 @@ namespace ModHelper.Common.Configs
 
     public class Buttons
     {
-        // [Range(50f, 80f)]
-        // [Increment(5f)]
-        // [DefaultValue(70)]
-        // public float ButtonSize;
-
-        // [DefaultValue(true)]
-        // public bool ShowOptionsButton = true;
-
-        // [DefaultValue(true)]
-        // public bool ShowUIButton = true;
-
         [DefaultValue(true)]
         public bool ShowModsButton = true;
 
