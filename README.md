@@ -9,13 +9,6 @@
 
 ModHelper is the ultimate Terraria testing tool for modders and players who want full control.
 
-  <p align="center">
-    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3408391079">Workshop Page</a>
-    &middot;
-    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3408391079">Bug Report</a>
-  </p>
-</div>
-
 ## Features:
 
 🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.

@@ -215,6 +215,7 @@ public static class CompilerUtilities
             int index = itemSpec.IndexOf(':');
             bool isAssemblyPattern = index == -1;
             string assemblyName = isAssemblyPattern ? itemSpec : itemSpec[..index];
+            assemblyName = FindReferenceNameFromAssemblyName(csproj, assemblyName);
 
             if (!contexts.TryGetValue(assemblyName, out var assemblyContext))
             {
@@ -276,6 +277,31 @@ public static class CompilerUtilities
         }
 
         return contexts;
+    }
+
+    private static string FindReferenceNameFromAssemblyName(XDocument csproj, string assemblyName)
+    {
+        XNamespace ns = csproj.Root!.Name.Namespace;
+
+        var references = csproj.Descendants(ns + "Reference");
+
+        foreach (var reference in references)
+        {
+            var includeAttr = reference.Attribute("Include")?.Value;
+            var hintPathElem = reference.Element(ns + "HintPath")?.Value;
+
+            if (string.IsNullOrEmpty(includeAttr) || string.IsNullOrEmpty(hintPathElem))
+                continue;
+
+            string hintFileName = Path.GetFileNameWithoutExtension(hintPathElem);
+
+            if (string.Equals(hintFileName, assemblyName, StringComparison.OrdinalIgnoreCase))
+            {
+                return includeAttr;
+            }
+        }
+        Log.Warn("Failed to find reference name for assembly: " + assemblyName);
+        return assemblyName;
     }
 
 }
