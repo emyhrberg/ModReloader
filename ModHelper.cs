@@ -1,4 +1,6 @@
 using System.IO;
+using System.Linq;
+using ModHelper.Common.Configs;
 using ModHelper.PacketHandlers;
 using Terraria.ModLoader;
 
@@ -14,6 +16,11 @@ namespace ModHelper
         public override void Load()
         {
             Instance = this;
+            Conf.C.ModsToReload = Conf.C.ModsToReload
+                .Distinct()
+                .Select(modName => modName.Trim())
+                .Where(modName => !string.IsNullOrEmpty(modName))
+                .ToList();
         }
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)

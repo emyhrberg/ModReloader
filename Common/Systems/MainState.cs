@@ -59,7 +59,7 @@ namespace ModHelper.Common.Systems
             
 
             string reloadHoverMods;
-            if (Conf.C.ModsToReload == "")
+            if (ReloadUtilities.IsModsToReloadEmpty)
                 reloadHoverMods = "No mods selected";
             else
                 reloadHoverMods = string.Join(",", Conf.C.ModsToReload);

@@ -37,20 +37,11 @@ namespace ModHelper.UI.ModElements
             VAlign = 1.0f;
             Top.Set(6, 0);
 
-            // update: read the json file, and update the checkboxes according to the json file.
-
-            HashSet<string> ModsToReload = Conf.C.ModsToReload.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(modName => modName.Trim())
-                .Where(modName => !string.IsNullOrEmpty(modName))
-                .ToHashSet(StringComparer.InvariantCultureIgnoreCase);
-
-            foreach (var checkedMod in ModsToReload)
+            foreach (var checkedMod in Conf.C.ModsToReload)
             {
                 if (checkedMod == modSourcePathString)
                 {
                     ToggleCheckState();
-                    Conf.C.ModsToReload = Conf.C.ModsToReload.Replace(modSourcePathString + ",", "");
-                    Conf.Save(); // Save the config after updating the ModsToReload string
                 }
             }
         }
@@ -91,35 +82,29 @@ namespace ModHelper.UI.ModElements
                     if (mod.checkbox.isChecked)
                     {
                         // only add if it doesnt already exist
-                        //if (!ReloadUtilities.ModsToReload.Contains(modSourcePathString))
+                        if (!Conf.C.ModsToReload.Contains(modSourcePathString))
                         {
-                            //ReloadUtilities.ModsToReload.Add(modSourcePathString);
-                            // Log.Info("added mod to reload: " + modSourcePathString);
+                            Conf.C.ModsToReload.Add(modSourcePathString);
+                            Log.Info("added mod to reload: " + modSourcePathString);
                         }
                     }
                     else
                     {
                         // unchecked. 
-                        // Log.Info("removing mod to reload: " + modSourcePathString);
-                        //ReloadUtilities.ModsToReload.Remove(modSourcePathString);
+                        if (Conf.C.ModsToReload.Remove(modSourcePathString))
+                        {
+                            Log.Info("removed mod to reload: " + modSourcePathString);
+                        }
+                        else
+                        {
+                            Log.Info("mod not found in reload list: " + modSourcePathString);
+                        }
                     }
 
                     // set hovertext in reloadSP
-                    ReloadSPButton sp = sys.mainState.reloadSPButton;
-                    ReloadMPButton mp = sys.mainState.reloadMPButton;
-                    sp?.UpdateHoverTextDescription();
-                    mp?.UpdateHoverTextDescription();
+                    sys.mainState.reloadSPButton?.UpdateHoverTextDescription();
+                    sys.mainState.reloadMPButton?.UpdateHoverTextDescription();
 
-                    // Add mod to reload list if not already present
-
-                    if (!Conf.C.ModsToReload.Contains(modSourcePathString))
-                    {
-                        Conf.C.ModsToReload += modSourcePathString + ",";
-                    }
-                    else
-                    {
-                        Conf.C.ModsToReload = Conf.C.ModsToReload.Replace(modSourcePathString + ",", "");
-                    }
                     Conf.Save(); // Save the config after updating the ModsToReload string
                 }
             }

@@ -28,7 +28,7 @@ namespace ModHelper.Helpers
 
         private const string pipeNameAfterRebuild = "ModHelperReloadPipeAfterRebuild";
 
-        private static bool IsModsToReloadEmpty => Conf.C.ModsToReload == "";
+        public static bool IsModsToReloadEmpty => Conf.C.ModsToReload.Count <= 0;
 
         /// <summary>
         /// Main function to build and reload all the mods in the ModsToReload list for Singleplayer.
@@ -418,15 +418,10 @@ namespace ModHelper.Helpers
             // Find all mod sources
             string[] modSources = ModCompile.FindModSources();
 
-            HashSet<string> ModsToReload = Conf.C.ModsToReload.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(modName => modName.Trim())
-                .Where(modName => !string.IsNullOrEmpty(modName))
-                .ToHashSet(StringComparer.InvariantCultureIgnoreCase);
-
-            Log.Info("Executing Mods to reload: " + string.Join(", ", ModsToReload));
+            Log.Info("Executing Mods to reload: " + string.Join(", ", Conf.C.ModsToReload));
 
             // Get mods paths of mods to reload
-            var modPaths = ModsToReload.Select((modName) =>
+            var modPaths = Conf.C.ModsToReload.Select((modName) =>
                 modSources.FirstOrDefault(p =>
                     !string.IsNullOrEmpty(p) &&
                     Directory.Exists(p) &&

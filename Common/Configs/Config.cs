@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 using ModHelper.Helpers;
@@ -14,8 +16,7 @@ namespace ModHelper.Common.Configs
 
         [Header("Reload")]
 
-        [DefaultValue("")]
-        public string ModsToReload;
+        public List<string> ModsToReload = [];
 
         [DefaultValue(true)]
         public bool AutoJoinWorld;
@@ -51,7 +52,6 @@ namespace ModHelper.Common.Configs
 
         [DefaultValue(true)]
         public bool LogDebugMessages;
-
     }
 
     public static class Conf
@@ -60,9 +60,7 @@ namespace ModHelper.Common.Configs
         {
             try
             {
-                MethodInfo saveMethodInfo = typeof(ConfigManager).GetMethod("Save", BindingFlags.Static | BindingFlags.NonPublic);
-                if (saveMethodInfo is not null)
-                    saveMethodInfo.Invoke(null, [Conf.C]);
+                ConfigManager.Save(C);
             }
             catch
             {

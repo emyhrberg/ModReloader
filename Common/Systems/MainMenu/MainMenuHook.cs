@@ -80,7 +80,7 @@ namespace ModHelper.Common.Systems.MainMenu
             //List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
 
             string reloadHoverMods;
-            if (Conf.C.ModsToReload == "")
+            if (ReloadUtilities.IsModsToReloadEmpty)
             {
                 reloadHoverMods = "No mods selected";
             }
