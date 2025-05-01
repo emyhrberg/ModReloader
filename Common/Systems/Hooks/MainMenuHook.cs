@@ -19,7 +19,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.MainMenu
+namespace ModHelper.Common.Systems.Hooks
 {
     public class MainMenuHook : ModSystem
     {
@@ -179,7 +179,7 @@ namespace ModHelper.Common.Systems.MainMenu
             //ReloadUtilities.ModsToReload.Clear();
             //foreach (var mod in modsToReloadFromJson)
             //{
-                //ReloadUtilities.ModsToReload.Add(mod);
+            //ReloadUtilities.ModsToReload.Add(mod);
             //}
 
             // Reload the selected mod

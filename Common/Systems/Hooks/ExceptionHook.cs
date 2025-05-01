@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.MainMenu
+namespace ModHelper.Common.Systems.Hooks
 {
     /// <summary>
     /// This should work by dynamically changing the visibility based on the config value.
