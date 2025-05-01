@@ -1,3 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Xml.Linq;
 using Basic.Reference.Assemblies;
 using dnlib.DotNet;
 using dnlib.DotNet.Writer;
@@ -6,17 +13,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using ModHelper.Helpers;
 using MonoMod.RuntimeDetour;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace ModHelper.Publicizier
+namespace ModHelper.Publicizer
 {
     public class CompileSystem : ModSystem
     {

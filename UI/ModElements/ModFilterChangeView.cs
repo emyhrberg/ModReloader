@@ -116,7 +116,7 @@ namespace ModHelper.UI.ModElements
             spriteBatch.Draw(tex.Value, destinationRect, sourceRect, Color.White);
 
             // Draw tooltip if applicable
-            if (IsMouseHovering && Conf.C.ShowTooltips)
+            if (IsMouseHovering)
             {
                 // Show the current enum
                 string tip = $"Mod View: {currentModView.ToString()}";

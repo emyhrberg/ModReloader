@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
-using static ModHelper.UI.Elements.AbstractElements.OptionElement;
 
 namespace ModHelper.UI.ModElements
 {
@@ -57,10 +56,6 @@ namespace ModHelper.UI.ModElements
 
             if (IsMouseHovering)
             {
-                if (!Conf.C.ShowTooltips)
-                {
-                    return;
-                }
                 if (state == State.Enabled)
                 {
                     UICommon.TooltipMouseText("Click to disable");

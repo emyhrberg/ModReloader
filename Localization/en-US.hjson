@@ -224,6 +224,21 @@ Mods: {
 					Label: Map Teleport Allowed
 					Tooltip: ""
 				}
+
+				LogDebugMessages: {
+					Tooltip: ""
+					Label: Log Debug Messages
+				}
+
+				World: {
+					Label: World
+					Tooltip: ""
+				}
+
+				ModsToReload: {
+					Label: Mods To Reload
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

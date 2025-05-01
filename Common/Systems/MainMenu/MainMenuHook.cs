@@ -77,16 +77,16 @@ namespace ModHelper.Common.Systems.MainMenu
             }
             string fileName = Path.GetFileName(Logging.LogPath);
 
-            List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
+            //List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
 
             string reloadHoverMods;
-            if (modsToReloadFromJson == null || modsToReloadFromJson.Count == 0)
+            if (Conf.C.ModsToReload == "")
             {
                 reloadHoverMods = "No mods selected";
             }
             else
             {
-                reloadHoverMods = string.Join(", ", modsToReloadFromJson);
+                reloadHoverMods = string.Join(",", Conf.C.ModsToReload);
             }
 
             // Menu options with corresponding actions
@@ -170,65 +170,17 @@ namespace ModHelper.Common.Systems.MainMenu
             Conf.C.Open();
 
             return;
-            // below code is not needed
-            try
-            {
-                // Use reflection to get the private ConfigManager.Configs property.
-                FieldInfo configsProp = typeof(ConfigManager).GetField("Configs", BindingFlags.Static | BindingFlags.NonPublic);
-                var configs = configsProp.GetValue(null) as IDictionary<Mod, List<ModConfig>>;
-
-                // Get the mod name from the modPath.
-                // string modName = Path.GetFileName(modPath);
-                string modName = ModHelper.Instance.Name;
-                Mod modInstance = ModLoader.GetMod(modName);
-                if (modInstance == null)
-                {
-                    Log.Info($"Mod '{modName}' not found.");
-                    return;
-                }
-
-                // Check if there are any configs for this mod.
-                if (!configs.TryGetValue(modInstance, out List<ModConfig> modConfigs) || modConfigs.Count == 0)
-                {
-                    Log.Info("No config available for mod: " + modName);
-                    return;
-                }
-
-                // Use the first available config.
-                ModConfig config = modConfigs[0];
-
-                // Open the config UI.
-                // Use reflection to set the mod and config for the modConfig UI.
-                Assembly assembly = typeof(Main).Assembly;
-                Type interfaceType = assembly.GetType("Terraria.ModLoader.UI.Interface");
-                var modConfigField = interfaceType.GetField("modConfig", BindingFlags.Static | BindingFlags.NonPublic);
-                var modConfigInstance = modConfigField.GetValue(null);
-                var setModMethod = modConfigInstance.GetType().GetMethod("SetMod", BindingFlags.Instance | BindingFlags.NonPublic);
-
-                // Invoke the SetMod method to set the mod and config for the modConfig UI.
-                setModMethod.Invoke(modConfigInstance, [modInstance, config, false, null, null, true]);
-
-                // Open the mod config UI.
-                Main.InGameUI.SetState(modConfigInstance as UIState);
-                Main.menuMode = 10024; // config UI (must set this!)
-                Main.NewText("Opening config for " + modName, Color.Green);
-            }
-            catch (Exception ex)
-            {
-                Log.Info($"No config found for mod '{ModHelper.Instance.Name}'. : {ex.Message}");
-                return;
-            }
         }
 
         private static async Task ReloadSelectedMod()
         {
             // read the json and add the mods to the list
-            List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
-            ReloadUtilities.ModsToReload.Clear();
-            foreach (var mod in modsToReloadFromJson)
-            {
-                ReloadUtilities.ModsToReload.Add(mod);
-            }
+            //List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
+            //ReloadUtilities.ModsToReload.Clear();
+            //foreach (var mod in modsToReloadFromJson)
+            //{
+                //ReloadUtilities.ModsToReload.Add(mod);
+            //}
 
             // Reload the selected mod
             await ReloadUtilities.SinglePlayerReload();

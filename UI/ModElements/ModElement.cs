@@ -3,14 +3,12 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
-using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
-using static ModHelper.UI.Elements.AbstractElements.OptionElement;
 
 namespace ModHelper.UI.ModElements
 {
@@ -229,7 +227,7 @@ namespace ModHelper.UI.ModElements
                 return;
             }
 
-            if (!Conf.C.ToggleOnClickEntireElement && evt.Target is not ModEnabledText modEnabledText)
+            if (evt.Target is not ModEnabledText modEnabledText)
             {
                 // If clicked on enabled text, don't proceed with mod toggling
                 return;

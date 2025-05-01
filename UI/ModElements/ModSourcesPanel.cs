@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using ModHelper.UI.Elements.AbstractElements;
+using ModHelper.UI.AbstractElements;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -10,12 +10,12 @@ namespace ModHelper.UI.ModElements
     /// <summary>
     /// A panel to display the contents of client.log.
     /// </summary>
-    public class ModSourcesPanel : OptionPanel
+    public class ModSourcesPanel : BasePanel
     {
         public List<ModSourcesElement> modSourcesElements = [];
 
         #region Constructor
-        public ModSourcesPanel() : base(title: "Mod Sources", scrollbarEnabled: true)
+        public ModSourcesPanel() : base(header: "Mod Sources", scrollbarEnabled: true)
         {
             // Active = true; // uncomment to show the panel by default
             AddPadding(20);

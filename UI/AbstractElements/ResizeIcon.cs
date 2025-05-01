@@ -7,7 +7,7 @@ using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.AbstractElements
+namespace ModHelper.UI.AbstractElements
 {
     public class ResizeIcon : UIImageButton
     {

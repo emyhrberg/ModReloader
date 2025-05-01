@@ -3,14 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using ModHelper.Common.Configs;
-using ModHelper.Helpers;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.AbstractElements
+namespace ModHelper.UI.AbstractElements
 {
     //ty jopojelly and darthmorf
     public class Searchbox : UIPanel
@@ -177,7 +176,7 @@ namespace ModHelper.UI.Elements.AbstractElements
                 Main.instance.DrawWindowsIMEPanel(new Vector2(98f, Main.screenHeight - 36), 0f);
             }
             string displayString = currentString;
-            if (textBlinkerState == 1 && focused && Conf.C.ShowSearchboxBlinker)
+            if (textBlinkerState == 1 && focused)
             {
                 displayString += "|";
             }

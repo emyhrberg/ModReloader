@@ -31,11 +31,11 @@ namespace ModHelper.UI.ModElements
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            ReloadUtilities.ModsToReload.Clear();
-            if (!ReloadUtilities.ModsToReload.Contains(internalModName))
-            {
-                ReloadUtilities.ModsToReload.Add(internalModName);
-            }
+            //ReloadUtilities.ModsToReload.Clear();
+            //if (!ReloadUtilities.ModsToReload.Contains(internalModName))
+            //{
+                //ReloadUtilities.ModsToReload.Add(internalModName);
+            //}
 
             // Set config.ModToReload to the mod name.
             // Conf.C.ModToReload = internalModName;
@@ -52,10 +52,6 @@ namespace ModHelper.UI.ModElements
 
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
-                if (!Conf.C.ShowTooltips)
-                {
-                    return;
-                }
                 UICommon.TooltipMouseText(hover);
             }
         }

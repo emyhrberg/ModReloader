@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements.AbstractElements;
+using ModHelper.UI.AbstractElements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
@@ -22,39 +22,20 @@ namespace ModHelper.UI
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
-            {
-                return;
-            }
-
             await ReloadUtilities.SinglePlayerReload();
-
-
         }
 
         public override void RightClick(UIMouseEvent evt)
         {
-            if (!Conf.C.RightClickButtonToExitWorld)
-            {
-                return;
-            }
-
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            if (!sys.mainState.isClick)
-            {
-                return;
-            }
-
-            if (Conf.C.SaveWorldBeforeReloading)
-            {
-                WorldGen.SaveAndQuit();
-            }
-            else
-            {
-                WorldGen.JustQuit();
-            }
-            Main.menuMode = 10001;
+            // if (Conf.C.SaveWorldBeforeReloading)
+            // {
+            // WorldGen.SaveAndQuit();
+            // }
+            // else
+            // {
+            // WorldGen.JustQuit();
+            // }
+            // Main.menuMode = 10001;
         }
     }
 }

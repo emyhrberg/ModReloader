@@ -5,7 +5,7 @@ using ModHelper.Common.Configs;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 
-namespace ModHelper.UI.Elements.AbstractElements
+namespace ModHelper.UI.AbstractElements
 {
     public class TogglePanel : UIPanel
     {
@@ -52,10 +52,6 @@ namespace ModHelper.UI.Elements.AbstractElements
             // Show hover text if provided
             if (!string.IsNullOrEmpty(hoverText) && IsMouseHovering)
             {
-                if (!Conf.C.ShowTooltips)
-                {
-                    return;
-                }
                 UICommon.TooltipMouseText(hoverText);
             }
         }

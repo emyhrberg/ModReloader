@@ -3,7 +3,7 @@ using System.Linq;
 using dnlib.DotNet;
 using ModHelper.Helpers;
 
-namespace ModHelper.Publicizier
+namespace ModHelper.Publicizer
 {
     // Almost all of this code are taken from Krafs.Publicizer
     // https://github.com/krafs/Publicizer

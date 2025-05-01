@@ -136,8 +136,8 @@ namespace ModHelper.Common.Systems
             int playerID = ClientDataJsonHelper.PlayerID;
             int worldID = ClientDataJsonHelper.WorldID;
 
-            var player = Main.PlayerList[Conf.C.DefaultPlayer];
-            var world = Main.WorldList[Conf.C.DefaultWorld];
+            var player = Main.PlayerList[Conf.C.Player];
+            var world = Main.WorldList[Conf.C.World];
 
             if (playerID == -1 || worldID == -1)
             {

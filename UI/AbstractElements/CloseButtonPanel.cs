@@ -5,7 +5,7 @@ using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.AbstractElements
+namespace ModHelper.UI.AbstractElements
 {
     public class CloseButtonPanel : UIPanel
     {
@@ -23,7 +23,7 @@ namespace ModHelper.UI.Elements.AbstractElements
             HAlign = 1f;
 
             // create a UIText
-            UIText text = new UIText("X", 0.4f, true);
+            UIText text = new("X", 0.4f, true);
             text.HAlign = 0.5f;
             text.VAlign = 0.5f;
             Append(text);
@@ -41,15 +41,15 @@ namespace ModHelper.UI.Elements.AbstractElements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Find the parent DraggablePanel containing this close button
+            // Find the parent BasePanel containing this close button
             UIElement current = Parent;
-            while (current != null && current is not DraggablePanel)
+            while (current != null && current is not BasePanel)
             {
                 current = current.Parent;
             }
 
             // If we found the parent panel, deactivate it
-            if (current is DraggablePanel panel && panel.GetActive())
+            if (current is BasePanel panel && panel.GetActive())
             {
                 Log.Info("CloseButtonPanel: Deactivated panel with name: " + panel.GetType().Name);
                 panel.SetActive(false);

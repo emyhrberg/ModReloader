@@ -57,10 +57,6 @@ namespace ModHelper.UI.ModElements
 
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
-                if (!Conf.C.ShowTooltips)
-                {
-                    return;
-                }
                 UICommon.TooltipMouseText(hover);
             }
         }

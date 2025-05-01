@@ -26,13 +26,13 @@ namespace ModHelper.UI.ModElements
         public override void Update(GameTime gameTime)
         {
             // update the text
-            if (Conf.C.AlwaysUpdateBuiltAgo)
-            {
-                TimeSpan timeAgo = DateTime.Now - lastModified;
-                string text = FormatTimeAgoText(lastModified);
-                TextColor = GetTimeColor(timeAgo);
-                SetText(text);
-            }
+            // if (Conf.C.AlwaysUpdateBuiltAgo)
+            // {
+            TimeSpan timeAgo = DateTime.Now - lastModified;
+            string text = FormatTimeAgoText(lastModified);
+            TextColor = GetTimeColor(timeAgo);
+            SetText(text);
+            // }
 
             base.Update(gameTime);
         }
@@ -102,12 +102,6 @@ namespace ModHelper.UI.ModElements
             if (IsMouseHovering)
             {
                 TimeSpan timeAgo = DateTime.Now - lastModified;
-
-                if (!Conf.C.ShowTooltips)
-                {
-                    return;
-                }
-
 
                 string tooltipText = FormatTimeAgoText(lastModified);
                 UICommon.TooltipMouseText($"Last built: " + tooltipText);

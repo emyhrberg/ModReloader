@@ -11,7 +11,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.AbstractElements
+namespace ModHelper.UI.AbstractElements
 {
     /// <summary>
     /// The base class for the main buttons that are displayed.
@@ -27,19 +27,16 @@ namespace ModHelper.UI.Elements.AbstractElements
         public string HoverText = "";
         public string HoverTextDescription;
         protected float opacity = 0.8f;
-        public ButtonText ButtonText;
+        public UIText ButtonText;
         public bool Active = true;
         public bool ParentActive = false;
-
-        // Tag for index positioning when dragging
-        public object Tag { get; set; } = null;
 
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed
 
         // Associated panel for closing and managing multiple panels
-        public DraggablePanel AssociatedPanel { get; set; } = null; // the panel associated with this button
+        public BasePanel AssociatedPanel { get; set; } = null; // the panel associated with this button
 
         // Animations variables to be set by child classes. virtual means it can be overridden by child classes.
         protected virtual float Scale { get; set; } = 1; // the scale of the animation.
@@ -67,27 +64,17 @@ namespace ModHelper.UI.Elements.AbstractElements
             // Set textScale based on buttonscale.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             TextScale = sys?.mainState?.TextSize ?? 0.9f;
-            // Log.Info("TextScale: " + TextScale);
 
             // Add a UIText centered horizontally at the bottom of the button.
             // Set the scale; 70f seems to fit to 0.9f scale.
-            ButtonText = new ButtonText(text: buttonText, textScale: TextScale, large: false);
+            ButtonText = new(text: buttonText, textScale: TextScale, large: false)
+            {
+                HAlign = 0.5f,
+                VAlign = 0.85f
+            };
             Append(ButtonText);
         }
         #endregion
-
-        public void UpdateHoverTextDescription()
-        {
-            // Based on ModsToReload, make the hovertext.
-            string modsToReload = string.Join(", ", ReloadUtilities.ModsToReload);
-
-            if (string.IsNullOrEmpty(modsToReload))
-            {
-                modsToReload = "No mods to reload";
-            }
-
-            HoverTextDescription = $"{modsToReload}";
-        }
 
         /// <summary>
         /// Draws the button with the specified image/animation and tooltip text
@@ -122,14 +109,6 @@ namespace ModHelper.UI.Elements.AbstractElements
                 spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Black * 0.3f);
             }
 
-            // if (this is ReloadSPButton || this is ReloadMPButton || this is LaunchButton)
-            // {
-            //     // Draw the button with full opacity.
-            //     spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Green * 0.5f);
-            // }
-
-            //Log.Info("parent active: " + ParentActive + "name: " + HoverText);
-
             if (ParentActive)
             {
                 // Scale down the highlight and center it
@@ -143,179 +122,43 @@ namespace ModHelper.UI.Elements.AbstractElements
                 spriteBatch.Draw(ButtonHighlight.Value, scaledRect, Color.White * 0.7f);
             }
 
-            //if (IsMouseHovering)
-            //DrawHelper.DrawProperScale(spriteBatch, this, ButtonHover.Value, scale: 0.92f);
 
-            // Draw the animation texture
-            if (Spritesheet != null)
-            {
-                if (IsMouseHovering)
-                {
-                    frameCounter++;
-                    if (frameCounter >= FrameSpeed)
-                    {
-                        // This is needed because ItemButton is set to end animation at its last frame 5.
-                        if (this is ModSourcesButton)
-                        {
-                            if (currFrame < FrameCount) // only increment if not at last frame
-                            {
-                                currFrame++;
-                            }
-                        }
-                        else
-                        {
-                            currFrame++;
-                            if (currFrame > FrameCount)
-                                currFrame = StartFrame;
-                        }
-                        frameCounter = 0;
-                    }
-                }
-                else
-                {
-                    currFrame = StartFrame;
-                    frameCounter = 0;
-                }
+            // Use a custom scale and offset to draw the animated overlay.
+            Vector2 position = dimensions.Position();
+            Vector2 size = new(dimensions.Width, dimensions.Height);
+            Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * Scale) / 2f;
+            Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
+            centeredPosition.Y -= 7; // magic offset to move it up a bit
 
-                // Use a custom scale and offset to draw the animated overlay.
-                Vector2 position = dimensions.Position();
-                Vector2 size = new(dimensions.Width, dimensions.Height);
-                Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * Scale) / 2f;
-                Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
-                centeredPosition.Y -= 7; // magic offset to move it up a bit
-
-                // Draw the spritesheet.
-                spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
-            }
-
-            // Update: Drawing is now done in MainState
-            /// <see cref="MainState"/> 
-            // Draw tooltip text if hovering and HoverText is given (see MainState).
-            // if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
-            // {
-            //     UICommon.TooltipMouseText(HoverText);
-
-            //     DrawHelper.DrawTooltipPanel(this, "a", HoverText); // Draw the tooltip panel
-            // }
+            // Draw the spritesheet.
+            spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
         }
+
         #endregion
 
-        //Disable button click if config window is open
-        public override bool ContainsPoint(Vector2 point)
-        {
-            if (!Active) // Dont allow clicking if button is disabled.
-                return false;
-
-            // try
-            // {
-            //     if (Main.InGameUI != null)
-            //     {
-            //         var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
-            //         if (currentStateProp != null)
-            //         {
-            //             var currentState = currentStateProp.GetValue(Main.InGameUI);
-            //             if (currentState != null)
-            //             {
-            //                 string stateName = currentState.GetType().Name;
-            //                 if (stateName.Contains("Config"))
-            //                 {
-            //                     return false;
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-            // catch (Exception ex)
-            // {
-            //     Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
-            // }
-
-            return base.ContainsPoint(point);
-        }
-
-        #region LeftClick
         public override void LeftClick(UIMouseEvent evt)
         {
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (AssociatedPanel is null) return;
 
-            // Check if we're in click mode (not drag mode)
-            if (!sys.mainState.isClick && Conf.C.DragButtons == "Left")
+            if (AssociatedPanel.GetActive())
             {
-                return;
-            }
-
-            // Get the associated panel for this button
-            DraggablePanel associatedPanel = null;
-
-            // Determine which panel is associated with this button based on button type
-            if (this is ModsButton)
-                associatedPanel = sys.mainState.modsPanel;
-            else if (this is ModSourcesButton)
-                associatedPanel = sys.mainState.modSourcesPanel;
-            else if (AssociatedPanel != null)
-                associatedPanel = AssociatedPanel;
-
-            // If no panel is associated, just return
-            if (associatedPanel == null)
-                return;
-
-            // Get configuration for multiple panels
-            bool allowMultiple = Conf.C.AllowMultiplePanelsOpenSimultaneously;
-            List<DraggablePanel> allPanels = sys.mainState.AllPanels;
-
-            // Toggle the associated panel
-            if (associatedPanel.GetActive())
-            {
-                // Panel is active, so deactivate it
-                associatedPanel.SetActive(false);
+                AssociatedPanel.SetActive(false);
                 ParentActive = false;
             }
             else
             {
-                // Panel is inactive, so activate it
-
-                // First, disable other panels if multiple aren't allowed
-                if (!allowMultiple)
-                {
-                    foreach (var panel in allPanels)
-                    {
-                        if (panel != associatedPanel && panel.GetActive())
-                        {
-                            panel.SetActive(false);
-                        }
-                    }
-
-                    // Also deactivate other buttons
-                    foreach (var button in sys.mainState.AllButtons)
-                    {
-                        if (button != this)
-                        {
-                            button.ParentActive = false;
-                        }
-                    }
-                }
-
-                // Now activate this panel and mark button as active
                 ParentActive = true;
-                associatedPanel.SetActive(true);
+                AssociatedPanel.SetActive(true);
 
-                // Special handling for Mods panel - focus searchbox
-                if (this is ModsButton && associatedPanel is ModsPanel modsPanel && Conf.C.AutoFocusSearchBox)
+                // bring to front …
+                if (AssociatedPanel.Parent is not null)
                 {
-                    modsPanel.searchbox?.Focus();
-                }
-
-                // Bring the panel to the front
-                if (associatedPanel.Parent != null)
-                {
-                    // Remove and re-append to bring to front
-                    UIElement parent = associatedPanel.Parent;
-                    associatedPanel.Remove();
-                    parent.Append(associatedPanel);
+                    UIElement parent = AssociatedPanel.Parent;
+                    AssociatedPanel.Remove();
+                    parent.Append(AssociatedPanel);
                 }
             }
         }
-        #endregion
 
         // Disable item use on click
         public override void Update(GameTime gameTime)
@@ -328,6 +171,19 @@ namespace ModHelper.UI.Elements.AbstractElements
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
+        }
+
+        public void UpdateHoverTextDescription()
+        {
+            // Based on ModsToReload, make the hovertext.
+            string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+
+            if (string.IsNullOrEmpty(modsToReload))
+            {
+                modsToReload = "No mods to reload";
+            }
+
+            HoverTextDescription = $"{modsToReload}";
         }
     }
 }

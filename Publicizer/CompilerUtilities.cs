@@ -1,5 +1,4 @@
-﻿using ModHelper.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,8 +8,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using ModHelper.Helpers;
 
-namespace ModHelper.Publicizier;
+namespace ModHelper.Publicizer;
 public static class CompilerUtilities
 {
     /// <summary>

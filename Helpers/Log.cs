@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
+using ModHelper.Common.Configs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -13,7 +14,6 @@ namespace ModHelper.Helpers
 {
     public static class Log
     {
-        // Log a message once every 5 second
         private static DateTime lastLogTime = DateTime.UtcNow;
 
         private static Mod ModInstance
@@ -33,11 +33,12 @@ namespace ModHelper.Helpers
             }
         }
 
-        /// <summary>
-        /// Log a message once every x second(s)
-        /// </summary>
+        /// <summary> Log a message once every x second(s) </summary>
         public static void SlowInfo(string message, int seconds = 1, [CallerFilePath] string callerFilePath = "")
         {
+            if (!Conf.C.LogDebugMessages)
+                return; // Skip logging if the config is set to false
+
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
             var instance = ModInstance;
@@ -45,7 +46,7 @@ namespace ModHelper.Helpers
                 return; // Skip logging if the mod is unloading or null
 
             // Use TimeSpanFactory to create a 3-second interval.
-            TimeSpan interval = TimeHelper.FromSeconds(seconds);
+            TimeSpan interval = TimeSpan.FromSeconds(seconds);
             if (DateTime.UtcNow - lastLogTime >= interval)
             {
                 // Prepend the class name to the log message.
@@ -56,6 +57,9 @@ namespace ModHelper.Helpers
 
         public static void Info(string message, [CallerFilePath] string callerFilePath = "")
         {
+            if (!Conf.C.LogDebugMessages)
+                return; // Skip logging if the config is set to false
+
             // Extract the class name from the caller's file path.
             string className = Path.GetFileNameWithoutExtension(callerFilePath);
             var instance = ModInstance;
@@ -68,6 +72,9 @@ namespace ModHelper.Helpers
 
         public static void Warn(string message)
         {
+            if (!Conf.C.LogDebugMessages)
+                return; // Skip logging if the config is set to false
+
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null
@@ -77,12 +84,17 @@ namespace ModHelper.Helpers
 
         public static void Error(string message)
         {
+            if (!Conf.C.LogDebugMessages)
+                return; // Skip logging if the config is set to false
+
             var instance = ModInstance;
             if (instance == null || instance.Logger == null)
                 return; // Skip logging if the mod is unloading or null
 
             instance.Logger.Error(message);
         }
+
+        #region more
 
         public static void ClearClientLog()
         {
@@ -107,29 +119,21 @@ namespace ModHelper.Helpers
 
         public static void OpenLogFolder()
         {
-            Main.NewText("Opening log folder...");
-
             try
             {
-                string steamPath = GetSteamPath();
-                if (string.IsNullOrEmpty(steamPath))
-                {
-                    Main.NewText("Steam path not found.");
-                    Error("Steam path not found.");
-                    return;
-                }
+                string path = Logging.LogPath;
+                string folderName = Path.GetDirectoryName(path);
 
-                // Maybe better Alternative:
-                // string folder = Logging.LogPath;
-
-                string folder = Path.Combine(GetSteamPath(), "tModLoader-Logs");
-                Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
+                Log.Info($"Open {folderName}");
+                Main.NewText("Opening " + folderName);
+                Process.Start(new ProcessStartInfo($@"{folderName}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
-                Main.NewText("Error opening log folder: " + ex.Message);
-                Error("Error opening log folder: " + ex.Message);
+                Main.NewText("Error opening client log: " + ex.Message);
+                Log.Error("Error opening client log: " + ex.Message);
             }
+
         }
 
         public static string GetSteamPath()
@@ -140,8 +144,7 @@ namespace ModHelper.Helpers
             return steamPath;
         }
 
-        /// <summary>
-        /// Opens the client log file in the default text editor for the right player.
+        /// <summary> Opens the client log file in the default text editor for the right player. </summary>
         public static void OpenClientLog()
         {
             try
@@ -159,63 +162,6 @@ namespace ModHelper.Helpers
                 Log.Error("Error opening client log: " + ex.Message);
             }
         }
-
-        public static void OpenServerLog()
-        {
-            Main.NewText("Opening server.log");
-
-            try
-            {
-                string steamPath = GetSteamPath();
-                if (string.IsNullOrEmpty(steamPath))
-                {
-                    Main.NewText("Steam path is null or empty.");
-                    Log.Error("Steam path is null or empty.");
-                    return;
-                }
-
-                string file = Path.Combine(steamPath, "tModLoader-Logs", "server.log");
-                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Main.NewText("Error opening server.log: " + ex.Message);
-                Log.Error("Error opening server.log: " + ex.Message);
-            }
-        }
-
-        // note: unused
-        public static void OpenEnabledJson()
-        {
-            Main.NewText("Opening enabled.json");
-
-            // Get the path to the enabled.json file in $USERPROFILE$\Documents\My Games\Terraria\tModLoader\Mods
-            try
-            {
-                string file = Path.Combine(ModLoader.ModPath, "enabled.json");
-                Process.Start(new ProcessStartInfo($@"{file}") { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Error("Error opening enabled.json: " + ex.Message);
-            }
-        }
-
-        public static void OpenEnabledJsonFolder()
-        {
-            Main.NewText("Opening enabled.json folder...");
-
-            try
-            {
-                string folder = Path.Combine(ModLoader.ModPath); // gets Documents/My Games/Terraria/tModLoader/Mods
-                // go up one directory (to the tModLoader folder)
-                folder = Path.GetFullPath(Path.Combine(folder, @"..\"));
-                Process.Start(new ProcessStartInfo($@"{folder}") { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                Error("Error opening enabled.json folder: " + ex.Message);
-            }
-        }
+        #endregion
     }
 }

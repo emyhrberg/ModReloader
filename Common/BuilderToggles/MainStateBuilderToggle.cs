@@ -36,10 +36,10 @@ namespace ModHelper.Common.BuilderToggles
         public override bool OnLeftClick(ref SoundStyle? sound)
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys.mainState.AreButtonsShowing = !sys.mainState.AreButtonsShowing; // Toggle the property
+            sys.mainState.Active = !sys.mainState.Active; // Toggle the property
 
             // Play appropriate sound
-            if (sys.mainState.AreButtonsShowing)
+            if (sys.mainState.Active)
             {
                 sound = SoundID.MenuClose;
             }

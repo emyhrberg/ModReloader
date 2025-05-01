@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,10 +8,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
 using ModHelper.Common.Configs;
-using ModHelper.Common.Systems;
 using ModHelper.PacketHandlers;
-using ModHelper.UI.Elements.AbstractElements;
-using ModHelper.UI.ModElements;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
 using Terraria;
@@ -26,31 +22,19 @@ namespace ModHelper.Helpers
 {
     public static class ReloadUtilities
     {
-        // Global list of all the mods that should be built and reloaded when a reload is executed
-        public static HashSet<string> ModsToReload = [];
-
         private static int clientsCountInServer;
 
         private const string pipeNameBeforeRebuild = "ModHelperReloadPipeBeforeRebuild";
 
         private const string pipeNameAfterRebuild = "ModHelperReloadPipeAfterRebuild";
 
-        private static bool IsModsToReloadEmpty => ModsToReload.Count == 0;
+        private static bool IsModsToReloadEmpty => Conf.C.ModsToReload == "";
 
         /// <summary>
         /// Main function to build and reload all the mods in the ModsToReload list for Singleplayer.
         /// </summary>
         public static async Task SinglePlayerReload()
         {
-
-            // Another null check for modstoreload, check if modsources contains any mod
-            if (!CheckThatModsExists())
-            {
-                Main.NewText("No mods were existing with that/those names. Please check the mod names and try again.");
-                Log.Warn("No mods were found to reload.");
-                return;
-            }
-
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 // Prepare client. Use singleplayer by default for now.
@@ -99,15 +83,6 @@ namespace ModHelper.Helpers
         /// <returns></returns>
         public static async Task MultiPlayerMainReload()
         {
-
-            // Another null check for modstoreload, check if modsources contains any mod
-            if (!CheckThatModsExists())
-            {
-                Main.NewText("No mods were existing with that/those names. Please check the mod names and try again.");
-                Log.Warn("No mods were found to reload.");
-                return;
-            }
-
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 PrepareClient(clientMode: ClientMode.MPMajor);
@@ -419,7 +394,7 @@ namespace ModHelper.Helpers
 
             if (Conf.C.SaveWorldBeforeReloading)
             {
-                Log.Warn("Saving and quitting...");
+                Log.Info("Saving and quitting...");
 
                 // Creating task that will delay reloading a mod until world finish saving
                 var tcs = new TaskCompletionSource();
@@ -428,41 +403,12 @@ namespace ModHelper.Helpers
             }
             else
             {
-                Log.Warn("Just quitting...");
+                Log.Info("Just quitting...");
                 WorldGen.JustQuit();
                 return Task.CompletedTask;
             }
         }
 
-        /// <summary>
-        /// Checks if the mods to reload are in the mod sources.
-        /// </summary>
-        /// <returns>True, if at least one mod was found in the mod sources</returns>
-        private static bool CheckThatModsExists()
-        {
-            // Check if the mods to reload are empty
-            if (IsModsToReloadEmpty)
-            {
-                return true;
-            }
-            Type modCompileType = typeof(Main).Assembly.GetType("Terraria.ModLoader.Core.ModCompile");
-            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
-            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
-            string[] modNames = modSources.Select(Path.GetFileName).ToArray();
-
-            foreach (var modName in ModsToReload)
-            {
-                Log.Info("Reloading mod: " + modName);
-                if (modNames.Contains(modName))
-                {
-                    Log.Info($"Mod '{modName}' found in mod sources.");
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
         /// Builds and reloads the mods in the ModsToReload list.<br/>
         /// After building, it invokes the actionAfterBuild action if provided.
         /// </summary>
@@ -471,6 +417,11 @@ namespace ModHelper.Helpers
         {
             // Find all mod sources
             string[] modSources = ModCompile.FindModSources();
+
+            HashSet<string> ModsToReload = Conf.C.ModsToReload.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(modName => modName.Trim())
+                .Where(modName => !string.IsNullOrEmpty(modName))
+                .ToHashSet(StringComparer.InvariantCultureIgnoreCase);
 
             Log.Info("Executing Mods to reload: " + string.Join(", ", ModsToReload));
 
@@ -517,140 +468,6 @@ namespace ModHelper.Helpers
                     throw ex.InnerException!;
                 }
             });
-        }
-
-        [Obsolete("This method is obsolete. Use BuildAndReloadMods(Action actionAfterBuild) instead.")]
-        private static void old_BuildAndReloadMods(Action actionAfterBuild = null)
-        {
-            // 1. Getting Assembly
-            Assembly tModLoaderAssembly = typeof(Main).Assembly;
-
-            // 2. Getting method for finding modSources paths
-            Type modCompileType = tModLoaderAssembly.GetType("Terraria.ModLoader.Core.ModCompile");
-            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
-            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
-
-            // 3. Get all modPaths for future
-            Log.Info("Executing Mods to reload: " + string.Join(", ", ModsToReload));
-
-            var modPaths = ModsToReload.Select((modName) =>
-                modSources.FirstOrDefault(p =>
-                    !string.IsNullOrEmpty(p) &&
-                    Directory.Exists(p) &&
-                    Path.GetFileName(p)?.Equals(modName, StringComparison.InvariantCultureIgnoreCase) == true)).ToList();
-
-            // 4. Getting method for reloading a mod
-            // 4.1 Getting UIBuildMod Instance
-            Type interfaceType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.Interface");
-            FieldInfo buildModField = interfaceType.GetField("buildMod", BindingFlags.NonPublic | BindingFlags.Static);
-            object buildModInstance = buildModField?.GetValue(null);
-
-            // 4.2 Getting correct BuildMod method of UIBuildMod
-            Type uiBuildModType = tModLoaderAssembly.GetType("Terraria.ModLoader.UI.UIBuildMod");
-            MethodInfo buildModMethod = uiBuildModType.GetMethod("BuildMod", BindingFlags.Instance | BindingFlags.NonPublic, [typeof(Action<>).MakeGenericType(modCompileType), typeof(bool)]);
-
-            // Check if it exist
-            if (buildModMethod == null)
-            {
-                Log.Warn("No buildMethod were found via reflection.");
-                return;
-            }
-
-            // 4.3 Getting correct Build method from ModCompile
-            MethodInfo mcBuildModFolder = modCompileType.GetMethod("Build", BindingFlags.NonPublic | BindingFlags.Instance, [typeof(string)]);
-
-            Log.Info("Starting to build mods..." + string.Join(", ", modPaths));
-
-            // 6. Creating a task
-            Main.menuMode = 10003;
-            Task.Run(() =>
-            {
-                try
-                {
-                    return (Task)buildModMethod.Invoke(buildModInstance,
-                    [
-                        (Action<object>) (mc =>
-                        {
-                            for (int i = 0; i < modPaths.Count; i++)
-                            {
-                                string modPath = modPaths[i];
-                                Log.Info("Building mod: " + modPath);
-                                try
-                                {
-                                    mcBuildModFolder.Invoke(mc, [modPath]);
-                                }
-                                catch (TargetInvocationException ex)
-                                {
-                                    throw ex.InnerException!;
-                                }
-                            }
-                            actionAfterBuild?.Invoke();
-                        }),
-                        true
-                    ]);
-                }
-                catch (TargetInvocationException ex)
-                {
-                    throw ex.InnerException!;
-                }
-
-            });
-        }
-
-        [Obsolete("This method is obsolete. Use IsModsToReloadEmpty instead.")]
-        private static bool CheckIfModsToReloadIsEmpty()
-        {
-            if (ModsToReload.Count == 0)
-            {
-                MainSystem sys = ModContent.GetInstance<MainSystem>();
-
-                // Open the mods panel.
-                List<DraggablePanel> allPanels = sys?.mainState?.AllPanels;
-
-                // replace with THIS panel
-                var modSourcesPanel = sys?.mainState?.modSourcesPanel;
-
-                // Disable all other panels
-                // if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
-                // {
-                if (allPanels != null)
-                {
-                    foreach (var p in allPanels?.Except([modSourcesPanel]))
-                    {
-                        if (p != modSourcesPanel && p.GetActive())
-                        {
-                            p?.SetActive(false);
-                        }
-                    }
-                }
-                // }
-
-                // Set the mods panel active
-                modSourcesPanel?.SetActive(true);
-
-                // Set modsbutton parentactive to true, and set the panel active
-                List<BaseButton> allButtons = sys?.mainState?.AllButtons;
-                var modsButton = allButtons?.FirstOrDefault(b => b is ModSourcesButton);
-                if (modsButton != null)
-                {
-                    modsButton.ParentActive = true;
-                }
-
-                // Disable World, Log, UI, Mods buttons
-                // if (!Conf.C.AllowMultiplePanelsOpenSimultaneously)
-                // {
-                foreach (var button in sys.mainState.AllButtons)
-                {
-                    if (button is ModsButton)
-                    {
-                        button.ParentActive = false;
-                    }
-                }
-                // }
-
-                return false;
-            }
-            return true;
         }
     }
 }

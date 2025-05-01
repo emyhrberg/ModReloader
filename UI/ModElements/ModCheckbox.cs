@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
@@ -36,13 +38,19 @@ namespace ModHelper.UI.ModElements
             Top.Set(6, 0);
 
             // update: read the json file, and update the checkboxes according to the json file.
-            List<string> modsToReloadFromJsonFile = ModsToReloadJsonHelper.ReadModsToReload();
-            foreach (var checkedMod in modsToReloadFromJsonFile)
+
+            HashSet<string> ModsToReload = Conf.C.ModsToReload.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(modName => modName.Trim())
+                .Where(modName => !string.IsNullOrEmpty(modName))
+                .ToHashSet(StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var checkedMod in ModsToReload)
             {
                 if (checkedMod == modSourcePathString)
                 {
                     ToggleCheckState();
-                    ReloadUtilities.ModsToReload.Add(modSourcePathString);
+                    Conf.C.ModsToReload = Conf.C.ModsToReload.Replace(modSourcePathString + ",", "");
+                    Conf.Save(); // Save the config after updating the ModsToReload string
                 }
             }
         }
@@ -83,9 +91,9 @@ namespace ModHelper.UI.ModElements
                     if (mod.checkbox.isChecked)
                     {
                         // only add if it doesnt already exist
-                        if (!ReloadUtilities.ModsToReload.Contains(modSourcePathString))
+                        //if (!ReloadUtilities.ModsToReload.Contains(modSourcePathString))
                         {
-                            ReloadUtilities.ModsToReload.Add(modSourcePathString);
+                            //ReloadUtilities.ModsToReload.Add(modSourcePathString);
                             // Log.Info("added mod to reload: " + modSourcePathString);
                         }
                     }
@@ -93,7 +101,7 @@ namespace ModHelper.UI.ModElements
                     {
                         // unchecked. 
                         // Log.Info("removing mod to reload: " + modSourcePathString);
-                        ReloadUtilities.ModsToReload.Remove(modSourcePathString);
+                        //ReloadUtilities.ModsToReload.Remove(modSourcePathString);
                     }
 
                     // set hovertext in reloadSP
@@ -102,11 +110,17 @@ namespace ModHelper.UI.ModElements
                     sp?.UpdateHoverTextDescription();
                     mp?.UpdateHoverTextDescription();
 
-                    // Log.Info("mods to reload: " + string.Join(", ", ModsToReload.modsToReload));
-                    // Main.NewText("Mods to reload: " + string.Join(", ", ReloadUtilities.ModsToReload));
+                    // Add mod to reload list if not already present
 
-                    // Write to json file
-                    ModsToReloadJsonHelper.WriteModsToReload(ReloadUtilities.ModsToReload);
+                    if (!Conf.C.ModsToReload.Contains(modSourcePathString))
+                    {
+                        Conf.C.ModsToReload += modSourcePathString + ",";
+                    }
+                    else
+                    {
+                        Conf.C.ModsToReload = Conf.C.ModsToReload.Replace(modSourcePathString + ",", "");
+                    }
+                    Conf.Save(); // Save the config after updating the ModsToReload string
                 }
             }
             modSourcesPanel.Recalculate();
@@ -127,10 +141,6 @@ namespace ModHelper.UI.ModElements
 
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
-                if (!Conf.C.ShowTooltips)
-                {
-                    return;
-                }
                 UICommon.TooltipMouseText(hover);
             }
         }

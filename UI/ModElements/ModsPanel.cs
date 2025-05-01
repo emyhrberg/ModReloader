@@ -6,21 +6,20 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements.AbstractElements;
+using ModHelper.UI.AbstractElements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.UI;
-using static ModHelper.UI.Elements.AbstractElements.OptionElement;
 
 namespace ModHelper.UI.ModElements
 {
     /// <summary>
     /// A panel to display the contents of client.log.
     /// </summary>
-    public class ModsPanel : OptionPanel
+    public class ModsPanel : BasePanel
     {
         // top container for enable all, disable all, and searchbox
         public Searchbox searchbox;
@@ -42,7 +41,7 @@ namespace ModHelper.UI.ModElements
         private bool updateNeeded = false;
 
         #region Constructor
-        public ModsPanel() : base(title: "Manage Mods", scrollbarEnabled: true)
+        public ModsPanel() : base(header: "Manage Mods", scrollbarEnabled: true)
         {
             AddPadding(10f);
 
