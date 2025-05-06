@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
-using ModHelper.UI.AbstractElements;
 using ReLogic.Content;
 using Terraria.UI;
 

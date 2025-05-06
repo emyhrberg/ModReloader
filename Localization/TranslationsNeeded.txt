@@ -1,0 +1,11 @@
+
+en-US, 25/25, 100%, missing 0
+de-DE, 0/25, 0%, missing 25
+es-ES, 0/25, 0%, missing 25
+fr-FR, 0/25, 0%, missing 25
+it-IT, 0/25, 0%, missing 25
+pl-PL, 0/25, 0%, missing 25
+pt-BR, 0/25, 0%, missing 25
+ru-RU, 0/25, 0%, missing 25
+uk-UA, 1/25, 4%, missing 24
+zh-Hans, 0/25, 0%, missing 25

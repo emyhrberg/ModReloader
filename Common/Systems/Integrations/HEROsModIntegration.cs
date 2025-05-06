@@ -4,10 +4,10 @@ using Terraria.ModLoader;
 using ReLogic.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;    
+using ModHelper.Helpers;
 using ModHelper.Common.Configs;
-using ModHelper.UI.ModElements;
-using Terraria.UI; 
+using Terraria.UI;
+using ModHelper.UI.Elements.ModElements;
 
 namespace ModHelper.Common.Systems.Integrations
 {

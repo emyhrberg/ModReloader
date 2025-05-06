@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
-using ModHelper.UI.AbstractElements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;

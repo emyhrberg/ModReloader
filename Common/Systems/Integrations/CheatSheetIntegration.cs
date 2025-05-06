@@ -7,8 +7,8 @@ using CheatSheet;
 using System;
 using ModHelper.Helpers;
 using ModHelper.Common.Configs;
-using ModHelper.UI.ModElements;
 using Terraria.UI;
+using ModHelper.UI.Elements.ModElements;
 
 namespace ModHelper.Common.Systems.Integrations
 {
