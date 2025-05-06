@@ -239,6 +239,11 @@ Mods: {
 					Label: Mods To Reload
 					Tooltip: ""
 				}
+
+				IntegrateOrNewHotbar: {
+					Label: Integrate Or New Hotbar
+					Tooltip: ""
+				}
 			}
 
 			Buttons: {

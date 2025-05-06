@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using ModHelper.Common.Configs;
-using ModHelper.Common.Systems.MainMenu;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.ID;

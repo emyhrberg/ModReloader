@@ -22,8 +22,8 @@ namespace ModHelper.Common.Systems.Hooks
         // Variables
         private static UITextPanel<string> copyButton;
         private static bool buttonInitialized = false;
-        private static UIState lastErrorState = null;
 
+        #region hooks
         public override void Load()
         {
             if (Conf.C != null && !Conf.C.AddExceptionMenu)
@@ -32,6 +32,7 @@ namespace ModHelper.Common.Systems.Hooks
                 return;
             }
             On_Main.DrawVersionNumber += DrawCopyToClipboard;
+            On_Main.DrawVersionNumber += ClickFileName;
         }
         public override void Unload()
         {
@@ -41,6 +42,7 @@ namespace ModHelper.Common.Systems.Hooks
                 return;
             }
             On_Main.DrawVersionNumber -= DrawCopyToClipboard;
+            On_Main.DrawVersionNumber -= ClickFileName;
 
             // Clean up button reference
             if (copyButton != null && copyButton.Parent != null)
@@ -49,7 +51,37 @@ namespace ModHelper.Common.Systems.Hooks
                 copyButton = null;
             }
             buttonInitialized = false;
-            lastErrorState = null;
+        }
+        #endregion
+
+        private static void ClickFileName(On_Main.orig_DrawVersionNumber orig, Color menucolor, float upbump)
+        {
+            // Draw vanilla stuff first
+            orig(menucolor, upbump);
+
+            // Check if the feature is enabled in config
+            if (Conf.C == null || !Conf.C.AddExceptionMenu)
+                return;
+
+            // Check if we're in an error screen
+            Type uiErrorMessageType = typeof(Main).Assembly.GetType("Terraria.ModLoader.UI.UIErrorMessage");
+            if (uiErrorMessageType == null)
+                return;
+
+            // Try to get the active instance of UIErrorMessage
+            UIState currentState = null;
+            var state = Main.MenuUI.CurrentState;
+            if (state != null && uiErrorMessageType.IsInstanceOfType(state))
+            {
+                currentState = state;
+                // Check if the button is already initialized
+                if (!buttonInitialized && currentState != null)
+                {
+                    // Initialize the button
+                    AppendCopyButtonToErrorUI(currentState);
+                    buttonInitialized = true;
+                }
+            }
         }
 
         private static void DrawCopyToClipboard(On_Main.orig_DrawVersionNumber orig, Color menucolor, float upbump)
@@ -79,7 +111,6 @@ namespace ModHelper.Common.Systems.Hooks
             if (state != null && uiErrorMessageType.IsInstanceOfType(state))
             {
                 currentState = state;
-                lastErrorState = currentState; // Store the current state
 
                 // Check if the button is already initialized
                 if (!buttonInitialized && currentState != null)

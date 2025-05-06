@@ -10,8 +10,21 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
 	<ItemGroup>
+
+		<!-- dnlib for publicizer ?-->
 		<Reference Include="dnlib">
 			<HintPath>lib\dnlib.dll</HintPath>
+		</Reference>
+
+		<!-- integration with DL, CheatSheet and HerosMod-->
+		<Reference Include="DragonLens">
+		  <HintPath>lib\DragonLens.dll</HintPath>
+		</Reference>
+		<Reference Include="CheatSheet">
+			<HintPath>lib\CheatSheet.dll</HintPath>
+		</Reference>
+		<Reference Include="HEROsMod">
+			<HintPath>lib\HerosMod.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
