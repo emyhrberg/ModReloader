@@ -1,18 +1,11 @@
-Mod Helper is the ultimate tool for testing and debugging features for modders and players who want full control.
+ModHelper is the ultimate Terraria testing tool for modders and players who want full control.
 
 Features:
-🔹 Instant Reload: Test changes on the fly by quickly reloading mods without needing to restart.
-🔹 Toggle mods in-world - enable or disable any mod in-game effortlessly.
-🔹 UI Playground - Dive deep into your interface and fine-tune every element.
-🔹 Customizable Log Files - Clear, edit, and adjust log levels to suit your debugging needs.
-🔹 Powerful Player Options: Activate God Mode, Noclip, Kill Aura, Mine Aura, Build Faster, and much more!
-🔹 Instant Spawning – summon all items in the game, NPCs, bosses, and more!
-🔹 World Customization: Modify game settings like time, spawn rate, and much more with ease.
-🔹 Teleport Anywhere – instantly move across the map.
-🔹 Hitbox Tracker – track players, NPCs, projectiles with arrows and hitboxes.
-🔹 Keep Game Running - keeps the game running when out of focus if desired.
-🔹 Custom Exceptions - adds a button to copy exception to clipboard
-🔹 Multiplayer And Server Reload: Restart and re-join multiplayer servers to test multiple clients.
-And of course, the entire mod, its UI, and every single feature can be toggled in its menu and customized in the config.
+🔹 Seamless Reload – Instantly reload selected mods, even in multiplayer.
+🔹 In-Game Mod Toggle – Enable/disable mods mid-game with advanced filters.
+🔹 Publicizer Support – Access internal APIs with Krafs.Publicizer integration.
+🔹 Main Menu Boost – Jump into testing faster with UI improvements.
+🔹 Exception Menu Upgrade – Copy errors, and soon: retry, prettier logs, and jump-to-code.
+🔹 UI Integration – Works with CheatSheet, Hero’s Mod, and DragonLens.
 
-Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀
+And as always, every feature is toggleable and customizable in the menu and config.

@@ -30,8 +30,6 @@ ModHelper is the ultimate Terraria testing tool for modders and players who want
 
 🔹 UI Integration – Works with CheatSheet, Hero’s Mod, and DragonLens.
 
-🔹 Clean Standalone Mode – Minimal hotbar UI with max power.
-
 And as always, every feature is toggleable and customizable in the menu and config.
 
 # Demo
