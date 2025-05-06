@@ -5,6 +5,7 @@ using System.Reflection;
 
 using ModHelper.Helpers;
 using ModHelper.UI.Elements.ConfigElements;
+using ModHelper.UI.ModElements;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 
@@ -16,6 +17,7 @@ namespace ModHelper.Common.Configs
 
         [Header("Reload")]
 
+        [CustomModConfigItem(typeof(ModSourcesConfig))]
         public List<string> ModsToReload = [];
 
         [DefaultValue(true)]
