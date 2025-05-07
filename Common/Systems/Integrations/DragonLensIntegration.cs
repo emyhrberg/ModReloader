@@ -1,12 +1,5 @@
-﻿using System;
-using AssGen;
-using DragonLens;
-using DragonLens.Core.Systems.ThemeSystem;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using DragonLens.Core.Systems.ThemeSystem;
 using ModHelper.Helpers;
-using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace ModHelper.Common.Systems.Integrations
@@ -34,8 +27,13 @@ namespace ModHelper.Common.Systems.Integrations
                 Log.Warn("DragonLensIntegration failed to load (Is DragonLens enabled?)");
             }
             */
-            foreach(var iconProvider in ThemeHandler.allIconProvidersByType){
-                iconProvider.Value.icons.Add("Reload", Ass.ModReload.Value);
+            foreach (var iconProvider in ThemeHandler.allIconProvidersByType)
+            {
+                iconProvider.Value.icons.Add("Reload", Ass.ButtonReloadSP.Value);
+            }
+            foreach (var iconProvider in ThemeHandler.allIconProviders)
+            {
+                iconProvider.Value.icons.Add("Reload", Ass.ButtonReloadSP.Value);
             }
         }
     }
