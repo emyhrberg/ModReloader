@@ -1,6 +1,7 @@
 ﻿using System;
 using AssGen;
 using DragonLens;
+using DragonLens.Core.Systems.ThemeSystem;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
@@ -16,6 +17,7 @@ namespace ModHelper.Common.Systems.Integrations
     {
         public override void PostSetupContent()
         {
+            /*
             // Check if the mod is loaded and perform actions accordingly
             if (ModLoader.TryGetMod("DragonLens", out Mod dl))
             {
@@ -30,6 +32,10 @@ namespace ModHelper.Common.Systems.Integrations
             else
             {
                 Log.Warn("DragonLensIntegration failed to load (Is DragonLens enabled?)");
+            }
+            */
+            foreach(var iconProvider in ThemeHandler.allIconProvidersByType){
+                iconProvider.Value.icons.Add("Reload", Ass.ModReload.Value);
             }
         }
     }

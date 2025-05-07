@@ -66,5 +66,14 @@ Mods: {
 				}
 			}
 		}
+
+		// Keybinds.DLReload.DisplayName: D L Reload
+
+		Tools: {
+			DLReload: {
+				// DisplayName: DLReload
+				// Description: The tool has no description! Add one in .hjson files!
+			}
+		}
 	}
 }
