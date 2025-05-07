@@ -1,4 +1,5 @@
 ﻿using DragonLens.Core.Systems.ThemeSystem;
+using DragonLens.Core.Systems.ToolbarSystem;
 using ModHelper.Helpers;
 using Terraria.ModLoader;
 
@@ -35,6 +36,7 @@ namespace ModHelper.Common.Systems.Integrations
             {
                 iconProvider.Value.icons.Add("Reload", Ass.ButtonReloadSP.Value);
             }
+            ModContent.GetInstance<ToolbarHandler>().OnModLoad();
         }
     }
 }
