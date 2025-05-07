@@ -4,4 +4,4 @@ version = 0.1
 side = both
 buildIgnore = Assets\Old*, icon.psd
 dllReferences = dnlib
-weakReferences = CheatSheet, HEROsMod, DragonLens
+weakReferences = DragonLens, CheatSheet

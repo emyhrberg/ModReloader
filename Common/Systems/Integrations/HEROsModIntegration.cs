@@ -1,13 +1,13 @@
 ﻿using System;
-using Terraria;
-using Terraria.ModLoader;
-using ReLogic.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
 using ModHelper.Common.Configs;
-using Terraria.UI;
+using ModHelper.Helpers;
 using ModHelper.UI.Elements.ModElements;
+using ReLogic.Content;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace ModHelper.Common.Systems.Integrations
 {
@@ -75,8 +75,9 @@ namespace ModHelper.Common.Systems.Integrations
                     bool nowOpen = !panel.GetActive();
                     panel.SetActive(nowOpen);
 
-                    if (panel.Parent is UIElement parent) { 
-                        panel.Remove(); parent.Append(panel); 
+                    if (panel.Parent is UIElement parent)
+                    {
+                        panel.Remove(); parent.Append(panel);
                     }
                 }),
 
