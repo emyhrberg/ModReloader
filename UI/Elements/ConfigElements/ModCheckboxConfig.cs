@@ -107,8 +107,13 @@ namespace ModHelper.UI.ModElements
                     }
 
                     // set hovertext in reloadSP
-                    sys.mainState.reloadSPButton?.UpdateHoverTextDescription();
-                    sys.mainState.reloadMPButton?.UpdateHoverTextDescription();
+                    if (sys != null && sys.mainState != null)
+                    {
+                        // we need this check if we are main menu
+                        Log.Info("Updating hover text description");
+                        sys.mainState.reloadSPButton?.UpdateHoverTextDescription();
+                        sys.mainState.reloadMPButton?.UpdateHoverTextDescription();
+                    }
 
                     //Conf.Save(); // Save the config after updating the ModsToReload string
                     parentConfig.SetValue(l);

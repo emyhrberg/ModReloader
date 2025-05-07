@@ -210,8 +210,8 @@ namespace ModHelper.UI.Elements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (!Active)
-                return;
+            //if (!Active)
+                //return;
 
             // first draw everything in the panel
             base.Draw(spriteBatch);

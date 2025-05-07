@@ -19,12 +19,10 @@ namespace ModHelper.Common.Systems
     public class MainState : UIState
     {
         public ModsButton modsButton;
-        public ModSourcesButton modSourcesButton;
         public ReloadSPButton reloadSPButton;
         public ReloadMPButton reloadMPButton;
 
         public ModsPanel modsPanel;
-        public ModSourcesPanel modSourcesPanel;
 
         public bool Active = true;
         public bool AreButtonsShowing = false;
@@ -40,23 +38,19 @@ namespace ModHelper.Common.Systems
         {
             offset = -ButtonSize;
 
-            // Buttons
-            modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
-            modSourcesButton = AddButton<ModSourcesButton>(Ass.ButtonModSources, "Build", "Mod Sources", hoverTextDescription: "Manage mod sources and reload");
-
-            // Panels
-            modsPanel = AddPanel<ModsPanel>();
-            modSourcesPanel = AddPanel<ModSourcesPanel>();
-            modsButton.AssociatedPanel = modsPanel;
-            modSourcesButton.AssociatedPanel = modSourcesPanel;
-            modsPanel.AssociatedButton = modsButton;
-            modSourcesPanel.AssociatedButton = modSourcesButton;
-
             // Reload Buttons
             if (!AnyCheatModEnabled())
             {
                 Collapse collapse = new(Ass.CollapseDown, Ass.CollapseUp);
                 Append(collapse);
+
+                // Buttons
+                modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
+
+                // Panels
+                modsPanel = AddPanel<ModsPanel>();
+                modsButton.AssociatedPanel = modsPanel;
+                modsPanel.AssociatedButton = modsButton;
 
                 string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
 
@@ -87,7 +81,7 @@ namespace ModHelper.Common.Systems
         }
         #endregion
 
-        private bool AnyCheatModEnabled() => ModLoader.TryGetMod("CheatSheet", out _) || ModLoader.TryGetMod("HEROsMod", out _);
+        private bool AnyCheatModEnabled() => ModLoader.TryGetMod("CheatSheet", out _) || ModLoader.TryGetMod("HEROsMod", out _) || ModLoader.TryGetMod("DragonLens", out _);
 
         private T AddPanel<T>() where T : BasePanel, new()
         {
