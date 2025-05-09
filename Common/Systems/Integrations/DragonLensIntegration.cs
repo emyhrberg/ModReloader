@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace ModHelper.Common.Systems.Integrations
 {
     /// Tries to add reload as a 'tool' to DragonLens
-    [JITWhenModsEnabled("DragonLens")]
+    [ExtendsFromMod("DragonLens")]
     public class DragonLensIntegration : ModSystem
     {
         public override void PostSetupContent()
