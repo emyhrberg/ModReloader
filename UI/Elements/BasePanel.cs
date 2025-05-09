@@ -24,7 +24,7 @@ namespace ModHelper.UI.Elements
         private readonly int panelPadding = 12;
 
         // Panel values
-        private bool Active = false; // default to false
+        protected bool Active = false; // default to false
         public string Header = "";
         public TitlePanel TitlePanel;
 

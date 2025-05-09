@@ -3,7 +3,7 @@
         "Terraria": {
             "commandName": "Executable",
             "executablePath": "$(DotNetName)",
-            "commandLineArgs": "$(tMLPath)",
+            "commandLineArgs": "$(tMLPath) -skipselect",
             "workingDirectory": "$(tMLSteamPath)"
         },
         "TerrariaServer": {
@@ -12,9 +12,5 @@
             "commandLineArgs": "$(tMLServerPath)",
             "workingDirectory": "$(tMLSteamPath)"
         },
-        "Terraria (hot reload+)": {
-            "commandName": "Project",
-            "commandLineArgs": "\"$(TerrariaSteamPath)$(tMLPath)\""
-        }
     }
 }

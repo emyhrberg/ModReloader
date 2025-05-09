@@ -205,6 +205,11 @@ namespace ModHelper.UI.Elements.ModElements
 
         public override void Update(GameTime gameTime)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             base.Update(gameTime);
 
             if (updateNeeded)
@@ -218,6 +223,11 @@ namespace ModHelper.UI.Elements.ModElements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             // use for hot reload UI changes
             base.Draw(spriteBatch);
         }

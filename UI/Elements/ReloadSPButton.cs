@@ -13,6 +13,8 @@ namespace ModHelper.UI.Elements
     {
         public async override void LeftClick(UIMouseEvent evt)
         {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (!sys.mainState.AreButtonsShowing) return;
             await ReloadUtilities.SinglePlayerReload();
         }
     }

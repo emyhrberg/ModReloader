@@ -125,6 +125,11 @@ namespace ModHelper.UI.Elements
         // Disable item use on click
         public override void Update(GameTime gameTime)
         {
+            if (!Active)
+            {
+                return;
+            }
+
             // base update
             base.Update(gameTime);
 

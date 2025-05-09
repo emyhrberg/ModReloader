@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
@@ -38,17 +37,20 @@ namespace ModHelper.Common.Systems
         {
             offset = -ButtonSize;
 
+            modsPanel = AddPanel<ModsPanel>();
+
             // Reload Buttons
             if (!AnyCheatModEnabled())
             {
                 Collapse collapse = new(Ass.CollapseDown, Ass.CollapseUp);
                 Append(collapse);
 
+                AreButtonsShowing = true;
+
                 // Buttons
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
 
                 // Panels
-                modsPanel = AddPanel<ModsPanel>();
                 modsButton.AssociatedPanel = modsPanel;
                 modsPanel.AssociatedButton = modsButton;
 
@@ -66,9 +68,8 @@ namespace ModHelper.Common.Systems
                 }
             }
 
-            // Debug
-            if (Conf.C.AddDebugText)
-            {
+            // Debug. 
+            // Always add to MainState, but only show if its enabled (in Draw() and Update().. See the implementation in its class.
                 DebugText debugText = new("");
                 Append(debugText);
 
@@ -77,7 +78,6 @@ namespace ModHelper.Common.Systems
                 DebugAction clearLog = new("Clear log", $"Clear {logFileName}", Log.ClearClientLog, left: 81f);
                 Append(openLog);
                 Append(clearLog);
-            }
         }
         #endregion
 
@@ -114,6 +114,13 @@ namespace ModHelper.Common.Systems
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // Update visibility before drawing
+            foreach (var button in AllButtons)
+            {
+                button.Active = AreButtonsShowing;
+                button.ButtonText.Active = AreButtonsShowing;
+            }
+
             base.Draw(spriteBatch);
 
             if (AreButtonsShowing)

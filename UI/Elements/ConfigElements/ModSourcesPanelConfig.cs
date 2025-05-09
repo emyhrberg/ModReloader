@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using ModHelper.UI.AbstractElements;
 using Terraria;
@@ -24,8 +25,20 @@ namespace ModHelper.UI.ModElements
 
         private void ConstructModSources()
         {
-            // Get all the mod sources paths
+            // Get all the mod sources paths and their last modified times
+            List<(string fullModPath, DateTime lastModified)> modSourcesWithTimes = new();
+
             foreach (string fullModPath in GetModSourcesPaths())
+            {
+                DateTime lastModified = File.GetLastWriteTime(fullModPath);
+                modSourcesWithTimes.Add((fullModPath, lastModified));
+            }
+
+            // Sort by last modified time in descending order (latest first)
+            modSourcesWithTimes.Sort((a, b) => b.lastModified.CompareTo(a.lastModified));
+
+            // Add to the UI list in sorted order
+            foreach (var (fullModPath, _) in modSourcesWithTimes)
             {
                 // Get the clean name
                 string cleanName = GetModSourcesCleanName(fullModPath);

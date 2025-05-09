@@ -23,17 +23,16 @@ namespace ModHelper.UI.Elements
             // Set textures
             CollapseDown = down;
             CollapseUp = up;
-            SetImage(CollapseUp);
 
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            MainState mainState = sys?.mainState;
-            float buttonSize = mainState?.ButtonSize ?? 0;
+            // TODO maybe add config option
+            // "Show by Default" ?
+            SetImage(CollapseDown);
 
             // Size and position
             Width.Set(37, 0);
             Height.Set(15, 0);
             //Left.Set(-20, 0); // CUSTOM CUSTOM CUSTOM -20!
-            Top.Set(-buttonSize, 0); // Start at normal position for Expanded state
+            Top.Set(-70+10, 0); // Start at normal position for Expanded state
             VAlign = 0.99f;
             HAlign = 0.5f;
         }
@@ -79,23 +78,23 @@ namespace ModHelper.UI.Elements
         }
 
         // Update visuals based on state
-        public void UpdateCollapseImage()
+        private void UpdateCollapseImage()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             MainState mainState = sys?.mainState;
-            float buttonSize = mainState?.ButtonSize ?? 0;
 
             if (mainState != null)
             {
+                // Swap image directions
                 if (mainState.AreButtonsShowing)
                 {
-                    SetImage(CollapseDown.Value);
-                    Top.Set(-buttonSize+10, 0); // Expanded
+                    SetImage(CollapseUp.Value); // Up arrow when expanded
+                    Top.Set(-mainState.ButtonSize + 10, 0);
                 }
                 else
                 {
-                    SetImage(CollapseUp.Value);
-                    Top.Set(0, 0); // Collapsed
+                    SetImage(CollapseDown.Value); // Down arrow when collapsed
+                    Top.Set(0, 0);
                 }
             }
         }

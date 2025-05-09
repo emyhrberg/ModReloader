@@ -28,7 +28,7 @@ namespace ModHelper.UI.ModElements
         public ModSourcesIcon modIcon;
         public ModSourcesConfig parentConfig;
 
-        public ModSourcesElementConfig(ModSourcesConfig parent, string fullModPath, string cleanName = "", string builtAgo = "")
+        public ModSourcesElementConfig(ModSourcesConfig parent, string fullModPath, string cleanName = "")
         {
 
             parentConfig = parent;
