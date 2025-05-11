@@ -4,9 +4,10 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements;
+using ModHelper.UI.Elements.ButtonElements;
 using ModHelper.UI.Elements.DebugElements;
-using ModHelper.UI.Elements.ModElements;
+using ModHelper.UI.Elements.PanelElements;
+using ModHelper.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
@@ -17,14 +18,22 @@ namespace ModHelper.Common.Systems
 {
     public class MainState : UIState
     {
+        // Buttons for standalone mod
+        public Collapse collapse;
         public ModsButton modsButton;
         public ReloadSPButton reloadSPButton;
         public ReloadMPButton reloadMPButton;
+        public UIElementButton uiElementButton;
+        public LogButton logButton;
 
+        // Panels
         public ModsPanel modsPanel;
+        public UIElementPanel uiElementPanel;
+        public LogPanel logPanel;
 
+        // Settings
         public bool Active = true;
-        public bool AreButtonsShowing = false;
+        public bool AreButtonsShowing = true;
         public float ButtonSize = 70f;
         public float TextSize = 0.9f;
         public float offset = 0;
@@ -35,49 +44,50 @@ namespace ModHelper.Common.Systems
         #region Constructor
         public MainState()
         {
-            offset = -ButtonSize;
+            offset = -ButtonSize*2;
 
+            // Create new panels no matter what
             modsPanel = AddPanel<ModsPanel>();
+            uiElementPanel = AddPanel<UIElementPanel>();
+            logPanel = AddPanel<LogPanel>();
 
-            // Reload Buttons
+            // For standalone mod, add the collapse and its own hotbar with buttons to toggle the panels with everything
             if (!AnyCheatModEnabled())
             {
-                Collapse collapse = new(Ass.CollapseDown, Ass.CollapseUp);
+                collapse = new(Ass.CollapseDown, Ass.CollapseUp);
                 Append(collapse);
 
                 AreButtonsShowing = true;
 
                 // Buttons
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
+                uiElementButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UIElement hitboxes", hoverTextDescription: "Toggle UIElement hitboxes");
+                logButton = AddButton<LogButton>(Ass.ButtonLog, "Log", "Log options", hoverTextDescription: "Change log options here");
 
                 // Panels
                 modsButton.AssociatedPanel = modsPanel;
                 modsPanel.AssociatedButton = modsButton;
+                uiElementPanel.AssociatedButton = uiElementButton;
+                uiElementButton.AssociatedPanel = uiElementPanel;
+                logButton.AssociatedPanel = logPanel;
+                logPanel.AssociatedButton = logButton;
 
                 string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
                 {
                     reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
-                    Append(reloadSPButton);
                 }
                 else if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
                     reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
-                    Append(reloadMPButton);
                 }
             }
 
             // Debug. 
             // Always add to MainState, but only show if its enabled (in Draw() and Update().. See the implementation in its class.
-                DebugText debugText = new("");
-                Append(debugText);
-
-                string logFileName = Path.GetFileName(Logging.LogPath);
-                DebugAction openLog = new("Open log, ", $"Open {logFileName}", Conf.C.OpenLogType == "File" ? Log.OpenClientLog : Log.OpenLogFolder);
-                DebugAction clearLog = new("Clear log", $"Clear {logFileName}", Log.ClearClientLog, left: 81f);
-                Append(openLog);
-                Append(clearLog);
+            DebugText debugText = new("");
+            Append(debugText);
         }
         #endregion
 
@@ -109,18 +119,12 @@ namespace ModHelper.Common.Systems
 
         public override void Update(GameTime gameTime)
         {
+            // Log.SlowInfo("showing" + AreButtonsShowing);
             base.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // Update visibility before drawing
-            foreach (var button in AllButtons)
-            {
-                button.Active = AreButtonsShowing;
-                button.ButtonText.Active = AreButtonsShowing;
-            }
-
             base.Draw(spriteBatch);
 
             if (AreButtonsShowing)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using ModHelper.Common.Systems.Hooks;
 using ModHelper.Helpers;
 using Terraria;
 using Terraria.ModLoader;
@@ -23,6 +24,8 @@ namespace ModHelper.Common.Systems
         public override void UpdateUI(GameTime gameTime)
         {
             userInterface?.Update(gameTime);
+            //ChatPosHook.OffsetX = 0;
+            //ChatPosHook.OffsetY = 0;
         }
 
         // boilerplate code to draw the UI

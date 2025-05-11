@@ -1,16 +1,22 @@
 {
-    "profiles": {
-        "Terraria": {
-            "commandName": "Executable",
-            "executablePath": "$(DotNetName)",
-            "commandLineArgs": "$(tMLPath) -skipselect",
-            "workingDirectory": "$(tMLSteamPath)"
-        },
-        "TerrariaServer": {
-            "commandName": "Executable",
-            "executablePath": "$(DotNetName)",
-            "commandLineArgs": "$(tMLServerPath)",
-            "workingDirectory": "$(tMLSteamPath)"
-        },
+  "profiles": {
+    "Terraria": {
+      "commandName": "Executable",
+      "executablePath": "$(DotNetName)",
+      "commandLineArgs": "$(tMLPath)",
+      "workingDirectory": "$(tMLSteamPath)"
+    },
+    "TerrariaServer": {
+      "commandName": "Executable",
+      "executablePath": "$(DotNetName)",
+      "commandLineArgs": "$(tMLServerPath)",
+      "workingDirectory": "$(tMLSteamPath)"
+    },
+    "TerrariaSkipSelect": {
+      "commandName": "Executable",
+      "executablePath": "$(DotNetName)",
+      "commandLineArgs": "$(tMLPath) -skipselect",
+      "workingDirectory": "$(tMLSteamPath)"
     }
+  }
 }

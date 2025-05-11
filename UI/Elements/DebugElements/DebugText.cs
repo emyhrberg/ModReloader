@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -18,8 +19,8 @@ namespace ModHelper.UI.Elements.DebugElements
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
-            VAlign = 0.99f;
-            HAlign = 0.01f;
+            VAlign = 1.00f;
+            HAlign = 0.005f;
 
             // start text at top left corner of its element
             TextOriginX = 0f;
@@ -27,7 +28,8 @@ namespace ModHelper.UI.Elements.DebugElements
 
             // Arbitrary size, should use ChatManager.GetStringSize() instead
             Width.Set(150, 0);
-            Height.Set(20 * 4 + 10, 0); // 20 * 3 for 3 lines of text
+            Top.Set(-5, 0);
+            Height.Set(20 * 3 + 10, 0);
         }
 
         public override void MouseOver(UIMouseEvent evt)
@@ -61,9 +63,6 @@ namespace ModHelper.UI.Elements.DebugElements
                 return;
             }
 
-            VAlign = 1.00f;
-            HAlign = 0.005f;
-
             // update the text to show playername, whoAmI, and FPS
             string playerName = Main.LocalPlayer.name;
             int whoAmI = Main.myPlayer;
@@ -81,7 +80,7 @@ namespace ModHelper.UI.Elements.DebugElements
 
             string text = "";
             text += $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
-            text += $"\nDebugger: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
+            //text += $"\nDebugger: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
             text += $"\n{fps}fps {ups}ups ({Main.upTimerMax:0}ms)";
 
             //Main.instance.Window.Title = " += PID HERE? FOR EASY DEBUG INFO";
@@ -91,11 +90,11 @@ namespace ModHelper.UI.Elements.DebugElements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            //Top.Set(-5, 0);
+            //Height.Set(20 * 3+10, 0);
+
             // draw debug hitbox
             //DrawHelper.DrawDebugHitbox(this, Color.Green);
-
-            Top.Set(-42, 0);
-            Height.Set(20 * 4 + 10, 0);
 
             if (!Active)
             {

@@ -67,11 +67,19 @@ Mods: {
 			}
 		}
 
-		Keybinds.DLReload.DisplayName: D L Reload
+		Keybinds: {
+			DLReload.DisplayName: D L Reload
+			DLModsPanel.DisplayName: D L Mods Panel
+		}
 
 		Tools: {
 			DLReload: {
 				DisplayName: DLReload
+				Description: The tool has no description! Add one in .hjson files!
+			}
+
+			DLModsPanel: {
+				DisplayName: DLModsPanel
 				Description: The tool has no description! Add one in .hjson files!
 			}
 		}

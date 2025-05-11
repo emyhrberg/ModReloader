@@ -1,7 +1,7 @@
 ﻿using DragonLens.Core.Systems.ToolSystem;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements.ModElements;
+using ModHelper.UI.Elements.PanelElements.ModElements;
 using Terraria.ModLoader;
 using Terraria.UI;
 

@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
-using ModHelper.UI.Elements.ModElements;
+using ModHelper.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;

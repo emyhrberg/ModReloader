@@ -144,12 +144,30 @@ namespace ModHelper.Helpers
             return steamPath;
         }
 
-        /// <summary> Opens the client log file in the default text editor for the right player. </summary>
+        /// <summary> Opens the client log file in the default text editor for the correct player. </summary>
         public static void OpenClientLog()
         {
             try
             {
                 string path = Logging.LogPath;
+                string fileName = Path.GetFileName(path);
+
+                Log.Info($"Open {fileName}");
+                Main.NewText("Opening " + fileName);
+                Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Main.NewText("Error opening client log: " + ex.Message);
+                Log.Error("Error opening client log: " + ex.Message);
+            }
+        }
+        /// <summary> Opens the server log file in the default text editor for the right player. </summary>
+        public static void OpenServerLog()
+        {
+            try
+            {
+                string path = Path.Combine(Path.GetDirectoryName(Logging.LogPath), "server.log");
                 string fileName = Path.GetFileName(path);
 
                 Log.Info($"Open {fileName}");

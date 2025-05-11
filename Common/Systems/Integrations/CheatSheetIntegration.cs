@@ -8,7 +8,7 @@ using System;
 using ModHelper.Helpers;
 using ModHelper.Common.Configs;
 using Terraria.UI;
-using ModHelper.UI.Elements.ModElements;
+using ModHelper.UI.Elements.PanelElements.ModElements;
 
 namespace ModHelper.Common.Systems.Integrations
 {
