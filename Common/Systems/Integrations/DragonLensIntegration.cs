@@ -24,6 +24,7 @@ namespace ModHelper.Common.Systems.Integrations
                 provider.icons["Mods"] = Ass.ButtonModsHeros.Value;
                 provider.icons["UI"] = Ass.ButtonUIHeros.Value;
                 provider.icons["Log"] = Ass.ButtonLogHeros.Value;
+                provider.icons["ReloadMP"] = Ass.ButtonReloadMP.Value;
             }
 
             // rebuild toolbars *after* icons have been injected

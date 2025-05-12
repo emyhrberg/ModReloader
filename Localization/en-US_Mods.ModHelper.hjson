@@ -1,0 +1,101 @@
+Keybinds: {
+	DLLogPanel.DisplayName: D L Log Panel
+	DLModsPanel.DisplayName: D L Mods Panel
+	DLReload.DisplayName: D L Reload
+	DLReloadMP.DisplayName: D L Reload M P
+	DLUIPanel.DisplayName: D L U I Panel
+}
+
+Tools: {
+	DLLogPanel: {
+		DisplayName: DLLogPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DLModsPanel: {
+		DisplayName: DLModsPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DLReload: {
+		DisplayName: DLReload
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DLReloadMP: {
+		DisplayName: DLReloadMP
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DLUIPanel: {
+		DisplayName: DLUIPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+}
+
+Configs: {
+	Config: {
+		DisplayName: Config
+
+		Headers: {
+			Reload: Reload
+			Improvements: Improvements
+			Misc: Misc
+		}
+
+		ModsToReload: {
+			Label: Mods To Reload
+			Tooltip: ""
+		}
+
+		AutoJoinWorld: {
+			Label: Auto Join World
+			Tooltip: Automatically joins the selected world after reloading mods
+		}
+
+		SaveWorldBeforeReloading: {
+			Label: Save World Before Reloading
+			Tooltip: Save player and world data before reloading. Takes more time to reload but saves the your player and world
+		}
+
+		Player: {
+			Label: Player
+			Tooltip: Select the player to join a world with when reloading
+		}
+
+		World: {
+			Label: World
+			Tooltip: Select the world to join when reloading
+		}
+
+		AddDebugText: {
+			Label: Add Debug Text
+			Tooltip: A little debug text in the bottom left corner shows when in a world
+		}
+
+		AddMainMenuText: {
+			Label: Add Main Menu Text
+			Tooltip: Adds all of the main menu options
+		}
+
+		AddCopyToClipboardException: {
+			Label: Add Copy To Clipboard Exception
+			Tooltip: When encountering a error, a new button will appear allowing you to copy the message
+		}
+
+		AddExceptionMenuImprovements: {
+			Label: Add Exception Menu Improvements
+			Tooltip: Reworks some options when encountering a error
+		}
+
+		OpenLogType: {
+			Label: Open Log Type
+			Tooltip: Choose whether to open the folder or the file when opening logs
+		}
+
+		LogDebugMessages: {
+			Label: Log Debug Messages
+			Tooltip: (Optional) Most useful for developers, this option may help to debug possible bugs
+		}
+	}
+}
