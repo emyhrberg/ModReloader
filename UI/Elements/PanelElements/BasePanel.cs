@@ -179,6 +179,12 @@ namespace ModHelper.UI.Elements.PanelElements
 
         #region update
 
+        public override bool ContainsPoint(Vector2 point)
+        {
+            // If the panel isn’t active, pretend it’s not there for hit-testing.
+            return Active && base.ContainsPoint(point);
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (!Active)

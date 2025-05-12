@@ -44,12 +44,14 @@ namespace ModHelper.Common.Systems
         #region Constructor
         public MainState()
         {
-            offset = -ButtonSize*2;
+            offset = -ButtonSize * 2;
 
             // Create new panels no matter what
             modsPanel = AddPanel<ModsPanel>();
             uiElementPanel = AddPanel<UIElementPanel>();
             logPanel = AddPanel<LogPanel>();
+
+            AreButtonsShowing = false; // Default to false, so we can toggle it on or off
 
             // For standalone mod, add the collapse and its own hotbar with buttons to toggle the panels with everything
             if (!AnyCheatModEnabled())
@@ -57,12 +59,12 @@ namespace ModHelper.Common.Systems
                 collapse = new(Ass.CollapseDown, Ass.CollapseUp);
                 Append(collapse);
 
-                AreButtonsShowing = true;
+                AreButtonsShowing = true; // Show our own collapse and show buttons by default
 
                 // Buttons
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
-                uiElementButton = AddButton<UIElementButton>(Ass.ButtonUI, "UI", "UIElement hitboxes", hoverTextDescription: "Toggle UIElement hitboxes");
-                logButton = AddButton<LogButton>(Ass.ButtonLog, "Log", "Log options", hoverTextDescription: "Change log options here");
+                uiElementButton = AddButton<UIElementButton>(Ass.ButtonUIAnimation, "UI", "UIElement hitboxes", hoverTextDescription: "Toggle UIElement hitboxes");
+                logButton = AddButton<LogButton>(Ass.ButtonLogAnimation, "Log", "Log options", hoverTextDescription: "Change log options here");
 
                 // Panels
                 modsButton.AssociatedPanel = modsPanel;
@@ -76,11 +78,11 @@ namespace ModHelper.Common.Systems
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
                 {
-                    reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
+                    reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSPAnimation, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
                 }
                 else if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
-                    reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMP, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
+                    reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMPAnimation, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
                 }
             }
 
@@ -119,7 +121,7 @@ namespace ModHelper.Common.Systems
 
         public override void Update(GameTime gameTime)
         {
-            // Log.SlowInfo("showing" + AreButtonsShowing);
+            //modsButton._scale = 0.35f;
             base.Update(gameTime);
         }
 

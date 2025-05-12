@@ -174,6 +174,9 @@ namespace ModHelper.UI.Elements.PanelElements
 
         public override void Update(GameTime gameTime)
         {
+            if (!Active)
+                return;
+
             base.Update(gameTime);
 
             // Only update once a second

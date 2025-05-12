@@ -70,6 +70,9 @@ Mods: {
 		Keybinds: {
 			DLReload.DisplayName: D L Reload
 			DLModsPanel.DisplayName: D L Mods Panel
+			TestTool.DisplayName: Test Tool
+			DLLogPanel.DisplayName: D L Log Panel
+			DLUIPanel.DisplayName: D L U I Panel
 		}
 
 		Tools: {
@@ -80,6 +83,21 @@ Mods: {
 
 			DLModsPanel: {
 				DisplayName: DLModsPanel
+				Description: The tool has no description! Add one in .hjson files!
+			}
+
+			TestTool: {
+				Description: The tool has no description! Add one in .hjson files!
+				DisplayName: TestTool
+			}
+
+			DLLogPanel: {
+				DisplayName: DLLogPanel
+				Description: The tool has no description! Add one in .hjson files!
+			}
+
+			DLUIPanel: {
+				DisplayName: DLUIPanel
 				Description: The tool has no description! Add one in .hjson files!
 			}
 		}

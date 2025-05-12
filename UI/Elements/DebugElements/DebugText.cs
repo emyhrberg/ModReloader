@@ -104,7 +104,7 @@ namespace ModHelper.UI.Elements.DebugElements
             // also, if chat is open, hide the text
             if (Main.drawingPlayerChat)
             {
-                return;
+                //return;
             }
 
             base.Draw(spriteBatch);

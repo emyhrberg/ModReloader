@@ -20,6 +20,8 @@ namespace ModHelper.Common.Systems.Integrations
             {
                 RegisterReloadButton(herosMod);
                 RegisterModsButton(herosMod);
+                RegisterUIButton(herosMod);
+                RegisterLogButton(herosMod);
             }
         }
 
@@ -39,7 +41,7 @@ namespace ModHelper.Common.Systems.Integrations
             herosMod.Call(
                 "AddSimpleButton",
                 /* permissionName:      */ ReloadPermission,
-                /* texture:             */ Ass.ButtonReloadSP,
+                /* texture:             */ Ass.ButtonReloadSPHeros,
                 /* onClick action:      */ (Action)(async () =>
                                            {
                                                await ReloadUtilities.SinglePlayerReload();
@@ -61,7 +63,7 @@ namespace ModHelper.Common.Systems.Integrations
 
             // grab the panel instance once so both the click‑action and tooltip can use it
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            Asset<Texture2D> tex = Ass.ButtonMods;
+            Asset<Texture2D> tex = Ass.ButtonModsHeros;
 
             herosMod.Call(
                 "AddSimpleButton",
@@ -69,7 +71,7 @@ namespace ModHelper.Common.Systems.Integrations
                 tex,
 
                 // on‑click: toggle visibility and bring to front
-                (Action)(() =>
+                () =>
                 {
                     ModsPanel panel = sys.mainState.modsPanel;
                     bool nowOpen = !panel.GetActive();
@@ -79,7 +81,7 @@ namespace ModHelper.Common.Systems.Integrations
                     {
                         panel.Remove(); parent.Append(panel);
                     }
-                }),
+                },
 
                 // permission change callback
                 (Action<bool>)(hasPerm =>
@@ -88,7 +90,77 @@ namespace ModHelper.Common.Systems.Integrations
                 }),
 
                 // tooltip: reflect current state
-                (Func<string>)(() => sys.mainState.modsPanel.GetActive() ? "Close mod menu" : "Open mod menu")
+                () => sys.mainState.modsPanel.GetActive() ? "Close mod menu" : "Open mod menu"
+            );
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // 3.  Button that toggles the UI-element demo panel
+        // ──────────────────────────────────────────────────────────────────────────────
+        private static void RegisterUIButton(Mod herosMod)
+        {
+            const string Perm = "ToggleUIPanel";
+            herosMod.Call("AddPermission", Perm, "Show or hide the UI-Elements panel");
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            Asset<Texture2D> tex = Ass.ButtonUIHeros;
+
+            herosMod.Call(
+                "AddSimpleButton",
+                Perm,
+                tex,
+                (Action)(() =>                       // click
+                {
+                    var panel = sys.mainState.uiElementPanel;
+                    bool opened = !panel.GetActive();
+                    panel.SetActive(opened);
+
+                    if (panel.Parent is UIElement p) { panel.Remove(); p.Append(panel); }
+                }),
+                (Action<bool>)(hasPerm =>            // permission lost
+                {
+                    if (!hasPerm)
+                        Main.NewText("⛔ You lost permission to use the UI-panel button!", Color.OrangeRed);
+                }),
+                (Func<string>)(() =>                 // tooltip
+                    sys.mainState.uiElementPanel.GetActive()
+                    ? "Close UI-Elements panel"
+                    : "Open UI-Elements panel")
+            );
+        }
+
+        // ──────────────────────────────────────────────────────────────────────────────
+        // 4.  Button that toggles the in-game log panel
+        // ──────────────────────────────────────────────────────────────────────────────
+        private static void RegisterLogButton(Mod herosMod)
+        {
+            const string Perm = "ToggleLogPanel";
+            herosMod.Call("AddPermission", Perm, "Open or close the log panel");
+
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            Asset<Texture2D> tex = Ass.ButtonLogHeros;
+
+            herosMod.Call(
+                "AddSimpleButton",
+                Perm,
+                tex,
+                (Action)(() =>
+                {
+                    var panel = sys.mainState.logPanel;
+                    bool opened = !panel.GetActive();
+                    panel.SetActive(opened);
+
+                    if (panel.Parent is UIElement p) { panel.Remove(); p.Append(panel); }
+                }),
+                (Action<bool>)(hasPerm =>
+                {
+                    if (!hasPerm)
+                        Main.NewText("⛔ You lost permission to open the log panel!", Color.OrangeRed);
+                }),
+                (Func<string>)(() =>
+                    sys.mainState.logPanel.GetActive()
+                    ? "Close log panel"
+                    : "Open log panel")
             );
         }
     }

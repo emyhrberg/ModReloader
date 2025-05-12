@@ -4,6 +4,7 @@ using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
+using Terraria.UI;
 using static ModHelper.UI.Elements.PanelElements.OptionElement;
 
 namespace ModHelper.UI.Elements.PanelElements
@@ -31,8 +32,10 @@ namespace ModHelper.UI.Elements.PanelElements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            // TODO Draw a rectangle behind the text
-            DrawHelper.DrawDebugHitbox(this, ColorHelper.SuperDarkBluePanel, scale: 1.08f);
+            // TODO Draw a rectangle behind the text  
+            //DrawHelper.DrawDebugHitbox(this, ColorHelper.SuperDarkBluePanel, scale: 1.08f);  
+
+            //DrawHelper.DrawBackgroundPanel(this, 1.0f, 1.0f);
 
             base.Draw(spriteBatch);
 

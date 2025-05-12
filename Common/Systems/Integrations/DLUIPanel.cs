@@ -11,41 +11,41 @@ namespace ModHelper.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
-    public class DLModsPanel : Tool
+    public class DLUIPanel : Tool
     {
-        public override string IconKey => "Mods";
+        public override string IconKey => "UI";
 
-        public override string DisplayName => "Mods List";
+        public override string DisplayName => "UIElement Hitboxes";
 
-        public override string Description => $"Enable or disable mods";
+        public override string Description => $"Toggle UIElement hitboxes";
 
         public override void OnActivate()
         {
             Log.Info("DLModsPanel activated");
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            BasePanel modsPanel = sys.mainState.modsPanel;
+            BasePanel uiPanel = sys.mainState.uiElementPanel;
 
-            if (modsPanel is null)
+            if (uiPanel is null)
             {
-                Log.Error("ModsPanel is null");
+                Log.Error("UIPanel is null");
                 return;
             }
 
-            if (modsPanel.GetActive())
+            if (uiPanel.GetActive())
             {
-                modsPanel.SetActive(false);
+                uiPanel.SetActive(false);
             }
             else
             {
-                modsPanel.SetActive(true);
+                uiPanel.SetActive(true);
 
                 // bring to front …
-                if (modsPanel.Parent is not null)
+                if (uiPanel.Parent is not null)
                 {
-                    UIElement parent = modsPanel.Parent;
-                    modsPanel.Remove();
-                    parent.Append(modsPanel);
+                    UIElement parent = uiPanel.Parent;
+                    uiPanel.Remove();
+                    parent.Append(uiPanel);
                 }
             }
         }

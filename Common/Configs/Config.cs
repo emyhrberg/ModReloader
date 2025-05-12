@@ -52,11 +52,6 @@ namespace ModHelper.Common.Configs
         [DefaultValue("Folder")]
         public string OpenLogType;
 
-        [DrawTicks]
-        [OptionStrings(["Integrate", "NewHotbar"])]
-        [DefaultValue("Integrate")]
-        public string IntegrateOrNewHotbar;
-
         [DefaultValue(true)]
         public bool LogDebugMessages;
     }

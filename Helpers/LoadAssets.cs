@@ -31,6 +31,27 @@ namespace ModHelper.Helpers
         public static Asset<Texture2D> ButtonReloadSP;
         public static Asset<Texture2D> ButtonReloadMP;
 
+        // Button animations
+        public static Asset<Texture2D> ButtonLogAnimation;
+        public static Asset<Texture2D> ButtonUIAnimation;
+        //public static Asset<Texture2D> ButtonModsAnimation;
+        public static Asset<Texture2D> ButtonReloadSPAnimation;
+        public static Asset<Texture2D> ButtonReloadMPAnimation;
+
+        // Button for Cheat Sheet extensions
+        public static Asset<Texture2D> ButtonLogCS;
+        public static Asset<Texture2D> ButtonUICS;
+        // public static Asset<Texture2D> ButtonModsCS;
+        public static Asset<Texture2D> ButtonReloadSPCS;
+        // public static Asset<Texture2D> ButtonReloadMPCS;
+
+        // Buttons for HEROsMod extensions
+        public static Asset<Texture2D> ButtonLogHeros;
+        public static Asset<Texture2D> ButtonUIHeros;
+        public static Asset<Texture2D> ButtonModsHeros;
+        public static Asset<Texture2D> ButtonReloadSPHeros;
+        // public static Asset<Texture2D> ButtonReloadMPHeros;
+
         // Misc
         public static Asset<Texture2D> Resize;
         public static Asset<Texture2D> ModOpenFolder; // 22x22

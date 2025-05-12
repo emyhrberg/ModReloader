@@ -1,15 +1,10 @@
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements.PanelElements;
-using ModHelper.UI.ModElements;
 using ReLogic.Content;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements.ButtonElements

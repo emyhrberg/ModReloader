@@ -6,36 +6,27 @@ using Terraria.ModLoader;
 namespace ModHelper.Common.Systems.Integrations
 {
     /// Tries to add reload as a 'tool' to DragonLens
+    [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
     public class DragonLensIntegration : ModSystem
     {
         public override void PostSetupContent()
         {
-            /*
-            // Check if the mod is loaded and perform actions accordingly
-            if (ModLoader.TryGetMod("DragonLens", out Mod dl))
-            {
-                Action click = async () => await ReloadUtilities.SinglePlayerReload();
+            AddIcons();
+        }
 
-                dl.Call("AddAPITool",
-                        "Reload",        // internal key, must be unique
-                        Ass.ButtonReloadSP,
-                        click);
-                Log.Info("DLintegration was run!");
-            }
-            else
+        private static void AddIcons()
+        {
+            foreach (var provider in ThemeHandler.allIconProviders.Values)
             {
-                Log.Warn("DragonLensIntegration failed to load (Is DragonLens enabled?)");
+                // assign (overwrites if the key exists already) – never throws
+                provider.icons["Reload"] = Ass.ButtonReloadSP.Value;
+                provider.icons["Mods"] = Ass.ButtonModsHeros.Value;
+                provider.icons["UI"] = Ass.ButtonUIHeros.Value;
+                provider.icons["Log"] = Ass.ButtonLogHeros.Value;
             }
-            */
-            foreach (var iconProvider in ThemeHandler.allIconProvidersByType)
-            {
-                iconProvider.Value.icons.Add("Reload", Ass.ButtonReloadSP.Value);
-            }
-            foreach (var iconProvider in ThemeHandler.allIconProviders)
-            {
-                iconProvider.Value.icons.Add("Reload", Ass.ButtonReloadSP.Value);
-            }
+
+            // rebuild toolbars *after* icons have been injected
             ModContent.GetInstance<ToolbarHandler>().OnModLoad();
         }
     }

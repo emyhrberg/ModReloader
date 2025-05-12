@@ -13,6 +13,16 @@ namespace ModHelper.Helpers
 {
     public static class DrawHelper
     {
+        // Draws a dark blue background panel with the size of the element given.
+        public static void DrawBackgroundPanel(this UIElement e, float scaleX = 0.6f, float scaleY = 0.6f)
+        {
+            var d = e.GetDimensions();
+            var sz = new Vector2(d.Width * scaleX + 20, d.Height * scaleY + 20);
+            var tl = (d.Position() + new Vector2(d.Width, d.Height) / 2) - sz / 2;
+            Utils.DrawInvBG(Main.spriteBatch, new Rectangle(tl.ToPoint().X, tl.ToPoint().Y, sz.ToPoint().X, sz.ToPoint().Y), new Color(20, 20, 55) * 0.925f);
+        }
+
+
         public static void DrawDebugHitbox(this UIElement element,
                                    Color color = default,
                                    float scale = 1f)   // new

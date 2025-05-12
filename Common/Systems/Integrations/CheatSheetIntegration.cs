@@ -1,14 +1,15 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using ReLogic.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using System;
 using CheatSheet;
-using System;
-using ModHelper.Helpers;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
-using Terraria.UI;
+using ModHelper.Helpers;
+using ModHelper.UI.Elements.PanelElements;
 using ModHelper.UI.Elements.PanelElements.ModElements;
+using ReLogic.Content;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace ModHelper.Common.Systems.Integrations
 {
@@ -20,15 +21,28 @@ namespace ModHelper.Common.Systems.Integrations
             // Only run if CheatSheet is loaded and we’re on client
             if (ModLoader.TryGetMod("CheatSheet", out Mod csMod) && !Main.dedServ)
             {
+                // Check if we also have Heros. If so, just skip here since
+                // we only want to register the buttons once (to Heros).
+                // I hope this works, it may not work because of the order of the mods loaded.
+                // I believe they are loaded in alphabetical order.
+                // Update: It worked once during testing, so its fine for now.
+                if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod))
+                {
+                    Log.Info("HEROsMod is loaded, skipping CheatSheet integration.");
+                    return;
+                }
+
                 RegisterReloadButton();
                 RegisterModsButton();
+                RegisterUIButton();
+                RegisterLogButton();
             }
         }
 
         private void RegisterReloadButton()
         {
             // Load the button icon
-            Asset<Texture2D> reloadTex = Ass.ButtonReloadSP;
+            Asset<Texture2D> reloadTex = Ass.ButtonReloadSPCS;
 
             // Build the mods‐to‐reload string
             string modsToReload = string.Join(", ", Conf.C.ModsToReload);
@@ -52,8 +66,7 @@ namespace ModHelper.Common.Systems.Integrations
                 // Click – toggle panel + bring to front if opening
                 buttonClickedAction: () =>
                 {
-                    if (!sys.mainState.AreButtonsShowing) return;
-                    ModsPanel panel = sys.mainState.modsPanel;
+                    BasePanel panel = sys.mainState.modsPanel;
 
                     bool nowOpen = !panel.GetActive();
                     panel.SetActive(nowOpen);
@@ -63,13 +76,62 @@ namespace ModHelper.Common.Systems.Integrations
                         panel.Remove();
                         parent.Append(panel);          // move to top layer
                     }
+                },
+                tooltip: () => sys.mainState.modsPanel.GetActive() ? "Close mod menu" : "Open mod menu"
+            );
+        }
 
-                    // (optional) highlight your in‑game button
-                    sys.mainState.modsButton.ParentActive = nowOpen;
+        private static void RegisterUIButton()
+        {
+            // Grab the panel once so both lambdas can see it
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            CheatSheetInterface.RegisterButton(
+                texture: Ass.ButtonUICS,
+
+                // Click – toggle panel + bring to front if opening
+                buttonClickedAction: () =>
+                {
+                    BasePanel panel = sys.mainState.uiElementPanel;
+
+                    bool nowOpen = !panel.GetActive();
+                    panel.SetActive(nowOpen);
+
+                    if (nowOpen && panel.Parent is UIElement parent)
+                    {
+                        panel.Remove();
+                        parent.Append(panel);          // move to top layer
+                    }
                 },
 
                 // Tooltip – reflect current state
-                tooltip: () => sys.mainState.modsPanel.GetActive() ? "Close mod menu" : "Open mod menu"
+                tooltip: () => sys.mainState.uiElementPanel.GetActive() ? "Close UIElement panel" : "Open UIElement panel"
+            );
+        }
+
+        private static void RegisterLogButton()
+        {
+            // Grab the panel once so both lambdas can see it
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            CheatSheetInterface.RegisterButton(
+                texture: Ass.ButtonLogCS,
+
+                // Click – toggle panel + bring to front if opening
+                buttonClickedAction: () =>
+                {
+                    BasePanel panel = sys.mainState.logPanel;
+
+                    bool nowOpen = !panel.GetActive();
+                    panel.SetActive(nowOpen);
+
+                    if (nowOpen && panel.Parent is UIElement parent)
+                    {
+                        panel.Remove();
+                        parent.Append(panel);          // move to top layer
+                    }
+                },
+                tooltip: () => sys.mainState.logPanel.GetActive() ? "Close log panel" : "Open log panel"
             );
         }
     }

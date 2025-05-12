@@ -41,19 +41,20 @@ namespace ModHelper.UI.Elements.PanelElements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // Find the parent BasePanel containing this close button
-            UIElement current = Parent;
-            while (current != null && current is not BasePanel)
-            {
-                current = current.Parent;
-            }
+            // 1. find the first BasePanel up the hierarchy
+            BasePanel panel = null;
+            for (UIElement cur = Parent; cur != null && panel == null; cur = cur.Parent)
+                panel = cur as BasePanel;
 
-            // If we found the parent panel, deactivate it
-            if (current is BasePanel panel && panel.GetActive())
+            // 2. if we found an active panel, deactivate it
+            if (panel?.GetActive() == true)
             {
-                Log.Info("CloseButtonPanel: Deactivated panel with name: " + panel.GetType().Name);
+                Log.Info($"CloseButtonPanel: Deactivated panel {panel.GetType().Name}");
                 panel.SetActive(false);
-                panel.AssociatedButton.ParentActive = false; // deactivate the button
+
+                // 3. deactivate the toggle button if there is one
+                if (panel.AssociatedButton != null)
+                    panel.AssociatedButton.ParentActive = false;
             }
         }
     }

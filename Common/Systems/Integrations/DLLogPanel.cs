@@ -11,41 +11,41 @@ namespace ModHelper.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
-    public class DLModsPanel : Tool
+    public class DLLogPanel : Tool
     {
-        public override string IconKey => "Mods";
+        public override string IconKey => "Log";
 
-        public override string DisplayName => "Mods List";
+        public override string DisplayName => "Log Options";
 
-        public override string Description => $"Enable or disable mods";
+        public override string Description => $"Change log options here";
 
         public override void OnActivate()
         {
             Log.Info("DLModsPanel activated");
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
-            BasePanel modsPanel = sys.mainState.modsPanel;
+            BasePanel logPanel = sys.mainState.logPanel;
 
-            if (modsPanel is null)
+            if (logPanel is null)
             {
-                Log.Error("ModsPanel is null");
+                Log.Error("LogPanel is null");
                 return;
             }
 
-            if (modsPanel.GetActive())
+            if (logPanel.GetActive())
             {
-                modsPanel.SetActive(false);
+                logPanel.SetActive(false);
             }
             else
             {
-                modsPanel.SetActive(true);
+                logPanel.SetActive(true);
 
                 // bring to front …
-                if (modsPanel.Parent is not null)
+                if (logPanel.Parent is not null)
                 {
-                    UIElement parent = modsPanel.Parent;
-                    modsPanel.Remove();
-                    parent.Append(modsPanel);
+                    UIElement parent = logPanel.Parent;
+                    logPanel.Remove();
+                    parent.Append(logPanel);
                 }
             }
         }
