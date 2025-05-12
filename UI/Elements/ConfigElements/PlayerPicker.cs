@@ -1,6 +1,4 @@
-﻿using Terraria;
-
-namespace ModHelper.UI.Elements.ConfigElements
+﻿namespace ModHelper.UI.Elements.ConfigElements
 {
     internal class PlayerPicker : BasePicker
     {

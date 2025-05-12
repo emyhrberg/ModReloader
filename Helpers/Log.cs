@@ -7,8 +7,6 @@ using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
 using ModHelper.Common.Configs;
-using Terraria;
-using Terraria.ModLoader;
 
 namespace ModHelper.Helpers
 {

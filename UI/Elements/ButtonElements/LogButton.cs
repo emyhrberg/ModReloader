@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using ModHelper.UI.Elements.ButtonElements;
 using ReLogic.Content;
 using Terraria.UI;
 

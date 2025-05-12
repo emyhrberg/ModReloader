@@ -2,9 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using ModHelper.Helpers;
-using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 namespace ModHelper.PacketHandlers
 {
     internal class RefreshServerPacketHandler : BasePacketHandler

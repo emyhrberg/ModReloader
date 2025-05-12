@@ -1,13 +1,10 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ReLogic.OS;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using ModHelper.UI.AbstractElements;
-using Terraria;
-using Terraria.ModLoader;
 
 namespace ModHelper.UI.ModElements
 {

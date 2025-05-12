@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using Terraria;
 
 namespace ModHelper.Helpers
 {

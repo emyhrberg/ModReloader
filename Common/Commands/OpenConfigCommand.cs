@@ -1,5 +1,4 @@
 using ModHelper.Common.Configs;
-using Terraria.ModLoader;
 
 namespace ModHelper.Common.Commands
 {

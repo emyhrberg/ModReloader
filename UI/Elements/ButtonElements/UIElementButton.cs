@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Systems.UIElementState;
 using ReLogic.Content;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements.ButtonElements

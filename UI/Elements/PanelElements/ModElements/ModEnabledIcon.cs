@@ -2,7 +2,6 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 
 namespace ModHelper.UI.Elements.PanelElements.ModElements
 {

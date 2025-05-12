@@ -1,7 +1,6 @@
 ﻿using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolbarSystem;
 using ModHelper.Helpers;
-using Terraria.ModLoader;
 
 namespace ModHelper.Common.Systems.Integrations
 {

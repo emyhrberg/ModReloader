@@ -2,7 +2,6 @@ using System.IO;
 using System.Linq;
 using ModHelper.Common.Configs;
 using ModHelper.PacketHandlers;
-using Terraria.ModLoader;
 
 namespace ModHelper
 {

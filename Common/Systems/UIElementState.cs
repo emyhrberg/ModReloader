@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.UI;
 using ModHelper.UI.Elements.PanelElements;
-using Terraria;
 using Terraria.GameContent;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.Common.Systems.UIElementState

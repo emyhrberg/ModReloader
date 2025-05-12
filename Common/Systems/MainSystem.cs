@@ -1,9 +1,5 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using ModHelper.Common.Systems.Hooks;
-using ModHelper.Helpers;
-using Terraria;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.Common.Systems

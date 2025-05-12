@@ -1,14 +1,9 @@
-﻿using System;
-using CheatSheet;
-using Microsoft.Xna.Framework;
+﻿using CheatSheet;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements.PanelElements;
-using ModHelper.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
-using Terraria;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.Common.Systems.Integrations

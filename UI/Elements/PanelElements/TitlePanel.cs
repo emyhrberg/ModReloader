@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
 
 namespace ModHelper.UI.Elements.PanelElements

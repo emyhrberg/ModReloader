@@ -13,8 +13,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using ModHelper.Helpers;
 using MonoMod.RuntimeDetour;
-using Terraria;
-using Terraria.ModLoader;
 
 namespace ModHelper.Publicizer
 {

@@ -1,13 +1,8 @@
-using System.Diagnostics;
 using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
-using ModHelper.Helpers;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.UI.Elements.DebugElements

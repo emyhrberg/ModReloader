@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
@@ -85,7 +80,7 @@ namespace ModHelper.UI.ModElements
                     // update list
                     if (mod.checkbox.isChecked)
                     {
-                        
+
                         // only add if it doesnt already exist
                         if (!l.Contains(modSourcePathString))
                         {

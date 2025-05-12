@@ -1,12 +1,9 @@
 using System;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using ModHelper.Common.Systems;
 using ModHelper.Helpers;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
 using Terraria.Social.Steam;

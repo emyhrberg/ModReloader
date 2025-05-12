@@ -1,6 +1,4 @@
 using System.Linq;
-using Terraria;
-using Terraria.ModLoader;
 
 namespace ModHelper.Common.Commands
 {

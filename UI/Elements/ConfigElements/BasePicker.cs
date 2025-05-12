@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using ModHelper.Helpers;
+﻿using ModHelper.Helpers;
 using System.Collections.Generic;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -52,10 +51,10 @@ namespace ModHelper.UI.Elements.ConfigElements
                 if (int.TryParse(uIInputTextField.CurrentString.Split(": ")[0], out int val))
                 {
                     SetValue(val);
-                    
+
                 }
                 Log.Info($"OnTextChange: {uIInputTextField.CurrentString}");
-                
+
                 //else /{
                 //	Interface.modConfig.SetMessage($"{uIInputTextField.currentString} isn't a valid value.", Color.Green);
                 //}
@@ -69,7 +68,7 @@ namespace ModHelper.UI.Elements.ConfigElements
                     Log.Info($"OnUnfocus: {uIInputTextField.CurrentString}");
                 }
 
-                
+
             };
             textBoxBackground.Append(uIInputTextField);
 

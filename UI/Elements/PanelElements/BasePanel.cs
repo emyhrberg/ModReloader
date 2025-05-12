@@ -1,9 +1,7 @@
 using System;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements.ButtonElements;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;

@@ -1,5 +1,4 @@
 ﻿using System;
-using DragonLens.Content.GUI.FieldEditors;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 

@@ -1,10 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
-using Terraria.UI;
 using static ModHelper.UI.Elements.PanelElements.OptionElement;
 
 namespace ModHelper.UI.Elements.PanelElements

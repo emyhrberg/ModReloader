@@ -1,11 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Common.Systems;
-using ModHelper.UI.Elements.ButtonElements;
 using ReLogic.Content;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.UI;
 
 namespace ModHelper.UI.Elements.ButtonElements
 {

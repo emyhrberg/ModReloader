@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
@@ -9,9 +8,7 @@ using ModHelper.UI.Elements.DebugElements;
 using ModHelper.UI.Elements.PanelElements;
 using ModHelper.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
-using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace ModHelper.Common.Systems

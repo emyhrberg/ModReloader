@@ -1,11 +1,8 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
-using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace ModHelper.Common.Systems
 {
