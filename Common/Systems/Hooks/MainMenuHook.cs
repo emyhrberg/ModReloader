@@ -99,7 +99,12 @@ namespace ModHelper.Common.Systems.Hooks
                 ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
                 (" ", null, 1.15f, ""), // empty line
                 ($"Singleplayer", null, 1.15f, "Quickly join a world"),
-                ("Join Singleplayer", AutoloadPlayerInWorldSystem.EnterSingleplayerWorld, 1.02f, "Enter a singleplayer world with last selected player and world"),
+                ("Join Singleplayer", () => {
+                    ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
+                    ClientDataJsonHelper.PlayerID = -1;
+                    ClientDataJsonHelper.WorldID = -1;
+                    AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
+                }, 1.02f, "Enter a singleplayer world with last selected player and world"),
                 (" ", null, 1.15f, ""), // empty line
                 ($"Multiplayer", null, 1.15f, "Options for entering and testing multiple clients"),
                 ("Host Multiplayer", AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, "Start a multiplayer world with last selected player and world"),
