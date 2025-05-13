@@ -30,9 +30,9 @@ namespace ModHelper.UI.Elements.PanelElements
         public override void Draw(SpriteBatch spriteBatch)
         {
             // TODO Draw a rectangle behind the text  
-            //DrawHelper.DrawDebugHitbox(this, ColorHelper.SuperDarkBluePanel, scale: 1.08f);  
+            DrawHelper.DrawDebugHitbox(this, ColorHelper.SuperDarkBluePanel, scale: 1.12f, customXOffset: 2);  
 
-            //DrawHelper.DrawBackgroundPanel(this, 1.0f, 1.0f);
+            //DrawHelper.DrawBackgroundPanel(this, 0.95f, 0.25f);
 
             base.Draw(spriteBatch);
 

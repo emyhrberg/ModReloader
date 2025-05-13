@@ -10,6 +10,50 @@ namespace ModHelper.Helpers
 {
     public static class DrawHelper
     {
+        // Draw a regular text with outline.
+        // Used in MainMenu.
+        // Code is inspired from Terramon or some other mod with main menu text.
+        public static void DrawOutlinedStringOnMenu(SpriteBatch spriteBatch, DynamicSpriteFont font, string text,
+            Vector2 position, Color drawColor, float rotation, Vector2 origin, float scale, SpriteEffects effects,
+            float layerDepth, bool special = false, float alphaMult = 0.3f)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Color color;
+                if (i == 4) // draw the main text last
+                {
+                    color = drawColor;
+                }
+                else // Draw the outline first
+                {
+                    color = Color.Black;
+                    if (special)
+                    {
+                        color.R = (byte)((255 + color.R) / 2);
+                        color.G = (byte)((255 + color.G) / 2);
+                        color.B = (byte)((255 + color.B) / 2);
+                    }
+                }
+                // Adjust alpha
+                color.A = (byte)(color.A * alphaMult);
+
+                // Outline offsets
+                int offX = 0;
+                int offY = 0;
+                switch (i)
+                {
+                    case 0: offX = -2; break;
+                    case 1: offX = 2; break;
+                    case 2: offY = -2; break;
+                    case 3: offY = 2; break;
+                }
+
+                // Draw text
+                spriteBatch.DrawString(font, text, position + new Vector2(offX, offY),
+                color, rotation, origin, scale, effects, layerDepth);
+            }
+        }
+
         // Draws a dark blue background panel with the size of the element given.
         public static void DrawBackgroundPanel(this UIElement e, float scaleX = 0.6f, float scaleY = 0.6f)
         {
@@ -22,10 +66,17 @@ namespace ModHelper.Helpers
 
         public static void DrawDebugHitbox(this UIElement element,
                                    Color color = default,
-                                   float scale = 1f)   // new
+                                   float scale = 1f,
+                                   float customXOffset = 0)   // new
         {
             if (color == default)
                 color = Color.Red * 0.5f;
+
+            if (element == null)
+            {
+                Log.SlowInfo("Oop. Failed to find element to draw. Skipping draw.", seconds: 5);
+                return;
+            }
 
             CalculatedStyle dims = element.GetDimensions();
 
@@ -38,7 +89,7 @@ namespace ModHelper.Helpers
             float h = dims.Height * scale;
 
             // top-left corner after scaling about the centre
-            int left = (int)(cx - w * 0.5f);
+            int left = (int)(cx - w * 0.5f) + (int) customXOffset;
             int top = (int)(cy - h * 0.5f);
 
             Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value,

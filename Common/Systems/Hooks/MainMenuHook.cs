@@ -86,10 +86,9 @@ namespace ModHelper.Common.Systems.Hooks
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers main menu! Join worlds, change options, reload, etc..."),
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers main menu! Most useful features are here :)"),
                 ("Open config", () => Conf.C.Open(), 1.02f, "Click to open the Mod Helper config and change settings"),
-                ("Reload SP", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
-                ("Reload MP", async () => await ReloadUtilities.MultiPlayerMainReload(), 1.02f, $"Reloads {reloadHoverMods}"),
+                ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
                 (" ", null, 1.15f, ""), // empty line
 
                 ($"Options", null, 1.15f, "General options for testing"),
@@ -145,7 +144,7 @@ namespace ModHelper.Common.Systems.Hooks
                 }
 
                 // Draw with an outline
-                DrawOutlinedStringOnMenu(Main.spriteBatch, FontAssets.MouseText.Value, text, drawPos, textColor,
+                DrawHelper.DrawOutlinedStringOnMenu(Main.spriteBatch, FontAssets.MouseText.Value, text, drawPos, textColor,
                     rotation: 0f, origin: Vector2.Zero, scale: scale, effects: SpriteEffects.None, layerDepth: 0f,
                     alphaMult: alpha);
 
@@ -388,50 +387,5 @@ namespace ModHelper.Common.Systems.Hooks
         }
 
         #endregion
-
-        #region draw
-
-        private static void DrawOutlinedStringOnMenu(SpriteBatch spriteBatch, DynamicSpriteFont font, string text,
-            Vector2 position, Color drawColor, float rotation, Vector2 origin, float scale, SpriteEffects effects,
-            float layerDepth, bool special = false, float alphaMult = 0.3f)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                Color color;
-                if (i == 4) // draw the main text last
-                {
-                    color = drawColor;
-                }
-                else // Draw the outline first
-                {
-                    color = Color.Black;
-                    if (special)
-                    {
-                        color.R = (byte)((255 + color.R) / 2);
-                        color.G = (byte)((255 + color.G) / 2);
-                        color.B = (byte)((255 + color.B) / 2);
-                    }
-                }
-                // Adjust alpha
-                color.A = (byte)(color.A * alphaMult);
-
-                // Outline offsets
-                int offX = 0;
-                int offY = 0;
-                switch (i)
-                {
-                    case 0: offX = -2; break;
-                    case 1: offX = 2; break;
-                    case 2: offY = -2; break;
-                    case 3: offY = 2; break;
-                }
-
-                // Draw text
-                spriteBatch.DrawString(font, text, position + new Vector2(offX, offY),
-                color, rotation, origin, scale, effects, layerDepth);
-            }
-        }
-        #endregion
-
     }
 }
