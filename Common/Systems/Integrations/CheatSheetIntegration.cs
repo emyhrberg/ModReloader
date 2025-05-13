@@ -89,7 +89,7 @@ namespace ModHelper.Common.Systems.Integrations
                         parent.Append(panel);          // move to top layer
                     }
                 },
-                tooltip: () => sys.mainState.modsPanel.GetActive() ? "Close mod menu" : "Open mod menu"
+                tooltip: () => sys.mainState.modsPanel.GetActive() ? "Close mod list" : "Open mod list"
             );
         }
 

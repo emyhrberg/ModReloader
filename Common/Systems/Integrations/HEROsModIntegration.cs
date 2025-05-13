@@ -119,7 +119,7 @@ namespace ModHelper.Common.Systems.Integrations
                 }),
 
                 // tooltip: reflect current state
-                () => sys.mainState.modsPanel.GetActive() ? "Close mod menu" : "Open mod menu"
+                () => sys.mainState.modsPanel.GetActive() ? "Close mod list" : "Open mod list"
             );
         }
 

@@ -1,9 +1,16 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using ModHelper.Common.Configs;
+using ModHelper.Helpers;
+using ReLogic.Graphics;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.ModLoader.UI;
 using Terraria.UI;
+using Terraria.UI.Chat;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ModHelper.UI.Elements.DebugElements
 {
@@ -43,10 +50,19 @@ namespace ModHelper.UI.Elements.DebugElements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-            // base.LeftClick(evt);
+             base.LeftClick(evt);
+
+            Active = !Active;
 
             // Open client log
             // Log.OpenClientLog();
+        }
+
+        public override void RightClick(UIMouseEvent evt)
+        {
+            base.RightClick(evt);
+
+            Conf.C.Open();
         }
 
         public override void Update(GameTime gameTime)
@@ -83,12 +99,11 @@ namespace ModHelper.UI.Elements.DebugElements
             SetText(text, 0.9f, large: false);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch sb)
         {
             //Top.Set(-5, 0);
             //Height.Set(20 * 3+10, 0);
 
-            // draw debug hitbox
             //DrawHelper.DrawDebugHitbox(this, Color.Green);
 
             if (!Active)
@@ -102,13 +117,23 @@ namespace ModHelper.UI.Elements.DebugElements
                 //return;
             }
 
-            base.Draw(spriteBatch);
+            base.Draw(sb);
 
             if (IsMouseHovering)
             {
-                // Main.LocalPlayer.mouseInterface = true; // disable item use if the button is hovered
-                string fileName = Path.GetFileName(Logging.LogPath);
-                //Main.hoverItemName = $"Left click to open {fileName}\nRight click to hide text";
+                //Vector2 pos = new(Main.MouseScreen.X-16, Main.MouseScreen.Y-24);
+                CalculatedStyle dims = this.GetDimensions();
+                Vector2 posHigh = dims.Position() + new Vector2(0,-18);
+
+                DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, "Click to hide debug info", posHigh, Color.White,
+                    rotation: 0f, origin: Vector2.Zero, scale: 0.8f, effects: SpriteEffects.None, layerDepth: 0f,
+                    alphaMult: 0.8f);
+
+                Vector2 posLow = dims.Position() + new Vector2(0,3);
+
+                DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, "Right click to open config", posLow, Color.White,
+                    rotation: 0f, origin: Vector2.Zero, scale: 0.8f, effects: SpriteEffects.None, layerDepth: 0f,
+                    alphaMult: 0.8f);
             }
         }
     }
