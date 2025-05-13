@@ -31,16 +31,19 @@ namespace ModHelper.Common.Configs
         [DefaultValue(0)]
         public int World;
 
-        [Header("Add")]
+        [Header("Improvements")]
 
         [DefaultValue(true)]
         public bool AddDebugText;
 
         [DefaultValue(true)]
-        public bool AddMainMenu;
+        public bool AddMainMenuText;
 
         [DefaultValue(true)]
-        public bool AddExceptionMenu;
+        public bool AddCopyToClipboardException;
+
+        [DefaultValue(true)]
+        public bool AddExceptionMenuImprovements;
 
         [Header("Misc")]
 

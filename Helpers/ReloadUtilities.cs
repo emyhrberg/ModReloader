@@ -52,8 +52,8 @@ namespace ModHelper.Helpers
                 // Check if there are any clients connected to the server
                 if (clientsCountInServer > 0)
                 {
-                    Main.NewText($"{clientsCountInServer} client(s) is connected. Can't proceed with SP reload");
-                    Log.Warn($"{clientsCountInServer} client(s) is connected. Can't proceed with SP reload");
+                    Main.NewText($"{clientsCountInServer} additional client(s) is connected. Can't proceed with SP reload");
+                    Log.Warn($"{clientsCountInServer} additional client(s) is connected. Can't proceed with SP reload");
                     return;
                 }
                 else

@@ -16,6 +16,7 @@ namespace ModHelper.Common.Systems.Integrations
             if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod) && !Main.dedServ)
             {
                 RegisterReloadButton(herosMod);
+                RegisterReloadMPButton(herosMod);
                 RegisterModsButton(herosMod);
                 RegisterUIButton(herosMod);
                 RegisterLogButton(herosMod);
@@ -51,6 +52,37 @@ namespace ModHelper.Common.Systems.Integrations
                 /* tooltipFunc:         */ (Func<string>)(() => $"Reload {string.Join(", ", Conf.C.ModsToReload)}")
             );
             Log.Info("HEROsMod reload button registered successfully.");
+        }
+
+        private static void RegisterReloadMPButton(Mod herosMod)
+        {
+            const string ReloadPermission = "ReloadMods";
+            const string ReloadPermissionDisplay = "Reload Selected Mods";
+
+            // Register a permission so admins can gate this button
+            herosMod.Call(
+                "AddPermission",
+                ReloadPermission,
+                ReloadPermissionDisplay
+            );
+
+            // Add the button itself
+            herosMod.Call(
+                "AddSimpleButton",
+                /* permissionName:      */ ReloadPermission,
+                /* texture:             */ Ass.ButtonReloadMP,
+                /* onClick action:      */ (Action)(async () =>
+                                           {
+                                               await ReloadUtilities.MultiPlayerMainReload();
+                                           }),
+                /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
+                                           {
+                                               if (!hasPerm)
+                                                   Main.NewText("⛔ You lost permission to reload mods!", Color.OrangeRed);
+                                           }),
+                /* tooltipFunc:         */ (Func<string>)(() => $"Reload {string.Join(", ", Conf.C.ModsToReload)}")
+            );
+            Log.Info("HEROsMod reloadMP button registered successfully.");
         }
 
         private static void RegisterModsButton(Mod herosMod)

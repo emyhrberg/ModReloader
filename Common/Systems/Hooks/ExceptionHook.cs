@@ -23,7 +23,7 @@ namespace ModHelper.Common.Systems.Hooks
         #region hooks
         public override void Load()
         {
-            if (Conf.C != null && !Conf.C.AddExceptionMenu)
+            if (Conf.C != null && !Conf.C.AddCopyToClipboardException)
             {
                 Log.Info("ExceptionHook: ImproveExceptionMenu is set to false. Not hooking into Error Menu.");
                 return;
@@ -33,7 +33,7 @@ namespace ModHelper.Common.Systems.Hooks
         }
         public override void Unload()
         {
-            if (Conf.C != null && !Conf.C.AddExceptionMenu)
+            if (Conf.C != null && !Conf.C.AddCopyToClipboardException)
             {
                 Log.Info("ExceptionHook: ImproveExceptionMenu is set to false. Not unloading the hook.");
                 return;
@@ -57,7 +57,7 @@ namespace ModHelper.Common.Systems.Hooks
             orig(menucolor, upbump);
 
             // Check if the feature is enabled in config
-            if (Conf.C == null || !Conf.C.AddExceptionMenu)
+            if (Conf.C == null || !Conf.C.AddCopyToClipboardException)
                 return;
 
             // Check if we're in an error screen
@@ -87,7 +87,7 @@ namespace ModHelper.Common.Systems.Hooks
             orig(menucolor, upbump);
 
             // Check if the feature is enabled in config
-            if (Conf.C == null || !Conf.C.AddExceptionMenu)
+            if (Conf.C == null || !Conf.C.AddCopyToClipboardException)
             {
                 // If the feature is disabled but button exists, remove it
                 if (buttonInitialized)

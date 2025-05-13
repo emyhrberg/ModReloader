@@ -86,7 +86,7 @@ namespace ModHelper.Common.Systems
             // Select the player and world
             SelectPlayerAndWorld();
 
-            // Join the server (code taken from Main.instance.OnSubmitServerPassword())
+            // Join the localhost server (code taken from Main.instance.OnSubmitServerPassword())
             Netplay.SetRemoteIP("127.0.0.1");
             Main.autoPass = true;
             Main.statusText = Lang.menu[8].Value;
@@ -154,7 +154,10 @@ namespace ModHelper.Common.Systems
                 throw new ArgumentNullException(nameof(world.Path), "World path cannot be null or empty.");
             }
 
-            Log.Info("HostMultiplayer. Found player: " + player.Name + ", world: " + world.Name);
+            Log.Info("SelectPlayerAndWorld. Found player: " + player.Name + ", world: " + world.Name);
+
+            // Announce that we have added the player to the world to the server (what server? we are in main menu)
+            // ModNetHandler.PlayersInLocalHost.SendPlayersInLocalHost(toWho: 255);
 
             Main.SelectPlayer(player);
             Main.ActiveWorldFileData = world;

@@ -28,6 +28,7 @@ namespace ModHelper.Common.Systems.Integrations
                 }
 
                 RegisterReloadButton();
+                RegisterReloadMPButton();
                 RegisterModsButton();
                 RegisterUIButton();
                 RegisterLogButton();
@@ -46,6 +47,22 @@ namespace ModHelper.Common.Systems.Integrations
             CheatSheetInterface.RegisterButton(
                 texture: reloadTex,
                 buttonClickedAction: async () => await ReloadUtilities.SinglePlayerReload(),
+                tooltip: () => $"Reload {modsToReload}"
+            );
+        }
+
+        private void RegisterReloadMPButton()
+        {
+            // Load the button icon
+            Asset<Texture2D> reloadTex = Ass.ButtonReloadMP;
+
+            // Build the mods‐to‐reload string
+            string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+
+            // Register the button: click runs your reload, tooltip shows the list
+            CheatSheetInterface.RegisterButton(
+                texture: reloadTex,
+                buttonClickedAction: async () => await ReloadUtilities.MultiPlayerMainReload(),
                 tooltip: () => $"Reload {modsToReload}"
             );
         }

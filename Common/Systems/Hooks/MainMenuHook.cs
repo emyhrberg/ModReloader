@@ -12,6 +12,11 @@ using ReLogic.Graphics;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.IO;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
+using Terraria.UI;
+using static Terraria.ModLoader.BackupIO;
 
 namespace ModHelper.Common.Systems.Hooks
 {
@@ -19,7 +24,7 @@ namespace ModHelper.Common.Systems.Hooks
     {
         public override void Load()
         {
-            if (Conf.C != null && !Conf.C.AddMainMenu)
+            if (Conf.C != null && !Conf.C.AddMainMenuText)
             {
                 Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not hooking into Main Menu.");
                 return;
@@ -30,13 +35,12 @@ namespace ModHelper.Common.Systems.Hooks
         public override void Unload()
         {
             // Unload the hook
-            if (Conf.C != null && !Conf.C.AddMainMenu)
+            if (Conf.C != null && !Conf.C.AddMainMenuText)
             {
                 Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not unloading the hook into Main Menu.");
                 return;
             }
             On_Main.DrawVersionNumber -= DrawMenuOptions;
-
         }
         #region draw hook
         private static void DrawMenuOptions(On_Main.orig_DrawVersionNumber orig, Color menucolor, float upbump)
@@ -51,7 +55,7 @@ namespace ModHelper.Common.Systems.Hooks
             if (Main.menuMode != 0) return;
 
             // Check the config
-            if (Conf.C != null && !Conf.C.AddMainMenu)
+            if (Conf.C != null && !Conf.C.AddMainMenuText)
             {
                 // Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not drawing menu options.");
                 return;
@@ -67,28 +71,25 @@ namespace ModHelper.Common.Systems.Hooks
             // If other mods exist, move down a bit
             if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
             {
-                drawPos.Y = Main.screenHeight / 2f - 74;
+                drawPos.Y += 210;
             }
+
+            if (ModLoader.HasMod("CompatChecker"))
+            {
+                drawPos.Y += 30;
+            }
+
+            // Get names and tooltips for menu options
             string fileName = Path.GetFileName(Logging.LogPath);
-
-            //List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
-
-            string reloadHoverMods;
-            if (ReloadUtilities.IsModsToReloadEmpty)
-            {
-                reloadHoverMods = "No mods selected";
-            }
-            else
-            {
-                reloadHoverMods = string.Join(",", Conf.C.ModsToReload);
-            }
+            string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
 
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
                 ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers main menu! Join worlds, change options, reload, etc..."),
-                ("Open config", OpenConfig, 1.02f, "Click to open the Mod Helper config and change settings"),
-                ("Reload", async () => await ReloadSelectedMod(), 1.02f, $"Reload {reloadHoverMods}"),
+                ("Open config", () => Conf.C.Open(), 1.02f, "Click to open the Mod Helper config and change settings"),
+                ("Reload SP", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
+                ("Reload MP", async () => await ReloadUtilities.MultiPlayerMainReload(), 1.02f, $"Reloads {reloadHoverMods}"),
                 (" ", null, 1.15f, ""), // empty line
 
                 ($"Options", null, 1.15f, "General options for testing"),
@@ -102,8 +103,7 @@ namespace ModHelper.Common.Systems.Hooks
                 (" ", null, 1.15f, ""), // empty line
                 ($"Multiplayer", null, 1.15f, "Options for entering and testing multiple clients"),
                 ("Host Multiplayer", AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, "Start a multiplayer world with last selected player and world"),
-                ("Join Multiplayer", AutoloadPlayerInWorldSystem.EnterMultiplayerWorld, 1.02f, "Enter the multiplayer world with first available player (server required)"),
-
+                ("Join Multiplayer", JoinMultiplayerNew, 1.02f, "Enter the multiplayer world with first available player (server required)"),
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)
@@ -157,28 +157,6 @@ namespace ModHelper.Common.Systems.Hooks
         #endregion
 
         #region actions
-
-        private static void OpenConfig()
-        {
-            // this does the same as below code
-            Conf.C.Open();
-
-            return;
-        }
-
-        private static async Task ReloadSelectedMod()
-        {
-            // read the json and add the mods to the list
-            //List<string> modsToReloadFromJson = ModsToReloadJsonHelper.ReadModsToReload();
-            //ReloadUtilities.ModsToReload.Clear();
-            //foreach (var mod in modsToReloadFromJson)
-            //{
-            //ReloadUtilities.ModsToReload.Add(mod);
-            //}
-
-            // Reload the selected mod
-            await ReloadUtilities.SinglePlayerReload();
-        }
 
         private static void StartClient()
         {
@@ -254,7 +232,45 @@ namespace ModHelper.Common.Systems.Hooks
             }
         }
 
+        private static void JoinMultiplayerNew()
+        {
+            Log.Info("[MainMenuHook] Trying to join localhost server with a player not already on the server");
+
+            // ── 1. Load local characters ────────────────────────────────────
+            Main.LoadPlayers();
+            if (Main.PlayerList is null || Main.PlayerList.Count == 0)
+            {
+                Log.Error("No local players found.");
+                return;
+            }
+
+            // ── 2. Choose a player that is NOT the one in Conf.C.Player ─────
+            int cfgIndex = Conf.C.Player;                    // the one we want to avoid
+            if (cfgIndex < 0 || cfgIndex >= Main.PlayerList.Count)
+                cfgIndex = 0;                               // keep it in range
+
+            int chosenIndex = -1;
+            for (int i = 0; i < Main.PlayerList.Count; i++)
+            {
+                if (i != cfgIndex) { chosenIndex = i; break; }   // first non-config slot
+            }
+            if (chosenIndex == -1) chosenIndex = cfgIndex;       // only one character
+
+            PlayerFileData playerToJoinWith = Main.PlayerList[chosenIndex];
+            Log.Info($"Selected player index {chosenIndex}: {playerToJoinWith.Name}");
+            Main.SelectPlayer(playerToJoinWith);
+
+            // ── 3. Connect to localhost ─────────────────────────────────────
+            Netplay.SetRemoteIP("127.0.0.1");
+            Main.autoPass = true;
+            Main.statusText = Lang.menu[8].Value;           // “Connecting…”
+            Netplay.StartTcpClient();
+            Main.menuMode = 10;
+        }
+
         [Obsolete("Just use EnterMultiplayerWorld")]
+        // Comment by Erky:
+        // no cotlim, using EnterMultiplayerWorld doesnt work, we want to join with a player that is not already in the server
         private static void JoinMultiplayer()
         {
             // Simply join localhost, easy.
@@ -273,13 +289,13 @@ namespace ModHelper.Common.Systems.Hooks
             // var player = Main.PlayerList[random.Next(Main.PlayerList.Count)];
 
             // Get a list of active players in the server
-            List<Player> activePlayers = Main.player.Where(p => p != null && p.active).ToList();
+            List<Terraria.Player> activePlayers = Main.player.Where(p => p != null && p.active).ToList();
 
             // Get a list of all player file data
             // Select the first player that is not already in the active players list
             foreach (var p in Main.PlayerList)
             {
-                Player player = p.Player;
+                Terraria.Player player = p.Player;
 
                 if (!activePlayers.Contains(player))
                 {

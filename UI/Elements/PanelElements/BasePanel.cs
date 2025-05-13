@@ -141,7 +141,7 @@ namespace ModHelper.UI.Elements.PanelElements
 
         protected HeaderElement AddHeader(string title, Action onLeftClick = null, string hover = "")
         {
-            HeaderElement headerElement = new(title);
+            HeaderElement headerElement = new(title, hover);
             headerElement.OnLeftClick += (mouseEvent, element) => onLeftClick?.Invoke();
             uiList.Add(headerElement);
             return headerElement;
@@ -179,7 +179,7 @@ namespace ModHelper.UI.Elements.PanelElements
 
         public override bool ContainsPoint(Vector2 point)
         {
-            // If the panel isn’t active, pretend it’s not there for hit-testing.
+            // If the panel isnï¿½t active, pretend itï¿½s not there for hit-testing.
             return Active && base.ContainsPoint(point);
         }
 
