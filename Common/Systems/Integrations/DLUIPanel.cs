@@ -62,7 +62,7 @@ namespace ModHelper.Common.Systems.Integrations
             {
                 GUIHelper.DrawOutline(spriteBatch, new Rectangle(position.X - 4, position.Y - 4, 46, 46), ThemeHandler.ButtonColor.InvertColor());
 
-                Texture2D tex = Assets.Misc.GlowAlpha.Value;
+                Texture2D tex = DragonLensAssets.Misc.GlowAlpha.Value;
                 Color color = new Color(255, 215, 150);
                 color.A = 0;
                 var target = new Rectangle(position.X, position.Y, 38, 38);
