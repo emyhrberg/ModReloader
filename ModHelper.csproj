@@ -18,7 +18,7 @@
 
 		<!-- integration with DL, CheatSheet and HerosMod-->
 		<Reference Include="DragonLens">
-		  <HintPath>lib\DragonLens.dll</HintPath>
+			<HintPath>lib\DragonLens.dll</HintPath>
 		</Reference>
 		<Reference Include="CheatSheet">
 			<HintPath>lib\CheatSheet.dll</HintPath>

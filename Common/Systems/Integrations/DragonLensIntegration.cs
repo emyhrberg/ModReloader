@@ -26,7 +26,7 @@ namespace ModHelper.Common.Systems.Integrations
                 provider.icons["ReloadMP"] = Ass.ButtonReloadMP.Value;
             }
 
-            // rebuild toolbars *after* icons have been injected
+            // rebuild toolbars *after* icons (and tools) have been injected
             ModContent.GetInstance<ToolbarHandler>().OnModLoad();
         }
     }

@@ -1,6 +1,11 @@
-﻿using DragonLens.Core.Systems.ToolSystem;
+﻿using AssGen;
+using DragonLens.Core.Systems.ThemeSystem;
+using DragonLens.Core.Systems.ToolSystem;
+using DragonLens.Helpers;
+using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Helpers;
 using ModHelper.UI.Elements.PanelElements;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace ModHelper.Common.Systems.Integrations
@@ -36,13 +41,33 @@ namespace ModHelper.Common.Systems.Integrations
             {
                 uiPanel.SetActive(true);
 
-                // bring to front …
+                // bring to front …  
                 if (uiPanel.Parent is not null)
                 {
                     UIElement parent = uiPanel.Parent;
                     uiPanel.Remove();
                     parent.Append(uiPanel);
                 }
+            }
+        }
+
+        public override void DrawIcon(SpriteBatch spriteBatch, Rectangle position)
+        {
+            base.DrawIcon(spriteBatch, position);
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+
+            BasePanel uiPanel = sys.mainState.uiElementPanel;
+
+            if (uiPanel.GetActive())
+            {
+                GUIHelper.DrawOutline(spriteBatch, new Rectangle(position.X - 4, position.Y - 4, 46, 46), ThemeHandler.ButtonColor.InvertColor());
+
+                Texture2D tex = Assets.Misc.GlowAlpha.Value;
+                Color color = new Color(255, 215, 150);
+                color.A = 0;
+                var target = new Rectangle(position.X, position.Y, 38, 38);
+
+                spriteBatch.Draw(tex, target, color);
             }
         }
     }
