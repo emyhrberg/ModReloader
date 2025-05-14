@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
+using ModHelper.Common.Configs;
 using ModHelper.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
@@ -30,16 +31,8 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
 
         public async override void LeftClick(UIMouseEvent evt)
         {
-            //ReloadUtilities.ModsToReload.Clear();
-            //if (!ReloadUtilities.ModsToReload.Contains(internalModName))
-            //{
-            //ReloadUtilities.ModsToReload.Add(internalModName);
-            //}
-
-            // Set config.ModToReload to the mod name.
-            // Conf.C.ModToReload = internalModName;
-            // Conf.Save();
-
+            Conf.C.ModsToReload = [internalModName];
+            Conf.Save();
             await ReloadUtilities.SinglePlayerReload();
         }
 
