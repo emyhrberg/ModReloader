@@ -21,7 +21,7 @@ namespace ModHelper.Common.Systems
         {
             userInterface?.Update(gameTime);
             //ChatPosHook.OffsetX = -20;
-            ChatPosHook.OffsetY = -15;
+            //ChatPosHook.OffsetY = -15;
         }
 
         // boilerplate code to draw the UI

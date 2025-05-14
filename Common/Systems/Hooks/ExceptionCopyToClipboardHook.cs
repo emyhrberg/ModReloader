@@ -23,7 +23,7 @@ namespace ModHelper.Common.Systems.Hooks
         #region hooks
         public override void Load()
         {
-            if (Conf.C != null && !Conf.C.AddExceptionMenuCopyToClipboardText)
+            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
             {
                 Log.Info("ExceptionCopyToClipboardHook: ImproveExceptionMenu is set to false. Not hooking into Error Menu.");
                 return;
@@ -32,7 +32,7 @@ namespace ModHelper.Common.Systems.Hooks
         }
         public override void Unload()
         {
-            if (Conf.C != null && !Conf.C.AddExceptionMenuCopyToClipboardText)
+            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
             {
                 Log.Info("ExceptionCopyToClipboardHook: ImproveExceptionMenu is set to false. Not unloading the hook.");
                 return;
@@ -55,7 +55,7 @@ namespace ModHelper.Common.Systems.Hooks
             orig(menucolor, upbump);
 
             // Check if the feature is enabled in config
-            if (Conf.C == null || !Conf.C.AddExceptionMenuCopyToClipboardText)
+            if (Conf.C == null || !Conf.C.ShowCopyToClipboardButton)
             {
                 // If the feature is disabled but button exists, remove it
                 if (buttonInitialized)
@@ -121,7 +121,7 @@ namespace ModHelper.Common.Systems.Hooks
             {
                 if (child is UITextPanel<string> textPanel && textPanel.Text == "Open Web Help")
                 {
-                    Log.Info("Found Web Help button. Moving our button.");
+                    //Log.SlowInfo("Found Web Help button. Moving our button.");
                     webHelpButtonExists = true;
                     break;
                 }
@@ -130,8 +130,8 @@ namespace ModHelper.Common.Systems.Hooks
             float yOffset = 0;
             if (webHelpButtonExists)
             {
-                yOffset = -800;
-                //return;
+                //yOffset = -800;
+                return;
             }
 
             // Create a standard UITextPanel with typical tModLoader colors

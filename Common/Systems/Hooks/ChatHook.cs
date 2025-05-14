@@ -5,12 +5,11 @@ using Terraria.GameContent.UI.Chat;
 
 namespace ModHelper.Common.Systems.Hooks;
 
-// ── IL hook that patches *both* methods ───────────────────────────
 public class ChatPosHook : ModSystem
 {
     // ── offsets, kept as two floats ───────────────────────────────────
     public static float OffsetX = 0;         // +right / –left
-    public static float OffsetY = 0;         // +down  / –up
+    public static float OffsetY = -25;         // +down  / –up
 
     public override void Load()
     {

@@ -9,8 +9,7 @@ namespace ModHelper.UI.Elements.ButtonElements
     public class ReloadMPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set custom animation dimensions
-        private float _scale = 1.15f;
-        protected override float Scale => _scale;
+        protected override float BaseAnimScale => 1.15f;
         protected override int FrameCount => 5;
         protected override int FrameSpeed => 12;
         protected override int FrameWidth => 65;

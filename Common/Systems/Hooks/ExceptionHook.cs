@@ -30,7 +30,7 @@ namespace ModHelper.Common.Systems.Hooks
         #region hooks
         public override void Load()
         {
-            if (Conf.C != null && !Conf.C.AddExceptionMenuCopyToClipboardText)
+            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
             {
                 Log.Info("ExceptionHook: ImproveExceptionMenu is set to false. Not hooking into Error Menu.");
                 return;
@@ -39,7 +39,7 @@ namespace ModHelper.Common.Systems.Hooks
         }
         public override void Unload()
         {
-            if (Conf.C != null && !Conf.C.AddExceptionMenuCopyToClipboardText)
+            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
             {
                 Log.Info("ExceptionHook: ImproveExceptionMenu is set to false. Not unloading the hook.");
                 return;
@@ -62,7 +62,7 @@ namespace ModHelper.Common.Systems.Hooks
         private static bool IsInErrorUI()
         {
             // Check if the feature is enabled in config
-            if (Conf.C == null || !Conf.C.AddExceptionMenuText)
+            if (Conf.C == null || !Conf.C.ShowErrorMenuInfo)
                 return false;
 
             // Check if we're in an error screen
@@ -97,7 +97,7 @@ namespace ModHelper.Common.Systems.Hooks
                     childrenCount++;
                     if (child is UITextPanel<string> textPanel && textPanel.Text == "Open Web Help")
                     {
-                        Log.Info("Found Web Help button. Moving our button.");
+                        Log.SlowInfo("Found Web Help button. Moving our button.");
                         webHelpFound = true;
                     }
                 }
@@ -127,7 +127,7 @@ namespace ModHelper.Common.Systems.Hooks
 
             if (WebHelpButtonExists())
             {
-                Log.SlowInfo("Ugh, web help.");
+                Log.SlowInfo("Ugh, web help.", seconds: 5);
             }
 
             // Start at top-left corner
@@ -177,7 +177,7 @@ namespace ModHelper.Common.Systems.Hooks
                 if (hovered)
                 {
                     // Draw tooltip
-                    DrawHelper.DrawMainMenuTooltipPanel(tooltip, extraXOffset: 0, extraYOffset: -325, extraHeight: -35);
+                    DrawHelper.DrawMainMenuTooltipPanel(tooltip, extraXOffset: 130, extraYOffset: -430, extraHeight: 65, extraWidth: -150);
 
                     Main.LocalPlayer.mouseInterface = true;
                     // Click

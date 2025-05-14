@@ -100,13 +100,13 @@ namespace ModHelper.Helpers
         /// <summary>
         /// Draw a tooltip panel at a hardcoded position in the main menu
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset =0, int extraYOffset=0, int extraHeight = 0)
+        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset =0, int extraYOffset=0, int extraHeight = 0, int extraWidth = 0)
         {
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
             // The panel is 200x50, centered on that point.
             Vector2 basePos = new Vector2(108, Main.screenHeight / 2f);
-            int width = 300;
+            int width = 300 + extraWidth;
             int height = 70 + extraHeight;
             int xOffset = -100 + extraXOffset;
             int yOffset = 30 + extraYOffset;
@@ -141,7 +141,7 @@ namespace ModHelper.Helpers
                         currentLine = word;
                     lines.Add(currentLine);
                     currentLine = word;
-                    if (lines.Count == 2) // Limit to two lines.
+                    if (lines.Count == 4) // Limit to two lines.
                         break;
                 }
                 else
@@ -149,7 +149,7 @@ namespace ModHelper.Helpers
                     currentLine = testLine;
                 }
             }
-            if (lines.Count < 2 && !string.IsNullOrEmpty(currentLine))
+            if (lines.Count < 4 && !string.IsNullOrEmpty(currentLine))
                 lines.Add(currentLine);
 
             // If more words remain and we've already created two lines, you might want to append ellipsis.

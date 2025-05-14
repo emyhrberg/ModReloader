@@ -27,9 +27,6 @@ namespace ModHelper.UI.Elements.ButtonElements
         public bool Active = true;
         public bool ParentActive = false;
 
-        // Tag for index positioning when dragging
-        public object Tag { get; set; } = null;
-
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed
@@ -38,7 +35,10 @@ namespace ModHelper.UI.Elements.ButtonElements
         public BasePanel AssociatedPanel { get; set; } = null; // the panel associated with this button
 
         // Animations variables to be set by child classes. virtual means it can be overridden by child classes.
-        protected virtual float Scale { get; set; } = 1; // the scale of the animation.
+        protected virtual float BaseAnimScale => 1f;    // default
+        private float Scale
+            => BaseAnimScale
+               * ModContent.GetInstance<MainSystem>().mainState.UIScale;
         protected virtual int StartFrame => 1;
         protected virtual int FrameCount => 1;
         protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
@@ -62,12 +62,19 @@ namespace ModHelper.UI.Elements.ButtonElements
 
             // Set textScale based on buttonscale.
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            TextScale = sys?.mainState?.TextSize ?? 0.9f;
-            // Log.Info("TextScale: " + TextScale);
+            var state = sys.mainState;
+
+            // 1) drive size
+            Width.Set(state.ButtonSize, 0f);
+            Height.Set(state.ButtonSize, 0f);
+
+            // 2) center and bottom-align
+            VAlign = 1f;
+            HAlign = 0.5f;
 
             // Add a UIText centered horizontally at the bottom of the button.
             // Set the scale; 70f seems to fit to 0.9f scale.
-            ButtonText = new ButtonText(text: buttonText, textScale: TextScale, large: false);
+            ButtonText = new ButtonText(text: buttonText, textScale: 0.9f, large: false);
             Append(ButtonText);
         }
         #endregion
@@ -96,13 +103,16 @@ namespace ModHelper.UI.Elements.ButtonElements
 
             // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            float buttonSize = sys.mainState?.ButtonSize ?? 70f;
 
             // Update the scale based on the buttonsize. 70f means a scale of 1. For every 10 pixels, the scale is increased by 0.1f.
-
             // Get the dimensions based on the button size.
             CalculatedStyle dimensions = GetInnerDimensions();
-            Rectangle drawRect = new((int)dimensions.X, (int)dimensions.Y, (int)buttonSize, (int)buttonSize);
+            var state = ModContent.GetInstance<MainSystem>().mainState;
+            float s = state.ButtonSize;
+            Rectangle drawRect = new(
+                (int)dimensions.X, (int)dimensions.Y,
+                (int)s, (int)s
+            );
 
             // Set the opacity based on mouse hover.
             opacity = IsMouseHovering ? 1f : 0.9f; // Determine opacity based on mouse hover.
@@ -118,14 +128,6 @@ namespace ModHelper.UI.Elements.ButtonElements
                 spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Black * 0.3f);
             }
 
-            // if (this is ReloadSPButton || this is ReloadMPButton || this is LaunchButton)
-            // {
-            //     // Draw the button with full opacity.
-            //     spriteBatch.Draw(ButtonNoOutline.Value, drawRect, Color.Green * 0.5f);
-            // }
-
-            //Log.Info("parent active: " + ParentActive + "name: " + HoverText);
-
             if (ParentActive)
             {
                 // Scale down the highlight and center it
@@ -138,9 +140,6 @@ namespace ModHelper.UI.Elements.ButtonElements
                 );
                 spriteBatch.Draw(ButtonHighlight.Value, scaledRect, Color.White * 0.7f);
             }
-
-            //if (IsMouseHovering)
-            //DrawHelper.DrawProperScale(spriteBatch, this, ButtonHover.Value, scale: 0.92f);
 
             // Draw the animation texture
             if (Spritesheet != null)
@@ -172,16 +171,6 @@ namespace ModHelper.UI.Elements.ButtonElements
                 // Draw the spritesheet.
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
             }
-
-            // Update: Drawing is now done in MainState
-            /// <see cref="MainState"/> 
-            // Draw tooltip text if hovering and HoverText is given (see MainState).
-            // if (!string.IsNullOrEmpty(HoverText) && IsMouseHovering)
-            // {
-            //     UICommon.TooltipMouseText(HoverText);
-
-            //     DrawHelper.DrawTooltipPanel(this, "a", HoverText); // Draw the tooltip panel
-            // }
         }
         #endregion
 
@@ -190,30 +179,6 @@ namespace ModHelper.UI.Elements.ButtonElements
         {
             if (!Active) // Dont allow clicking if button is disabled.
                 return false;
-
-            // try
-            // {
-            //     if (Main.InGameUI != null)
-            //     {
-            //         var currentStateProp = Main.InGameUI.GetType().GetProperty("CurrentState", BindingFlags.Public | BindingFlags.Instance);
-            //         if (currentStateProp != null)
-            //         {
-            //             var currentState = currentStateProp.GetValue(Main.InGameUI);
-            //             if (currentState != null)
-            //             {
-            //                 string stateName = currentState.GetType().Name;
-            //                 if (stateName.Contains("Config"))
-            //                 {
-            //                     return false;
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
-            // catch (Exception ex)
-            // {
-            //     Log.Error("Error checking UI state in ContainsPoint: " + ex.Message);
-            // }
 
             return base.ContainsPoint(point);
         }
@@ -259,6 +224,10 @@ namespace ModHelper.UI.Elements.ButtonElements
             {
                 Main.LocalPlayer.mouseInterface = true;
             }
+
+            // center the buttontext
+            //ButtonText.HAlign = 0.5f;
+            //ButtonText.VAlign = 0.85f;
         }
     }
 }

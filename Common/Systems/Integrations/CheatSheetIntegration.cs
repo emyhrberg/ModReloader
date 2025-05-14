@@ -21,6 +21,7 @@ namespace ModHelper.Common.Systems.Integrations
                 // I hope this works, it may not work because of the order of the mods loaded.
                 // I believe they are loaded in alphabetical order.
                 // Update: It worked once during testing, so its fine for now.
+                // Update 2: Maybe we should use sortAfter or sortBefore in build.txt to ensure mods load in the right order?
                 if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod))
                 {
                     Log.Info("HEROsMod is loaded, skipping CheatSheet integration.");

@@ -26,6 +26,7 @@ namespace ModHelper.UI.Elements.PanelElements
             AddPadding(20);
 
             AddHeader(title: "Log Level", hover: "Set the log level for each logger (0-5): Off, Error, Warn, Info, Debug, All");
+            AddPadding(3);
 
             // Get all loggers and sort them
             ILog[] sortedLoggers = LogManager.GetCurrentLoggers()

@@ -9,8 +9,7 @@ namespace ModHelper.UI.Elements.ButtonElements
     public class UIElementButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Sprite size
-        private float _scale = 1.3f;
-        protected override float Scale => _scale;
+        protected override float BaseAnimScale => 1.3f;
         protected override int FrameWidth => 28;
         protected override int FrameHeight => 24;
 

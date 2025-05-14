@@ -9,12 +9,13 @@ namespace ModHelper.Common.Systems.Integrations
     [ExtendsFromMod("DragonLens")]
     public class DragonLensIntegration : ModSystem
     {
+
         public override void PostSetupContent()
         {
             AddIcons();
         }
 
-        private static void AddIcons()
+        public static void AddIcons()
         {
             foreach (var provider in ThemeHandler.allIconProviders.Values)
             {

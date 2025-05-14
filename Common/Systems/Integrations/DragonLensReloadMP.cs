@@ -6,7 +6,7 @@ namespace ModHelper.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
-    public class DLReloadMP : Tool
+    public class DragonLensReloadMP : Tool
     {
         public override string IconKey => "ReloadMP";
 

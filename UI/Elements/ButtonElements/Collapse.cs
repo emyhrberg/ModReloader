@@ -24,7 +24,7 @@ namespace ModHelper.UI.Elements.ButtonElements
             // Size and position
             Width.Set(37, 0);
             Height.Set(15, 0);
-            Left.Set(-35, 0); // CUSTOM CUSTOM CUSTOM -20!
+            //Left.Set(-35, 0); // CUSTOM CUSTOM CUSTOM -20!
             Top.Set(-70 + 10, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
@@ -47,6 +47,41 @@ namespace ModHelper.UI.Elements.ButtonElements
                 UpdateButtonVisibility();
                 UpdateCollapseImage();
             }
+        }
+
+        public void RecalculateSizeAndPosition()
+        {
+            var state = ModContent.GetInstance<MainSystem>().mainState;
+            float bs = state.ButtonSize;
+
+            // pick whatever aspect‐ratio you like for the little arrow
+            float w = bs * 0.5f;
+            float h = bs * 0.2f;
+
+            Width .Set(w, 0f);
+            Height.Set(h, 0f);
+
+            // always centre horizontally & hug bottom
+            HAlign = 0.5f;
+            VAlign = 0.99f;
+
+            if (state.AreButtonsShowing)
+            {
+                // up
+                Top.Set((int)-70 * state.UIScale+5*state.UIScale, 0);
+            }
+            else
+            {
+                Top.Set(0, 0);
+            }
+
+            // custom x for smaller scales
+            if (state.UIScale < 1.0)
+            {
+                Left.Set(-2, 0);
+            }
+
+            Recalculate(); // push updates through immediately
         }
 
         private void UpdateButtonVisibility()

@@ -7,8 +7,7 @@ namespace ModHelper.UI.Elements.ButtonElements
     public class LogButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
         // Set custom animation dimensions
-        private float _scale = 0.5f;
-        protected override float Scale => _scale;
+        protected override float BaseAnimScale => 0.5f;
         protected override int FrameCount => 16;
         protected override int FrameSpeed => 4;
         protected override int FrameWidth => 74;
