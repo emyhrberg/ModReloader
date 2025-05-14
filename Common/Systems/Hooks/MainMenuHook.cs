@@ -4,19 +4,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ModHelper.Common.Configs;
 using ModHelper.Helpers;
-using ReLogic.Graphics;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.IO;
-using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
-using Terraria.UI;
-using static Terraria.ModLoader.BackupIO;
 
 namespace ModHelper.Common.Systems.Hooks
 {

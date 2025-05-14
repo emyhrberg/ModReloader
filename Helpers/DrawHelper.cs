@@ -100,16 +100,17 @@ namespace ModHelper.Helpers
         /// <summary>
         /// Draw a tooltip panel at a hardcoded position in the main menu
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(string text)
+        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset =0, int extraYOffset=0, int extraHeight = 0)
         {
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
             // The panel is 200x50, centered on that point.
             Vector2 basePos = new Vector2(108, Main.screenHeight / 2f);
             int width = 300;
-            int height = 70;
-            int yOffset = -50;
-            Rectangle tooltipRect = new Rectangle((int)basePos.X - 100, (int)basePos.Y - yOffset, width, height);
+            int height = 70 + extraHeight;
+            int xOffset = -100 + extraXOffset;
+            int yOffset = 30 + extraYOffset;
+            Rectangle tooltipRect = new Rectangle((int)basePos.X +xOffset, (int)basePos.Y + yOffset, width, height);
 
             // Draw background panel.
             Color darkBlue = ColorHelper.DarkBluePanel;

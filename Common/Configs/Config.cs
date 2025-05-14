@@ -40,10 +40,10 @@ namespace ModHelper.Common.Configs
         public bool AddMainMenuText;
 
         [DefaultValue(true)]
-        public bool AddCopyToClipboardException;
+        public bool AddExceptionMenuText;
 
         [DefaultValue(true)]
-        public bool AddExceptionMenuImprovements;
+        public bool AddExceptionMenuCopyToClipboardText;
 
         [Header("Misc")]
 

@@ -97,5 +97,15 @@ Configs: {
 			Label: Log Debug Messages
 			Tooltip: (Optional) Most useful for developers, this option may help to debug possible bugs
 		}
+
+		AddExceptionMenuText: {
+			Label: Add Exception Menu Text
+			Tooltip: ""
+		}
+
+		AddExceptionMenuCopyToClipboardText: {
+			Label: Add Exception Menu Copy To Clipboard Text
+			Tooltip: ""
+		}
 	}
 }
