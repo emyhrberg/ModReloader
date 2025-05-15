@@ -31,19 +31,19 @@ namespace ModHelper.Common.Configs
         [DefaultValue(0)]
         public int World;
 
-        [Header("Improvements")]
+        [Header("ExtraInfo")]
 
         [DefaultValue(true)]
-        public bool AddDebugText;
+        public bool ShowDebugInfo;
 
         [DefaultValue(true)]
-        public bool AddMainMenuText;
+        public bool ShowMainMenuInfo;
 
         [DefaultValue(true)]
-        public bool AddExceptionMenuText;
+        public bool ShowErrorMenuInfo;
 
         [DefaultValue(true)]
-        public bool AddExceptionMenuCopyToClipboardText;
+        public bool ShowCopyToClipboardButton;
 
         [Header("Misc")]
 
@@ -71,7 +71,7 @@ namespace ModHelper.Common.Configs
         }
 
         // Instance of the Config class
-        // Use it like Conf.C for easy access to the config values
+        // Use it like 'Conf.C.YourConfigField' for easy access to the config values
         public static Config C => ModContent.GetInstance<Config>();
     }
 }

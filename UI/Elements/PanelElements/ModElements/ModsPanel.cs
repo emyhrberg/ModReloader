@@ -157,7 +157,10 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
             {
                 // 1. Check if the mod name contains the current filter string (ignoring case).
                 //    (When currentFilter is empty, this always returns true.)
-                bool matchSearch = modElement.cleanModName.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
+                bool matchCleanModName = modElement.cleanModName.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
+
+                // 1b. Check internal mod name
+                bool matchInternalModName = modElement.internalModName.Contains(currentFilter, StringComparison.OrdinalIgnoreCase);
 
                 // 2. Check if the mod should be included based on the Enabled/Disabled filter.
                 bool matchEnabledDisabled = true;
@@ -176,7 +179,7 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
                 bool matchSide = modFilterSide.currentModSideFilter == ModFilterSideButton.ModFilterSide.All ||
                     string.Equals(modElement.side, modFilterSide.currentModSideFilter.ToString(), StringComparison.OrdinalIgnoreCase);
 
-                if (matchSearch && matchEnabledDisabled && matchSide)
+                if ((matchCleanModName || matchInternalModName) && matchEnabledDisabled && matchSide)
                 {
                     filteredMods.Add(modElement);
                 }
@@ -266,8 +269,6 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
                 // Log.Info("Adding mod " + internalName + " version " + currMod.Version + " to enabled mods.");
 
                 // Get the clean name using reflection for the LocalMod mod.
-                // string cleanName = GetCleanName(localMod);
-                // string description = GetLocalModDescription(localMod);
                 string cleanName = localMod.DisplayNameClean;
                 string description = localMod.properties.description ?? string.Empty;
 
@@ -302,7 +303,6 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
                 // Get the clean name using reflection for the LocalMod mod.
                 string cleanName = mod.DisplayNameClean;
                 string internalName = mod.ToString();
-                // string description = GetLocalModDescription(mod);
                 string description = mod.properties.description;
                 string short_desc = description.Length > 50 ? description.Substring(0, 50) + "..." : description;
                 // Log.Info("Mod name: " + cleanName + " InternalName: " + internalName + " Description: " + short_desc);
@@ -344,16 +344,7 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
         }
 
         #endregion
-
         #region Helpers mod lists
-        // Note: Lots of reflection is used here, so be careful with error handling.
-
-        // Helper method to get clean name from a mod object
-        private static string GetCleanName(object mod)
-        {
-            FieldInfo displayNameField = mod.GetType().GetField("DisplayNameClean", BindingFlags.Public | BindingFlags.Instance);
-            return (string)displayNameField.GetValue(mod);
-        }
 
         private static Texture2D GetModIconFromAllMods(TmodFile tmodFile)
         {

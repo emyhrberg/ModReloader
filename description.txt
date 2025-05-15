@@ -1,11 +1,11 @@
-ModHelper is the ultimate Terraria testing tool for modders and players who want full control.
+Mod Helper is the ultimate testing tool for modders and players who want full control.
 
 Features:
-🔹 Seamless Reload – Instantly reload selected mods, even in multiplayer.
-🔹 In-Game Mod Toggle – Enable/disable mods mid-game with advanced filters.
-🔹 Publicizer Support – Access internal APIs with Krafs.Publicizer integration.
-🔹 Main Menu Boost – Jump into testing faster with UI improvements.
-🔹 Exception Menu Upgrade – Copy errors, and soon: retry, prettier logs, and jump-to-code.
-🔹 UI Integration – Works with CheatSheet, Hero’s Mod, and DragonLens.
+- Seamless Reload – Instantly reload selected mods, even in multiplayer.
+- In-Game Mod Toggle – Enable/disable mods mid-game with advanced filters.
+- Publicizer Support – Access internal APIs, including tModLoader, with publicizer integration.
+- Main Menu Upgrade – Test faster with UI improvements.
+- Exception Menu Upgrade – Copy errors, retry, prettier logs, and jump-to-code.
+- UI Integration – Works with CheatSheet, Hero’s Mod, and DragonLens.
 
 And as always, every feature is toggleable and customizable in the menu and config.

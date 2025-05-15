@@ -42,7 +42,8 @@ namespace ModHelper.UI.Elements.PanelElements.ModElements
             tex = Ass.ConfigOpen;
             // Main.NewText("Closing config for " + modName, new Color(226, 57, 39));
             Main.menuMode = 0;
-            Main.InGameUI.SetState(null);
+            //Main.InGameUI.SetState(null);
+            IngameFancyUI.Close();
             isInfoOpen = false;
 
             // If this is the currently open config, clear the static reference

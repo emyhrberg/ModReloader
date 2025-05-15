@@ -11,7 +11,7 @@ namespace ModHelper.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
-    public class DLModsPanel : Tool
+    public class DragonLensModsPanel : Tool
     {
         public override string IconKey => "Mods";
 

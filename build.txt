@@ -1,5 +1,5 @@
 displayName = Mod Helper
-author = Erky
+author = Erky & Cotlim
 version = 0.1
 side = both
 buildIgnore = Assets\Old*, icon.psd

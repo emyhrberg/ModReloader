@@ -11,7 +11,7 @@ namespace ModHelper.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
-    public class DLLogPanel : Tool
+    public class DragonLensLogPanel : Tool
     {
         public override string IconKey => "Log";
 

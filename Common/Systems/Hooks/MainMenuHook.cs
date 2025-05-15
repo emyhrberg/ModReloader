@@ -18,7 +18,7 @@ namespace ModHelper.Common.Systems.Hooks
     {
         public override void Load()
         {
-            if (Conf.C != null && !Conf.C.AddMainMenuText)
+            if (Conf.C != null && !Conf.C.ShowMainMenuInfo)
             {
                 Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not hooking into Main Menu.");
                 return;
@@ -29,7 +29,7 @@ namespace ModHelper.Common.Systems.Hooks
         public override void Unload()
         {
             // Unload the hook
-            if (Conf.C != null && !Conf.C.AddMainMenuText)
+            if (Conf.C != null && !Conf.C.ShowMainMenuInfo)
             {
                 Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not unloading the hook into Main Menu.");
                 return;
@@ -49,7 +49,7 @@ namespace ModHelper.Common.Systems.Hooks
             if (Main.menuMode != 0) return;
 
             // Check the config
-            if (Conf.C != null && !Conf.C.AddMainMenuText)
+            if (Conf.C != null && !Conf.C.ShowMainMenuInfo)
             {
                 // Log.Info("MainMenuHook: ImproveMainMenu is set to false. Not drawing menu options.");
                 return;
@@ -61,6 +61,7 @@ namespace ModHelper.Common.Systems.Hooks
 
             // Start at top-left corner
             var drawPos = new Vector2(15, 15);
+            int extraYOffset = 0;
 
             // If other mods exist, move down a bit
             if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
@@ -71,6 +72,7 @@ namespace ModHelper.Common.Systems.Hooks
             if (ModLoader.HasMod("CompatChecker"))
             {
                 drawPos.Y += 30;
+                extraYOffset += 30;
             }
 
             // Get names and tooltips for menu options
@@ -80,8 +82,8 @@ namespace ModHelper.Common.Systems.Hooks
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers main menu! Most useful features are here :)"),
-                ("Open config", () => Conf.C.Open(), 1.02f, "Click to open the Mod Helper config and change settings"),
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers main menu!"),
+                ("Open config", () => Conf.C.Open(), 1.02f, "Click to open Mod Helper config"),
                 ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
                 (" ", null, 1.15f, ""), // empty line
 
@@ -91,17 +93,17 @@ namespace ModHelper.Common.Systems.Hooks
                 ("Open Log", Conf.C.OpenLogType == "File" ? Log.OpenClientLog : Log.OpenLogFolder, 1.02f, $"Click to open the {fileName} of this client"),
                 ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
                 (" ", null, 1.15f, ""), // empty line
-                ($"Singleplayer", null, 1.15f, "Quickly join a world"),
+                ($"Singleplayer", null, 1.15f, "Quickly join singleplayer worlds"),
                 ("Join Singleplayer", () => {
                     ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
                     ClientDataJsonHelper.PlayerID = -1;
                     ClientDataJsonHelper.WorldID = -1;
                     AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
-                }, 1.02f, "Enter a singleplayer world with last selected player and world"),
+                }, 1.02f, "Enter singleplayer world with the selected player and world from config"),
                 (" ", null, 1.15f, ""), // empty line
-                ($"Multiplayer", null, 1.15f, "Options for entering and testing multiple clients"),
-                ("Host Multiplayer", AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, "Start a multiplayer world with last selected player and world"),
-                ("Join Multiplayer", JoinMultiplayerNew, 1.02f, "Enter the multiplayer world with first available player (server required)"),
+                ($"Multiplayer", null, 1.15f, "Hosting and testing multiplayer"),
+                ("Host Multiplayer", AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, "Start a local multiplayer world"),
+                ("Join Multiplayer", JoinMultiplayerNew, 1.02f, "Enter local multiplayer world with first available player (server required)"),
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)
@@ -116,7 +118,7 @@ namespace ModHelper.Common.Systems.Hooks
                 if (hovered)
                 {
                     // Draw tooltip
-                    DrawHelper.DrawMainMenuTooltipPanel(tooltip);
+                    DrawHelper.DrawMainMenuTooltipPanel(tooltip, extraYOffset: extraYOffset);
 
                     Main.LocalPlayer.mouseInterface = true;
                     // Click

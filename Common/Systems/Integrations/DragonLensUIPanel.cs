@@ -12,7 +12,7 @@ namespace ModHelper.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
-    public class DLUIPanel : Tool
+    public class DragonLensUIPanel : Tool
     {
         public override string IconKey => "UI";
 

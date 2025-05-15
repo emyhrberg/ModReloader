@@ -30,7 +30,7 @@ namespace ModHelper.UI.Elements.PanelElements
             spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle((int)dimensions.X + 10, (int)dimensions.Y + (int)dimensions.Height - 2, (int)dimensions.Width - 20, 1), Color.LightGray);
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, header, position, Color.White, 0f, Vector2.Zero, new Vector2(1f), num - 20f);
 
-            if (IsMouseHovering)
+            if (hoverText != "" && IsMouseHovering)
             {
                 UICommon.TooltipMouseText(hoverText);
             }

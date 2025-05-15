@@ -31,9 +31,11 @@ namespace ModHelper.Common.Systems
         // Settings
         public bool Active = true;
         public bool AreButtonsShowing = true;
-        public float ButtonSize = 70f;
         public float TextSize = 0.9f;
         public float offset = 0;
+        public float UIScale = 1f;
+        public const float BaseButtonSize = 70f; // ← the original 70px value
+        public float ButtonSize => BaseButtonSize * UIScale;
 
         public List<BaseButton> AllButtons = [];
         public List<BasePanel> AllPanels = [];
@@ -41,6 +43,7 @@ namespace ModHelper.Common.Systems
         #region Constructor
         public MainState()
         {
+            ModContent.GetInstance<MainSystem>().mainState = this;
             offset = -ButtonSize * 2;
 
             // Create new panels no matter what
@@ -103,23 +106,56 @@ namespace ModHelper.Common.Systems
         private T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null, string hoverTextDescription = "") where T : BaseButton
         {
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText, hoverTextDescription);
-            button.Width.Set(ButtonSize, 0f);
-            button.Height.Set(ButtonSize, 0f);
+            
+            // offset
             button.Left.Set(offset, 0f);
-            button.VAlign = 1.0f;
-            button.HAlign = 0.5f;
-
             offset += ButtonSize;
+
+            // add button
             AllButtons.Add(button);
             Append(button);
 
             return button;
         }
 
+        private void LayoutButtons()
+        {
+            float bs = ButtonSize;                  // BaseButtonSize * UIScale
+            float totalW = AllButtons.Count * bs;
+            float startX = (Main.screenWidth - totalW) / 2f;
+
+            for (int i = 0; i < AllButtons.Count; i++)
+            {
+                var b = AllButtons[i];
+
+                // 1) resize the hit‐box
+                b.Width.Set(bs, 0f);
+                b.Height.Set(bs, 0f);
+
+                // 2) absolute bottom‐snap via Top.Percent + Top.Pixels
+                b.HAlign = 0f;                     // use absolute Left
+                b.VAlign = 0f;                     // ignore VAlign
+                b.Left.Set(startX + i * bs, 0f);
+                b.Top.Set(-bs, 1f);              // Top = 1*screenHeight - bs
+
+                // 3) finally re‐calculate its position
+                b.Recalculate();
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
-            //modsButton._scale = 0.35f;
             base.Update(gameTime);
+
+            // whoa hot reload resize buttons work!  
+            UIScale = 0.85f;
+            foreach (var b in AllButtons)
+            {
+                // Fix: Convert StyleDimension to float using its Pixels property  
+                b.ButtonText.ResizeText();
+            }
+            LayoutButtons();
+            collapse?.RecalculateSizeAndPosition();
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -1,7 +1,9 @@
 using System.IO;
+using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Graphics.PackedVector;
 using ModHelper.Common.Configs;
+using ModHelper.Common.Systems.Integrations;
 using ModHelper.Helpers;
 using ReLogic.Graphics;
 using Terraria.GameContent;
@@ -16,8 +18,6 @@ namespace ModHelper.UI.Elements.DebugElements
 {
     public class DebugText : UIText
     {
-        private bool Active = true;
-
         public DebugText(string text, float textScale = 0.9f, bool large = false) : base(text, textScale, large)
         {
             TextColor = Color.White;
@@ -50,9 +50,10 @@ namespace ModHelper.UI.Elements.DebugElements
 
         public override void LeftClick(UIMouseEvent evt)
         {
-             base.LeftClick(evt);
+            base.LeftClick(evt);
 
-            Active = !Active;
+            Conf.C.ShowDebugInfo = !Conf.C.ShowDebugInfo;
+            Conf.Save();
 
             // Open client log
             // Log.OpenClientLog();
@@ -60,16 +61,57 @@ namespace ModHelper.UI.Elements.DebugElements
 
         public override void RightClick(UIMouseEvent evt)
         {
+            if (!Conf.C.ShowDebugInfo)
+            {
+                // if debug info is not active, do nothing
+                Log.Info("Debug info is not active, ignoring right click.");
+                return;
+            }
+
             base.RightClick(evt);
 
-            Conf.C.Open();
+            if (IsConfigOpenAnywhere())
+            {
+                // close any open config UI
+                Main.menuMode = 0;
+                //Main.InGameUI.SetState(null);
+                IngameFancyUI.Close();
+            }
+            else
+            {
+                // open the config
+                Conf.C.Open();
+            }
+        }
+
+        // Helper: is any tML config UI currently open?
+        private bool IsConfigOpenAnywhere()
+        {
+            if (Main.InGameUI == null)
+            {
+                return false;
+            }
+
+            var currentState = Main.InGameUI.CurrentState;
+
+            if (currentState == null)
+            {
+                //Log.SlowInfo("Config is not open (InGameUI state is null).");
+                return false;
+            }
+
+            var modConfig = Terraria.ModLoader.UI.Interface.modConfig;
+
+            bool isConfigOpen = currentState.GetType() == modConfig.GetType();
+            //Log.SlowInfo("isConfigOpen: " + isConfigOpen);
+            return isConfigOpen;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            if (!Conf.C.AddDebugText)
+            if (!Conf.C.ShowDebugInfo)
             {
                 return;
             }
@@ -97,6 +139,12 @@ namespace ModHelper.UI.Elements.DebugElements
             //Main.instance.Window.Title = " += PID HERE? FOR EASY DEBUG INFO";
 
             SetText(text, 0.9f, large: false);
+
+            if (IsConfigOpenAnywhere())
+            {
+                // ensure dragonlens assets are added. if not, add them
+                DragonLensIntegration.AddIcons();
+            }
         }
 
         public override void Draw(SpriteBatch sb)
@@ -106,16 +154,16 @@ namespace ModHelper.UI.Elements.DebugElements
 
             //DrawHelper.DrawDebugHitbox(this, Color.Green);
 
-            if (!Active)
+            if (!Conf.C.ShowDebugInfo)
             {
                 return;
             }
 
             // also, if chat is open, hide the text
-            if (Main.drawingPlayerChat)
-            {
-                //return;
-            }
+            //if (Main.drawingPlayerChat)
+            //{
+            //return;
+            //}
 
             base.Draw(sb);
 
@@ -123,15 +171,19 @@ namespace ModHelper.UI.Elements.DebugElements
             {
                 //Vector2 pos = new(Main.MouseScreen.X-16, Main.MouseScreen.Y-24);
                 CalculatedStyle dims = this.GetDimensions();
-                Vector2 posHigh = dims.Position() + new Vector2(0,-18);
+                Vector2 posHigh = dims.Position() + new Vector2(0, -18);
 
                 DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, "Click to hide debug info", posHigh, Color.White,
                     rotation: 0f, origin: Vector2.Zero, scale: 0.8f, effects: SpriteEffects.None, layerDepth: 0f,
                     alphaMult: 0.8f);
 
-                Vector2 posLow = dims.Position() + new Vector2(0,3);
+                Vector2 posLow = dims.Position() + new Vector2(0, 3);
 
-                DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, "Right click to open config", posLow, Color.White,
+                string configOpenCloseTooltip = IsConfigOpenAnywhere()
+                   ? "Right click to close config"
+                   : "Right click to open config";
+
+                DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, configOpenCloseTooltip, posLow, Color.White,
                     rotation: 0f, origin: Vector2.Zero, scale: 0.8f, effects: SpriteEffects.None, layerDepth: 0f,
                     alphaMult: 0.8f);
             }
