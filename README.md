@@ -5,9 +5,9 @@
     <img src="icon_workshop.png" alt="Logo" width="150">
   </a>
 
-  <h3 align="center">ModHelper</h3>
+  <h3 align="center">Mod Reloader</h3>
 
-ModHelper is the ultimate Terraria testing tool for modders and players who want full control.
+Mod Reloader is the ultimate Terraria testing tool for modders and players who want full control.
 
   <p align="center">
     <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3408391079">Workshop Page</a>
