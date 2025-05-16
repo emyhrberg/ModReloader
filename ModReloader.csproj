@@ -10,6 +10,9 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
 	<ItemGroup>
+	  <None Include="Common\Commands\DLLoadCustomLayoutCommand.cs" />
+	</ItemGroup>
+	<ItemGroup>
 
 		<!-- dnlib for publicizer ?-->
 		<Reference Include="dnlib">
