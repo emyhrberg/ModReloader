@@ -12,10 +12,18 @@ namespace ModHelper.Common.Systems.Integrations
 
         public override string DisplayName => "Reload";
 
-        public override string Description => $"Reloads {string.Join(", ", Conf.C.ModsToReload)}";
+        public override string Description => $"Reloads {string.Join(", ", Conf.C.ModsToReload)}\n" +
+            $"Right click will reload mods without building any";
 
+        public override bool HasRightClick => true;
         public override async void OnActivate()
         {
+            await ReloadUtilities.SinglePlayerReload();
+        }
+
+        public override async void OnRightClick()
+        {
+            ReloadUtilities.forceJustReload = true;
             await ReloadUtilities.SinglePlayerReload();
         }
     }

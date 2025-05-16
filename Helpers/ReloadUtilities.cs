@@ -29,6 +29,11 @@ namespace ModHelper.Helpers
         public static bool IsModsToReloadEmpty => Conf.C.ModsToReload.Count <= 0;
 
         /// <summary>
+        /// Forces the reload to just reload the mods without building them again.
+        /// </summary>
+        public static bool forceJustReload = false;
+
+        /// <summary>
         /// Main function to build and reload all the mods in the ModsToReload list for Singleplayer.
         /// </summary>
         public static async Task SinglePlayerReload()
@@ -271,7 +276,7 @@ namespace ModHelper.Helpers
         /// <param name="actionAfterBuild">Action to invoke after building or before reloading.</param>
         private static void BuildOrReloadMods()
         {
-            if (IsModsToReloadEmpty)
+            if (IsModsToReloadEmpty || forceJustReload)
             {
                 ReloadMods();
             }
