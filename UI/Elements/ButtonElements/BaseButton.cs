@@ -1,13 +1,12 @@
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Common.Systems;
-using ModHelper.Helpers;
-using ModHelper.UI.Elements.PanelElements;
+using ModReloader.Common.Configs;
+using ModReloader.Common.Systems;
+using ModReloader.UI.Elements.PanelElements;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.ButtonElements
+namespace ModReloader.UI.Elements.ButtonElements
 {
     /// <summary>
     /// The base class for the main buttons that are displayed.

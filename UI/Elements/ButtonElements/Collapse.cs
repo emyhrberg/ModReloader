@@ -1,12 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Systems;
-using ModHelper.Helpers;
+using ModReloader.Common.Systems;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.ButtonElements
+namespace ModReloader.UI.Elements.ButtonElements
 {
     public class Collapse : UIImage
     {
@@ -58,7 +57,7 @@ namespace ModHelper.UI.Elements.ButtonElements
             float w = bs * 0.5f;
             float h = bs * 0.2f;
 
-            Width .Set(w, 0f);
+            Width.Set(w, 0f);
             Height.Set(h, 0f);
 
             // always centre horizontally & hug bottom
@@ -68,7 +67,7 @@ namespace ModHelper.UI.Elements.ButtonElements
             if (state.AreButtonsShowing)
             {
                 // up
-                Top.Set((int)-70 * state.UIScale+5*state.UIScale, 0);
+                Top.Set(-70 * state.UIScale + 5 * state.UIScale, 0);
             }
             else
             {

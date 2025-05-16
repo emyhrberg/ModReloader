@@ -1,6 +1,6 @@
 using Terraria.GameContent.UI.Elements;
 
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     public class TitlePanel : UIPanel
     {

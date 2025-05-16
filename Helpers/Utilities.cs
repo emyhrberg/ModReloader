@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     //Class basically for universal helping functions
     internal static class Utilities
@@ -76,13 +76,13 @@ namespace ModHelper.Helpers
         }
 
         /// <summary>
-        /// Gets the path to the file in the ModHelper folder.
+        /// Gets the path to the file in the ModReloader folder.
         /// </summary>
         /// <param name="fileName">The name of the file.</param>
         /// <returns>The full path to the file.</returns>
-        public static string GetModHelperFolderPath(string fileName)
+        public static string GetModReloaderFolderPath(string fileName)
         {
-            return GetFolderPath("ModHelper", fileName);
+            return GetFolderPath("ModReloader", fileName);
         }
 
         /// <summary>

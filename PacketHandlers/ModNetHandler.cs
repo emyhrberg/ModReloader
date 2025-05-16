@@ -1,6 +1,7 @@
 ﻿using System.IO;
-using ModHelper.Helpers;
-namespace ModHelper.PacketHandlers
+using ModReloader.Helpers;
+
+namespace ModReloader.PacketHandlers
 {
     internal class ModNetHandler
     {

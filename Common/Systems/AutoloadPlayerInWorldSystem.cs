@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
 using Terraria.ID;
 
-namespace ModHelper.Common.Systems
+namespace ModReloader.Common.Systems
 {
     /// <summary>
     /// This system handles the automatic loading of players and worlds in singleplayer and multiplayer modes.

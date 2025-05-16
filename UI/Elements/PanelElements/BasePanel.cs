@@ -1,12 +1,12 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
-using ModHelper.UI.Elements.ButtonElements;
+using ModReloader.Helpers;
+using ModReloader.UI.Elements.ButtonElements;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     /// <summary>
     /// A parent panel

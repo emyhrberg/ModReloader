@@ -1,4 +1,4 @@
-Mod Helper is the ultimate testing tool for modders and players who want full control.
+Mod Reloader is the ultimate testing tool for modders and players who want full control.
 
 Features:
 - Seamless Reload – Instantly reload selected mods, even in multiplayer.

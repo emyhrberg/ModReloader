@@ -3,12 +3,12 @@ using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolSystem;
 using DragonLens.Helpers;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
-using ModHelper.UI.Elements.PanelElements;
+using ModReloader.Helpers;
+using ModReloader.UI.Elements.PanelElements;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]

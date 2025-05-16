@@ -1,5 +1,5 @@
 ﻿using System.IO;
-namespace ModHelper.PacketHandlers
+namespace ModReloader.PacketHandlers
 {
     // Reference:
     // https://github.com/tModLoader/tModLoader/wiki/intermediate-netcode#good-practice-managing-many-packets
@@ -23,7 +23,7 @@ namespace ModHelper.PacketHandlers
         // It will be used to send data to the client and server.
         protected ModPacket GetPacket(byte packetType)
         {
-            var p = ModContent.GetInstance<ModHelper>().GetPacket();
+            var p = ModContent.GetInstance<ModReloader>().GetPacket();
             p.Write(HandlerType);
             p.Write(packetType);
             return p;

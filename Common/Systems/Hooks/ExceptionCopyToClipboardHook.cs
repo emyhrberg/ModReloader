@@ -1,14 +1,14 @@
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
 using ReLogic.OS;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.Hooks
+namespace ModReloader.Common.Systems.Hooks
 {
     /// <summary>
     /// This should work by dynamically changing the visibility based on the config value.
@@ -157,7 +157,7 @@ namespace ModHelper.Common.Systems.Hooks
             {
                 if (errorMessage != null)
                 {
-                    ReLogic.OS.Platform.Get<IClipboard>().Value = errorMessage;
+                    Platform.Get<IClipboard>().Value = errorMessage;
 
                     // Visual feedback that copying worked
                     string originalText = copyButton.Text;

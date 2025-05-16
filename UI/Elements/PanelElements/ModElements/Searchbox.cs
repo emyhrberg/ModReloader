@@ -6,7 +6,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     //ty jopojelly and darthmorf
     public class Searchbox : UIPanel

@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
-using ModHelper.Common.Systems;
-using ModHelper.Helpers;
+using ModReloader.Common.Systems;
+using ModReloader.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader.Core;
@@ -9,7 +9,7 @@ using Terraria.ModLoader.UI;
 using Terraria.Social.Steam;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     public class ModInfoState : UIState, ILoadable
     {

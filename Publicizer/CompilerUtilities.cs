@@ -8,9 +8,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 
-namespace ModHelper.Publicizer;
+namespace ModReloader.Publicizer;
 public static class CompilerUtilities
 {
     /// <summary>
@@ -19,9 +19,9 @@ public static class CompilerUtilities
     /// <param name="referencePaths">List of reference paths</param>
     /// <param name="referenceNames">List of reference names to find</param>
     /// <returns>Dictionary with reference names as keys and their paths as values</returns>
-    public static Dictionary<string, string?> FindReferencePaths(List<string> referencePaths, List<string> referenceNames)
+    public static Dictionary<string, string> FindReferencePaths(List<string> referencePaths, List<string> referenceNames)
     {
-        var results = new Dictionary<string, string?>();
+        var results = new Dictionary<string, string>();
         var remainingToFind = new HashSet<string>(referenceNames);
 
         // 1. Trying to find by filename
@@ -191,7 +191,7 @@ public static class CompilerUtilities
     public static string GetPRFolderPath(string fileName)
     {
         // TODO: create a better folder management system
-        return Utilities.GetFolderPath("ModHelper/PublicizedReferences", fileName);
+        return Utilities.GetFolderPath("ModReloader/PublicizedReferences", fileName);
     }
 
     /// <summary>
@@ -209,7 +209,7 @@ public static class CompilerUtilities
 
         foreach (var elem in publicizeElements)
         {
-            string? itemSpec = elem.Attribute("Include")?.Value;
+            string itemSpec = elem.Attribute("Include")?.Value;
             if (string.IsNullOrEmpty(itemSpec)) continue;
 
             int index = itemSpec.IndexOf(':');
@@ -250,7 +250,7 @@ public static class CompilerUtilities
 
         foreach (var elem in doNotPublicizeElements)
         {
-            string? itemSpec = elem.Attribute("Include")?.Value;
+            string itemSpec = elem.Attribute("Include")?.Value;
             if (string.IsNullOrEmpty(itemSpec)) continue;
 
             int index = itemSpec.IndexOf(':');

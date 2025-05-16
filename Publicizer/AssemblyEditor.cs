@@ -1,6 +1,6 @@
 using dnlib.DotNet;
 
-namespace ModHelper.Publicizer;
+namespace ModReloader.Publicizer;
 
 /// <summary>
 /// Class for making edits to assemblies and related types.

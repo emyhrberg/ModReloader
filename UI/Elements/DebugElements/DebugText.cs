@@ -1,20 +1,13 @@
 using System.IO;
-using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using ModHelper.Common.Configs;
-using ModHelper.Common.Systems.Integrations;
-using ModHelper.Helpers;
-using ReLogic.Graphics;
+using ModReloader.Common.Configs;
+using ModReloader.Common.Systems.Integrations;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
-using Terraria.UI.Chat;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace ModHelper.UI.Elements.DebugElements
+namespace ModReloader.UI.Elements.DebugElements
 {
     public class DebugText : UIText
     {
@@ -170,7 +163,7 @@ namespace ModHelper.UI.Elements.DebugElements
             if (IsMouseHovering)
             {
                 //Vector2 pos = new(Main.MouseScreen.X-16, Main.MouseScreen.Y-24);
-                CalculatedStyle dims = this.GetDimensions();
+                CalculatedStyle dims = GetDimensions();
                 Vector2 posHigh = dims.Position() + new Vector2(0, -18);
 
                 DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, "Click to hide debug info", posHigh, Color.White,

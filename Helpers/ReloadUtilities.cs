@@ -7,8 +7,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using log4net;
-using ModHelper.Common.Configs;
-using ModHelper.PacketHandlers;
+using ModReloader.Common.Configs;
+using ModReloader.PacketHandlers;
 using MonoMod.RuntimeDetour;
 using ReLogic.OS;
 using Terraria.ID;
@@ -16,15 +16,15 @@ using Terraria.Localization;
 using Terraria.ModLoader.Core;
 using Terraria.ModLoader.UI;
 using Terraria.Social;
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     public static class ReloadUtilities
     {
         private static int clientsCountInServer;
 
-        private const string pipeNameBeforeRebuild = "ModHelperReloadPipeBeforeRebuild";
+        private const string pipeNameBeforeRebuild = "ModReloaderReloadPipeBeforeRebuild";
 
-        private const string pipeNameAfterRebuild = "ModHelperReloadPipeAfterRebuild";
+        private const string pipeNameAfterRebuild = "ModReloaderReloadPipeAfterRebuild";
 
         public static bool IsModsToReloadEmpty => Conf.C.ModsToReload.Count <= 0;
 
@@ -132,7 +132,7 @@ namespace ModHelper.Helpers
                 {
                     // Create a list of pipes for clients
                     List<NamedPipeServerStream> clients = new List<NamedPipeServerStream>();
-                    List<Task<string?>> clientResponses = new List<Task<string?>>();
+                    List<Task<string>> clientResponses = new List<Task<string>>();
 
                     Log.Info($"Waiting for {clientsCountInServer} clients...");
 
@@ -233,7 +233,7 @@ namespace ModHelper.Helpers
                     Hook hookForUnload = null;
                     hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
                     {
-                        var logger = LogManager.GetLogger("MODHELPER_UNLOAD");
+                        var logger = LogManager.GetLogger("MODRELOADER_UNLOAD");
 
                         bool o = orig();
 
@@ -252,7 +252,7 @@ namespace ModHelper.Helpers
 
                         logger.Info("Wait to continue loading");
 
-                        using var pipeClientafterRebuild = new NamedPipeClientStream(".", ReloadUtilities.pipeNameAfterRebuild, PipeDirection.InOut);
+                        using var pipeClientafterRebuild = new NamedPipeClientStream(".", pipeNameAfterRebuild, PipeDirection.InOut);
                         pipeClientafterRebuild.Connect();
 
                         logger.Info("Loading mods");
@@ -296,7 +296,7 @@ namespace ModHelper.Helpers
 
             hookForUnload = new Hook(typeof(ModLoader).GetMethod("Unload", BindingFlags.NonPublic | BindingFlags.Static), (Func<bool> orig) =>
             {
-                var logger = LogManager.GetLogger("MODHELPER_UNLOAD");
+                var logger = LogManager.GetLogger("MODRELOADER_UNLOAD");
 
                 try
                 {
@@ -310,9 +310,9 @@ namespace ModHelper.Helpers
 
                     string text = "-autoshutdown -password \"" + Main.ConvertToSafeArgument(Netplay.ServerPassword) + "\" -lang " + Language.ActiveCulture.LegacyId;
                     if (Platform.IsLinux)
-                        text = ((IntPtr.Size != 8) ? (text + " -x86") : (text + " -x64"));
+                        text = nint.Size != 8 ? text + " -x86" : text + " -x64";
 
-                    text = ((!Main.ActiveWorldFileData.IsCloudSave) ? (text + Main.instance.SanitizePathArgument("world", Main.worldPathName)) : (text + Main.instance.SanitizePathArgument("cloudworld", Main.worldPathName)));
+                    text = !Main.ActiveWorldFileData.IsCloudSave ? text + Main.instance.SanitizePathArgument("world", Main.worldPathName) : text + Main.instance.SanitizePathArgument("cloudworld", Main.worldPathName);
                     text = text + " -worldrollbackstokeep " + Main.WorldRollingBackupsCountToKeep;
 
                     // TML options

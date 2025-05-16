@@ -1,6 +1,6 @@
 //using System.Linq;
 
-//namespace ModHelper.Common.Commands
+//namespace ModReloader.Common.Commands
 //{
 //    public class ClearChatCommand : ModCommand
 //    {

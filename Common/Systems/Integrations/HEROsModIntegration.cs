@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
-using ModHelper.UI.Elements.PanelElements.ModElements;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
+using ModReloader.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("HEROsMod")]
     public class HerosModIntegration : ModSystem

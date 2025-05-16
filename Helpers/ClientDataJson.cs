@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     public class ClientDataJson
     {

@@ -1,6 +1,6 @@
 using Terraria.GameContent.UI.Elements;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     public class ModsFoundPanel : UIPanel
     {

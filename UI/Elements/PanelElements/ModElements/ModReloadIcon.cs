@@ -1,11 +1,11 @@
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     public class ModReloadIcon : UIImage
     {

@@ -5,9 +5,9 @@ using System.Reflection;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     public class LogPanel : BasePanel
     {
@@ -34,7 +34,7 @@ namespace ModHelper.UI.Elements.PanelElements
                 {
                     // Prioritize tML and your mod's name
                     if (log.Logger.Name == "tML") return 0;
-                    if (log.Logger.Name.StartsWith(ModContent.GetInstance<ModHelper>().Name)) return 1;
+                    if (log.Logger.Name.StartsWith(ModContent.GetInstance<ModReloader>().Name)) return 1;
                     return 2; // Other loggers
                 })
                 .ThenBy(log => log.Logger.Name) // Sort alphabetically for the rest

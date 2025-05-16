@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.UIElementState
+namespace ModReloader.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
     public class UIElementSystem : ModSystem
@@ -30,7 +30,7 @@ namespace ModHelper.Common.Systems.UIElementState
             if (index != -1)
             {
                 layers.Insert(index, new LegacyGameInterfaceLayer(
-                    name: "ModHelper: UIElementSystem",
+                    name: "ModReloader: UIElementSystem",
 
                     drawMethod: delegate
                     {

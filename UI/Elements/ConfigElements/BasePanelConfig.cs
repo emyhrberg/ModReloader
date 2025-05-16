@@ -1,9 +1,9 @@
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 
-namespace ModHelper.UI.AbstractElements
+namespace ModReloader.UI.Elements.ConfigElements
 {
     /// <summary>
     /// A parent panel for config panels.

@@ -7,8 +7,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
 using ReLogic.OS;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -19,7 +19,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.Hooks
+namespace ModReloader.Common.Systems.Hooks
 {
     /// <summary>
     /// Try to get a "retry" and avoid disabling mods when not needed.
@@ -108,7 +108,7 @@ namespace ModHelper.Common.Systems.Hooks
 
         private static void CopyErrorMessage(string errorMessage)
         {
-            ReLogic.OS.Platform.Get<IClipboard>().Value = errorMessage;
+            Platform.Get<IClipboard>().Value = errorMessage;
             timeOnCopyOptionPressed = DateTime.Now;
 
         }
@@ -137,7 +137,7 @@ namespace ModHelper.Common.Systems.Hooks
             string fileName = Path.GetFileName(Logging.LogPath);
             string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
 
-            Mod mod = ModHelper.Instance;
+            Mod mod = ModReloader.Instance;
 
             // Copy tooltip will change based on last time pressed
             string copyTooltip;
@@ -154,7 +154,7 @@ namespace ModHelper.Common.Systems.Hooks
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Helpers UIError menu!"),
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Reloaders UIError menu!"),
                  ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
                 (" ", null, 1.15f, ""), // empty line
                 ("Open Log", Conf.C.OpenLogType == "File" ? Log.OpenClientLog : Log.OpenLogFolder, 1.02f, $"Click to open the {fileName} of this client"),

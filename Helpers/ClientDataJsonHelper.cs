@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     public static class ClientDataJsonHelper
     {
@@ -58,7 +58,7 @@ namespace ModHelper.Helpers
             if (Main.dedServ)
                 return;
 
-            string path = Utilities.GetModHelperFolderPath("ClientDataHandler.json");
+            string path = Utilities.GetModReloaderFolderPath("ClientDataHandler.json");
             if (path == null)
                 return;
 
@@ -118,7 +118,7 @@ namespace ModHelper.Helpers
             if (Main.dedServ)
                 return;
 
-            string path = Utilities.GetModHelperFolderPath("ClientDataHandler.json");
+            string path = Utilities.GetModReloaderFolderPath("ClientDataHandler.json");
             if (path == null)
                 return;
 
@@ -128,7 +128,7 @@ namespace ModHelper.Helpers
                 var listJson = GetListFromJson(reader);
 
                 var index = listJson.Select((data, index) => new { data, index = index + 1 })
-                .Where(pair => (pair.data.ProcessID == Utilities.ProcessID))
+                .Where(pair => pair.data.ProcessID == Utilities.ProcessID)
                 .Select((pair) => pair.index)
                 .FirstOrDefault() - 1;
 

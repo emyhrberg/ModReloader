@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using ModHelper.Common.Systems.Hooks;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems
+namespace ModReloader.Common.Systems
 {
     [Autoload(Side = ModSide.Client)]
     public class MainSystem : ModSystem
@@ -32,7 +31,7 @@ namespace ModHelper.Common.Systems
             if (fancyIndex != -1)
             {
                 layers.Insert(fancyIndex, new LegacyGameInterfaceLayer(
-                    "ModHelper: MainSystem (before Fancy UI)",
+                    "ModReloader: MainSystem (before Fancy UI)",
                     () =>
                     {
                         userInterface?.Draw(Main.spriteBatch, new GameTime());
@@ -48,7 +47,7 @@ namespace ModHelper.Common.Systems
                 if (mouseTextIndex != -1)
                 {
                     layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-                        "ModHelper: MainSystem",
+                        "ModReloader: MainSystem",
                         () =>
                         {
                             userInterface?.Draw(Main.spriteBatch, new GameTime());

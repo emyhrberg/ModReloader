@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using ModHelper.UI.AbstractElements;
 
-namespace ModHelper.UI.ModElements
+namespace ModReloader.UI.Elements.ConfigElements
 {
     /// <summary>
     /// A panel to display the contents of client.log.

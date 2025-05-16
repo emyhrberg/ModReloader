@@ -1,11 +1,11 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     public class ResizeIcon : UIImageButton
     {

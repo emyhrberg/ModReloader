@@ -4,14 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Core;
 using Terraria.UI;
-using static ModHelper.UI.Elements.PanelElements.OptionElement;
+using static ModReloader.UI.Elements.PanelElements.OptionElement;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     /// <summary>
     /// A panel to display the contents of client.log.

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
-using ModHelper.UI.Elements.ButtonElements;
-using ModHelper.UI.Elements.DebugElements;
-using ModHelper.UI.Elements.PanelElements;
-using ModHelper.UI.Elements.PanelElements.ModElements;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
+using ModReloader.UI.Elements.ButtonElements;
+using ModReloader.UI.Elements.DebugElements;
+using ModReloader.UI.Elements.PanelElements;
+using ModReloader.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
 using Terraria.ID;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems
+namespace ModReloader.Common.Systems
 {
     public class MainState : UIState
     {
@@ -106,7 +106,7 @@ namespace ModHelper.Common.Systems
         private T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null, string hoverTextDescription = "") where T : BaseButton
         {
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText, hoverTextDescription);
-            
+
             // offset
             button.Left.Set(offset, 0f);
             offset += ButtonSize;

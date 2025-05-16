@@ -1,10 +1,8 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Systems;
-using ModHelper.Helpers;
-using Terraria.GameContent;
+using ModReloader.Common.Systems;
 using Terraria.GameContent.UI.Elements;
 
-namespace ModHelper.UI.Elements.ButtonElements
+namespace ModReloader.UI.Elements.ButtonElements
 {
     public class ButtonText : UIText
     {

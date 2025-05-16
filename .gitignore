@@ -1,5 +1,5 @@
 # folders to ignore
-/bin
 /.vs
-/obj
 /.vscode
+/bin
+/obj

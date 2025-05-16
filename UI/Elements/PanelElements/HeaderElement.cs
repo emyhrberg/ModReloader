@@ -1,4 +1,4 @@
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -18,7 +18,7 @@ namespace ModHelper.UI.Elements.PanelElements
             Vector2 stringSize = ChatManager.GetStringSize(FontAssets.ItemStack.Value, this.header, Vector2.One, 532f);
             Width.Set(0f, 1f);
             Height.Set(stringSize.Y + 6f, 0f);
-            this.hoverText = hover;
+            hoverText = hover;
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)

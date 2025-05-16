@@ -1,4 +1,4 @@
-﻿namespace ModHelper.UI.Elements.ConfigElements
+﻿namespace ModReloader.UI.Elements.ConfigElements
 {
     internal class PlayerPicker : BasePicker
     {

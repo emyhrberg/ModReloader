@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.UI.Elements.PanelElements;
+using ModReloader.UI.Elements.PanelElements;
 using Terraria.GameContent;
 using Terraria.UI;
 
-namespace ModHelper.Common.Systems.UIElementState
+namespace ModReloader.Common.Systems
 {
     public class UIElementState : UIState
     {

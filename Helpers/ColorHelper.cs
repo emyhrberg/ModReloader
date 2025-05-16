@@ -1,4 +1,4 @@
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     // Also see:
     // UICommon.DefaultBlue

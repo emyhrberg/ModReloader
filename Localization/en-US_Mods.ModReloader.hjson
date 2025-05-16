@@ -1,0 +1,103 @@
+Configs: {
+	Config: {
+		DisplayName: Config
+
+		Headers: {
+			Reload: Reload Header
+			ExtraInfo: Extra Info Header
+			Misc: Misc Header
+		}
+
+		ModsToReload: {
+			Label: Mods To Reload
+			Tooltip: ""
+		}
+
+		AutoJoinWorld: {
+			Label: Auto Join World
+			Tooltip: ""
+		}
+
+		SaveWorldBeforeReloading: {
+			Label: Save World Before Reloading
+			Tooltip: ""
+		}
+
+		Player: {
+			Label: Player
+			Tooltip: ""
+		}
+
+		World: {
+			Label: World
+			Tooltip: ""
+		}
+
+		ShowDebugInfo: {
+			Label: Show Debug Info
+			Tooltip: ""
+		}
+
+		ShowMainMenuInfo: {
+			Label: Show Main Menu Info
+			Tooltip: ""
+		}
+
+		ShowErrorMenuInfo: {
+			Label: Show Error Menu Info
+			Tooltip: ""
+		}
+
+		ShowCopyToClipboardButton: {
+			Label: Show Copy To Clipboard Button
+			Tooltip: ""
+		}
+
+		OpenLogType: {
+			Label: Open Log Type
+			Tooltip: ""
+		}
+
+		LogDebugMessages: {
+			Label: Log Debug Messages
+			Tooltip: ""
+		}
+	}
+}
+
+Keybinds: {
+	DragonLensLogPanel.DisplayName: Dragon Lens Log Panel
+	DragonLensModsPanel.DisplayName: Dragon Lens Mods Panel
+	DragonLensReload.DisplayName: Dragon Lens Reload
+	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
+	DragonLensReloadMP.DisplayName: Dragon Lens Reload M P
+	DragonLensUIPanel.DisplayName: Dragon Lens U I Panel
+}
+
+Tools: {
+	DragonLensLogPanel: {
+		DisplayName: DragonLensLogPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DragonLensModsPanel: {
+		DisplayName: DragonLensModsPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DragonLensReload: {
+		DisplayName: DragonLensReload
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensReload Right Click
+	}
+
+	DragonLensReloadMP: {
+		DisplayName: DragonLensReloadMP
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DragonLensUIPanel: {
+		DisplayName: DragonLensUIPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+}

@@ -3,7 +3,7 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria.GameContent.UI.Chat;
 
-namespace ModHelper.Common.Systems.Hooks;
+namespace ModReloader.Common.Systems.Hooks;
 
 public class ChatPosHook : ModSystem
 {

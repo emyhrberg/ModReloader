@@ -11,10 +11,10 @@ using dnlib.DotNet.Writer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using MonoMod.RuntimeDetour;
 
-namespace ModHelper.Publicizer
+namespace ModReloader.Publicizer
 {
     public class CompileSystem : ModSystem
     {
@@ -28,7 +28,7 @@ namespace ModHelper.Publicizer
             out byte[] code,
             out byte[] pdb);
 
-        private Hook? RoslynCompileHook;
+        private Hook RoslynCompileHook;
 
         // In load, we hook into the RoslynCompile method and replace it with our own implementation
         // that uses Publicizer to modify the assembly before compilation.
@@ -151,7 +151,7 @@ namespace ModHelper.Publicizer
                         // Adding references to the publicized mod
                         refs = refs.Concat(publicizedModReferences);
 
-                        var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(System.IO.File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
+                        var src = files.Select(f => SyntaxFactory.ParseSyntaxTree(File.ReadAllText(f), parseOptions, f, Encoding.UTF8));
 
                         // IACT 1
                         var asmAttrs = string.Join(Environment.NewLine,

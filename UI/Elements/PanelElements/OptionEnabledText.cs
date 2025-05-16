@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
-using static ModHelper.UI.Elements.PanelElements.OptionElement;
+using static ModReloader.UI.Elements.PanelElements.OptionElement;
 
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     public class OptionEnabledText : UIText
     {
@@ -30,7 +30,7 @@ namespace ModHelper.UI.Elements.PanelElements
         public override void Draw(SpriteBatch spriteBatch)
         {
             // TODO Draw a rectangle behind the text  
-            DrawHelper.DrawDebugHitbox(this, ColorHelper.SuperDarkBluePanel, scale: 1.12f, customXOffset: 2);  
+            this.DrawDebugHitbox(ColorHelper.SuperDarkBluePanel, scale: 1.12f, customXOffset: 2);
 
             //DrawHelper.DrawBackgroundPanel(this, 0.95f, 0.25f);
 

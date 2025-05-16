@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-
-using ModHelper.Helpers;
-using ModHelper.UI.Elements.ConfigElements;
-using ModHelper.UI.ModElements;
+using ModReloader.Helpers;
+using ModReloader.UI.Elements.ConfigElements;
 using Terraria.ModLoader.Config;
 
-namespace ModHelper.Common.Configs
+namespace ModReloader.Common.Configs
 {
     public class Config : ModConfig
     {

@@ -1,14 +1,14 @@
 using System;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
-using static ModHelper.UI.Elements.PanelElements.OptionElement;
+using static ModReloader.UI.Elements.PanelElements.OptionElement;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     // Contains:
     // Icon image

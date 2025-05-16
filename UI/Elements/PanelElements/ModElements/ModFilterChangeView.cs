@@ -1,5 +1,5 @@
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Systems;
+using ModReloader.Common.Systems;
 using ReLogic.Content;
 using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
@@ -7,7 +7,7 @@ using Terraria.ID;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements.ModElements
+namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
     public class ModFilterChangeView : UIImage
     {

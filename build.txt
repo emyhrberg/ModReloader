@@ -1,4 +1,4 @@
-displayName = Mod Helper
+displayName = Mod Reloader
 author = Erky & Cotlim
 version = 0.9
 side = both

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Terraria.ModLoader.Config.UI;
 
-namespace ModHelper.UI.ModElements
+namespace ModReloader.UI.Elements.ConfigElements
 {
     /// <summary>
     /// A panel to display the contents of client.log.

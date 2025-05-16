@@ -2,7 +2,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     /// <summary>
     /// To add a new asset, simply add a new field like:
@@ -89,7 +89,7 @@ namespace ModHelper.Helpers
         private static Asset<Texture2D> RequestAsset(string path)
         {
             // string modName = typeof(Assets).Namespace;
-            string modName = "ModHelper"; // Use this, in case above line doesnt work
+            string modName = "ModReloader"; // Use this, in case above line doesnt work
             return ModContent.Request<Texture2D>($"{modName}/Assets/" + path, AssetRequestMode.AsyncLoad);
         }
     }

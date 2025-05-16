@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using dnlib.DotNet;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 
-namespace ModHelper.Publicizer
+namespace ModReloader.Publicizer
 {
     // Almost all of this code are taken from Krafs.Publicizer
     // https://github.com/krafs/Publicizer

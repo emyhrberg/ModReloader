@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ModHelper.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]

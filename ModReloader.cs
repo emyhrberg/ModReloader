@@ -1,16 +1,15 @@
+using System;
 using System.IO;
 using System.Linq;
-using ModHelper.Common.Configs;
-using ModHelper.PacketHandlers;
+using ModReloader.Common.Configs;
+using ModReloader.PacketHandlers;
+using Terraria.ModLoader;
 
-namespace ModHelper
+namespace ModReloader
 {
-    // If no Autoload(Side) is provided, it will default to Both (which is wanted in this case)
-    // [Autoload(Side = ModSide.Client)]
-    // [Autoload(Side = ModSide.Both)]
-    public class ModHelper : Mod
-    {
-        public static ModHelper Instance { get; private set; }
+	public class ModReloader : Mod
+	{
+        public static ModReloader Instance { get; private set; }
 
         public override void Load()
         {

@@ -4,7 +4,7 @@ using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.PanelElements
+namespace ModReloader.UI.Elements.PanelElements
 {
     public class Slider : SliderBase
     {
@@ -93,8 +93,8 @@ namespace ModHelper.UI.Elements.PanelElements
             Rectangle extendedClickRect = new(
                 (int)innerX - padding,
                 (int)innerY - padding,
-                (int)(barRect.Width - 10) + 2 * padding,
-                (int)barRect.Height - 8 + 2 * padding);
+                barRect.Width - 10 + 2 * padding,
+                barRect.Height - 8 + 2 * padding);
 
             bool hovered = extendedClickRect.Contains(Main.mouseX, Main.mouseY);
             if (usageLevel == SliderUsageLevel.OtherElementIsLocked)

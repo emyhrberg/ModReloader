@@ -2,7 +2,7 @@
 using ReLogic.Content;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.ButtonElements
+namespace ModReloader.UI.Elements.ButtonElements
 {
     public class LogButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {

@@ -1,4 +1,4 @@
-﻿using ModHelper.Helpers;
+﻿using ModReloader.Helpers;
 using System.Collections.Generic;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -6,7 +6,7 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
 
-namespace ModHelper.UI.Elements.ConfigElements
+namespace ModReloader.UI.Elements.ConfigElements
 {
     internal class BasePicker : ConfigElement
     {

@@ -6,7 +6,7 @@ using Terraria.GameContent;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     public static class DrawHelper
     {
@@ -59,7 +59,7 @@ namespace ModHelper.Helpers
         {
             var d = e.GetDimensions();
             var sz = new Vector2(d.Width * scaleX + 20, d.Height * scaleY + 20);
-            var tl = (d.Position() + new Vector2(d.Width, d.Height) / 2) - sz / 2;
+            var tl = d.Position() + new Vector2(d.Width, d.Height) / 2 - sz / 2;
             Utils.DrawInvBG(Main.spriteBatch, new Rectangle(tl.ToPoint().X, tl.ToPoint().Y, sz.ToPoint().X, sz.ToPoint().Y), new Color(20, 20, 55) * 0.925f);
         }
 
@@ -89,7 +89,7 @@ namespace ModHelper.Helpers
             float h = dims.Height * scale;
 
             // top-left corner after scaling about the centre
-            int left = (int)(cx - w * 0.5f) + (int) customXOffset;
+            int left = (int)(cx - w * 0.5f) + (int)customXOffset;
             int top = (int)(cy - h * 0.5f);
 
             Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value,
@@ -100,7 +100,7 @@ namespace ModHelper.Helpers
         /// <summary>
         /// Draw a tooltip panel at a hardcoded position in the main menu
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset =0, int extraYOffset=0, int extraHeight = 0, int extraWidth = 0)
+        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset = 0, int extraYOffset = 0, int extraHeight = 0, int extraWidth = 0)
         {
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
@@ -110,7 +110,7 @@ namespace ModHelper.Helpers
             int height = 70 + extraHeight;
             int xOffset = -100 + extraXOffset;
             int yOffset = 30 + extraYOffset;
-            Rectangle tooltipRect = new Rectangle((int)basePos.X +xOffset, (int)basePos.Y + yOffset, width, height);
+            Rectangle tooltipRect = new Rectangle((int)basePos.X + xOffset, (int)basePos.Y + yOffset, width, height);
 
             // Draw background panel.
             Color darkBlue = ColorHelper.DarkBluePanel;

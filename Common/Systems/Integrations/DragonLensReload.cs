@@ -1,8 +1,8 @@
 ﻿using DragonLens.Core.Systems.ToolSystem;
-using ModHelper.Common.Configs;
-using ModHelper.Helpers;
+using ModReloader.Common.Configs;
+using ModReloader.Helpers;
 
-namespace ModHelper.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
@@ -13,7 +13,7 @@ namespace ModHelper.Common.Systems.Integrations
         public override string DisplayName => "Reload";
 
         public override string Description => $"Reloads {string.Join(", ", Conf.C.ModsToReload)}\n" +
-            $"Right click will reload mods without building any";
+            $"Right click to reload mods without building any";
 
         public override bool HasRightClick => true;
         public override async void OnActivate()

@@ -1,12 +1,11 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Systems;
-using ModHelper.Helpers;
+using ModReloader.Common.Systems;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModHelper.UI.ModElements
+namespace ModReloader.UI.Elements.ConfigElements
 {
     public class ModCheckboxConfig : UIImage
     {

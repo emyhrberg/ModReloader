@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using ModHelper.Helpers;
+using ModReloader.Helpers;
 using Terraria.ID;
-namespace ModHelper.PacketHandlers
+namespace ModReloader.PacketHandlers
 {
     internal class RefreshServerPacketHandler : BasePacketHandler
     {

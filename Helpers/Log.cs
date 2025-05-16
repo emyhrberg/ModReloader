@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
-using ModHelper.Common.Configs;
+using ModReloader.Common.Configs;
 
-namespace ModHelper.Helpers
+namespace ModReloader.Helpers
 {
     public static class Log
     {
@@ -21,7 +21,7 @@ namespace ModHelper.Helpers
             {
                 try
                 {
-                    return ModLoader.GetMod("ModHelper");
+                    return ModLoader.GetMod("ModReloader");
                 }
                 catch (Exception ex)
                 {
@@ -122,14 +122,14 @@ namespace ModHelper.Helpers
                 string path = Logging.LogPath;
                 string folderName = Path.GetDirectoryName(path);
 
-                Log.Info($"Open {folderName}");
+                Info($"Open {folderName}");
                 Main.NewText("Opening " + folderName);
                 Process.Start(new ProcessStartInfo($@"{folderName}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
                 Main.NewText("Error opening client log: " + ex.Message);
-                Log.Error("Error opening client log: " + ex.Message);
+                Error("Error opening client log: " + ex.Message);
             }
 
         }
@@ -150,14 +150,14 @@ namespace ModHelper.Helpers
                 string path = Logging.LogPath;
                 string fileName = Path.GetFileName(path);
 
-                Log.Info($"Open {fileName}");
+                Info($"Open {fileName}");
                 Main.NewText("Opening " + fileName);
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
                 Main.NewText("Error opening client log: " + ex.Message);
-                Log.Error("Error opening client log: " + ex.Message);
+                Error("Error opening client log: " + ex.Message);
             }
         }
         /// <summary> Opens the server log file in the default text editor for the right player. </summary>
@@ -168,14 +168,14 @@ namespace ModHelper.Helpers
                 string path = Path.Combine(Path.GetDirectoryName(Logging.LogPath), "server.log");
                 string fileName = Path.GetFileName(path);
 
-                Log.Info($"Open {fileName}");
+                Info($"Open {fileName}");
                 Main.NewText("Opening " + fileName);
                 Process.Start(new ProcessStartInfo($@"{path}") { UseShellExecute = true });
             }
             catch (Exception ex)
             {
                 Main.NewText("Error opening client log: " + ex.Message);
-                Log.Error("Error opening client log: " + ex.Message);
+                Error("Error opening client log: " + ex.Message);
             }
         }
         #endregion

@@ -1,10 +1,9 @@
 using Microsoft.Xna.Framework.Graphics;
-using ModHelper.Common.Systems;
-using ModHelper.Helpers;
+using ModReloader.Common.Systems;
 using ReLogic.Content;
 using Terraria.UI;
 
-namespace ModHelper.UI.Elements.ButtonElements
+namespace ModReloader.UI.Elements.ButtonElements
 {
     public class ReloadSPButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
     {
