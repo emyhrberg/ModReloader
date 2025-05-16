@@ -1,6 +1,6 @@
 displayName = Mod Helper
 author = Erky & Cotlim
-version = 0.1
+version = 0.9
 side = both
 buildIgnore = Assets\Old*, icon.psd
 dllReferences = dnlib
