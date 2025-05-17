@@ -21,7 +21,7 @@ namespace ModReloader.Common.Systems.Integrations
 
         public override void OnActivate()
         {
-            Log.Info("DLModsPanel activated");
+            Log.Info("DLLogPanel activated");
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             BasePanel logPanel = sys.mainState.logPanel;

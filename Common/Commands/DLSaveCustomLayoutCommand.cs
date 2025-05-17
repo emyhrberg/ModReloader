@@ -1,23 +1,10 @@
 ﻿using System.IO;
-using System.Linq;
-using DragonLens.Content.Tools.Despawners;
-using DragonLens.Content.Tools.Gameplay;
-using DragonLens.Content.Tools.Map;
-using DragonLens.Content.Tools.Multiplayer;
-using DragonLens.Content.Tools.Spawners;
-using DragonLens.Content.Tools.Visualization;
-using DragonLens.Content.Tools;
-using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolbarSystem;
-using DragonLens.Content.Themes.BoxProviders;
-using DragonLens.Content.Themes.IconProviders;
-using ModReloader.Common.Systems.Integrations;
-using DragonLens.Content.GUI;
-using Stubble.Core.Classes;
 using Terraria.ModLoader.IO;
 
 namespace ModReloader.Common.Commands
 {
+    [JITWhenModsEnabled("DragonLens")]
     public class DLSaveCustomLayoutCommand : ModCommand
     {
         public override string Command => "save";
@@ -28,20 +15,32 @@ namespace ModReloader.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            if (args.Length != 1)
+            if (!ModLoader.TryGetMod("DragonLens", out _))
             {
-                // Print usage
-                Main.NewText("Usage: /save");
+                Main.NewText("DragonLens must be enabled.");
                 return;
             }
 
-            // get first arg
-            string firstArg = args[0];
+            if (args.Length < 1 || string.IsNullOrWhiteSpace(args[0]))
+            {
+                Main.NewText("Please provide a layout name. Usage: /save <layoutName>");
+                return;
+            }
 
-            // save it
-            string layoutPath = Path.Join(Main.SavePath, "DragonLensLayouts", firstArg);
-            TagCompound tag = TagIO.FromFile(layoutPath);
+            string firstArg = args[0];
+            string layoutsDir = Path.Join(Main.SavePath, "DragonLensLayouts");
+            string layoutPath = Path.Join(layoutsDir, firstArg);
+
+            // Ensure directory exists
+            Directory.CreateDirectory(layoutsDir);
+
+            // Create new tag and save layout
+            TagCompound tag = [];
             ToolbarHandler.SaveLayout(tag);
+
+            // Write to file
+            TagIO.ToFile(tag, layoutPath);
+
             Main.NewText("Successfully saved layout to " + layoutPath);
         }
     }

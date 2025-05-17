@@ -2,8 +2,8 @@ Keybinds: {
 	DragonLensLogPanel.DisplayName: Dragon Lens Log Panel
 	DragonLensModsPanel.DisplayName: Dragon Lens Mods Panel
 	DragonLensReload.DisplayName: Dragon Lens Reload
-	DragonLensReloadMP.DisplayName: Dragon Lens Reload M P
-	DragonLensUIPanel.DisplayName: Dragon Lens U I Panel
+	DragonLensReloadMP.DisplayName: Dragon Lens Reload MP
+	DragonLensUIPanel.DisplayName: Dragon Lens UI Panel
 	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
 }
 

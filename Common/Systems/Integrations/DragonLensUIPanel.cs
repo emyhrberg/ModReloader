@@ -22,7 +22,7 @@ namespace ModReloader.Common.Systems.Integrations
 
         public override void OnActivate()
         {
-            Log.Info("DLModsPanel activated");
+            Log.Info("DLUIPanel activated");
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             BasePanel uiPanel = sys.mainState.uiElementPanel;

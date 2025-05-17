@@ -18,6 +18,7 @@ using Terraria.ModLoader.IO;
 
 namespace ModReloader.Common.Commands
 {
+    [JITWhenModsEnabled("DragonLens")]
     public class DLLoadCustomLayoutCommand : ModCommand
     {
         public override string Command => "load";
@@ -28,21 +29,29 @@ namespace ModReloader.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
+            if (!ModLoader.TryGetMod("DragonLens", out _))
+            {
+                Main.NewText("DragonLens must be enabled.");
+                return;
+            }
+
             // If there is not exactly 1 arg, print usage
             if (args.Length != 1)
             {
                 // Print usage
-                Main.NewText("Usage: /load <layout name>");
+                Main.NewText("Usage: /load YourLayoutName");
                 return;
             }
 
             string firstArg = args[0].ToLower();
 
             // check if the first arg exists in the path
-            if (!File.Exists(Path.Join(Main.SavePath, "DragonLensLayouts", firstArg)))
+            string layoutsFilePath = Path.Join(Main.SavePath, "DragonLensLayouts", firstArg);
+
+            if (!File.Exists(layoutsFilePath))
             {
                 // Print error
-                Main.NewText($"Layout {firstArg} does not exist.");
+                Main.NewText($"Error: {layoutsFilePath} does not exist.", Color.Red);
                 return;
             }
 
