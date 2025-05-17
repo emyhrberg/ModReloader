@@ -10,7 +10,6 @@ namespace ModReloader.Common.Systems.Integrations
     [ExtendsFromMod("DragonLens")]
     public class DragonLensIntegration : ModSystem
     {
-
         public override void PostSetupContent()
         {
             AddIcons();

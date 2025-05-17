@@ -11,6 +11,7 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
 	<ItemGroup>
 	  <None Include="Common\Commands\DLLoadCustomLayoutCommand.cs" />
+	  <None Include="Common\Systems\Integrations\DragonLensToolAndLayout\ModReloaderToolFilter.cs" />
 	</ItemGroup>
 	<ItemGroup>
 

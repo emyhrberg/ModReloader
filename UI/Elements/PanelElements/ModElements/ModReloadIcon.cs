@@ -33,6 +33,8 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
         {
             Conf.C.ModsToReload = [internalModName];
             Conf.Save();
+            // Close fancy UI
+            IngameFancyUI.Close();
             await ReloadUtilities.SinglePlayerReload();
         }
 
