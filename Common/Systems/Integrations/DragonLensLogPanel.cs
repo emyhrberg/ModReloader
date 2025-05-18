@@ -1,8 +1,10 @@
-﻿using AssGen;
+﻿using System.IO;
+using AssGen;
 using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolSystem;
 using DragonLens.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Common.Configs;
 using ModReloader.Helpers;
 using ModReloader.UI.Elements.PanelElements;
 using Terraria.UI;
@@ -17,7 +19,27 @@ namespace ModReloader.Common.Systems.Integrations
 
         public override string DisplayName => "Log Options";
 
-        public override string Description => $"Change log options here";
+        public override string Description => GetDescription();
+
+        private string GetDescription()
+        {
+            if (!Conf.C.RightClickToolOptions)
+            {
+                return $"Change log options here";
+            }
+
+            string logFileName = Path.GetFileName(Logging.LogPath);
+            return $"Change log options here \nRight click to open {logFileName}";
+        }
+
+        public override bool HasRightClick => Conf.C.RightClickToolOptions;
+
+        public override void OnRightClick()
+        {
+            if (!Conf.C.RightClickToolOptions) return;
+
+            Log.OpenClientLog();
+        }
 
         public override void OnActivate()
         {

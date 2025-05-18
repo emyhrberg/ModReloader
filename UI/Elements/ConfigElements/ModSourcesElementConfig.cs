@@ -92,7 +92,26 @@ namespace ModReloader.UI.Elements.ConfigElements
             if (cleanModName.Length > 20)
                 cleanModName = string.Concat(cleanModName.AsSpan(0, 20), "...");
 
-            string hoverText = internalNameFolderName;
+            string hoverText = $"{internalNameFolderName}";
+
+            // Temporary fix to get version.
+            // This is not great because ModLoader only gets enabled mods.
+            // TODO get all modsources versions, either from their modSources folder path, build.txt, or similar.
+
+            // This crashes with KeyNotFoundException...
+            //Mod modTest = ModLoader.GetMod(internalNameFolderName);
+            //Log.Info("Found mod: " + modTest.Name);
+
+            if (ModLoader.TryGetMod(internalNameFolderName, out Mod currMod))
+            {
+                string version = currMod.Version.ToString();
+                hoverText = $"{internalNameFolderName} v{version}";
+            }
+            else
+            {
+                //Log.Info("currMod is null?");
+            }
+
             if (isModEnabled)
             {
                 // hoverText = $"Open {internalNameFolderName} config";

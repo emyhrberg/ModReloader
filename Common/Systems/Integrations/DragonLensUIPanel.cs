@@ -3,9 +3,8 @@ using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolSystem;
 using DragonLens.Helpers;
 using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Helpers;
+using ModReloader.Common.Configs;
 using ModReloader.UI.Elements.PanelElements;
-using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace ModReloader.Common.Systems.Integrations
@@ -18,7 +17,17 @@ namespace ModReloader.Common.Systems.Integrations
 
         public override string DisplayName => "UIElement Hitboxes";
 
-        public override string Description => $"Toggle UIElement hitboxes";
+        public override string Description => GetDescription();
+
+        private string GetDescription()
+        {
+            if (!Conf.C.RightClickToolOptions)
+            {
+                return $"Toggle UIElements";
+            }
+
+            return $"Toggle UIElements \nRight click to toggle all UIElement hitboxes";
+        }
 
         public override void OnActivate()
         {
@@ -49,6 +58,22 @@ namespace ModReloader.Common.Systems.Integrations
                     parent.Append(uiPanel);
                 }
             }
+        }
+
+        public override bool HasRightClick => Conf.C.RightClickToolOptions;
+
+        public override void OnRightClick()
+        {
+            if (!Conf.C.RightClickToolOptions)
+            {
+                return;
+            }
+
+            UIElementSystem elementSystem = ModContent.GetInstance<UIElementSystem>();
+            if (elementSystem == null) return;
+            UIElementState elementState = elementSystem.debugState;
+            if (elementState == null) return;
+            elementState.ToggleShowAll();
         }
 
         public override void DrawIcon(SpriteBatch spriteBatch, Rectangle position)

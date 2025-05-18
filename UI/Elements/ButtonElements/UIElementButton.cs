@@ -19,6 +19,8 @@ namespace ModReloader.UI.Elements.ButtonElements
 
         public override void RightClick(UIMouseEvent evt)
         {
+            if (!Conf.C.RightClickToolOptions) return;
+
             base.RightClick(evt);
 
             // Toggle all elements

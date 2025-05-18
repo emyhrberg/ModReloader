@@ -4,7 +4,7 @@ using Terraria.ModLoader.Config.UI;
 namespace ModReloader.UI.Elements.ConfigElements
 {
     /// <summary>
-    /// A panel to display the contents of client.log.
+    /// A panel to display the Mod Sources
     /// </summary>
     public class ModSourcesConfig : ConfigElement
     {
