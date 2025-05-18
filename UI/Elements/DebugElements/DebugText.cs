@@ -135,6 +135,11 @@ namespace ModReloader.UI.Elements.DebugElements
 
             if (IsConfigOpenAnywhere())
             {
+                if (!ModLoader.TryGetMod("DragonLens", out _))
+                {
+                    //Log.Info("DragonLens is not loaded, skipping icon addition.");
+                    return;
+                }
                 // ensure dragonlens assets are added. if not, add them
                 DragonLensIntegration.AddIcons();
             }
