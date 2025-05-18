@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Helpers;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
@@ -11,14 +12,14 @@ namespace ModReloader.UI.Elements.ConfigElements
     public abstract class BasePanelConfig : UIPanel
     {
         public NestedUIList uiList;
-        protected UIScrollbar scrollbar;
+        public UIScrollbar scrollbar;
 
         public BasePanelConfig(bool scrollbarEnabled = true)
         {
             // Panel settings
             Width.Set(-20, 1f);
             Height.Set(-40, 1f);
-            Top.Set(30, 0);
+            Top.Set(0, 0);
             VAlign = 0f;
             HAlign = 0.5f;
             BackgroundColor = ColorHelper.SuperDarkBluePanel;
@@ -36,11 +37,11 @@ namespace ModReloader.UI.Elements.ConfigElements
             {
                 scrollbar = new()
                 {
-                    Height = { Percent = 1f },
+                    Height = { Percent = 1f, Pixels = -10 },
                     HAlign = 1f,
                     VAlign = 0f,
                     Left = { Pixels = 5 },
-                    Top = { Pixels = 5 },
+                    Top = { Pixels = 10 },
                 };
             }
 
@@ -64,6 +65,16 @@ namespace ModReloader.UI.Elements.ConfigElements
             paddingElement.Width.Set(0, 1f);
             uiList.Add(paddingElement);
             return paddingElement;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            uiList.Top.Set(0, 0);
+            //uiList.Height.Set(0, 1);
+            //uiList.MaxHeight.Set(0, 1);
+            scrollbar.Top.Set(-0, 0);
+            base.Draw(spriteBatch);
+            Top.Set(-0,0);
         }
     }
 }

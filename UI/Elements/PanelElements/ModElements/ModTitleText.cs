@@ -22,6 +22,8 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
         {
             base.Draw(spriteBatch);
 
+            //SetText(internalModName, 0.43f, true);
+
             if (!string.IsNullOrEmpty(hover) && IsMouseHovering)
             {
                 UICommon.TooltipMouseText(hover);

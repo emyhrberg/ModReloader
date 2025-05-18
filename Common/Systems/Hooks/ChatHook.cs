@@ -16,11 +16,6 @@ public class ChatPosHook : ModSystem
     {
         IL_Main.DrawPlayerChat += InjectOffset;
         IL_RemadeChatMonitor.DrawChat += InjectOffset;
-
-        if (Conf.C.MoveChat)
-        {
-            OffsetY = -50;
-        }
     }
 
     public override void Unload()
@@ -32,6 +27,10 @@ public class ChatPosHook : ModSystem
     public override void PostUpdateEverything()
     {
         // Test hot reload changes here (to chat position)
+        if (Conf.C.MoveChat)
+        {
+            OffsetY = -50;
+        }
         base.PostUpdateEverything();
     }
 

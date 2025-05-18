@@ -29,7 +29,7 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
             TimeSpan timeAgo = DateTime.Now - lastModified;
             string text = FormatTimeAgoText(lastModified);
             TextColor = GetTimeColor(timeAgo);
-            SetText(text);
+            SetText(text, 0.38f, true);
             // }
 
             base.Update(gameTime);

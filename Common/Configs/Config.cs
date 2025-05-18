@@ -10,16 +10,12 @@ namespace ModReloader.Common.Configs
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
-        [Header("Reload")]
+        [Header("ModsToReload")]
 
         [CustomModConfigItem(typeof(ModSourcesConfig))]
         public List<string> ModsToReload = [];
 
-        [DefaultValue(true)]
-        public bool AutoJoinWorld;
-
-        [DefaultValue(false)]
-        public bool SaveWorldBeforeReloading;
+        [Header("ReloadOptions")]
 
         [CustomModConfigItem(typeof(PlayerPicker))]
         [DefaultValue(0)]
@@ -28,6 +24,12 @@ namespace ModReloader.Common.Configs
         [CustomModConfigItem(typeof(WorldPicker))]
         [DefaultValue(0)]
         public int World;
+
+        [DefaultValue(true)]
+        public bool AutoJoinWorld;
+
+        [DefaultValue(true)]
+        public bool AutoSaveWorld;
 
         [Header("ExtraInfo")]
 
@@ -44,10 +46,6 @@ namespace ModReloader.Common.Configs
         public bool ShowCopyToClipboardButton;
 
         [Header("Misc")]
-
-        [OptionStrings(["File", "Folder"])]
-        [DefaultValue("Folder")]
-        public string OpenLogType;
 
         [DefaultValue(true)]
         public bool RightClickToolOptions;

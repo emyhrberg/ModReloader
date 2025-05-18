@@ -44,10 +44,11 @@ Configs: {
 		DisplayName: Config
 
 		Headers: {
-			Reload: Reload
 			Improvements: Improvements
 			Misc: Misc
 			ExtraInfo: Show
+			ModsToReload: Mods To Reload
+			ReloadOptions: Reload Options
 		}
 
 		ModsToReload: {
@@ -60,8 +61,8 @@ Configs: {
 			Tooltip: Automatically joins the selected world after reloading mods
 		}
 
-		SaveWorldBeforeReloading: {
-			Label: Save World Before Reloading
+		AutoSaveWorld: {
+			Label: Auto Save World
 			Tooltip: Save player and world data before reloading. Takes more time to reload but saves the your player and world
 		}
 
@@ -73,11 +74,6 @@ Configs: {
 		World: {
 			Label: World
 			Tooltip: Select the world to join when reloading
-		}
-
-		OpenLogType: {
-			Label: Open Log File Or Folder
-			Tooltip: Choose whether to open the log folder or the file when opening logs
 		}
 
 		LogDebugMessages: {
@@ -111,27 +107,22 @@ Configs: {
 
 		RightClickToolOptions: {
 			Label: Right Click Tool Options
-			Tooltip: "Adds the option for tools to have additional functionality with right click options."
+			Tooltip: Adds the option for tools to have additional functionality with right click options.
 		}
 
 		MoveChat: {
 			Label: Move Chat
-			Tooltip: "Moves the chat box position a little to make space for debug info"
+			Tooltip: Moves the chat box position a little to make space for debug info
 		}
 
 		LogLevelPersistOnReloads: {
-			Tooltip: "Whether to keep the log levels after reloading. Keep this setting off to keep log levels at default."
+			Tooltip: Whether to keep the log levels after reloading. Keep this setting off to keep log levels at default.
 			Label: Log Level Persist On Reloads
-		}
-
-		CollapseOrBuilderToggleType: {
-			Tooltip: Shows a new builder toggle to the left of inventory to toggle all tools
-			Label: Collapse Or Builder Toggle Type
 		}
 
 		BuilderToggle: {
 			Label: Builder Toggle
-			Tooltip: ""
+			Tooltip: Shows a new builder toggle to the left of inventory to toggle all tools
 		}
 	}
 }

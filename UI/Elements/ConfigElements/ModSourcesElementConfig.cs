@@ -24,15 +24,15 @@ namespace ModReloader.UI.Elements.ConfigElements
         public ModCheckboxConfig checkbox;
         public ModSourcesIcon modIcon;
         public ModSourcesConfig parentConfig;
+        public ModTitleText modNameText;
 
         public ModSourcesElementConfig(ModSourcesConfig parent, string fullModPath, string cleanName = "")
         {
-
             parentConfig = parent;
             // size and position
-            Width.Set(-35f, 1f);
+            Width.Set(-25f, 1f);
             Height.Set(30 * 2, 0);
-            Left.Set(5, 0);
+            Left.Set(0, 0);
 
             // last modified
             DateTime lastModified = File.GetLastWriteTime(fullModPath);
@@ -89,8 +89,8 @@ namespace ModReloader.UI.Elements.ConfigElements
             // mod name
             // modSourcePathString = Path.GetFileName(modPath);
             cleanModName = cleanName;
-            if (cleanModName.Length > 20)
-                cleanModName = string.Concat(cleanModName.AsSpan(0, 20), "...");
+            if (cleanModName.Length > 40)
+                cleanModName = string.Concat(cleanModName.AsSpan(0, 40), "...");
 
             string hoverText = $"{internalNameFolderName}";
 
@@ -126,7 +126,7 @@ namespace ModReloader.UI.Elements.ConfigElements
                 Append(modConfigIcon);
             }
 
-            ModTitleText modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, textSize: 0.45f, large: true);
+            modNameText = new(text: cleanModName, hover: hoverText, internalModName: internalNameFolderName, textSize: 0.43f, large: true);
             modNameText.Left.Set(60, 0);
             modNameText.Top.Set(-3, 0);
             modNameText.VAlign = 0f;
@@ -163,6 +163,13 @@ namespace ModReloader.UI.Elements.ConfigElements
             ModProjectIcon projectIcon = new(Ass.ModOpenProject.Value, fullModPath, "Open .csproj");
             projectIcon.Left.Set(def, 1f);
             Append(projectIcon);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Left.Set(0, 0);
+            Width.Set(-25, 1);
+            base.Draw(spriteBatch);
         }
     }
 }

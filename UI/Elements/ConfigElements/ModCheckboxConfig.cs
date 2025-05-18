@@ -16,7 +16,6 @@ namespace ModReloader.UI.Elements.ConfigElements
         private string modSourcePathString;
         public ModSourcesConfig parentConfig;
 
-
         public ModCheckboxConfig(ModSourcesConfig parent, Texture2D uncheck, string modSourcePathString, string hover = "") : base(uncheck)
         {
             parentConfig = parent;
@@ -68,7 +67,7 @@ namespace ModReloader.UI.Elements.ConfigElements
             foreach (var mod in parentConfig.modSourcesPanelConfig.modSourcesElements)
             {
                 string internalFolderNameFromMod = Path.GetFileName(mod.modPath);
-                Log.Info("clicked on mod: " + modSourcePathString);
+                //Log.Info("clicked on mod: " + modSourcePathString);
                 // Log.Info("checking mod: " + internalFolderNameFromMod);
 
                 if (internalFolderNameFromMod == modSourcePathString)

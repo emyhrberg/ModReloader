@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ModReloader.UI.Elements.ConfigElements
 {
@@ -16,6 +17,8 @@ namespace ModReloader.UI.Elements.ConfigElements
 
         public ModSourcesPanelConfig(ModSourcesConfig parent) : base(scrollbarEnabled: true)
         {
+            Width.Set(0, 1);
+            Left.Set(-10, 0);
             parentConfig = parent;
             ConstructModSources();
         }
@@ -35,19 +38,22 @@ namespace ModReloader.UI.Elements.ConfigElements
             modSourcesWithTimes.Sort((a, b) => b.lastModified.CompareTo(a.lastModified));
 
             // Add to the UI list in sorted order
-            foreach (var (fullModPath, _) in modSourcesWithTimes)
+
+            for (int i = 0; i < modSourcesWithTimes.Count; i++)
             {
-                // Get the clean name
+                var (fullModPath, _) = modSourcesWithTimes[i];
+
+                // Add the element to the UI list  
                 string cleanName = GetModSourcesCleanName(fullModPath);
-
-                // Cut to max 20 chars
-                if (cleanName.Length > 20)
-                    cleanName = string.Concat(cleanName.AsSpan(0, 20), "...");
-
                 ModSourcesElementConfig modSourcesElement = new(parentConfig, fullModPath: fullModPath, cleanName: cleanName);
                 modSourcesElements.Add(modSourcesElement);
                 uiList.Add(modSourcesElement);
-                AddPadding(3);
+
+                // Add padding for all except the last element  
+                if (i != modSourcesWithTimes.Count - 1)
+                {
+                    AddPadding(1);
+                }
             }
         }
 
@@ -97,6 +103,15 @@ namespace ModReloader.UI.Elements.ConfigElements
                 strings.Add(modSources[i]);
             }
             return strings;
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            Width.Set(-5,1);
+            Left.Set(-0, 0);
+            Height.Set(-10, 1);
+            MaxHeight.Set(-10, 1);
+            base.Draw(spriteBatch);
         }
     }
 }

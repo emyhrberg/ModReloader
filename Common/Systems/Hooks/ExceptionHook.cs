@@ -157,7 +157,7 @@ namespace ModReloader.Common.Systems.Hooks
                 ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Reloaders UIError menu!"),
                  ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
                 (" ", null, 1.15f, ""), // empty line
-                ("Open Log", Conf.C.OpenLogType == "File" ? Log.OpenClientLog : Log.OpenLogFolder, 1.02f, $"Click to open the {fileName} of this client"),
+                ("Open Log", Log.OpenClientLog, 1.02f, $"Click to open the {fileName} of this client"),
                 ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
                 ($"Copy", () => CopyErrorMessage(errorMessage), 1.02f, copyTooltip),
                 ($"Go to file", () => OpenFileWithException(errorMessage), 1.02f, "Open VS with the file with the exception"),

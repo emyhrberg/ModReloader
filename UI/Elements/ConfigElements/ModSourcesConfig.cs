@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader.Config.UI;
+using Terraria.UI;
 
 namespace ModReloader.UI.Elements.ConfigElements
 {
@@ -16,7 +18,9 @@ namespace ModReloader.UI.Elements.ConfigElements
         {
             base.OnBind();
 
-            Height.Set(300, 0f);
+            DrawLabel = false;
+
+            Height.Set(280, 0f);
 
             ListList = (IList<List<string>>)List;
 
@@ -31,8 +35,29 @@ namespace ModReloader.UI.Elements.ConfigElements
             Recalculate();
         }
 
-
         public virtual List<string> GetValue() => (List<string>)GetObject();
+
+        public override void Update(GameTime gameTime)
+        {
+            // hot reload testing/fixing
+
+            base.Update(gameTime);
+            //TooltipFunction = () => GetDynamicTooltip();
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            //base.Draw(sb);
+            Height.Set(280, 0);
+
+            Top.Set(5, 0);
+
+            // Draw children only
+            for (int i = 0; i < Elements.Count; i++)
+            {
+                Elements[i].Draw(sb);
+            }
+        }
 
         public virtual void SetValue(List<string> value)
         {
