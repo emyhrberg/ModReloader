@@ -1,11 +1,13 @@
-Mod Reloader is the ultimate testing tool for modders and players who want full control.
+Mod Reloader is designed to improve the mod reload and compile process, while also offering additional helpful features for modders and players.
 
 Features:
-- Seamless Reload – Instantly reload selected mods, even in multiplayer.
-- In-Game Mod Toggle – Enable/disable mods mid-game with advanced filters.
+- Quick Reload – Instantly reload selected mods, even in multiplayer.
+- In-Game Mod Toggle – Enable/disable mods mid-game.
 - Publicizer Support – Access internal APIs, including tModLoader, with publicizer integration.
-- Main Menu Upgrade – Test faster with UI improvements.
-- Exception Menu Upgrade – Copy errors, retry, prettier logs, and jump-to-code.
-- UI Integration – Works with CheatSheet, Hero’s Mod, and DragonLens.
+- Log Tools – Set the log level for every logger.
+- UI Tools - Toggle UIElements hitboxes, view their sizes, positions, and more to simplify UI development.
+- Main Menu Tools – Test faster with UI improvements and quick navigation options.
+- Exception Menu Tools – Copy errors, retry, better logs, and jump-to-code options.
+- Integration – Integrates cleanly with all other debugging mods: CheatSheet, Hero’s Mod, and DragonLens.
 
-And as always, every feature is toggleable and customizable in the menu and config.
+As always, to accommodate all users, every feature is toggleable and customizable in the menu and config.
