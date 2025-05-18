@@ -45,10 +45,21 @@ namespace ModReloader.Common.Configs
 
         [Header("Misc")]
 
-        [DrawTicks]
         [OptionStrings(["File", "Folder"])]
         [DefaultValue("Folder")]
         public string OpenLogType;
+
+        [DefaultValue(true)]
+        public bool RightClickToolOptions;
+
+        [DefaultValue(true)]
+        public bool LogLevelPersistOnReloads;
+
+        [DefaultValue(true)]
+        public bool MoveChat;
+
+        [DefaultValue(true)]
+        public bool BuilderToggle;
 
         [DefaultValue(true)]
         public bool LogDebugMessages;

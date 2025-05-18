@@ -1,4 +1,5 @@
 using System.Reflection;
+using ModReloader.Common.Configs;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria.GameContent.UI.Chat;
@@ -9,18 +10,29 @@ public class ChatPosHook : ModSystem
 {
     // ── offsets, kept as two floats ───────────────────────────────────
     public static float OffsetX = 0;         // +right / –left
-    public static float OffsetY = -25;         // +down  / –up
+    public static float OffsetY = 0;         // +down  / –up
 
     public override void Load()
     {
         IL_Main.DrawPlayerChat += InjectOffset;
         IL_RemadeChatMonitor.DrawChat += InjectOffset;
+
+        if (Conf.C.MoveChat)
+        {
+            OffsetY = -50;
+        }
     }
 
     public override void Unload()
     {
         IL_Main.DrawPlayerChat -= InjectOffset;
         IL_RemadeChatMonitor.DrawChat -= InjectOffset;
+    }
+
+    public override void PostUpdateEverything()
+    {
+        // Test hot reload changes here (to chat position)
+        base.PostUpdateEverything();
     }
 
     /// <summary>Adds new Vector2(OffsetX, OffsetY) to every Vector2 literal.</summary>

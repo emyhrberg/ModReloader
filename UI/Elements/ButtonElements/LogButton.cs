@@ -15,7 +15,8 @@ namespace ModReloader.UI.Elements.ButtonElements
 
         public override void RightClick(UIMouseEvent evt)
         {
-            // Log.OpenClientLog();
+            if (!Conf.C.RightClickToolOptions) return;
+             Log.OpenClientLog();
         }
     }
 }

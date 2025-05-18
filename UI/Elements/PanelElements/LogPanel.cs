@@ -25,7 +25,7 @@ namespace ModReloader.UI.Elements.PanelElements
             AddAction(Log.ClearClientLog, "Clear Log", $"Clear the {clientPath} file");
             AddPadding(20);
 
-            AddHeader(title: "Log Level", hover: "Set the log level for each logger (0-5): Off, Error, Warn, Info, Debug, All");
+            AddHeader(title: "Log Level", hover: "Set the log level for each logger: Off, Error, Warn, Info, Debug, All \nThis log level persists over reloads!");
             AddPadding(3);
 
             // Get all loggers and sort them
@@ -43,20 +43,34 @@ namespace ModReloader.UI.Elements.PanelElements
             // Add sliders for each logger
             foreach (var log in sortedLoggers)
             {
-                // Truncate logger name if it's too long
-                string loggerName = log.Logger.Name.Length > 13
-                    ? log.Logger.Name.Substring(0, 10) + ".."
-                    : log.Logger.Name;
+                string loggerName = log.Logger.Name;
+
+                // Get saved level or default to 5 (All)
+                int defaultValue = 5;
+
+                if (Conf.C.LogLevelPersistOnReloads)
+                {
+                    if (LogLevelSettingsJson.ReadLogLevels().TryGetValue(loggerName, out string savedLevel))
+                    {
+                        if (int.TryParse(savedLevel, out int parsedLevel))
+                            defaultValue = parsedLevel;
+                    }
+                }
+
+                // Truncate logger name for display
+                string displayName = loggerName.Length > 13
+                    ? loggerName.Substring(0, 10) + ".."
+                    : loggerName;
 
                 AddSlider(
-                    title: loggerName,
+                    title: displayName,
                     min: 0,
                     max: 5,
-                    defaultValue: 5,
+                    defaultValue: defaultValue, // Set from saved value
                     onValueChanged: (value) => SetLogLevel(value, log.Logger as Logger),
                     increment: 1,
                     textSize: 0.8f,
-                    hover: $"Set the log level for {log.Logger.Name}",
+                    hover: $"Set log level for {loggerName}",
                     valueFormatter: (value) => ((LogLevel)value).ToString()
                 );
             }
@@ -90,19 +104,25 @@ namespace ModReloader.UI.Elements.PanelElements
                 LogLevel.All => Level.All,
                 _ => Level.Off
             };
+
+            // Save to JSON
+            LogLevelSettingsJson.UpdateLogLevel(logger.Name, ((int)level).ToString());
         }
 
+        [Obsolete("Old and unused reflection stuff")]
         private static Logger GetLogger(string loggerName = "tML")
         {
-            PropertyInfo tmlProp = typeof(Logging).GetProperty(loggerName, BindingFlags.Static | BindingFlags.NonPublic);
-            if (tmlProp == null)
-                return null;
+            //PropertyInfo tmlProp = typeof(Logging).GetProperty(loggerName, BindingFlags.Static | BindingFlags.NonPublic);
+            //if (tmlProp == null)
+            //    return null;
 
-            ILog tmlLogger = (ILog)tmlProp.GetValue(null);
-            if (tmlLogger == null)
-                return null;
+            //ILog tmlLogger = (ILog)tmlProp.GetValue(null);
+            //if (tmlLogger == null)
+            //    return null;
 
-            return tmlLogger.Logger as Logger;
+            //Logging.tML;
+
+            return Logging.tML.Logger as Logger;
         }
     }
 }

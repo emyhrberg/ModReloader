@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using DragonLens.Content.GUI;
+using DragonLens.Content.Themes.BoxProviders;
+using DragonLens.Content.Themes.IconProviders;
+using DragonLens.Content.Tools;
 using DragonLens.Content.Tools.Despawners;
 using DragonLens.Content.Tools.Editors;
 using DragonLens.Content.Tools.Gameplay;
 using DragonLens.Content.Tools.Spawners;
 using DragonLens.Content.Tools.Visualization;
-using DragonLens.Content.Tools;
 using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolbarSystem;
-using DragonLens.Content.Themes.BoxProviders;
-using DragonLens.Content.Themes.IconProviders;
-using System.Reflection;
 using Terraria.ModLoader.UI.Elements;
 
 namespace ModReloader.Common.Systems.Integrations.DragonLensToolAndLayout

@@ -9,7 +9,7 @@
     "TerrariaServer": {
       "commandName": "Executable",
       "executablePath": "$(DotNetName)",
-      "commandLineArgs": "$(tMLServerPath)",
+      "commandLineArgs": "$(tMLServerPath) -eac",
       "workingDirectory": "$(tMLSteamPath)"
     },
     "TerrariaSkipSelect": {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
@@ -61,10 +62,19 @@ namespace ModReloader.Common.Systems
 
                 AreButtonsShowing = true; // Show our own collapse and show buttons by default
 
-                // Buttons
+                // Setup Tooltips
+                string uiElementHoverDesc = "Toggle UIElement hitboxes";
+                if (Conf.C.RightClickToolOptions)
+                    uiElementHoverDesc += "\nRight click to toggle all UIElements";
+
+                string logHoverDesc = "Change log options here";
+                if (Conf.C.RightClickToolOptions)
+                    logHoverDesc += "\nRight click to open " + Path.GetFileName(Logging.LogPath);
+
+                // Add Buttons
                 modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
-                uiElementButton = AddButton<UIElementButton>(Ass.ButtonUIAnimation, "UI", "UIElement hitboxes", hoverTextDescription: "Toggle UIElement hitboxes");
-                logButton = AddButton<LogButton>(Ass.ButtonLogAnimation, "Log", "Log options", hoverTextDescription: "Change log options here");
+                uiElementButton = AddButton<UIElementButton>(Ass.ButtonUIAnimation, "UI", "UIElement hitboxes", hoverTextDescription: uiElementHoverDesc);
+                logButton = AddButton<LogButton>(Ass.ButtonLogAnimation, "Log", "Log options", hoverTextDescription: logHoverDesc);
 
                 // Panels
                 modsButton.AssociatedPanel = modsPanel;
@@ -75,6 +85,8 @@ namespace ModReloader.Common.Systems
                 logPanel.AssociatedButton = logButton;
 
                 string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
+                if (Conf.C.RightClickToolOptions)
+                    reloadHoverMods += "\nRight click to reload mods without building any";
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
                 {
@@ -145,6 +157,7 @@ namespace ModReloader.Common.Systems
 
         public override void Update(GameTime gameTime)
         {
+            if (!Active) return;
             base.Update(gameTime);
 
             // whoa hot reload resize buttons work!  
@@ -160,12 +173,16 @@ namespace ModReloader.Common.Systems
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            if (!Active) return;
             base.Draw(spriteBatch);
 
             if (AreButtonsShowing)
             {
                 foreach (var button in AllButtons)
                 {
+                    // hot reload testing. comment the below line out plz
+                    //if (button is UIElementButton) button.DrawTooltipPanel(button.HoverText, button.HoverTextDescription);
+
                     if (button.IsMouseHovering && button.HoverText != null)
                     {
                         button.DrawTooltipPanel(button.HoverText, button.HoverTextDescription);

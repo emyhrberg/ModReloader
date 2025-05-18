@@ -5,12 +5,15 @@ Keybinds: {
 	DragonLensReloadMP.DisplayName: Dragon Lens Reload MP
 	DragonLensUIPanel.DisplayName: Dragon Lens UI Panel
 	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
+	DragonLensLogPanelRightClick.DisplayName: Dragon Lens Log Panel Right Click
+	DragonLensUIPanelRightClick.DisplayName: Dragon Lens U I Panel Right Click
 }
 
 Tools: {
 	DragonLensLogPanel: {
 		DisplayName: DragonLensLogPanel
 		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensLogPanel Right Click
 	}
 
 	DragonLensModsPanel: {
@@ -32,6 +35,7 @@ Tools: {
 	DragonLensUIPanel: {
 		DisplayName: DragonLensUIPanel
 		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensUIPanel Right Click
 	}
 }
 
@@ -104,5 +108,37 @@ Configs: {
 			Label: Show Copy To Clipboard Button
 			Tooltip: A new button will appear allowing you to copy the message in the error menu
 		}
+
+		RightClickToolOptions: {
+			Label: Right Click Tool Options
+			Tooltip: ""
+		}
+
+		MoveChat: {
+			Label: Move Chat
+			Tooltip: ""
+		}
+
+		LogLevelPersistOnReloads: {
+			Tooltip: ""
+			Label: Log Level Persist On Reloads
+		}
+
+		CollapseOrBuilderToggleType: {
+			Tooltip: Shows a new builder toggle to the left of inventory to toggle all tools
+			Label: Collapse Or Builder Toggle Type
+		}
+
+		BuilderToggle: {
+			Label: Builder Toggle
+			Tooltip: ""
+		}
+	}
+}
+
+BuilderToggles: {
+	MainStateBuilderToggle: {
+		OffText: Mod Reloader Off
+		OnText: Mod Reloader On
 	}
 }

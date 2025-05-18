@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Systems;
 using ReLogic.Content;
@@ -16,6 +17,16 @@ namespace ModReloader.UI.Elements.ButtonElements
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (!sys.mainState.AreButtonsShowing) return;
+            await ReloadUtilities.SinglePlayerReload();
+        }
+
+        public override async void RightClick(UIMouseEvent evt)
+        {
+            base.RightClick(evt);
+
+            if (!Conf.C.RightClickToolOptions) return;
+
+            ReloadUtilities.forceJustReload = true;
             await ReloadUtilities.SinglePlayerReload();
         }
     }
