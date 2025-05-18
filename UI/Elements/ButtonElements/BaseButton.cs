@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Configs;
 using ModReloader.Common.Systems;
@@ -78,16 +79,11 @@ namespace ModReloader.UI.Elements.ButtonElements
         }
         #endregion
 
-        public void UpdateHoverTextDescription()
+        public void UpdateHoverTextDescription(string modsToReload)
         {
             // Based on ModsToReload, make the hovertext.
-            string modsToReload = string.Join(", ", Conf.C.ModsToReload);
-
-            if (string.IsNullOrEmpty(modsToReload))
-            {
-                modsToReload = "No mods to reload";
-            }
-
+            // string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+            Log.Info("Update hover text with mods to reload: " + modsToReload);
             HoverTextDescription = $"{modsToReload}";
         }
 

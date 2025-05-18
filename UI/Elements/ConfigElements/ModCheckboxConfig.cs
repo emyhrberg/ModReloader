@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Systems;
@@ -62,7 +63,7 @@ namespace ModReloader.UI.Elements.ConfigElements
 
             // toggle config and check status
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            var l = parentConfig.GetValue();
+            List<string> l = parentConfig.GetValue();
 
             foreach (var mod in parentConfig.modSourcesPanelConfig.modSourcesElements)
             {
@@ -103,9 +104,20 @@ namespace ModReloader.UI.Elements.ConfigElements
                     if (sys != null && sys.mainState != null)
                     {
                         // we need this check if we are main menu
-                        Log.Info("Updating hover text description");
-                        sys.mainState.reloadSPButton?.UpdateHoverTextDescription();
-                        sys.mainState.reloadMPButton?.UpdateHoverTextDescription();
+                        // Log.Info("Updating hover text description with " + string.Join(", ", l));
+                        string modsToReload = string.Join(", ", l);
+                        if (l.Count < 1)
+                        {
+                            modsToReload = "No mods to reload";
+                        }
+                        else
+                        {
+                            modsToReload = $"{modsToReload}";
+                            if (Conf.C.RightClickToolOptions)
+                                modsToReload += "\nRight click to reload mods without building any";
+                        }
+                        sys.mainState.reloadSPButton?.UpdateHoverTextDescription(modsToReload);
+                        sys.mainState.reloadMPButton?.UpdateHoverTextDescription(modsToReload);
                     }
 
                     //Conf.Save(); // Save the config after updating the ModsToReload string
