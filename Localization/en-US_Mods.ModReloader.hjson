@@ -6,7 +6,7 @@ Keybinds: {
 	DragonLensUIPanel.DisplayName: Dragon Lens UI Panel
 	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
 	DragonLensLogPanelRightClick.DisplayName: Dragon Lens Log Panel Right Click
-	DragonLensUIPanelRightClick.DisplayName: Dragon Lens U I Panel Right Click
+	DragonLensUIPanelRightClick.DisplayName: Dragon Lens UI Panel Right Click
 }
 
 Tools: {
@@ -111,16 +111,16 @@ Configs: {
 
 		RightClickToolOptions: {
 			Label: Right Click Tool Options
-			Tooltip: ""
+			Tooltip: "Adds the option for tools to have additional functionality with right click options."
 		}
 
 		MoveChat: {
 			Label: Move Chat
-			Tooltip: ""
+			Tooltip: "Moves the chat box position a little to make space for debug info"
 		}
 
 		LogLevelPersistOnReloads: {
-			Tooltip: ""
+			Tooltip: "Whether to keep the log levels after reloading. Keep this setting off to keep log levels at default."
 			Label: Log Level Persist On Reloads
 		}
 
