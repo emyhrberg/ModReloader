@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.UI.Elements.PanelElements;
@@ -26,13 +27,20 @@ namespace ModReloader.Common.Systems
 
         // Outline color
         private Color outlineColor = Color.White;
-        public void SetOutlineColor(Color color) => outlineColor = color;
+        public void SetOutlineColor(Color color)
+        {
+            outlineColor = color;
+            UIElementSettingsJson.UpdateElementValue("outlineColor", $"{color.R},{color.G},{color.B},{color.A}");
+        }
         private bool randomOutlineColor = false;
-        public void ToggleRandomOutlineColor() => randomOutlineColor = !randomOutlineColor;
+        public void ToggleRandomOutlineColor()
+        {
+            randomOutlineColor = !randomOutlineColor;
+            UIElementSettingsJson.UpdateElementValue("randomOutlineColor", randomOutlineColor);
+        }
 
         // Thickness
         private int thickness = 1;
-        public void SetThickness(int value) => thickness = value;
 
         // Settings
         private List<Color> rainbowColors;
@@ -42,29 +50,80 @@ namespace ModReloader.Common.Systems
         private float SizeXOffset = 0;
         private float SizeYOffset = 0;
         private float SizeTextSize = 0.5f;
-        public void SetSizeXOffset(float value) => SizeXOffset = value;
-        public void SetSizeYOffset(float value) => SizeYOffset = value;
-        public void SetSizeTextSize(float value) => SizeTextSize = value;
 
         // Type text
         private float TypeXOffset = 0;
         private float TypeYOffset = 0;
         private float TypeTextSize = 0.5f;
-        public void SetTypeXOffset(float value) => TypeXOffset = value;
-        public void SetTypeYOffset(float value) => TypeYOffset = value;
-        public void SetTypeTextSize(float value) => TypeTextSize = value;
 
-        // Toggle stuff
-        public void ToggleShowSize() => DrawSizeOfElement = !DrawSizeOfElement;
-        public void ToggleShowType() => DrawNameOfElement = !DrawNameOfElement;
+        // Misc
+        public void RandomizeRainbowColors() => rainbowColors = rainbowColors.OrderBy(_ => Main.rand.Next()).ToList();
+        private static int Random => Main.rand.Next(-20, 20); // the random offset in X and Y
 
+        // Reset
         public void ResetSizeOffset() => sizeOffsets.Clear();
         public void ResetTypeOffset() => typeOffsets.Clear();
 
-        // Misc
-        public void SetOpacity(float value) => opacity = value;
-        public void RandomizeRainbowColors() => rainbowColors = rainbowColors.OrderBy(_ => Main.rand.Next()).ToList();
-        private static int Random => Main.rand.Next(-20, 20); // the random offset in X and Y
+        // New setters
+        public void SetThickness(int value)
+        {
+            thickness = value;
+            UIElementSettingsJson.UpdateElementValue("thickness", value);
+        }
+
+        public void SetSizeXOffset(float value)
+        {
+            SizeXOffset = value;
+            UIElementSettingsJson.UpdateElementValue("SizeXOffset", value);
+        }
+
+        public void SetSizeYOffset(float value)
+        {
+            SizeYOffset = value;
+            UIElementSettingsJson.UpdateElementValue("SizeYOffset", value);
+        }
+
+        public void SetSizeTextSize(float value)
+        {
+            SizeTextSize = value;
+            UIElementSettingsJson.UpdateElementValue("SizeTextSize", value);
+        }
+
+        public void SetTypeXOffset(float value)
+        {
+            TypeXOffset = value;
+            UIElementSettingsJson.UpdateElementValue("TypeXOffset", value);
+        }
+
+        public void SetTypeYOffset(float value)
+        {
+            TypeYOffset = value;
+            UIElementSettingsJson.UpdateElementValue("TypeYOffset", value);
+        }
+
+        public void SetTypeTextSize(float value)
+        {
+            TypeTextSize = value;
+            UIElementSettingsJson.UpdateElementValue("TypeTextSize", value);
+        }
+
+        public void ToggleShowSize()
+        {
+            DrawSizeOfElement = !DrawSizeOfElement;
+            UIElementSettingsJson.UpdateElementValue("DrawSizeOfElement", DrawSizeOfElement);
+        }
+
+        public void ToggleShowType()
+        {
+            DrawNameOfElement = !DrawNameOfElement;
+            UIElementSettingsJson.UpdateElementValue("DrawNameOfElement", DrawNameOfElement);
+        }
+
+        public void SetOpacity(float value)
+        {
+            opacity = value;
+            UIElementSettingsJson.UpdateElementValue("opacity", value);
+        }
 
         #endregion
 
@@ -72,7 +131,61 @@ namespace ModReloader.Common.Systems
         public UIElementState()
         {
             GenerateRainbowColors(count: 20);
+            LoadSettingsJson();
+            RefreshUIState();
         }
+
+        private void LoadSettingsJson()
+        {
+            var settings = UIElementSettingsJson.ReadElementSettings();
+
+            if (settings.TryGetValue("showAll", out object showAllObj))
+            {
+                showAll = Convert.ToBoolean(showAllObj);
+
+                // Apply to existing elements
+                foreach (var elem in elements)
+                {
+                    elementToggles[elem] = !showAll; // If showAll=true, elements are NOT toggled (false)
+                }
+            }
+
+            if (settings.TryGetValue("DrawSizeOfElement", out object drawSizeObj))
+                DrawSizeOfElement = Convert.ToBoolean(drawSizeObj);
+            if (settings.TryGetValue("DrawNameOfElement", out object drawNameObj))
+                DrawNameOfElement = Convert.ToBoolean(drawNameObj);
+            if (settings.TryGetValue("outlineColor", out object outlineColorObj))
+            {
+                string[] parts = ((string)outlineColorObj).Split(',');
+                if (parts.Length == 4 &&
+                    byte.TryParse(parts[0], out byte r) &&
+                    byte.TryParse(parts[1], out byte g) &&
+                    byte.TryParse(parts[2], out byte b) &&
+                    byte.TryParse(parts[3], out byte a))
+                {
+                    outlineColor = new Color(r, g, b, a);
+                }
+            }
+            if (settings.TryGetValue("randomOutlineColor", out object randomOutlineObj))
+                randomOutlineColor = Convert.ToBoolean(randomOutlineObj);
+            if (settings.TryGetValue("thickness", out object thicknessObj))
+                thickness = Convert.ToInt32(thicknessObj);
+            if (settings.TryGetValue("SizeXOffset", out object sizeXOffsetObj))
+                SizeXOffset = Convert.ToSingle(sizeXOffsetObj);
+            if (settings.TryGetValue("SizeYOffset", out object sizeYOffsetObj))
+                SizeYOffset = Convert.ToSingle(sizeYOffsetObj);
+            if (settings.TryGetValue("SizeTextSize", out object sizeTextSizeObj))
+                SizeTextSize = Convert.ToSingle(sizeTextSizeObj);
+            if (settings.TryGetValue("TypeXOffset", out object typeXOffsetObj))
+                TypeXOffset = Convert.ToSingle(typeXOffsetObj);
+            if (settings.TryGetValue("TypeYOffset", out object typeYOffsetObj))
+                TypeYOffset = Convert.ToSingle(typeYOffsetObj);
+            if (settings.TryGetValue("TypeTextSize", out object typeTextSizeObj))
+                TypeTextSize = Convert.ToSingle(typeTextSizeObj);
+            if (settings.TryGetValue("opacity", out object opacityObj))
+                opacity = Convert.ToSingle(opacityObj);
+        }
+
         #endregion
 
         // Randomize offset
@@ -116,6 +229,7 @@ namespace ModReloader.Common.Systems
         public void ToggleShowAll()
         {
             showAll = !showAll;
+            UIElementSettingsJson.UpdateElementValue("showAll", showAll);
             if (showAll)
             {
                 Main.NewText("Showing all UI elements.", Color.Green);
@@ -281,6 +395,13 @@ namespace ModReloader.Common.Systems
             }
         }
 
+        public void RefreshUIState()
+        {
+            MainSystem sys = ModContent.GetInstance<MainSystem>();
+            UIElementPanel uiPanel = sys.mainState.uiElementPanel;
+            uiPanel?.Update(Main._drawInterfaceGameTime); // Force immediate update
+        }
+
         public void UIElement_Draw(On_UIElement.orig_Draw orig, UIElement self, SpriteBatch spriteBatch)
         {
             orig(self, spriteBatch); // Normal UI behavior
@@ -290,6 +411,8 @@ namespace ModReloader.Common.Systems
             if (!elements.Contains(self))
             {
                 elements.Add(self);
+
+                elementToggles[self] = !showAll; // showAll=true → toggle=false (visible)
 
                 // Ensure the element has a default toggle state (ON by default)
                 if (!elementToggles.ContainsKey(self))

@@ -84,13 +84,30 @@ namespace ModReloader.Common.Systems.Hooks
             // Get the state
             var state = Main.MenuUI.CurrentState;
 
+            if (state == null)
+                return false;  // nothing to draw
+
+            // make sure the tML error‐screen type actually exists
+            var uiErrorMessageType =
+            typeof(Main).Assembly.GetType("Terraria.ModLoader.UI.UIErrorMessage");
+            if (uiErrorMessageType == null || !uiErrorMessageType.IsInstanceOfType(state))
+                return false;
+
             // tracker variables
             bool webHelpFound = false;
             int childrenCount = 0;
 
             // get area field
             FieldInfo areaField = state.GetType().GetField("area", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (areaField.GetValue(state) is UIElement area)
+
+            if (areaField == null)
+            {
+                Log.Error("Failed to find the 'area' field in the error message state.");
+                return false;
+            }
+            var rawArea = areaField.GetValue(state);
+
+            if (rawArea is UIElement area)
             {
                 foreach (var child in area.Children)
                 {
@@ -120,8 +137,15 @@ namespace ModReloader.Common.Systems.Hooks
             // Get the state
             var state = Main.MenuUI.CurrentState;
 
+            if (state == null)
+                return;  // nothing to draw
+
+            // make sure the tML error‐screen type actually exists
+            var uiErrorMessageType = typeof(Main).Assembly.GetType("Terraria.ModLoader.UI.UIErrorMessage");
+            if (uiErrorMessageType == null || !uiErrorMessageType.IsInstanceOfType(state))
+                return;
+
             // Get the error message
-            Type uiErrorMessageType = typeof(Main).Assembly.GetType("Terraria.ModLoader.UI.UIErrorMessage");
             FieldInfo messageField = uiErrorMessageType.GetField("message", BindingFlags.NonPublic | BindingFlags.Instance);
             string errorMessage = messageField?.GetValue(state) as string;
 

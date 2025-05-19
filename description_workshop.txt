@@ -1,18 +1,17 @@
 [h1] Mod Reloader [/h1]
-Build faster. Test smarter. Mod Reloader transforms your modding experience with instant reloads, flexible tools, and seamless integration.
-This mod is built to streamline the mod reload and compile process, while also offering additional helpful features for modders and players.
+Build faster. Test smarter. Mod Reloader improves your modding experience with instant reloads, practical tools, and solid support for other mods.
+It's built to make the mod reload and compile process easier and more efficient, while also adding helpful tools for modders and players.
 
 [h1] Features [/h1] 
 [list]
-[*] [b]Quick Reload[/b] – Instantly reload selected mods, even in multiplayer.
-[*] [b]In-Game Mod Toggle[/b] – Enable/disable mods mid-game.
-[*] [b]Publicizer Support[/b] – Access internal APIs, including tModLoader, with publicizer integration.
-[*] [b]Log Tools[/b] – Set the log level for every logger.
-[*] [b]UI Tools[/b] - Toggle UIElements hitboxes, view their sizes, positions, and more to simplify UI development.
-[*] [b]Main Menu Tools[/b] – Test faster with UI improvements and quick navigation options.
-[*] [b]Exception Menu Tools[/b] – Copy errors, retry, better logs, and jump-to-code options.
-[*] [b]Integration[/b] – Integrates cleanly with all other debugging mods: CheatSheet, Hero’s Mod, and DragonLens.
-[*] [b]Customizable config[/b] – To accommodate all users, every feature is toggleable in the config.
+[*] [b]Quick Reload[/b]: Instantly reload selected mods without restarting the game.
+[*] [b]Multiplayer Reload[/b]: Instantly reload selected mods for multiple clients with one click.
+[*] [b]In-Game Mod Toggle[/b]: Enable/disable mods mid-game.
+[*] [b]Publicizer Tool [/b]: Access internal dll's, including tModLoader, with publicizer support.
+[*] [b]Log Tools[/b]: Set the log level for every logger.
+[*] [b]UI Tools[/b]: View UIElement hitboxes, sizes, and positions to make UI development easier.
+[*] [b]Main Menu Tools[/b]: Navigate the menu faster with helpful options to speed up testing.
+[*] [b]Exception Menu Tools[/b]: Copy error messages, retry actions, and go-to-exception.
 [/list]
 
 [h1] Support [/h1]
@@ -22,5 +21,5 @@ This mod is built to streamline the mod reload and compile process, while also o
 [*] [url=https://discord.com/invite/JNFYABQM] Discord [/url]
 [/list]
 
-[quote=tModLoader ModReloader]
+[quote]
 Developed By Erky & Cotlim[/quote]

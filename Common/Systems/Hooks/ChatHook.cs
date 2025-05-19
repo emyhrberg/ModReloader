@@ -31,6 +31,10 @@ public class ChatPosHook : ModSystem
         {
             OffsetY = -50;
         }
+        else
+        {
+            OffsetY = 0;
+        }
         base.PostUpdateEverything();
     }
 
