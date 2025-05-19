@@ -135,15 +135,26 @@ namespace ModReloader.Common.Systems
             var player = Main.PlayerList[Conf.C.Player];
             var world = Main.WorldList[Conf.C.World];
 
-            if (playerID == -1 || worldID == -1)
+            if (playerID == -1)
             {
-                Log.Error("PlayerID or WorldID is -1. Cannot autoload.");
+                Log.Error("PlayerID is -1. Cannot autoload.");
                 // if we return here, we cause a "crash" or "stuck" in loading.
             }
             else
             {
                 // all ok, continue.
                 player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+            }
+
+
+            if (worldID == -1)
+            {
+                Log.Error("WorldID is -1. Cannot autoload.");
+                // if we return here, we cause a "crash" or "stuck" in loading.
+            }
+            else
+            {
+                // all ok, continue.
                 world = Main.WorldList[ClientDataJsonHelper.WorldID];
             }
 
