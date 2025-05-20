@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Common.Configs;
-using ModReloader.Helpers;
 using ModReloader.UI.Elements.ButtonElements;
 using ModReloader.UI.Elements.DebugElements;
 using ModReloader.UI.Elements.PanelElements;
@@ -62,19 +60,31 @@ namespace ModReloader.Common.Systems
 
                 AreButtonsShowing = true; // Show our own collapse and show buttons by default
 
-                // Setup Tooltips
-                string uiElementHoverDesc = "Toggle UIElement hitboxes";
+                string uiElementHoverDesc = LocalizationHelper.GetText("UIElementButton.HoverDescBase");
                 if (Conf.C.RightClickToolOptions)
-                    uiElementHoverDesc += "\nRight click to toggle all UIElements";
+                    uiElementHoverDesc += "\n" + LocalizationHelper.GetText("UIElementButton.HoverDescRightClick");
 
-                string logHoverDesc = "Change log options here";
+                string logHoverDesc = LocalizationHelper.GetText("LogButton.HoverDescBase");
                 if (Conf.C.RightClickToolOptions)
-                    logHoverDesc += "\nRight click to open " + Path.GetFileName(Logging.LogPath);
+                    logHoverDesc += "\n" + LocalizationHelper.GetText("LogButton.HoverDescRightClick", Path.GetFileName(Logging.LogPath));
 
-                // Add Buttons
-                modsButton = AddButton<ModsButton>(Ass.ButtonMods, "Mods", "Manage Mods", hoverTextDescription: "Toggle mods on or off");
-                uiElementButton = AddButton<UIElementButton>(Ass.ButtonUIAnimation, "UI", "UIElement hitboxes", hoverTextDescription: uiElementHoverDesc);
-                logButton = AddButton<LogButton>(Ass.ButtonLogAnimation, "Log", "Log options", hoverTextDescription: logHoverDesc);
+                modsButton = AddButton<ModsButton>(
+                    Ass.ButtonMods,
+                    LocalizationHelper.GetText("ModsButton.Text"),
+                    LocalizationHelper.GetText("ModsButton.HoverText"),
+                    hoverTextDescription: LocalizationHelper.GetText("ModsButton.HoverDesc"));
+
+                uiElementButton = AddButton<UIElementButton>(
+                    Ass.ButtonUIAnimation,
+                    LocalizationHelper.GetText("UIElementButton.Text"),
+                    LocalizationHelper.GetText("UIElementButton.HoverText"),
+                    hoverTextDescription: uiElementHoverDesc);
+
+                logButton = AddButton<LogButton>(
+                    Ass.ButtonLogAnimation,
+                    LocalizationHelper.GetText("LogButton.Text"),
+                    LocalizationHelper.GetText("LogButton.HoverText"),
+                    hoverTextDescription: logHoverDesc);
 
                 // Panels
                 modsButton.AssociatedPanel = modsPanel;
@@ -84,23 +94,34 @@ namespace ModReloader.Common.Systems
                 logButton.AssociatedPanel = logPanel;
                 logPanel.AssociatedButton = logButton;
 
-                string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
+                string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty
+                    ? LocalizationHelper.GetText("ReloadButton.HoverDescNoMods")
+                    : string.Join(",", Conf.C.ModsToReload);
+
                 if (Conf.C.RightClickToolOptions)
-                    reloadHoverMods += "\nRight click to reload mods without building any";
+                    reloadHoverMods += "\n" + LocalizationHelper.GetText("ReloadButton.HoverDescRightClick");
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
                 {
-                    reloadSPButton = AddButton<ReloadSPButton>(Ass.ButtonReloadSPAnimation, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
+                    reloadSPButton = AddButton<ReloadSPButton>(
+                        Ass.ButtonReloadSPAnimation,
+                        buttonText: LocalizationHelper.GetText("ReloadButton.Text"),
+                        hoverText: LocalizationHelper.GetText("ReloadButton.Text"),
+                        hoverTextDescription: reloadHoverMods);
                 }
                 else if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
-                    reloadMPButton = AddButton<ReloadMPButton>(Ass.ButtonReloadMPAnimation, buttonText: "Reload", hoverText: "Reload", hoverTextDescription: reloadHoverMods);
+                    reloadMPButton = AddButton<ReloadMPButton>(
+                        Ass.ButtonReloadMPAnimation,
+                        buttonText: LocalizationHelper.GetText("ReloadButton.Text"),
+                        hoverText: LocalizationHelper.GetText("ReloadButton.Text"),
+                        hoverTextDescription: reloadHoverMods);
                 }
             }
 
-            // Debug. 
-            // Always add to MainState, but only show if its enabled (in Draw() and Update().. See the implementation in its class.
-            DebugText debugText = new("");
+                // Debug. 
+                // Always add to MainState, but only show if its enabled (in Draw() and Update().. See the implementation in its class.
+                DebugText debugText = new("");
             Append(debugText);
         }
         #endregion

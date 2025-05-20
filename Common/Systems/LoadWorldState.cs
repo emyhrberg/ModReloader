@@ -10,7 +10,7 @@ namespace ModReloader.Common.Systems
         public override void OnInitialize()
         {
             // Create a centered UIText element
-            centeredText = new UIText("Loading world...", 0.7f, true)
+            centeredText = new UIText(LocalizationHelper.GetText("MainMenu.LoadingWorld", ""), 0.7f, true)
             {
                 HAlign = 0.5f, // Center horizontally
                 VAlign = 0.33f,  // Approx random vertical position, approx where the vanilla loading screen is
@@ -27,7 +27,7 @@ namespace ModReloader.Common.Systems
             Main.menuMode = 888;
             // Activate this UI
             Main.MenuUI.SetState(screen);
-            centeredText.SetText($"Loading world: {worldName}..");
+            centeredText.SetText($"{LocalizationHelper.GetText("MainMenu.LoadingWorld", worldName)}...");
             return screen;
         }
     }

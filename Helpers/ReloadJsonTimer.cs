@@ -1,6 +1,6 @@
 ﻿namespace ModReloader.Helpers
 {
-    public class PlayerTest : ModPlayer
+    public class ReloadJsonTimerTimer : ModPlayer
     {
         public override void OnEnterWorld()
         {

@@ -1,4 +1,5 @@
 ﻿using CheatSheet;
+using DragonLens.Content.GUI;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
@@ -48,7 +49,7 @@ namespace ModReloader.Common.Systems.Integrations
             CheatSheetInterface.RegisterButton(
                 texture: reloadTex,
                 buttonClickedAction: async () => await ReloadUtilities.SinglePlayerReload(),
-                tooltip: () => $"Reload {modsToReload}"
+                tooltip: () => $"{LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload)}"
             );
         }
 
@@ -64,7 +65,7 @@ namespace ModReloader.Common.Systems.Integrations
             CheatSheetInterface.RegisterButton(
                 texture: reloadTex,
                 buttonClickedAction: async () => await ReloadUtilities.MultiPlayerMainReload(),
-                tooltip: () => $"Reload {modsToReload}"
+                tooltip: () => $"{LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload)}"
             );
         }
 
@@ -90,7 +91,7 @@ namespace ModReloader.Common.Systems.Integrations
                         parent.Append(panel);          // move to top layer
                     }
                 },
-                tooltip: () => sys.mainState.modsPanel.GetActive() ? "Close mod list" : "Open mod list"
+                tooltip: () => sys.mainState.modsPanel.GetActive() ? LocalizationHelper.GetText("ModsButton.HoverTooltipOn") : LocalizationHelper.GetText("ModsButton.HoverTooltipOff")
             );
         }
 
@@ -118,7 +119,7 @@ namespace ModReloader.Common.Systems.Integrations
                 },
 
                 // Tooltip – reflect current state
-                tooltip: () => sys.mainState.uiElementPanel.GetActive() ? "Close UIElement panel" : "Open UIElement panel"
+                tooltip: () => sys.mainState.uiElementPanel.GetActive() ? LocalizationHelper.GetText("UIElementButton.HoverTooltipOn") : LocalizationHelper.GetText("UIElementButton.HoverTooltipOff")
             );
         }
 
@@ -144,7 +145,8 @@ namespace ModReloader.Common.Systems.Integrations
                         parent.Append(panel);          // move to top layer
                     }
                 },
-                tooltip: () => sys.mainState.logPanel.GetActive() ? "Close log panel" : "Open log panel"
+                //tooltip: () => sys.mainState.logPanel.GetActive() ?
+                tooltip: () => sys.mainState.logPanel.GetActive() ? LocalizationHelper.GetText("LogButton.HoverTooltipOn") : LocalizationHelper.GetText("UIElementButton.HoverTooltipOff")
             );
         }
     }

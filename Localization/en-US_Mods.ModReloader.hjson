@@ -1,44 +1,3 @@
-Keybinds: {
-	DragonLensLogPanel.DisplayName: Dragon Lens Log Panel
-	DragonLensModsPanel.DisplayName: Dragon Lens Mods Panel
-	DragonLensReload.DisplayName: Dragon Lens Reload
-	DragonLensReloadMP.DisplayName: Dragon Lens Reload MP
-	DragonLensUIPanel.DisplayName: Dragon Lens UI Panel
-	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
-	DragonLensLogPanelRightClick.DisplayName: Dragon Lens Log Panel Right Click
-	DragonLensUIPanelRightClick.DisplayName: Dragon Lens UI Panel Right Click
-}
-
-Tools: {
-	DragonLensLogPanel: {
-		DisplayName: DragonLensLogPanel
-		Description: The tool has no description! Add one in .hjson files!
-		RightClickName: DragonLensLogPanel Right Click
-	}
-
-	DragonLensModsPanel: {
-		DisplayName: DragonLensModsPanel
-		Description: The tool has no description! Add one in .hjson files!
-	}
-
-	DragonLensReload: {
-		DisplayName: DragonLensReload
-		Description: The tool has no description! Add one in .hjson files!
-		RightClickName: DragonLensReload Right Click
-	}
-
-	DragonLensReloadMP: {
-		DisplayName: DragonLensReloadMP
-		Description: The tool has no description! Add one in .hjson files!
-	}
-
-	DragonLensUIPanel: {
-		DisplayName: DragonLensUIPanel
-		Description: The tool has no description! Add one in .hjson files!
-		RightClickName: DragonLensUIPanel Right Click
-	}
-}
-
 Configs: {
 	Config: {
 		DisplayName: Config
@@ -131,5 +90,133 @@ BuilderToggles: {
 	MainStateBuilderToggle: {
 		OffText: Mod Reloader Off
 		OnText: Mod Reloader On
+	}
+}
+
+MainMenu: {
+	WelcomeTooltip: Welcome to Mod Reloader's main menu!
+	OpenConfigText: Open config
+	OpenConfigTooltip: Click to open Mod Reloader config
+	ReloadText: Reload
+	ReloadTooltip: Reloads {0}
+	ReloadNoMods: No mods selected
+	OptionsHeader: Options
+	OptionsTooltip: General options for testing
+	StartServerText: Start Server
+	StartServerTooltip: Starts a server instance with cmd-line
+	StartClientText: Start Client
+	StartClientTooltip: Starts another tML instance with cmd-line in addition to this one
+	OpenLogText: Open Log
+	OpenLogTooltip: Click to open the {0}
+	ClearLogText: Clear Log
+	ClearLogTooltip: Click to clear the {0}
+	SingleplayerHeader: Singleplayer
+	SingleplayerTooltip: Quickly join singleplayer worlds
+	JoinSingleplayerText: Join Singleplayer
+	JoinSingleplayerTooltip: Enter singleplayer world with the selected player and world from config
+	MultiplayerHeader: Multiplayer
+	MultiplayerTooltip: Hosting and testing multiplayer
+	HostMultiplayerText: Host Multiplayer
+	HostMultiplayerTooltip: Start a local multiplayer world
+	JoinMultiplayerText: Join Multiplayer
+	JoinMultiplayerTooltip: Enter local multiplayer world with first available player (server required)
+	LoadingWorld: Loading world: {0}
+}
+
+ExceptionMenu: {
+	TitleTooltip: Welcome to Mod Reloader's error menu!
+	ReloadText: Reload
+	ReloadTooltip: Reloads {0}
+	OpenLogText: Open Log
+	OpenLogTooltip: Click to open the {0}
+	ClearLogText: Clear Log
+	ClearLogTooltip: Click to clear the {0}
+	CopyText: Copy
+	CopyTooltip: Copy to Clipboard
+	GoToFileText: Go to file
+	GoToFileTooltip: Open the exception's source file in VS
+	Copied: Copied!
+}
+
+ModsButton: {
+	Text: Mods
+	HoverText: Mod list
+	HoverDesc: Toggle mods on or off
+	HoverTooltipOn: Close mod list
+	HoverTooltipOff: Open mod list
+}
+
+UIElementButton: {
+	Text: UI
+	HoverText: UIElement Hitboxes
+	HoverDescBase: Toggle UIElement hitboxes
+	HoverDescRightClick: Right click to toggle all UIElements
+	HoverTooltipOn: Close UIElement panel
+	HoverTooltipOff: Open UIElement panel
+}
+
+LogButton: {
+	Text: Log
+	HoverText: Log options
+	HoverDescBase: Change log options here
+	HoverDescRightClick: Right click to open {0}
+	HoverTooltipOn: Close log panel
+	HoverTooltipOff: Open log panel
+}
+
+ReloadButton: {
+	Text: Reload
+	HoverText: Reloads {0}
+	HoverDescNoMods: No mods selected
+	HoverDescRightClick: Right click to reload mods without building any
+}
+
+ReloadMPButton: {
+	Text: Reload MP
+	HoverText: Reloads {0}
+	HoverDescNoMods: No mods selected
+	HoverDescRightClick: Right click to reload mods without building any
+}
+
+Keybinds: {
+	DragonLensLogPanel.DisplayName: Dragon Lens Log Panel
+	DragonLensLogPanelRightClick.DisplayName: Dragon Lens Log Panel Right Click
+	DragonLensModsPanel.DisplayName: Dragon Lens Mods Panel
+	DragonLensReload.DisplayName: Dragon Lens Reload
+	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
+	DragonLensReloadMP.DisplayName: Dragon Lens Reload M P
+	DragonLensReloadMPRightClick.DisplayName: Dragon Lens Reload M P Right Click
+	DragonLensUIPanel.DisplayName: Dragon Lens U I Panel
+	DragonLensUIPanelRightClick.DisplayName: Dragon Lens U I Panel Right Click
+}
+
+Tools: {
+	DragonLensLogPanel: {
+		DisplayName: DragonLensLogPanel
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensLogPanel Right Click
+	}
+
+	DragonLensModsPanel: {
+		DisplayName: DragonLensModsPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DragonLensReload: {
+		DisplayName: DragonLensReload
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensReload Right Click
+	}
+
+	DragonLensReloadMP: {
+		DisplayName: DragonLensReloadMP
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensReloadMP Right Click
+	}
+
+	DragonLensUIPanel: {
+		DisplayName: DragonLensUIPanel
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensUIPanel Right Click
 	}
 }

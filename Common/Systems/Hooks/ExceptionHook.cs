@@ -159,7 +159,15 @@ namespace ModReloader.Common.Systems.Hooks
 
             // Get names and tooltips for menu options
             string fileName = Path.GetFileName(Logging.LogPath);
-            string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
+            string reloadHoverMods;
+            if (ReloadUtilities.IsModsToReloadEmpty)
+            {
+                reloadHoverMods = LocalizationHelper.GetText("MainMenu.ReloadNoMods");
+            }
+            else
+            {
+                reloadHoverMods = string.Join(",", Conf.C.ModsToReload);
+            }
 
             Mod mod = ModReloader.Instance;
 
@@ -167,24 +175,31 @@ namespace ModReloader.Common.Systems.Hooks
             string copyTooltip;
             if (timeOnCopyOptionPressed == DateTime.MinValue)
             {
-                copyTooltip = "Copy error message to clipboard";
+                copyTooltip = LocalizationHelper.GetText("ExceptionMenu.CopyTooltip");
             }
             else
             {
                 TimeSpan timeSinceCopy = DateTime.Now - timeOnCopyOptionPressed;
-                copyTooltip = timeSinceCopy.TotalSeconds <= 1 ? "Copied!" : "Copy error message to clipboard";
+                if (timeSinceCopy.TotalSeconds <= 1)
+                {
+                    copyTooltip = LocalizationHelper.GetText("ExceptionMenu.Copied");
+                }
+                else
+                {
+                    copyTooltip = LocalizationHelper.GetText("ExceptionMenu.CopyTooltip");
+                }
             }
 
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Reloaders UIError menu!"),
-                 ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
-                (" ", null, 1.15f, ""), // empty line
-                ("Open Log", Log.OpenClientLog, 1.02f, $"Click to open the {fileName} of this client"),
-                ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
-                ($"Copy", () => CopyErrorMessage(errorMessage), 1.02f, copyTooltip),
-                ($"Go to file", () => OpenFileWithException(errorMessage), 1.02f, "Open VS with the file with the exception"),
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, LocalizationHelper.GetText("ExceptionMenu.TitleTooltip")),
+                (LocalizationHelper.GetText("ExceptionMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, LocalizationHelper.GetText("ExceptionMenu.ReloadTooltip", reloadHoverMods)),
+                (" ", null, 1.15f, ""),
+                (LocalizationHelper.GetText("ExceptionMenu.OpenLogText"),   Log.OpenClientLog,   1.02f, LocalizationHelper.GetText("ExceptionMenu.OpenLogTooltip",   fileName)),
+                (LocalizationHelper.GetText("ExceptionMenu.ClearLogText"),  Log.ClearClientLog,  1.02f, LocalizationHelper.GetText("ExceptionMenu.ClearLogTooltip",  fileName)),
+                (LocalizationHelper.GetText("ExceptionMenu.CopyText"),     () => CopyErrorMessage(errorMessage),           1.02f, LocalizationHelper.GetText("ExceptionMenu.CopyTooltip",  copyTooltip)),
+                (LocalizationHelper.GetText("ExceptionMenu.GoToFileText"), () => OpenFileWithException(errorMessage),      1.02f, LocalizationHelper.GetText("ExceptionMenu.GoToFileTooltip")),
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)

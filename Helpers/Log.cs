@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using log4net;
 using log4net.Appender;
-using ModReloader.Common.Configs;
 
 namespace ModReloader.Helpers
 {

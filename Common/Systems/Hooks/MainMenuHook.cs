@@ -82,29 +82,30 @@ namespace ModReloader.Common.Systems.Hooks
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Reloaders main menu!"),
-                ("Open config", () => Conf.C.Open(), 1.02f, "Click to open Mod Reloader config"),
-                ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, $"Reloads {reloadHoverMods}"),
-                (" ", null, 1.15f, ""), // empty line
-
-                ($"Options", null, 1.15f, "General options for testing"),
-                ("Start Server", StartServer, 1.02f, "Starts a server instance with cmd-line"),
-                ("Start Client", StartClient, 1.02f, "Starts another tML instance with cmd-line in addition to this one"),
-                ("Open Log", Log.OpenClientLog, 1.02f, $"Click to open the {fileName} of this client"),
-                ("Clear Log", Log.ClearClientLog, 1.02f, $"Click to clear the {fileName} of this client"),
-                (" ", null, 1.15f, ""), // empty line
-                ($"Singleplayer", null, 1.15f, "Quickly join singleplayer worlds"),
-                ("Join Singleplayer", () => {
+                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, LocalizationHelper.GetText("MainMenu.WelcomeTooltip")),
+                (LocalizationHelper.GetText("MainMenu.OpenConfigText"), () => Conf.C.Open(), 1.02f, LocalizationHelper.GetText("MainMenu.OpenConfigTooltip")),
+                (LocalizationHelper.GetText("MainMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, LocalizationHelper.GetText("MainMenu.ReloadTooltip", reloadHoverMods)),
+                (" ", null, 1.15f, ""),
+                (LocalizationHelper.GetText("MainMenu.OptionsHeader"), null, 1.15f, LocalizationHelper.GetText("MainMenu.OptionsTooltip")),
+                (LocalizationHelper.GetText("MainMenu.StartServerText"), StartServer, 1.02f, LocalizationHelper.GetText("MainMenu.StartServerTooltip")),
+                (LocalizationHelper.GetText("MainMenu.StartClientText"), StartClient, 1.02f, LocalizationHelper.GetText("MainMenu.StartClientTooltip")),
+                (LocalizationHelper.GetText("MainMenu.OpenLogText"), Log.OpenClientLog, 1.02f, LocalizationHelper.GetText("MainMenu.OpenLogTooltip", fileName)),
+                (LocalizationHelper.GetText("MainMenu.ClearLogText"), Log.ClearClientLog, 1.02f, LocalizationHelper.GetText("MainMenu.ClearLogTooltip", fileName)),
+                (" ", null, 1.15f, ""),
+                (LocalizationHelper.GetText("MainMenu.SingleplayerHeader"), null, 1.15f, LocalizationHelper.GetText("MainMenu.SingleplayerTooltip")),
+                (LocalizationHelper.GetText("MainMenu.JoinSingleplayerText"), () =>
+                {
                     ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
                     ClientDataJsonHelper.PlayerID = -1;
                     ClientDataJsonHelper.WorldID = -1;
                     AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
-                }, 1.02f, "Enter singleplayer world with the selected player and world from config"),
-                (" ", null, 1.15f, ""), // empty line
-                ($"Multiplayer", null, 1.15f, "Hosting and testing multiplayer"),
-                ("Host Multiplayer", AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, "Start a local multiplayer world"),
-                ("Join Multiplayer", JoinMultiplayerNew, 1.02f, "Enter local multiplayer world with first available player (server required)"),
+                }, 1.02f, LocalizationHelper.GetText("MainMenu.JoinSingleplayerTooltip")),
+                (" ", null, 1.15f, ""),
+                (LocalizationHelper.GetText("MainMenu.MultiplayerHeader"), null, 1.15f, LocalizationHelper.GetText("MainMenu.MultiplayerTooltip")),
+                (LocalizationHelper.GetText("MainMenu.HostMultiplayerText"), AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, LocalizationHelper.GetText("MainMenu.HostMultiplayerTooltip")),
+                (LocalizationHelper.GetText("MainMenu.JoinMultiplayerText"), JoinMultiplayerNew, 1.02f, LocalizationHelper.GetText("MainMenu.JoinMultiplayerTooltip")),
             };
+
 
             foreach (var (text, action, scale, tooltip) in menuOptions)
             {

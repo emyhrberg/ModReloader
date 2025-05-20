@@ -13,9 +13,9 @@ namespace ModReloader.Common.Systems.Integrations
     [ExtendsFromMod("DragonLens")]
     public class DragonLensUIPanel : Tool
     {
-        public override string IconKey => "UI";
+        public override string IconKey => Helpers.LocalizationHelper.GetText("UIElementButton.Text");
 
-        public override string DisplayName => "UIElement Hitboxes";
+        public override string DisplayName => Helpers.LocalizationHelper.GetText("UIElementButton.HoverText");
 
         public override string Description => GetDescription();
 
@@ -23,10 +23,12 @@ namespace ModReloader.Common.Systems.Integrations
         {
             if (!Conf.C.RightClickToolOptions)
             {
-                return $"Toggle UIElements";
+                return Helpers.LocalizationHelper.GetText("UIElementButton.HoverDescBase");
             }
 
-            return $"Toggle UIElements \nRight click to toggle all UIElement hitboxes";
+            string result = Helpers.LocalizationHelper.GetText("UIElementButton.HoverDescBase");
+            result += $"\n{Helpers.LocalizationHelper.GetText("UIElementButton.HoverDescRightClick")}";
+            return result;
         }
 
         public override void OnActivate()

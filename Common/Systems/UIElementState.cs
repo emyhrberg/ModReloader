@@ -132,7 +132,7 @@ namespace ModReloader.Common.Systems
         {
             GenerateRainbowColors(count: 20);
             LoadSettingsJson();
-            RefreshUIState();
+            //RefreshUIState();
         }
 
         private void LoadSettingsJson()
@@ -398,6 +398,11 @@ namespace ModReloader.Common.Systems
         public void RefreshUIState()
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
+            if (sys == null)
+            {
+                Log.Error("dang is null"); 
+                return;
+            }
             UIElementPanel uiPanel = sys.mainState.uiElementPanel;
             uiPanel?.Update(Main._drawInterfaceGameTime); // Force immediate update
         }

@@ -15,9 +15,9 @@ namespace ModReloader.Common.Systems.Integrations
     [ExtendsFromMod("DragonLens")]
     public class DragonLensLogPanel : Tool
     {
-        public override string IconKey => "Log";
+        public override string IconKey => Helpers.LocalizationHelper.GetText("LogButton.Text");
 
-        public override string DisplayName => "Log Options";
+        public override string DisplayName => Helpers.LocalizationHelper.GetText("LogButton.HoverText");
 
         public override string Description => GetDescription();
 
@@ -25,11 +25,13 @@ namespace ModReloader.Common.Systems.Integrations
         {
             if (!Conf.C.RightClickToolOptions)
             {
-                return $"Change log options here";
+                return Helpers.LocalizationHelper.GetText("LogButton.HoverDescBase");
             }
 
             string logFileName = Path.GetFileName(Logging.LogPath);
-            return $"Change log options here \nRight click to open {logFileName}";
+            string result = Helpers.LocalizationHelper.GetText("LogButton.HoverDescBase");
+            result += $"\n{Helpers.LocalizationHelper.GetText("LogButton.HoverDescRightClick", Path.GetFileName(Logging.LogPath))}";
+            return result;
         }
 
         public override bool HasRightClick => Conf.C.RightClickToolOptions;

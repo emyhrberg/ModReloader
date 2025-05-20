@@ -8,9 +8,9 @@ namespace ModReloader.Common.Systems.Integrations
     [ExtendsFromMod("DragonLens")]
     public class DragonLensReload : Tool
     {
-        public override string IconKey => "Reload";
+        public override string IconKey => "Reload"; // icon for assets only
 
-        public override string DisplayName => "Reload";
+        public override string DisplayName => Helpers.LocalizationHelper.GetText("ReloadButton.Text");
 
         public override string Description => GetDescription();
 
@@ -18,11 +18,12 @@ namespace ModReloader.Common.Systems.Integrations
         {
             if (!Conf.C.RightClickToolOptions)
             {
-                return $"Reloads {string.Join(", ", Conf.C.ModsToReload)}";
+                return Helpers.LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
             }
 
-            return $"Reloads {string.Join(", ", Conf.C.ModsToReload)}\n" +
-                   $"Right click to reload mods without building any";
+            string result = $"{Helpers.LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
+            //result += $"\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
+            return result;
         }
 
         public override bool HasRightClick => Conf.C.RightClickToolOptions;
