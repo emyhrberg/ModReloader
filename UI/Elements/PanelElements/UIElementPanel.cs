@@ -23,7 +23,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Opacity",
                 min: 0,
                 max: 1f,
-                defaultValue: 0.1f,
+                defaultValue: elementState.GetOpacity(),
                 onValueChanged: elementState.SetOpacity,
                 hover: "Set the opacity of the UI elements hitboxes",
                 increment: 0.01f
@@ -33,7 +33,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Color",
                 min: 0,
                 max: 1f,
-                defaultValue: 0f,
+                defaultValue: (float)elementState.GetOutlineColor().R/255f,
                 onValueChanged: (value) =>
                 {
                     // Interpolate from Black (value=0f) to White (value=1f)
@@ -48,7 +48,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Thickness",
                 min: 0,
                 max: 10,
-                defaultValue: 1f,
+                defaultValue: elementState.GetThickness(),
                 onValueChanged: (value) => elementState.SetThickness((int)value),
                 hover: "Set the thickness of the UI elements hitboxes",
                 increment: 1f

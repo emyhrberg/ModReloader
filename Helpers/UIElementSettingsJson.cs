@@ -5,16 +5,6 @@ using Newtonsoft.Json;
 
 namespace ModReloader.Helpers
 {
-    public class UIElementSettingsJsonSystem : ModSystem
-    {
-        public override void Load()
-        {
-            base.Load();
-
-            UIElementSettingsJson.Initialize();
-        }
-    }
-
     public static class UIElementSettingsJson
     {
         private static readonly string fileName = "UIElementSettings.json";
@@ -26,17 +16,36 @@ namespace ModReloader.Helpers
             _elementSettings = ReadElementSettingsFromFile();
         }
 
-        /// <summary> Update a setting's value and save to file </summary>
-        public static void UpdateElementValue(string settingName, object value)
+        public static T TryGetValue<T>(string settingName, T defaultValue)
         {
-            _elementSettings[settingName] = value;
-            WriteElementSettingsToFile();
+            if (TryGetValue(settingName, out T result))
+            {
+                    return result;
+            }
+            else
+            {
+                return defaultValue;
+            }
         }
 
-        /// <summary> Read log levels from the JSON file </summary>
-        public static Dictionary<string, object> ReadElementSettings()
+        public static bool TryGetValue<T>(string settingName, out T result)
         {
-            return new Dictionary<string, object>(_elementSettings);
+            if (_elementSettings.TryGetValue(settingName, out object value))
+            {
+                if(value is T cast)
+                {
+                    result = (T)value;
+                    return true;
+                }
+                result = default;
+                return false;
+            }
+            else
+            {
+                result = default;
+                return false;
+            }
+            
         }
 
         private static Dictionary<string, object> ReadElementSettingsFromFile()
@@ -49,7 +58,7 @@ namespace ModReloader.Helpers
                     string json = File.ReadAllText(filePath);
                     return JsonConvert.DeserializeObject<Dictionary<string, object>>(
                         json,
-                        new JsonSerializerSettings { FloatParseHandling = FloatParseHandling.Decimal }
+                        new JsonSerializerSettings { }
                     ) ?? [];
                 }
             }
@@ -60,7 +69,12 @@ namespace ModReloader.Helpers
             return [];
         }
 
-        private static void WriteElementSettingsToFile()
+        public static void WriteValue<T>(string settingName, T value)
+        {
+            _elementSettings[settingName] = value;
+        }
+
+        public static void Save()
         {
             string filePath = Utilities.GetModReloaderFolderPath(fileName);
             try

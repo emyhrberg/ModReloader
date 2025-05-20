@@ -14,11 +14,6 @@ namespace ModReloader.Common.Systems
         {
             ui = new UserInterface();
             debugState = new UIElementState();
-            if (debugState == null)
-            {
-                Log.Error("dang null UIElementstate");
-                return;
-            }
             ui.SetState(debugState);
 
             On_UIElement.Draw += debugState.UIElement_Draw;
@@ -26,7 +21,8 @@ namespace ModReloader.Common.Systems
 
         public override void Unload()
         {
-            //On_UIElement.Draw -= debugState.UIElement_Draw;
+            debugState.WriteAllInJson();
+            On_UIElement.Draw -= debugState.UIElement_Draw;
         }
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
