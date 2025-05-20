@@ -28,7 +28,7 @@ namespace ModReloader.Common.Systems.Hooks
     public class ExceptionHook : ModSystem
     {
         #region hooks
-        public override void Load()
+        public override void OnModLoad()
         {
             if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
             {
