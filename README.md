@@ -5,42 +5,33 @@
     <img src="icon_workshop.png" alt="Logo" width="150">
   </a>
 
-  <h3 align="center">Mod Reloader</h3>
+  <h1 align="center">Mod Reloader</h1>
 
-Mod Reloader is the ultimate Terraria testing tool for modders and players who want full control.
+Mod Reloader improves your modding experience with instant reloads, practical tools, and solid support for other mods.
+It's built to make the mod reload and compile process easier and more efficient, while also adding helpful tools for modders and players.
 
   <p align="center">
-    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3408391079">Workshop Page</a>
+    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3483722883">Workshop Page</a>
     &middot;
-    <a href="https://github.com/emyhrberg/ModHelper/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen">Bug Report</a>
+    <a href="https://github.com/emyhrberg/ModReloader/issues?q=sort%3Aupdated-desc+is%3Aissue+is%3Aopen">Issues</a>
   </p>
 </div>
 
-# Features:
+## Features:
 
-🔹 Seamless Reload – Instantly reload selected mods, even in multiplayer.
+🔹 **Quick Reload:** Instantly reload selected mods without restarting the game.
 
-🔹 In-Game Mod Toggle – Enable/disable mods mid-game with advanced filters.
+🔹 **Multiplayer Reload:** Instantly reload selected mods for multiple clients with one click.
 
-🔹 Publicizer Support – Access internal APIs with Krafs.Publicizer integration.
+🔹 **In-Game Mod Toggle:** Enable/disable mods mid-game.
 
-🔹 Main Menu Boost – Jump into testing faster with UI improvements.
+🔹 **Publicizer Tool:** Access internal dll's, including tModLoader, with publicizer support.
 
-🔹 Exception Menu Upgrade – Copy errors, and soon: retry, prettier logs, and jump-to-code.
+🔹 **Log Tools:** Set the log level for every logger.
 
-🔹 UI Integration – Works with CheatSheet, Hero’s Mod, and DragonLens.
+🔹 **UI Tools:** View UIElement hitboxes, sizes, and positions to make UI development easier.
 
-And as always, every feature is toggleable and customizable in the menu and config.
+🔹 **Main Menu Tools:** Navigate the menu faster with helpful options to speed up testing.
 
-# Demo
+🔹 **Exception Menu Tools:** Copy error messages, retry reload, and go to file with exception.
 
-UI Playground Demo:
-https://i.imgur.com/2aswesl.mp4
-
-Reload Demo:
-https://i.imgur.com/M7iq5FQ.mp4
-
-Copy Exception Demo:
-https://i.imgur.com/XeTf3KX.png
-
-Whether you're debugging a mod or just messing around, this mod makes testing faster, easier, and more fun! 🚀
