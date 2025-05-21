@@ -343,7 +343,6 @@ namespace ModReloader.Common.Systems
         {
             orig(self, spriteBatch); // Normal UI behavior
 
-
             // Register the element
             if (!elements.Contains(self))
             {

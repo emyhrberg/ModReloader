@@ -27,6 +27,7 @@ namespace ModReloader.UI.Elements.ConfigElements
             // Create a new list
             uiList = new NestedUIList
             {
+                Top = { Pixels = 0 },
                 Width = { Percent = 1f },
                 Height = { Percent = 1f },
                 ManualSortMethod = (e) => { }
@@ -41,7 +42,7 @@ namespace ModReloader.UI.Elements.ConfigElements
                     HAlign = 1f,
                     VAlign = 0f,
                     Left = { Pixels = 5 },
-                    Top = { Pixels = 10 },
+                    Top = { Pixels = 0 },
                 };
             }
 
@@ -69,12 +70,9 @@ namespace ModReloader.UI.Elements.ConfigElements
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            uiList.Top.Set(0, 0);
             //uiList.Height.Set(0, 1);
             //uiList.MaxHeight.Set(0, 1);
-            scrollbar.Top.Set(-0, 0);
             base.Draw(spriteBatch);
-            Top.Set(-0,0);
         }
     }
 }

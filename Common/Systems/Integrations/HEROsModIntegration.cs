@@ -25,8 +25,8 @@ namespace ModReloader.Common.Systems.Integrations
 
         private static void RegisterReloadButton(Mod herosMod)
         {
-            string ReloadPermission = Helpers.LocalizationHelper.GetText("ReloadButton.Text");
-            string ReloadPermissionDisplay = Helpers.LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+            string ReloadPermission = LocalizationHelper.GetText("ReloadButton.Text");
+            string ReloadPermissionDisplay = LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
 
             // Register a permission so admins can gate this button
             herosMod.Call(
@@ -40,16 +40,21 @@ namespace ModReloader.Common.Systems.Integrations
                 "AddSimpleButton",
                 /* permissionName:      */ ReloadPermission,
                 /* texture:             */ Ass.ButtonReloadSPHeros,
-                /* onClick action:      */ (Action)(async () =>
-                                           {
-                                               await ReloadUtilities.SinglePlayerReload();
-                                           }),
+                /* onClick action:      */ (Action)(async () => await ReloadUtilities.SinglePlayerReload()),
                 /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
                                            {
                                                if (!hasPerm)
                                                    Main.NewText("⛔You lost permission to reload mods!", Color.OrangeRed);
                                            }),
-                /* tooltipFunc:         */ (Func<string>)(() => $"{Helpers.LocalizationHelper.GetText("ReloadButton.HoverText")} {string.Join(", ", Conf.C.ModsToReload)}")
+                /* tooltipFunc:         */ () =>
+                {
+                    if (ReloadUtilities.IsModsToReloadEmpty)
+                        return LocalizationHelper.GetText("ReloadButton.HoverDescNoMods");
+
+                    string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+                    Log.Info($"Reloading mods for singleplayer Heros: {modsToReload}");
+                    return LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload);
+                }
             );
             Log.Info("HEROsMod reload button registered successfully.");
         }
@@ -71,16 +76,21 @@ namespace ModReloader.Common.Systems.Integrations
                 "AddSimpleButton",
                 /* permissionName:      */ ReloadPermission,
                 /* texture:             */ Ass.ButtonReloadMP,
-                /* onClick action:      */ (Action)(async () =>
-                                           {
-                                               await ReloadUtilities.MultiPlayerMainReload();
-                                           }),
+                /* onClick action:      */ (Action)(async () => await ReloadUtilities.MultiPlayerMainReload()),
                 /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
                                            {
                                                if (!hasPerm)
                                                    Main.NewText("⛔ You lost permission to reload MP mods!", Color.OrangeRed);
                                            }),
-                /* tooltipFunc:         */ (Func<string>)(() => $"{Helpers.LocalizationHelper.GetText("ReloadButton.HoverText")} {string.Join(", ", Conf.C.ModsToReload)}")
+                /* tooltipFunc:         */ () =>
+                {
+                    if (ReloadUtilities.IsModsToReloadEmpty)
+                        return LocalizationHelper.GetText("ReloadMPButton.HoverDescNoMods");
+
+                    string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+                    Log.Info($"Reloading mods for multiplayer Heros: {modsToReload}");
+                    return LocalizationHelper.GetText("ReloadMPButton.HoverText", modsToReload);
+                }
             );
             Log.Info("HEROsMod reloadMP button registered successfully.");
         }

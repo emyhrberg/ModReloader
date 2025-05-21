@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace ModReloader.UI.Elements.ConfigElements
@@ -15,10 +14,12 @@ namespace ModReloader.UI.Elements.ConfigElements
 
         public ModSourcesConfig parentConfig;
 
-        public ModSourcesPanelConfig(ModSourcesConfig parent) : base(scrollbarEnabled: true)
+        public ModSourcesPanelConfig(ModSourcesConfig parent, bool needScrollbar = false) : base(needScrollbar)
         {
-            Width.Set(0, 1);
-            Left.Set(-10, 0);
+            Width.Set(-5, 1);
+            Left.Set(-0, 0);
+            Height.Set(-10, 1);
+            MaxHeight.Set(-10, 1);
             parentConfig = parent;
             ConstructModSources();
         }
@@ -44,7 +45,7 @@ namespace ModReloader.UI.Elements.ConfigElements
                 var (fullModPath, _) = modSourcesWithTimes[i];
 
                 // Add the element to the UI list  
-                string cleanName = GetModSourcesCleanName(fullModPath);
+                string cleanName = Path.GetFileName(fullModPath); // Use the folder name as the clean name
                 ModSourcesElementConfig modSourcesElement = new(parentConfig, fullModPath: fullModPath, cleanName: cleanName);
                 modSourcesElements.Add(modSourcesElement);
                 uiList.Add(modSourcesElement);
@@ -57,60 +58,18 @@ namespace ModReloader.UI.Elements.ConfigElements
             }
         }
 
-        private string GetModSourcesCleanName(string modFolder)
-        {
-            // Get the assembly and the ModCompile type.
-            Assembly assembly = typeof(ModLoader).Assembly;
-            Type modCompileType = assembly.GetType("Terraria.ModLoader.Core.ModCompile");
-
-            // Get the non-public nested type "ConsoleBuildStatus".
-            Type consoleBuildStatusType = modCompileType.GetNestedType("ConsoleBuildStatus", BindingFlags.NonPublic);
-            // Create an instance of ConsoleBuildStatus.
-            object consoleBuildStatusInstance = Activator.CreateInstance(consoleBuildStatusType, nonPublic: true);
-
-            // Create an instance of ModCompile using the constructor that takes an IBuildStatus.
-            object modCompileInstance = Activator.CreateInstance(
-                modCompileType,
-                BindingFlags.Public | BindingFlags.Instance,
-                null,
-                [consoleBuildStatusInstance],
-                null);
-
-            // Retrieve the private instance method ReadBuildInfo.
-            MethodInfo readBuildInfoMethod = modCompileType.GetMethod("ReadBuildInfo", BindingFlags.NonPublic | BindingFlags.Instance);
-            // Invoke the method on the instance.
-            object buildingMod = readBuildInfoMethod.Invoke(modCompileInstance, [modFolder]);
-
-            // Since DisplayNameClean is a field, use GetField instead of GetProperty.
-            FieldInfo displayNameField = buildingMod.GetType().GetField("DisplayNameClean", BindingFlags.Public | BindingFlags.Instance);
-            return (string)displayNameField?.GetValue(buildingMod);
-        }
-
         private List<string> GetModSourcesPaths()
         {
-            List<string> strings = [];
-
-            // 1. Getting Assembly 
-            Assembly assembly = typeof(Main).Assembly;
-
-            // 2. Gettig method for finding modSources paths
-            Type modCompileType = assembly.GetType("Terraria.ModLoader.Core.ModCompile");
-            MethodInfo findModSourcesMethod = modCompileType.GetMethod("FindModSources", BindingFlags.NonPublic | BindingFlags.Static);
-            string[] modSources = (string[])findModSourcesMethod.Invoke(null, null);
-
-            for (int i = 0; i < modSources.Length; i++)
-            {
-                strings.Add(modSources[i]);
-            }
-            return strings;
+            // Directly use the ModCompile class to get mod sources paths
+            return [.. Terraria.ModLoader.Core.ModCompile.FindModSources()];
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            Width.Set(-5,1);
-            Left.Set(-0, 0);
-            Height.Set(-10, 1);
-            MaxHeight.Set(-10, 1);
+            // Width.Set(-5, 1);
+            // Left.Set(-0, 0);
+            // Height.Set(-10, 1);
+            // MaxHeight.Set(-10, 1);
             base.Draw(spriteBatch);
         }
     }

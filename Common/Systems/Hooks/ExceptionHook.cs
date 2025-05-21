@@ -193,13 +193,13 @@ namespace ModReloader.Common.Systems.Hooks
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-                ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, LocalizationHelper.GetText("ExceptionMenu.TitleTooltip")),
-                (LocalizationHelper.GetText("ExceptionMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, LocalizationHelper.GetText("ExceptionMenu.ReloadTooltip", reloadHoverMods)),
-                (" ", null, 1.15f, ""),
-                (LocalizationHelper.GetText("ExceptionMenu.OpenLogText"),   Log.OpenClientLog,   1.02f, LocalizationHelper.GetText("ExceptionMenu.OpenLogTooltip",   fileName)),
-                (LocalizationHelper.GetText("ExceptionMenu.ClearLogText"),  Log.ClearClientLog,  1.02f, LocalizationHelper.GetText("ExceptionMenu.ClearLogTooltip",  fileName)),
-                (LocalizationHelper.GetText("ExceptionMenu.CopyText"),     () => CopyErrorMessage(errorMessage),           1.02f, LocalizationHelper.GetText("ExceptionMenu.CopyTooltip",  copyTooltip)),
-                (LocalizationHelper.GetText("ExceptionMenu.GoToFileText"), () => OpenFileWithException(errorMessage),      1.02f, LocalizationHelper.GetText("ExceptionMenu.GoToFileTooltip")),
+               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, LocalizationHelper.GetText("ExceptionMenu.TitleTooltip")),
+               (LocalizationHelper.GetText("ExceptionMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, LocalizationHelper.GetText("ExceptionMenu.ReloadTooltip", reloadHoverMods)),
+               (" ", null, 1.15f, ""),
+               (LocalizationHelper.GetText("ExceptionMenu.OpenLogText"),   Log.OpenClientLog,   1.02f, LocalizationHelper.GetText("ExceptionMenu.OpenLogTooltip",   fileName)),
+               (LocalizationHelper.GetText("ExceptionMenu.ClearLogText"),  Log.ClearClientLog,  1.02f, LocalizationHelper.GetText("ExceptionMenu.ClearLogTooltip",  fileName)),
+               (LocalizationHelper.GetText("ExceptionMenu.CopyText"),     () => CopyErrorMessage(errorMessage),           1.02f, LocalizationHelper.GetText("ExceptionMenu.CopyTooltip",  copyTooltip)),
+               (LocalizationHelper.GetText("ExceptionMenu.GoToFileText"), () => OpenFileWithException(errorMessage),      1.02f, LocalizationHelper.GetText("ExceptionMenu.GoToFileTooltip")),
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)
@@ -285,7 +285,7 @@ namespace ModReloader.Common.Systems.Hooks
                 string[] progRoots =
                 [
                     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                    Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+                   Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
                 ];
 
                 foreach (var root in progRoots.Where(r => !string.IsNullOrEmpty(r) && Directory.Exists(r)))

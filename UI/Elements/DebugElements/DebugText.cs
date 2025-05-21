@@ -80,6 +80,7 @@ namespace ModReloader.UI.Elements.DebugElements
         // Helper: is any tML config UI currently open?
         private bool IsConfigOpenAnywhere()
         {
+            return false;
             if (Main.InGameUI == null)
             {
                 return false;

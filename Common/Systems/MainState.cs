@@ -4,6 +4,8 @@ using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.UI.Elements.ButtonElements;
 using ModReloader.UI.Elements.DebugElements;
+
+//using ModReloader.UI.Elements.DebugElements;
 using ModReloader.UI.Elements.PanelElements;
 using ModReloader.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
@@ -119,9 +121,9 @@ namespace ModReloader.Common.Systems
                 }
             }
 
-                // Debug. 
-                // Always add to MainState, but only show if its enabled (in Draw() and Update().. See the implementation in its class.
-                DebugText debugText = new("");
+            // Debug. 
+            // Always add to MainState, but only show if its enabled (in Draw() and Update().. See the implementation in its class.
+            DebugText debugText = new("");
             Append(debugText);
         }
         #endregion

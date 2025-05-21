@@ -49,7 +49,15 @@ namespace ModReloader.Common.Systems.Integrations
             CheatSheetInterface.RegisterButton(
                 texture: reloadTex,
                 buttonClickedAction: async () => await ReloadUtilities.SinglePlayerReload(),
-                tooltip: () => $"{LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload)}"
+                tooltip: () =>
+                {
+                    if (ReloadUtilities.IsModsToReloadEmpty)
+                        return LocalizationHelper.GetText("ReloadButton.HoverDescNoMods");
+
+                    string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+                    Log.Info($"Reloading mods for singleplayer Cheat sheet: {modsToReload}");
+                    return LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload);
+                }
             );
         }
 
@@ -58,14 +66,19 @@ namespace ModReloader.Common.Systems.Integrations
             // Load the button icon
             Asset<Texture2D> reloadTex = Ass.ButtonReloadMP;
 
-            // Build the mods‐to‐reload string
-            string modsToReload = string.Join(", ", Conf.C.ModsToReload);
-
             // Register the button: click runs your reload, tooltip shows the list
             CheatSheetInterface.RegisterButton(
                 texture: reloadTex,
                 buttonClickedAction: async () => await ReloadUtilities.MultiPlayerMainReload(),
-                tooltip: () => $"{LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload)}"
+                tooltip: () =>
+                {
+                    if (ReloadUtilities.IsModsToReloadEmpty)
+                        return LocalizationHelper.GetText("ReloadButton.HoverDescNoMods");
+
+                    string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+                    Log.Info($"Reloading mods for multiplayer Cheat sheet: {modsToReload}");
+                    return LocalizationHelper.GetText("ReloadMPButton.HoverText", modsToReload);
+                }
             );
         }
 
