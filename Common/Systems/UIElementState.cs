@@ -22,7 +22,7 @@ namespace ModReloader.Common.Systems
 
         // Elements
         public List<UIElement> elements = [];
-        private readonly Dictionary<UIElement, bool> elementToggles = [];
+        private readonly Dictionary<string, bool> elementToggles = [];
 
         // Outline color
         private Color outlineColor = Color.White;
@@ -59,16 +59,26 @@ namespace ModReloader.Common.Systems
         public void SetTypeYOffset(float value) => TypeYOffset = value;
         public void SetTypeTextSize(float value) => TypeTextSize = value;
 
+        // Getters
+        public float GetOpacity() => opacity;
+        public bool GetDrawSizeOfElement() => DrawSizeOfElement;
+        public bool GetRandomOutlineColor() => randomOutlineColor;
+        public float GetSizeXOffset() => SizeXOffset;
+        public float GetSizeYOffset() => SizeYOffset;
+        public float GetSizeTextSize() => SizeTextSize;
+        public float GetTypeXOffset() => TypeXOffset;
+        public float GetTypeYOffset() => TypeYOffset;
+        public float GetTypeTextSize() => TypeTextSize;
+        public bool GetDrawNameOfElement() => DrawNameOfElement;
+
         // Toggle stuff
-        public void ToggleShowSize() => DrawSizeOfElement = !DrawSizeOfElement;
-        public void ToggleShowType() => DrawNameOfElement = !DrawNameOfElement;
+        public void SetDrawSizeOfElement(bool value) => DrawSizeOfElement = value;
+        public void SetDrawNameOfElement(bool value) => DrawNameOfElement = value;
 
         public void ResetSizeOffset() => sizeOffsets.Clear();
         public void ResetTypeOffset() => typeOffsets.Clear();
 
         // Misc
-
-        public float GetOpacity() => opacity;
         public void SetOpacity(float value) => opacity = value;
         public void RandomizeRainbowColors() => rainbowColors = rainbowColors.OrderBy(_ => Main.rand.Next()).ToList();
         private static int Random => Main.rand.Next(-20, 20); // the random offset in X and Y
@@ -81,7 +91,7 @@ namespace ModReloader.Common.Systems
             GenerateRainbowColors(count: 20);
             // Load settings from JSON
             UIElementSettingsJson.Initialize();
-            opacity = UIElementSettingsJson.TryGetValue<float>("Opacity", 0.1f);
+            opacity = UIElementSettingsJson.TryGetValue("Opacity", 0.1f);
             DrawSizeOfElement = UIElementSettingsJson.TryGetValue("ShowSize", false);
             DrawNameOfElement = UIElementSettingsJson.TryGetValue("ShowType", false);
             outlineColor = UIElementSettingsJson.TryGetValue("OutlineColor", Color.White);
@@ -93,12 +103,17 @@ namespace ModReloader.Common.Systems
             TypeXOffset = UIElementSettingsJson.TryGetValue("TypeXOffset", 0);
             TypeYOffset = UIElementSettingsJson.TryGetValue("TypeYOffset", 0);
             TypeTextSize = UIElementSettingsJson.TryGetValue("TypeTextSize", 0.5f);
-
+            elementToggles = UIElementSettingsJson.TryGetValue("ElementToggles", new Dictionary<string, bool>());
+            Log.Info($"Readed Elements: {string.Join("\n", elementToggles.Keys)}");
             //RefreshUIState();
         }
 
         public void WriteAllInJson()
         {
+            // Clear the settings before writing new ones
+            UIElementSettingsJson.ClearSettings();
+
+            // Writting variables to settings
             UIElementSettingsJson.WriteValue("Opacity", opacity);
             UIElementSettingsJson.WriteValue("ShowSize", DrawSizeOfElement);
             UIElementSettingsJson.WriteValue("ShowType", DrawNameOfElement);
@@ -111,6 +126,8 @@ namespace ModReloader.Common.Systems
             UIElementSettingsJson.WriteValue("TypeXOffset", TypeXOffset);
             UIElementSettingsJson.WriteValue("TypeYOffset", TypeYOffset);
             UIElementSettingsJson.WriteValue("TypeTextSize", TypeTextSize);
+            UIElementSettingsJson.WriteValue("ElementToggles", elementToggles);
+
             // Save the settings to JSON
             UIElementSettingsJson.Save();
         }
@@ -134,40 +151,36 @@ namespace ModReloader.Common.Systems
             }
         }
 
-        public void ToggleElement(string typeName)
+        public bool GetElement(string typeName, bool defaultValue)
         {
-            UIElement firstMatch = elements.Find(e => e.GetType().Name == typeName);
-            if (firstMatch == null)
-                return;
+            return elementToggles.TryGetValue(typeName, out bool value) ? value : defaultValue;
+        }
 
-            // Find out if it's currently ON or OFF
-            bool oldValue = elementToggles[firstMatch];
-            bool newValue = !oldValue;
-
-            // Flip for all elements of that type
-            foreach (var elem in elements)
-            {
-                if (elem.GetType().Name == typeName)
-                {
-                    elementToggles[elem] = newValue;
-                }
-            }
+        public void SetElement(string typeName, bool value)
+        {
+            elementToggles[typeName] = value;
         }
 
         public void ToggleShowAll()
         {
             showAll = !showAll;
+            SetShowAll(showAll);
+        }
+
+        public void SetShowAll(bool value)
+        {
+            showAll = value;
             if (showAll)
             {
                 Main.NewText("Showing all UI elements.", Color.Green);
-                foreach (var elem in elements)
-                    elementToggles[elem] = false;
+                foreach (var keys in elementToggles.Keys)
+                    elementToggles[keys] = true;
             }
             else
             {
                 Main.NewText("Hiding all UI elements.", new Color(226, 57, 39));
-                foreach (var elem in elements)
-                    elementToggles[elem] = true;
+                foreach (var keys in elementToggles.Keys)
+                    elementToggles[keys] = false;
             }
 
             // Update text
@@ -178,14 +191,7 @@ namespace ModReloader.Common.Systems
             {
                 if (uiElement is OptionElement o)
                 {
-                    if (showAll)
-                    {
-                        o.SetState(OptionElement.EnabledState.Enabled);
-                    }
-                    else
-                    {
-                        o.SetState(OptionElement.EnabledState.Disabled);
-                    }
+                    o.SetValue(showAll);
                 }
             }
         }
@@ -344,10 +350,11 @@ namespace ModReloader.Common.Systems
             {
                 elements.Add(self);
 
-                // Ensure the element has a default toggle state (ON by default)
-                if (!elementToggles.ContainsKey(self))
+                // Ensure the element has a default toggle state (OFF by default)
+                if (!elementToggles.ContainsKey(self.GetType().Name))
                 {
-                    elementToggles[self] = true;
+                    Log.Info($"New element! : {self.GetType().Name}");
+                    elementToggles[self.GetType().Name] = false;
                 }
             }
 
@@ -359,8 +366,11 @@ namespace ModReloader.Common.Systems
                 return;
 
             // Check if this *type* is toggled OFF
-            if (elementToggles.ContainsKey(self) && elementToggles[self])
-                return;
+            if (elementToggles.TryGetValue(self.GetType().Name, out bool value))
+            {
+                if (!value)
+                    return;
+            }
 
             if (DrawSizeOfElement)
             {

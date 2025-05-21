@@ -154,9 +154,9 @@ namespace ModReloader.UI.Elements.PanelElements
             return sliderPanel;
         }
 
-        protected OptionElement AddOption(string text, Action leftClick, string hover = "", Action rightClick = null, float padding = 3f)
+        protected OptionElement AddOption(string text, bool defaultValue, Action<bool> leftClick, string hover = "", Action<bool> rightClick = null, float padding = 3f)
         {
-            OptionElement option = new(leftClick, text, hover);
+            OptionElement option = new(defaultValue, leftClick, text, hover);
             uiList.Add(option);
             AddPadding(padding);
             return option;

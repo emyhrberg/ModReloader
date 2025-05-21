@@ -9,7 +9,8 @@ namespace ModReloader.UI.Elements.PanelElements
         public string text;
         private OptionEnabledText enabledText;
         private OptionTitleText optionTitleText;
-        private Action leftClick;
+        private Action<bool> leftClick;
+        private bool value;
 
         public enum EnabledState
         {
@@ -17,10 +18,11 @@ namespace ModReloader.UI.Elements.PanelElements
             Disabled
         }
 
-        private EnabledState state = EnabledState.Disabled;
+        private EnabledState state => value ? EnabledState.Enabled : EnabledState.Disabled;
 
-        public OptionElement(Action leftClick, string text, string hover = "")
+        public OptionElement(bool value, Action<bool> leftClick, string text, string hover = "")
         {
+            this.value = value;
             this.leftClick = leftClick;
             this.text = text;
 
@@ -36,11 +38,11 @@ namespace ModReloader.UI.Elements.PanelElements
             // enabled text
             enabledText = new("Disabled");
             Append(enabledText);
+            UpdateState();
         }
 
-        public void SetState(EnabledState state)
+        private void UpdateState()
         {
-            this.state = state;
             enabledText.SetTextState(state);
         }
 
@@ -48,10 +50,17 @@ namespace ModReloader.UI.Elements.PanelElements
         {
             base.LeftClick(evt);
 
-            SetState(state == EnabledState.Enabled ? EnabledState.Disabled : EnabledState.Enabled);
+            value = !value;
 
-            // Invoke the left click action
-            leftClick?.Invoke();
+            leftClick?.Invoke(value);
+
+            UpdateState();
+        }
+
+        public void SetValue(bool value)
+        {
+            this.value = value;
+            UpdateState();
         }
     }
 }

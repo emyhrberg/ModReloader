@@ -19,7 +19,7 @@ namespace ModReloader.UI.Elements.PanelElements
             AddPadding(5);
             //TODO: This option is special bc it should be enabled if all elements are enabled and disabled if even one of the elements are disabled
             //So idk how to make it work rn, maybe we just with each element that tougles on or off we just update this option
-            AddOption("Show All", elementState.ToggleShowAll, "Show all UI elements from mods");
+            AddOption("Show All", false, elementState.SetShowAll, "Show all UI elements from mods");
 
             AddSlider(
                 title: "Opacity",
@@ -66,13 +66,13 @@ namespace ModReloader.UI.Elements.PanelElements
             AddPadding(20);
 
             AddHeader("UIElement Size");
-            AddOption("Show Size", elementState.ToggleShowSize, "Show the size of every element for active UIElements");
+            AddOption("Show Size", elementState.GetDrawSizeOfElement(), elementState.SetDrawSizeOfElement, "Show the size of every element for active UIElements");
 
             AddSlider(
                 title: "X Offset",
                 min: -100,
                 max: 100,
-                defaultValue: 0,
+                defaultValue: elementState.GetSizeXOffset(),
                 onValueChanged: elementState.SetSizeXOffset,
                 hover: "Set the X offset of the type text",
                 increment: 1
@@ -82,7 +82,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Y Offset",
                 min: -100,
                 max: 100,
-                defaultValue: 0,
+                defaultValue: elementState.GetSizeYOffset(),
                 onValueChanged: elementState.SetSizeYOffset,
                 hover: "Set the Y offset of the type text",
                 increment: 1
@@ -92,7 +92,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Text Size",
                 min: 0.1f,
                 max: 2f,
-                defaultValue: 0.5f,
+                defaultValue: elementState.GetSizeTextSize(),
                 onValueChanged: elementState.SetSizeTextSize,
                 hover: "Set the text size of the size text",
                 increment: 0.1f
@@ -114,13 +114,13 @@ namespace ModReloader.UI.Elements.PanelElements
             AddPadding(20);
 
             AddHeader("UIElement Types");
-            AddOption("Show Type", elementState.ToggleShowType, "Show the type of every element for active UIElements");
+            AddOption("Show Type", elementState.GetDrawNameOfElement(), elementState.SetDrawNameOfElement, "Show the type of every element for active UIElements");
 
             AddSlider(
                 title: "X Offset",
                 min: -100,
                 max: 100,
-                defaultValue: 0,
+                defaultValue: elementState.GetTypeXOffset(),
                 onValueChanged: elementState.SetTypeXOffset,
                 hover: "Set the X offset of the type text",
                 increment: 1
@@ -130,7 +130,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Y Offset",
                 min: -100,
                 max: 100,
-                defaultValue: 0,
+                defaultValue: elementState.GetTypeYOffset(),
                 onValueChanged: elementState.SetTypeYOffset,
                 hover: "Set the Y offset of the type text",
                 increment: 1
@@ -140,7 +140,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Text Size",
                 min: 0.1f,
                 max: 2f,
-                defaultValue: 0.5f,
+                defaultValue: elementState.GetTypeTextSize(),
                 onValueChanged: elementState.SetTypeTextSize,
                 hover: "Set the text size of the type text",
                 increment: 0.1f
@@ -215,7 +215,8 @@ namespace ModReloader.UI.Elements.PanelElements
                     // Create the UI option
                     var newOption = AddOption(
                         text: typeName,
-                        leftClick: () => elementState.ToggleElement(typeName),
+                        defaultValue: elementState.GetElement(typeName, false),
+                        leftClick: (bool value) => elementState.SetElement(typeName, value),
                         hover: $"Show all {typeName} UIElements",
                         padding: 0f
                     );

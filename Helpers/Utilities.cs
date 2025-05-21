@@ -109,5 +109,10 @@ namespace ModReloader.Helpers
                 return null;
             }
         }
+
+        public static T ReturValue<T>(ref T value)
+        {
+            return value;
+        }
     }
 }

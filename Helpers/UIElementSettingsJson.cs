@@ -17,6 +17,11 @@ namespace ModReloader.Helpers
             ReadElementSettingsFromFile();
         }
 
+        public static void ClearSettings()
+        {
+            _elementSettings = [];
+        }
+
         public static T TryGetValue<T>(string settingName, T defaultValue)
         {
             if (TryGetValue(settingName, out T result))
@@ -96,16 +101,38 @@ namespace ModReloader.Helpers
 
             if (token == null || token.Type == JTokenType.Null)
                 return false;
+
             try
             {
-                JValue temp = (JValue)token;
-                result = (T)Convert.ChangeType(temp, typeof(T));
+                if (token is JValue val)
+                {
+                    object rawValue = val.Value;
+
+                    if (rawValue == null)
+                        return false;
+                    if (typeof(T).IsEnum)
+                    {
+                        if (rawValue is string s)
+                        {
+                            result = (T)Enum.Parse(typeof(T), s, ignoreCase: true);
+                            return true;
+                        }
+                        else
+                        {
+                            result = (T)Enum.ToObject(typeof(T), rawValue);
+                            return true;
+                        }
+                    }
+                }
+                result = token.ToObject<T>();
                 return true;
             }
             catch
             {
+                result = default;
                 return false;
             }
         }
+
     }
 }

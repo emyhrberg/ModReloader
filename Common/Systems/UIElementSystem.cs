@@ -19,9 +19,13 @@ namespace ModReloader.Common.Systems
             On_UIElement.Draw += debugState.UIElement_Draw;
         }
 
-        public override void Unload()
+        public override void OnWorldUnload()
         {
             debugState.WriteAllInJson();
+        }
+
+        public override void Unload()
+        {
             On_UIElement.Draw -= debugState.UIElement_Draw;
         }
 
