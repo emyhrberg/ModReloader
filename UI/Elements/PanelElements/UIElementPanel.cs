@@ -17,6 +17,8 @@ namespace ModReloader.UI.Elements.PanelElements
 
             AddHeader("UIElement Hitboxes");
             AddPadding(5);
+            //TODO: This option is special bc it should be enabled if all elements are enabled and disabled if even one of the elements are disabled
+            //So idk how to make it work rn, maybe we just with each element that tougles on or off we just update this option
             AddOption("Show All", elementState.ToggleShowAll, "Show all UI elements from mods");
 
             AddSlider(
@@ -33,7 +35,7 @@ namespace ModReloader.UI.Elements.PanelElements
                 title: "Color",
                 min: 0,
                 max: 1f,
-                defaultValue: (float)elementState.GetOutlineColor().R/255f,
+                defaultValue: 1f - (elementState.GetOutlineColor().R / 255f),
                 onValueChanged: (value) =>
                 {
                     // Interpolate from Black (value=0f) to White (value=1f)
@@ -55,6 +57,7 @@ namespace ModReloader.UI.Elements.PanelElements
             );
 
             // colors
+            // THIS IS SHOULD BE AddOption ELEMENTS BC THEY ACT LIKE THEM 
             ActionOption rand = new(elementState.RandomizeRainbowColors, "Randomize Colors", "Randomize the colors of the boxes");
             uiList.Add(rand);
             AddPadding(3f);

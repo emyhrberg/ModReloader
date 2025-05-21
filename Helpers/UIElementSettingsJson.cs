@@ -2,25 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ModReloader.Helpers
 {
     public static class UIElementSettingsJson
     {
         private static readonly string fileName = "UIElementSettings.json";
-        private static Dictionary<string, object> _elementSettings = [];
+        private static JObject _elementSettings = [];
 
         /// <summary> Initialize element settings levels from file </summary>
         public static void Initialize()
         {
-            _elementSettings = ReadElementSettingsFromFile();
+            ReadElementSettingsFromFile();
         }
 
         public static T TryGetValue<T>(string settingName, T defaultValue)
         {
             if (TryGetValue(settingName, out T result))
             {
-                    return result;
+                return result;
             }
             else
             {
@@ -30,11 +31,11 @@ namespace ModReloader.Helpers
 
         public static bool TryGetValue<T>(string settingName, out T result)
         {
-            if (_elementSettings.TryGetValue(settingName, out object value))
+            if (_elementSettings.TryGetValue(settingName, out JToken value))
             {
-                if(value is T cast)
+                if (TryConvertToken(value, out T castedValue))
                 {
-                    result = (T)value;
+                    result = castedValue;
                     return true;
                 }
                 result = default;
@@ -45,33 +46,34 @@ namespace ModReloader.Helpers
                 result = default;
                 return false;
             }
-            
+
         }
 
-        private static Dictionary<string, object> ReadElementSettingsFromFile()
+        private static void ReadElementSettingsFromFile()
         {
+            _elementSettings = [];
             string filePath = Utilities.GetModReloaderFolderPath(fileName);
             try
             {
                 if (File.Exists(filePath))
                 {
                     string json = File.ReadAllText(filePath);
-                    return JsonConvert.DeserializeObject<Dictionary<string, object>>(
-                        json,
-                        new JsonSerializerSettings { }
-                    ) ?? [];
+                    var jObject = JsonConvert.DeserializeObject<JObject>(json);
+                    if (jObject != null)
+                    {
+                        _elementSettings = jObject;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Log.Error($"Failed to read element settings: {ex.Message}");
             }
-            return [];
         }
 
         public static void WriteValue<T>(string settingName, T value)
         {
-            _elementSettings[settingName] = value;
+            _elementSettings[settingName] = JToken.FromObject(value);
         }
 
         public static void Save()
@@ -85,6 +87,24 @@ namespace ModReloader.Helpers
             catch (Exception ex)
             {
                 Log.Error($"Failed to save element settings: {ex.Message}");
+            }
+        }
+
+        public static bool TryConvertToken<T>(JToken token, out T result)
+        {
+            result = default;
+
+            if (token == null || token.Type == JTokenType.Null)
+                return false;
+            try
+            {
+                JValue temp = (JValue)token;
+                result = (T)Convert.ChangeType(temp, typeof(T));
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }
