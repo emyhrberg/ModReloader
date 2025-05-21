@@ -104,7 +104,6 @@ namespace ModReloader.Common.Systems
             TypeYOffset = UIElementSettingsJson.TryGetValue("TypeYOffset", 0);
             TypeTextSize = UIElementSettingsJson.TryGetValue("TypeTextSize", 0.5f);
             elementToggles = UIElementSettingsJson.TryGetValue("ElementToggles", new Dictionary<string, bool>());
-            Log.Info($"Readed Elements: {string.Join("\n", elementToggles.Keys)}");
             //RefreshUIState();
         }
 
@@ -353,7 +352,6 @@ namespace ModReloader.Common.Systems
                 // Ensure the element has a default toggle state (OFF by default)
                 if (!elementToggles.ContainsKey(self.GetType().Name))
                 {
-                    Log.Info($"New element! : {self.GetType().Name}");
                     elementToggles[self.GetType().Name] = false;
                 }
             }
