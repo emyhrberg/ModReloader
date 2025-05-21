@@ -1,0 +1,222 @@
+Configs: {
+	Config: {
+		DisplayName: 配置
+
+		Headers: {
+			Improvements: 改进
+			Misc: 杂项
+			ExtraInfo: 显示
+			ModsToReload: 重加载时需要构建的模组
+			ReloadOptions: 重加载选项
+		}
+
+		ModsToReload: {
+			Label: 重加载时需要构建的模组
+			Tooltip: ""
+		}
+
+		AutoJoinWorld: {
+			Label: 自动加入世界
+			Tooltip: 在重加载模组后自动加入选中的世界
+		}
+
+		AutoSaveWorld: {
+			Label: 自动保存世界
+			Tooltip: 在重加载前保存玩家和世界数据。增加重加载耗时，但可以更新存档。
+		}
+
+		Player: {
+			Label: 玩家
+			Tooltip: 选择重加载后进入游戏的玩家
+		}
+
+		World: {
+			Label: 世界
+			Tooltip: 选择重加载后进入游戏的世界
+		}
+
+		LogDebugMessages: {
+			Label: 在日志中记录debug信息
+			Tooltip: （可选）记录模组的行为流程。用于寻找bug的原因。
+		}
+
+		ShowDebugInfo: {
+			Label: 显示debug信息
+			Tooltip:
+				'''
+				在游戏中时，在屏幕左下角添加一份debug信息
+				包括玩家名称，玩家ID，游戏模式，帧率，以及开启模组配置。
+				'''
+		}
+
+		ShowMainMenuInfo: {
+			Label: 显示主菜单信息
+			Tooltip: 在主菜单界面显示所有主菜单信息
+		}
+
+		ShowErrorMenuInfo: {
+			Label: 显示报错菜单信息
+			Tooltip: 在报错界面显示所有报错菜单信息
+		}
+
+		ShowCopyToClipboardButton: {
+			Label: 显示复制到剪切板按钮
+			Tooltip: 在报错界面增加一个新按钮以允许将报错信息复制到剪切板
+		}
+
+		RightClickToolOptions: {
+			Label: 右键工具选项
+			Tooltip: 为工具增加以右键点击触发的额外功能
+		}
+
+		MoveChat: {
+			Label: 移动聊天栏
+			Tooltip: 略微移动聊天栏以为debug信息留出空间
+		}
+
+		LogLevelPersistOnReloads: {
+			Tooltip: 重加载时是否保持日志筛选设置。关闭此选项以恢复默认日志筛选。
+			Label: 重加载时保持日志筛选设置
+		}
+
+		BuilderToggle: {
+			Label: 物品栏左侧开关
+			Tooltip: 在物品栏左侧添加一个新的开关以切换所有工具
+		}
+	}
+}
+
+BuilderToggles: {
+	MainStateBuilderToggle: {
+		OffText: Mod Reloader：关
+		OnText: Mod Reloader：开
+	}
+}
+
+MainMenu: {
+	WelcomeTooltip: 欢迎使用Mod Reloader主菜单！
+	OpenConfigText: 开启模组配置
+	OpenConfigTooltip: 点击以打开Mod Reloader模组配置
+	ReloadText: 重加载
+	ReloadTooltip: 构建{0}并重加载
+	ReloadNoMods: 未设置重加载时要构建的模组
+	OptionsHeader: 选项
+	OptionsTooltip: 测试用基本选项
+	StartServerText: 启动服务器
+	StartServerTooltip: 使用命令行启动一个服务器实例
+	StartClientText: 启动客户端
+	StartClientTooltip: 使用命令行启动另一个新的tML实例
+	OpenLogText: 打开日志文件
+	OpenLogTooltip: 点击以打开{0}文件
+	ClearLogText: 清除日志文件
+	ClearLogTooltip: 点击以清除{0}文件内容
+	SingleplayerHeader: 单人游戏
+	SingleplayerTooltip: 快速进入单人游戏
+	JoinSingleplayerText: 进入单人游戏
+	JoinSingleplayerTooltip: 根据预设的玩家和世界快速进入游戏
+	MultiplayerHeader: 多人游戏
+	MultiplayerTooltip: 开服及测试多人游戏
+	HostMultiplayerText: 开服并进入游戏
+	HostMultiplayerTooltip: 在本地开服并进入多人游戏
+	JoinMultiplayerText: 加入多人游戏
+	JoinMultiplayerTooltip: 以首个可用玩家 加入本地（已开服的）多人游戏
+	LoadingWorld: 加入游戏：{0}
+}
+
+ExceptionMenu: {
+	TitleTooltip: 欢迎使用Mod Reloader报错菜单！
+	ReloadText: 重加载
+	ReloadTooltip: 构建{0} 并重加载
+	OpenLogText: 打开日志文件
+	OpenLogTooltip: 点击以打开 {0}文件
+	ClearLogText: 清除日志文件
+	ClearLogTooltip: 点击以清除 {0}文件内容
+	CopyText: 复制
+	CopyTooltip: 复制到剪切板
+	GoToFileText: 转到文件
+	GoToFileTooltip: 使用VS打开 涉及异常的文件
+	Copied: 已复制！
+}
+
+ModsButton: {
+	// Text: Mods
+	HoverText: 模组列表
+	HoverDesc: 启用或禁用模组
+	HoverTooltipOn: 关闭模组列表
+	HoverTooltipOff: 打开模组列表
+}
+
+UIElementButton: {
+	// Text: UI
+	HoverText: UI元素碰撞箱
+	HoverDescBase: 设置显示UI元素的碰撞箱
+	HoverDescRightClick: 右键点击以显示所有UI元素的碰撞箱
+	HoverTooltipOn: 关闭UI元素碰撞箱面板
+	HoverTooltipOff: 打开UI元素碰撞箱面板
+}
+
+LogButton: {
+	// Text: Log
+	HoverText: 日志文件选项
+	HoverDescBase: 改变日志文件的设置
+	HoverDescRightClick: 右键点击以打开{0}文件
+	HoverTooltipOn: 关闭日志选项面板
+	HoverTooltipOff: 打开日志选项面板
+}
+
+ReloadButton: {
+	Text: 重加载
+	HoverText: 构建{0}并重加载
+	HoverDescNoMods: 未选择重加载时要构建的模组
+	HoverDescRightClick: 右键点击以直接重加载，而不构建模组
+}
+
+ReloadMPButton: {
+	Text: 重加载多人游戏
+	HoverText: 构建{0}并重加载
+	HoverDescNoMods: 未选择重加载时要构建的模组
+	HoverDescRightClick: 右键点击以直接重加载，而不构建模组
+}
+
+Keybinds: {
+	DragonLensLogPanel.DisplayName: Dragon Lens日志文件面板
+	DragonLensLogPanelRightClick.DisplayName: Dragon Lens日志文件右键
+	DragonLensModsPanel.DisplayName: Dragon Lens模组配置面板
+	DragonLensReload.DisplayName: Dragon Lens重加载
+	DragonLensReloadRightClick.DisplayName: Dragon Lens重加载右键
+	DragonLensReloadMP.DisplayName: Dragon Lens重加载多人游戏
+	DragonLensReloadMPRightClick.DisplayName: Dragon Lens重加载多人游戏右键
+	DragonLensUIPanel.DisplayName: Dragon Lens UI元素面板
+	DragonLensUIPanelRightClick.DisplayName: Dragon Lens UI面板右键
+}
+
+Tools: {
+	DragonLensLogPanel: {
+		// DisplayName: DragonLensLogPanel
+		// Description: The tool has no description! Add one in .hjson files!
+		// RightClickName: DragonLensLogPanel Right Click
+	}
+
+	DragonLensModsPanel: {
+		// DisplayName: DragonLensModsPanel
+		// Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DragonLensReload: {
+		// DisplayName: DragonLensReload
+		// Description: The tool has no description! Add one in .hjson files!
+		// RightClickName: DragonLensReload Right Click
+	}
+
+	DragonLensReloadMP: {
+		// DisplayName: DragonLensReloadMP
+		// Description: The tool has no description! Add one in .hjson files!
+		// RightClickName: DragonLensReloadMP Right Click
+	}
+
+	DragonLensUIPanel: {
+		// DisplayName: DragonLensUIPanel
+		// Description: The tool has no description! Add one in .hjson files!
+		// RightClickName: DragonLensUIPanel Right Click
+	}
+}
