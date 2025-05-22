@@ -22,8 +22,7 @@ namespace ModReloader.Common.Systems
         private Dictionary<UIElement, Vector2> typeOffsets = [];
 
         // Elements
-        public List<UIElement> elements = [];
-        private readonly Dictionary<string, bool> elementToggles = [];
+        public Dictionary<string, bool> elementToggles = [];
 
         // Outline color
         private Color outlineColor = Color.White;
@@ -141,18 +140,18 @@ namespace ModReloader.Common.Systems
         public void RandomizeSizeOffset()
         {
             sizeOffsets.Clear();
-            foreach (var elem in elements)
-            {
-                sizeOffsets[elem] = new Vector2(Random, Random);
-            }
+            //foreach (var elem in elements)
+            //{
+            //    sizeOffsets[elem] = new Vector2(Random, Random);
+            //}
         }
         public void RandomizeTypeOffset()
         {
             typeOffsets.Clear();
-            foreach (var elem in elements)
-            {
-                typeOffsets[elem] = new Vector2(Random, Random);
-            }
+            //foreach (var elem in elements)
+            //{
+            //    typeOffsets[elem] = new Vector2(Random, Random);
+            //}
         }
 
         public bool GetElement(string typeName, bool defaultValue)
@@ -348,12 +347,6 @@ namespace ModReloader.Common.Systems
         {
             orig(self, spriteBatch); // Normal UI behavior
 
-            if (!elementToggles.ContainsKey(self.GetType().Name))
-            {
-                elementToggles[self.GetType().Name] = false;
-                Main.NewText($"Registered {self.GetType().Name} in UIElementState.", Color.Green);
-            }
-
             // Fixes bestiary performance bug
             if (!DrawHitboxOfElement && !DrawSizeOfElement && !DrawNameOfElement)
                 return;
@@ -365,20 +358,11 @@ namespace ModReloader.Common.Systems
             if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900)
                 return;
 
-            
-
-
-            //if (Main.InGameUI != null)
-            //{
-            //var currentState = Main.InGameUI.CurrentState;
-            //if (currentState != null)
-            //Log.SlowInfo("InGameUI.CurrentState.Type" + currentState.GetType(), 3);
-
-        //}
-
-
-            // Register the element
-            
+            if (!elementToggles.ContainsKey(self.GetType().Name))
+            {
+                elementToggles[self.GetType().Name] = false;
+                return;
+            }
 
             // Check if this *type* is toggled OFF
             if (elementToggles.TryGetValue(self.GetType().Name, out bool value))

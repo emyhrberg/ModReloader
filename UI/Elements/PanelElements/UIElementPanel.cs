@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ModReloader.Common.Systems;
+using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace ModReloader.UI.Elements.PanelElements
@@ -21,7 +22,7 @@ namespace ModReloader.UI.Elements.PanelElements
             //So idk how to make it work rn, maybe we just with each element that tougles on or off we just update this option
 
             AddOption("Show Hitboxes", elementState.GetDrawHitboxOfElement(), elementState.SetDrawHitboxOfElement, "Show all UI elements from mods");
-            
+
 
             AddSlider(
                 title: "Opacity",
@@ -171,78 +172,61 @@ namespace ModReloader.UI.Elements.PanelElements
         }
 
         // Dynamic UI elements for each UIElement type
-        private List<string> elements = new List<string>();
         public Dictionary<string, UIElement> dynamicOptions = new();
 
         public override void Update(GameTime gameTime)
         {
-            if (!Active)
-                return;
-
             base.Update(gameTime);
 
             // Only update once a second
             if (Main.GameUpdateCount % 60 != 0)
                 return;
 
-            // Gather distinct UIElement type names
-            var distinctTypes = elementState.elements
-                .Select(ele => ele.GetType().Name)
-                .Where(name => !string.IsNullOrEmpty(name))
-                .Distinct()
-                .OrderBy(name => name)
-                .ToList();
-
-            // 1. Remove old ones that no longer exist
-            for (int i = elements.Count - 1; i >= 0; i--)
-            {
-                if (!distinctTypes.Contains(elements[i]))
-                {
-                    // Remove from the UI if we’re tracking it
-                    if (dynamicOptions.TryGetValue(elements[i], out UIElement oldOption))
-                    {
-                        uiList.Remove(oldOption);
-                        dynamicOptions.Remove(elements[i]);
-                    }
-                    elements.RemoveAt(i);
-                }
-            }
-
-            // 2. Add new ones
-            foreach (var typeName in distinctTypes)
-            {
-                if (!elements.Contains(typeName))
-                {
-                    elements.Add(typeName);
-
-                    // Create the UI option
-                    var newOption = AddOption(
-                        text: typeName,
-                        defaultValue: elementState.GetElement(typeName, false),
-                        leftClick: (bool value) => elementState.SetElement(typeName, value),
-                        hover: $"Show all {typeName} UIElements",
-                        padding: 0f
-                    );
-
-                    dynamicOptions[typeName] = newOption;
-                }
-            }
-
-            // 3. Sort everything in alphabetical order by typeName
-            elements.Sort();
-
-            // 4. Remove existing “dynamic” UI elements from uiList
+            // Remove the old dynamic options
             foreach (var pair in dynamicOptions)
             {
                 uiList.Remove(pair.Value);
             }
 
-            // 5. Re-add them in sorted order
-            foreach (var typeName in elements)
+            // Remove any dynamic options that are no longer in the elementToggles
+            foreach (var key in dynamicOptions.Keys.ToList())
             {
-                if (dynamicOptions.TryGetValue(typeName, out UIElement elem))
-                    uiList.Add(elem);
+                if (!elementState.elementToggles.ContainsKey(key))
+                {
+                    dynamicOptions.Remove(key);
+                }
             }
+
+            // Add new dynamic options for each element in the elementToggles
+            foreach (var pair in elementState.elementToggles)
+            {
+                if (!dynamicOptions.ContainsKey(pair.Key))
+                {
+                    var newOption = AddOption(
+                        text: pair.Key,
+                        defaultValue: elementState.GetElement(pair.Key, false),
+                        leftClick: (bool value) => elementState.SetElement(pair.Key, value),
+                        hover: $"Show all {pair.Key} UIElements",
+                        padding: 0f
+                    );
+
+                    dynamicOptions[pair.Key] = newOption;
+                }
+            }
+
+            // Sort the dynamic options by key
+            var dynamicOptionsKeys = dynamicOptions.Keys.ToList();
+            dynamicOptionsKeys.Sort();
+
+            // Add the dynamic options to the UI
+            foreach (var key in dynamicOptionsKeys)
+            {
+                if (dynamicOptions.TryGetValue(key, out UIElement elem))
+                {
+                    uiList.Add(elem);
+                }
+            }
+            uiList.Recalculate();
         }
     }
 }
