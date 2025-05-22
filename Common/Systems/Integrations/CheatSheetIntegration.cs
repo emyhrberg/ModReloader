@@ -159,7 +159,7 @@ namespace ModReloader.Common.Systems.Integrations
                     }
                 },
                 //tooltip: () => sys.mainState.logPanel.GetActive() ?
-                tooltip: () => sys.mainState.logPanel.GetActive() ? Loc.Get("LogButton.HoverTooltipOn") : Loc.Get("UIElementButton.HoverTooltipOff")
+                tooltip: () => sys.mainState.logPanel.GetActive() ? Loc.Get("LogButton.HoverTooltipOn") : Loc.Get("LogButton.HoverTooltipOff")
             );
         }
     }
