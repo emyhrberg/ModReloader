@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Reflection;
 using DragonLens.Content.GUI;
 using DragonLens.Content.Tools;
-using System.Reflection;
-using MonoMod.Cil;
 using Mono.Cecil.Cil;
+using MonoMod.Cil;
 
-namespace ModReloader.Common.Systems.Integrations.DragonLensToolAndLayout
+namespace ModReloader.Common.Systems.Integrations.DragonLens
 {
     // Adds a Mod Helper filter to tool browser
     // References:
@@ -41,7 +41,7 @@ namespace ModReloader.Common.Systems.Integrations.DragonLensToolAndLayout
                 c.Emit(OpCodes.Ldarg_0); // Load ToolBrowser instance
                 c.EmitDelegate((FilterPanel filters, ToolBrowser self) =>
                 {
-                        filters.AddFilter(new ModReloaderToolFilter(Mod));
+                    filters.AddFilter(new ModReloaderToolFilter(Mod));
                 });
             }
         }

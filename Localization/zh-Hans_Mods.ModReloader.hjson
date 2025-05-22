@@ -83,6 +83,11 @@ Configs: {
 			Label: 物品栏左侧开关
 			Tooltip: 在物品栏左侧添加一个新的开关以切换所有工具
 		}
+
+		ShowBuilderToggle: {
+			// Label: Show Builder Toggle
+			// Tooltip: ""
+		}
 	}
 }
 
@@ -237,3 +242,31 @@ ModSourceLastBuilt: {
 	// Days: "{0} days ago"
 	// LastBuilt: Last built
 }
+
+LogPanel: {
+	// LogTitle: Log
+	// LogTitleHover: Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs
+	// OpenClientLog: Open Client Log
+	// OpenClientLogHover: Click to open {0}
+	// OpenServerLog: Open Server Log
+	// OpenServerLogHover: Click to open the server log
+	// ClearClientLog: Clear Client Log
+	// ClearClientLogHover: Click to clear {0}
+	// LogLevelTitle: Log level
+	// LogLevelHeader: Set the log level for each logger: Off, Error, Warn, Info, Debug, All
+	// LogLevelPersistOnReloads: This log level persists over reloads!
+	// SetLogLevelFor: Set log level for {0}
+	// Off: Off
+	// Error: Error
+	// Warn: Warn
+	// Info: Info
+	// Debug: Debug
+	// All: All
+}
+
+UIElementPanel: {
+	// ShowAll: Showing all UI elements
+	// HideAll: Hiding all UI elements
+}
+
+// LeftClickHelper.ModReloaderOffTooltip: Mod Reloader is off. To toggle, open inventory, look to the left of the hotbar and toggle the eye to see or hide all Mod Reloader tools.

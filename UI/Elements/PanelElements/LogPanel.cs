@@ -1,11 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using log4net;
 using log4net.Core;
 using log4net.Repository.Hierarchy;
-using ModReloader.Helpers;
 
 namespace ModReloader.UI.Elements.PanelElements
 {
@@ -14,18 +12,28 @@ namespace ModReloader.UI.Elements.PanelElements
         public LogPanel() : base(header: "Log")
         {
             AddPadding(5);
-            AddHeader(title: "Log",
-                onLeftClick: Log.OpenLogFolder,
-                hover: "Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs");
+            AddHeader(
+                title: Loc.Get("LogPanel.LogTitle"),
+                hover: Loc.Get("LogPanel.LogTitleHover"),
+                onLeftClick: Log.OpenLogFolder
+            );
 
             AddPadding(3f);
             string clientPath = Path.GetFileName(Logging.LogPath);
-            AddAction(Log.OpenClientLog, "Open Client Log", $"Click to open {clientPath}");
-            AddAction(Log.OpenServerLog, "Open Server Log", "Click to open server.log");
-            AddAction(Log.ClearClientLog, "Clear Log", $"Clear the {clientPath} file");
+
+            AddAction(Log.OpenClientLog, Loc.Get("LogPanel.OpenClientLog"), Loc.Get("LogPanel.OpenClientLogHover", clientPath));
+
+            AddAction(Log.OpenServerLog, Loc.Get("LogPanel.OpenServerLog"), Loc.Get("LogPanel.OpenServerLogHover"));
+
+            AddAction(Log.ClearClientLog, Loc.Get("LogPanel.ClearClientLog"), Loc.Get("LogPanel.ClearClientLogHover", clientPath));
+
             AddPadding(20);
 
-            AddHeader(title: "Log Level", hover: "Set the log level for each logger: Off, Error, Warn, Info, Debug, All \nThis log level persists over reloads!");
+            string headerHover = Loc.Get("LogPanel.LogLevelHeader");
+            if (Conf.C.LogLevelPersistOnReloads)
+                headerHover += "\n" + Loc.Get("LogPanel.LogLevelPersistOnReloads");
+
+            AddHeader(title: Loc.Get("LogPanel.LogLevelTitle"), hover: headerHover);
             AddPadding(3);
 
             // Get all loggers and sort them
@@ -58,9 +66,11 @@ namespace ModReloader.UI.Elements.PanelElements
                 }
 
                 // Truncate logger name for display
-                string displayName = loggerName.Length > 13
-                    ? loggerName.Substring(0, 10) + ".."
-                    : loggerName;
+                string displayName;
+                if (loggerName.Length > 13)
+                    displayName = loggerName[..10] + "..";
+                else
+                    displayName = loggerName;
 
                 AddSlider(
                     title: displayName,
@@ -70,8 +80,8 @@ namespace ModReloader.UI.Elements.PanelElements
                     onValueChanged: (value) => SetLogLevel(value, log.Logger as Logger),
                     increment: 1,
                     textSize: 0.8f,
-                    hover: $"Set log level for {loggerName}",
-                    valueFormatter: (value) => ((LogLevel)value).ToString()
+                    hover: Loc.Get("LogPanel.SetLogLevelFor", loggerName),
+                    valueFormatter: (value) => Loc.Get($"LogPanel.{(LogLevel)value}")
                 );
             }
         }

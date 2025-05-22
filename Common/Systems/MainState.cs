@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Common.BuilderToggles;
 using ModReloader.UI.Elements.ButtonElements;
 using ModReloader.UI.Elements.DebugElements;
 
@@ -46,6 +47,12 @@ namespace ModReloader.Common.Systems
         {
             ModContent.GetInstance<MainSystem>().mainState = this;
             offset = -ButtonSize * 2;
+
+            // Force to on
+            MainStateBuilderToggle toggle = ModContent.GetInstance<MainStateBuilderToggle>();
+            toggle.CurrentState = 0; // Force to "On" (state 0)
+            Log.Info("MainStateBuilderToggle.CurrentState: " + toggle);
+            Active = true;  // Active when toggle is "On" (state 0)
 
             // Create new panels no matter what
             modsPanel = AddPanel<ModsPanel>();

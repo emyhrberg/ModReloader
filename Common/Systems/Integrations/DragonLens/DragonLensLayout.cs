@@ -14,7 +14,7 @@ using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolbarSystem;
 using Terraria.ModLoader.UI.Elements;
 
-namespace ModReloader.Common.Systems.Integrations.DragonLensToolAndLayout
+namespace ModReloader.Common.Systems.Integrations.DragonLens
 {
     // References:
     // Adding a layout to the layout browser with grid.Add():

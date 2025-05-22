@@ -1,10 +1,11 @@
-﻿using DragonLens.Content.GUI;
+﻿using DragonLens.Content.Filters;
+using DragonLens.Content.GUI;
 using DragonLens.Content.Tools;
 using DragonLens.Core.Systems.ThemeSystem;
-using DragonLens.Content.Filters;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ModReloader.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations.DragonLens
+
 {
     // A filter for the tool browser that shows only tools from a specific mod (Mod Reloader)
     [JITWhenModsEnabled("DragonLens")]

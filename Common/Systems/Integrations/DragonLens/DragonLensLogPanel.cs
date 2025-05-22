@@ -4,12 +4,13 @@ using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolSystem;
 using DragonLens.Helpers;
 using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Common.BuilderToggles;
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
 using ModReloader.UI.Elements.PanelElements;
 using Terraria.UI;
 
-namespace ModReloader.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations.DragonLens
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]
@@ -45,6 +46,12 @@ namespace ModReloader.Common.Systems.Integrations
 
         public override void OnActivate()
         {
+            if (!BuilderToggleHelper.GetActive())
+            {
+                LeftClickHelper.Notify();
+                return;
+            }
+
             Log.Info("DLLogPanel activated");
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
@@ -77,6 +84,12 @@ namespace ModReloader.Common.Systems.Integrations
         public override void DrawIcon(SpriteBatch spriteBatch, Rectangle position)
         {
             base.DrawIcon(spriteBatch, position);
+
+            if (!BuilderToggleHelper.GetActive())
+            {
+                return;
+            }
+
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
             BasePanel logPanel = sys.mainState.logPanel;

@@ -1,6 +1,7 @@
 ﻿using CheatSheet;
 using DragonLens.Content.GUI;
 using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Common.BuilderToggles;
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
 using ModReloader.UI.Elements.PanelElements;
@@ -93,6 +94,11 @@ namespace ModReloader.Common.Systems.Integrations
                 // Click – toggle panel + bring to front if opening
                 buttonClickedAction: () =>
                 {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
                     BasePanel panel = sys.mainState.modsPanel;
 
                     bool nowOpen = !panel.GetActive();
@@ -119,6 +125,11 @@ namespace ModReloader.Common.Systems.Integrations
                 // Click – toggle panel + bring to front if opening
                 buttonClickedAction: () =>
                 {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
                     BasePanel panel = sys.mainState.uiElementPanel;
 
                     bool nowOpen = !panel.GetActive();
@@ -147,6 +158,12 @@ namespace ModReloader.Common.Systems.Integrations
                 // Click – toggle panel + bring to front if opening
                 buttonClickedAction: () =>
                 {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
+
                     BasePanel panel = sys.mainState.logPanel;
 
                     bool nowOpen = !panel.GetActive();

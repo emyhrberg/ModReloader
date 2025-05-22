@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Common.BuilderToggles;
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
 using ModReloader.UI.Elements.PanelElements.ModElements;
@@ -40,7 +41,15 @@ namespace ModReloader.Common.Systems.Integrations
                 "AddSimpleButton",
                 /* permissionName:      */ ReloadPermission,
                 /* texture:             */ Ass.ButtonReloadSPHeros,
-                /* onClick action:      */ (Action)(async () => await ReloadUtilities.SinglePlayerReload()),
+                /* onClick action:      */ (Action)(async () =>
+                {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
+                    await ReloadUtilities.SinglePlayerReload();
+                }),
                 /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
                                            {
                                                if (!hasPerm)
@@ -76,7 +85,15 @@ namespace ModReloader.Common.Systems.Integrations
                 "AddSimpleButton",
                 /* permissionName:      */ ReloadPermission,
                 /* texture:             */ Ass.ButtonReloadMP,
-                /* onClick action:      */ (Action)(async () => await ReloadUtilities.MultiPlayerMainReload()),
+                /* onClick action:      */ (Action)(async () =>
+                                           {
+                                               if (!BuilderToggleHelper.GetActive())
+                                               {
+                                                   LeftClickHelper.Notify();
+                                                   return;
+                                               }
+                                               await ReloadUtilities.MultiPlayerMainReload();
+                                           }),
                 /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
                                            {
                                                if (!hasPerm)
@@ -114,6 +131,11 @@ namespace ModReloader.Common.Systems.Integrations
                 // on‑click: toggle visibility and bring to front
                 () =>
                 {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
                     ModsPanel panel = sys.mainState.modsPanel;
                     bool nowOpen = !panel.GetActive();
                     panel.SetActive(nowOpen);
@@ -135,9 +157,6 @@ namespace ModReloader.Common.Systems.Integrations
             );
         }
 
-        // ──────────────────────────────────────────────────────────────────────────────
-        // 3.  Button that toggles the UI-element demo panel
-        // ──────────────────────────────────────────────────────────────────────────────
         private static void RegisterUIButton(Mod herosMod)
         {
             string Perm = Loc.Get("ModsButton.Text");
@@ -155,6 +174,11 @@ namespace ModReloader.Common.Systems.Integrations
                 tex,
                 (Action)(() =>                       // click
                 {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
                     var panel = sys.mainState.uiElementPanel;
                     bool opened = !panel.GetActive();
                     panel.SetActive(opened);
@@ -170,9 +194,6 @@ namespace ModReloader.Common.Systems.Integrations
             );
         }
 
-        // ──────────────────────────────────────────────────────────────────────────────
-        // 4.  Button that toggles the in-game log panel
-        // ──────────────────────────────────────────────────────────────────────────────
         private static void RegisterLogButton(Mod herosMod)
         {
             // const string Perm = "ToggleLogPanel";
@@ -189,6 +210,11 @@ namespace ModReloader.Common.Systems.Integrations
                 tex,
                 (Action)(() =>
                 {
+                    if (!BuilderToggleHelper.GetActive())
+                    {
+                        LeftClickHelper.Notify();
+                        return;
+                    }
                     var panel = sys.mainState.logPanel;
                     bool opened = !panel.GetActive();
                     panel.SetActive(opened);

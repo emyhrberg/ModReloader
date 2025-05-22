@@ -175,13 +175,13 @@ namespace ModReloader.Common.Systems
             showAll = value;
             if (showAll)
             {
-                Main.NewText("Showing all UI elements.", Color.Green);
+                Main.NewText(Loc.Get("UIElementPanel.ShowAll"), new Color(57, 226, 39)); // green
                 foreach (var keys in elementToggles.Keys)
                     elementToggles[keys] = true;
             }
             else
             {
-                Main.NewText("Hiding all UI elements.", new Color(226, 57, 39));
+                Main.NewText(Loc.Get("UIElementPanel.HideAll"), new Color(226, 57, 39));
                 foreach (var keys in elementToggles.Keys)
                     elementToggles[keys] = false;
             }
@@ -380,12 +380,12 @@ namespace ModReloader.Common.Systems
             {
                 DrawElementType(spriteBatch, self, self.GetOuterDimensions().Position().ToPoint());
             }
-            if(DrawHitboxOfElement)
+            if (DrawHitboxOfElement)
             {
                 // Draw the hitbox
                 DrawHitbox(self, spriteBatch);
             }
-            
+
         }
     }
 }

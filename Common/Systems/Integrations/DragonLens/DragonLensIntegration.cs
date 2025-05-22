@@ -3,7 +3,7 @@ using DragonLens.Core.Systems.ThemeSystem;
 using DragonLens.Core.Systems.ToolbarSystem;
 using ModReloader.Helpers;
 
-namespace ModReloader.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations.DragonLens
 {
     /// Tries to add reload as a 'tool' to DragonLens
     [JITWhenModsEnabled("DragonLens")]

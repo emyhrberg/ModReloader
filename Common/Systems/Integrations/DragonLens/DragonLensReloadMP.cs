@@ -2,7 +2,7 @@
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
 
-namespace ModReloader.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations.DragonLens
 {
     [JITWhenModsEnabled("DragonLens")]
     [ExtendsFromMod("DragonLens")]

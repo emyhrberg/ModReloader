@@ -1,6 +1,7 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Systems.Integrations;
+using ModReloader.Common.Systems.Integrations.DragonLens;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;

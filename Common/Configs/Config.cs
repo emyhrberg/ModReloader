@@ -57,7 +57,7 @@ namespace ModReloader.Common.Configs
         public bool MoveChat;
 
         [DefaultValue(true)]
-        public bool BuilderToggle;
+        public bool ShowBuilderToggle;
 
         [DefaultValue(true)]
         public bool LogDebugMessages;
