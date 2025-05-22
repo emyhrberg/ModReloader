@@ -1,8 +1,10 @@
-﻿using Terraria.Localization;
-
-namespace ModReloader.Helpers
+﻿namespace ModReloader.Helpers
 {
-    public static class LocalizationHelper
+    // Loc:
+    // Short for Localization
+    // This class is used to get the localization text for the ModReloader mod.
+    // Is found in en-US.Mods.ModReloader.json and other localization files.
+    public static class Loc
     {
         /// <summary>
         /// Gets the text for the given key from the ModReloader localization file.
@@ -10,9 +12,16 @@ namespace ModReloader.Helpers
         /// Reference:
         /// https://github.com/ScalarVector1/DragonLens/blob/master/Helpers/LocalizationHelper.cs
         /// </summary>
-        public static string GetText(string key, params object[] args)
+        public static string Get(string key, params object[] args)
         {
-            return Language.Exists($"Mods.ModReloader.{key}") ? Language.GetTextValue($"Mods.ModReloader.{key}", args) : key;
+            if (Terraria.Localization.Language.Exists($"Mods.ModReloader.{key}"))
+            {
+                return Terraria.Localization.Language.GetTextValue($"Mods.ModReloader.{key}", args);
+            }
+            else
+            {
+                return key;
+            }
         }
     }
 }

@@ -64,31 +64,31 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
             TimeSpan timeAgo = DateTime.Now - lastModified;
             if (timeAgo.TotalSeconds < 60)
             {
-                return $"{timeAgo.Seconds} seconds ago";
+                return Loc.Get("ModSourceLastBuilt.Seconds", timeAgo.Seconds);
             }
             else if (timeAgo.TotalMinutes < 2)
             {
-                return $"{timeAgo.Minutes} minute ago";
+                return Loc.Get("ModSourceLastBuilt.Minute", timeAgo.Minutes);
             }
             else if (timeAgo.TotalMinutes < 60)
             {
-                return $"{timeAgo.Minutes} minutes ago";
+                return Loc.Get("ModSourceLastBuilt.Minutes", timeAgo.Minutes);
             }
             else if (timeAgo.TotalHours < 2)
             {
-                return $"{timeAgo.Hours} hour ago";
+                return Loc.Get("ModSourceLastBuilt.Hour", timeAgo.Hours);
             }
             else if (timeAgo.TotalHours < 24)
             {
-                return $"{timeAgo.Hours} hours ago";
+                return Loc.Get("ModSourceLastBuilt.Hours", timeAgo.Hours);
             }
             else if (timeAgo.TotalDays < 2)
             {
-                return $"{timeAgo.Days} day ago";
+                return Loc.Get("ModSourceLastBuilt.Day", timeAgo.Days);
             }
             else
             {
-                return $"{timeAgo.Days} days ago";
+                return Loc.Get("ModSourceLastBuilt.Days", timeAgo.Days);
             }
         }
 
@@ -102,7 +102,7 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
                 TimeSpan timeAgo = DateTime.Now - lastModified;
 
                 string tooltipText = FormatTimeAgoText(lastModified);
-                UICommon.TooltipMouseText($"Last built: " + tooltipText);
+                UICommon.TooltipMouseText(Loc.Get("ModSourceLastBuilt.LastBuilt") + ": " + tooltipText);
             }
         }
     }

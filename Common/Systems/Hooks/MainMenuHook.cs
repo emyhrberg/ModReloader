@@ -82,28 +82,28 @@ namespace ModReloader.Common.Systems.Hooks
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, LocalizationHelper.GetText("MainMenu.WelcomeTooltip")),
-               (LocalizationHelper.GetText("MainMenu.OpenConfigText"), () => Conf.C.Open(), 1.02f, LocalizationHelper.GetText("MainMenu.OpenConfigTooltip")),
-               (LocalizationHelper.GetText("MainMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, LocalizationHelper.GetText("MainMenu.ReloadTooltip", reloadHoverMods)),
+               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, Loc.Get("MainMenu.WelcomeTooltip")),
+               (Loc.Get("MainMenu.OpenConfigText"), () => Conf.C.Open(), 1.02f, Loc.Get("MainMenu.OpenConfigTooltip")),
+               (Loc.Get("MainMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, Loc.Get("MainMenu.ReloadTooltip", reloadHoverMods)),
                (" ", null, 1.15f, ""),
-               (LocalizationHelper.GetText("MainMenu.OptionsHeader"), null, 1.15f, LocalizationHelper.GetText("MainMenu.OptionsTooltip")),
-               (LocalizationHelper.GetText("MainMenu.StartServerText"), StartServer, 1.02f, LocalizationHelper.GetText("MainMenu.StartServerTooltip")),
-               (LocalizationHelper.GetText("MainMenu.StartClientText"), StartClient, 1.02f, LocalizationHelper.GetText("MainMenu.StartClientTooltip")),
-               (LocalizationHelper.GetText("MainMenu.OpenLogText"), Log.OpenClientLog, 1.02f, LocalizationHelper.GetText("MainMenu.OpenLogTooltip", fileName)),
-               (LocalizationHelper.GetText("MainMenu.ClearLogText"), Log.ClearClientLog, 1.02f, LocalizationHelper.GetText("MainMenu.ClearLogTooltip", fileName)),
+               (Loc.Get("MainMenu.OptionsHeader"), null, 1.15f, Loc.Get("MainMenu.OptionsTooltip")),
+               (Loc.Get("MainMenu.StartServerText"), StartServer, 1.02f, Loc.Get("MainMenu.StartServerTooltip")),
+               (Loc.Get("MainMenu.StartClientText"), StartClient, 1.02f, Loc.Get("MainMenu.StartClientTooltip")),
+               (Loc.Get("MainMenu.OpenLogText"), Log.OpenClientLog, 1.02f, Loc.Get("MainMenu.OpenLogTooltip", fileName)),
+               (Loc.Get("MainMenu.ClearLogText"), Log.ClearClientLog, 1.02f, Loc.Get("MainMenu.ClearLogTooltip", fileName)),
                (" ", null, 1.15f, ""),
-               (LocalizationHelper.GetText("MainMenu.SingleplayerHeader"), null, 1.15f, LocalizationHelper.GetText("MainMenu.SingleplayerTooltip")),
-               (LocalizationHelper.GetText("MainMenu.JoinSingleplayerText"), () =>
+               (Loc.Get("MainMenu.SingleplayerHeader"), null, 1.15f, Loc.Get("MainMenu.SingleplayerTooltip")),
+               (Loc.Get("MainMenu.JoinSingleplayerText"), () =>
                {
                    ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
                    ClientDataJsonHelper.PlayerID = -1;
                    ClientDataJsonHelper.WorldID = -1;
                    AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
-               }, 1.02f, LocalizationHelper.GetText("MainMenu.JoinSingleplayerTooltip")),
+               }, 1.02f, Loc.Get("MainMenu.JoinSingleplayerTooltip")),
                (" ", null, 1.15f, ""),
-               (LocalizationHelper.GetText("MainMenu.MultiplayerHeader"), null, 1.15f, LocalizationHelper.GetText("MainMenu.MultiplayerTooltip")),
-               (LocalizationHelper.GetText("MainMenu.HostMultiplayerText"), AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, LocalizationHelper.GetText("MainMenu.HostMultiplayerTooltip")),
-               (LocalizationHelper.GetText("MainMenu.JoinMultiplayerText"), JoinMultiplayerNew, 1.02f, LocalizationHelper.GetText("MainMenu.JoinMultiplayerTooltip")),
+               (Loc.Get("MainMenu.MultiplayerHeader"), null, 1.15f, Loc.Get("MainMenu.MultiplayerTooltip")),
+               (Loc.Get("MainMenu.HostMultiplayerText"), AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, Loc.Get("MainMenu.HostMultiplayerTooltip")),
+               (Loc.Get("MainMenu.JoinMultiplayerText"), JoinMultiplayerNew, 1.02f, Loc.Get("MainMenu.JoinMultiplayerTooltip")),
             };
 
 

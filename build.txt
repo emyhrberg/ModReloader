@@ -1,7 +1,8 @@
 displayName = Mod Reloader
 author = Erky & Cotlim
-version = 1.0.2
+version = 1.0.3
 side = both
 buildIgnore = Assets\Old*, icon.psd
 dllReferences = dnlib
 weakReferences = DragonLens, CheatSheet
+after = ChatImprover

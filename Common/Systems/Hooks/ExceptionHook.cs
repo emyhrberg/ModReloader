@@ -162,7 +162,7 @@ namespace ModReloader.Common.Systems.Hooks
             string reloadHoverMods;
             if (ReloadUtilities.IsModsToReloadEmpty)
             {
-                reloadHoverMods = LocalizationHelper.GetText("MainMenu.ReloadNoMods");
+                reloadHoverMods = Loc.Get("MainMenu.ReloadNoMods");
             }
             else
             {
@@ -175,31 +175,31 @@ namespace ModReloader.Common.Systems.Hooks
             string copyTooltip;
             if (timeOnCopyOptionPressed == DateTime.MinValue)
             {
-                copyTooltip = LocalizationHelper.GetText("ExceptionMenu.CopyTooltip");
+                copyTooltip = Loc.Get("ExceptionMenu.CopyTooltip");
             }
             else
             {
                 TimeSpan timeSinceCopy = DateTime.Now - timeOnCopyOptionPressed;
                 if (timeSinceCopy.TotalSeconds <= 1)
                 {
-                    copyTooltip = LocalizationHelper.GetText("ExceptionMenu.Copied");
+                    copyTooltip = Loc.Get("ExceptionMenu.Copied");
                 }
                 else
                 {
-                    copyTooltip = LocalizationHelper.GetText("ExceptionMenu.CopyTooltip");
+                    copyTooltip = Loc.Get("ExceptionMenu.CopyTooltip");
                 }
             }
 
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, LocalizationHelper.GetText("ExceptionMenu.TitleTooltip")),
-               (LocalizationHelper.GetText("ExceptionMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, LocalizationHelper.GetText("ExceptionMenu.ReloadTooltip", reloadHoverMods)),
+               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, Loc.Get("ExceptionMenu.TitleTooltip")),
+               (Loc.Get("ExceptionMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, Loc.Get("ExceptionMenu.ReloadTooltip", reloadHoverMods)),
                (" ", null, 1.15f, ""),
-               (LocalizationHelper.GetText("ExceptionMenu.OpenLogText"),   Log.OpenClientLog,   1.02f, LocalizationHelper.GetText("ExceptionMenu.OpenLogTooltip",   fileName)),
-               (LocalizationHelper.GetText("ExceptionMenu.ClearLogText"),  Log.ClearClientLog,  1.02f, LocalizationHelper.GetText("ExceptionMenu.ClearLogTooltip",  fileName)),
-               (LocalizationHelper.GetText("ExceptionMenu.CopyText"),     () => CopyErrorMessage(errorMessage),           1.02f, LocalizationHelper.GetText("ExceptionMenu.CopyTooltip",  copyTooltip)),
-               (LocalizationHelper.GetText("ExceptionMenu.GoToFileText"), () => OpenFileWithException(errorMessage),      1.02f, LocalizationHelper.GetText("ExceptionMenu.GoToFileTooltip")),
+               (Loc.Get("ExceptionMenu.OpenLogText"),   Log.OpenClientLog,   1.02f, Loc.Get("ExceptionMenu.OpenLogTooltip",   fileName)),
+               (Loc.Get("ExceptionMenu.ClearLogText"),  Log.ClearClientLog,  1.02f, Loc.Get("ExceptionMenu.ClearLogTooltip",  fileName)),
+               (Loc.Get("ExceptionMenu.CopyText"),     () => CopyErrorMessage(errorMessage),           1.02f, Loc.Get("ExceptionMenu.CopyTooltip",  copyTooltip)),
+               (Loc.Get("ExceptionMenu.GoToFileText"), () => OpenFileWithException(errorMessage),      1.02f, Loc.Get("ExceptionMenu.GoToFileTooltip")),
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)

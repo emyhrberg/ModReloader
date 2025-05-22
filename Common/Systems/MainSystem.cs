@@ -19,8 +19,6 @@ namespace ModReloader.Common.Systems
         public override void UpdateUI(GameTime gameTime)
         {
             userInterface?.Update(gameTime);
-            //ChatPosHook.OffsetX = -20;
-            //ChatPosHook.OffsetY = -15;
         }
 
         // boilerplate code to draw the UI

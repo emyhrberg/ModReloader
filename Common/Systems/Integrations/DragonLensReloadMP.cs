@@ -10,7 +10,7 @@ namespace ModReloader.Common.Systems.Integrations
     {
         public override string IconKey => "ReloadMP"; // no need for localization. this is just to find the asset for the icon
 
-        public override string DisplayName => Helpers.LocalizationHelper.GetText("ReloadMPButton.Text");
+        public override string DisplayName => Helpers.Loc.Get("ReloadMPButton.Text");
 
         public override string Description => GetDescription();
 
@@ -18,10 +18,10 @@ namespace ModReloader.Common.Systems.Integrations
         {
             if (!Conf.C.RightClickToolOptions)
             {
-                return Helpers.LocalizationHelper.GetText("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+                return Helpers.Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
             }
 
-            string result = $"{Helpers.LocalizationHelper.GetText("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Helpers.LocalizationHelper.GetText("ReloadMPButton.HoverDescRightClick")}";
+            string result = $"{Helpers.Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Helpers.Loc.Get("ReloadMPButton.HoverDescRightClick")}";
             //result += $"\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
             return result;
         }

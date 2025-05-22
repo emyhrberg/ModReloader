@@ -25,8 +25,8 @@ namespace ModReloader.Common.Systems.Integrations
 
         private static void RegisterReloadButton(Mod herosMod)
         {
-            string ReloadPermission = LocalizationHelper.GetText("ReloadButton.Text");
-            string ReloadPermissionDisplay = LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+            string ReloadPermission = Loc.Get("ReloadButton.Text");
+            string ReloadPermissionDisplay = Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
 
             // Register a permission so admins can gate this button
             herosMod.Call(
@@ -49,11 +49,11 @@ namespace ModReloader.Common.Systems.Integrations
                 /* tooltipFunc:         */ () =>
                 {
                     if (ReloadUtilities.IsModsToReloadEmpty)
-                        return LocalizationHelper.GetText("ReloadButton.HoverDescNoMods");
+                        return Loc.Get("ReloadButton.HoverDescNoMods");
 
                     string modsToReload = string.Join(", ", Conf.C.ModsToReload);
                     Log.Info($"Reloading mods for singleplayer Heros: {modsToReload}");
-                    return LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload);
+                    return Loc.Get("ReloadButton.HoverText", modsToReload);
                 }
             );
             Log.Info("HEROsMod reload button registered successfully.");
@@ -61,8 +61,8 @@ namespace ModReloader.Common.Systems.Integrations
 
         private static void RegisterReloadMPButton(Mod herosMod)
         {
-            string ReloadPermission = LocalizationHelper.GetText("ReloadMPButton.Text");
-            string ReloadPermissionDisplay = Helpers.LocalizationHelper.GetText("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+            string ReloadPermission = Loc.Get("ReloadMPButton.Text");
+            string ReloadPermissionDisplay = Helpers.Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
 
             // Register a permission so admins can gate this button
             herosMod.Call(
@@ -85,11 +85,11 @@ namespace ModReloader.Common.Systems.Integrations
                 /* tooltipFunc:         */ () =>
                 {
                     if (ReloadUtilities.IsModsToReloadEmpty)
-                        return LocalizationHelper.GetText("ReloadMPButton.HoverDescNoMods");
+                        return Loc.Get("ReloadMPButton.HoverDescNoMods");
 
                     string modsToReload = string.Join(", ", Conf.C.ModsToReload);
                     Log.Info($"Reloading mods for multiplayer Heros: {modsToReload}");
-                    return LocalizationHelper.GetText("ReloadMPButton.HoverText", modsToReload);
+                    return Loc.Get("ReloadMPButton.HoverText", modsToReload);
                 }
             );
             Log.Info("HEROsMod reloadMP button registered successfully.");
@@ -98,8 +98,8 @@ namespace ModReloader.Common.Systems.Integrations
         private static void RegisterModsButton(Mod herosMod)
         {
             // const string Perm = "ToggleModMenu";
-            string Perm = LocalizationHelper.GetText("ModsButton.Text");
-            string PermDisplay = LocalizationHelper.GetText("ModsButton.HoverDesc");
+            string Perm = Loc.Get("ModsButton.Text");
+            string PermDisplay = Loc.Get("ModsButton.HoverDesc");
             herosMod.Call("AddPermission", Perm, PermDisplay);
 
             // grab the panel instance once so both the click‑action and tooltip can use it
@@ -131,7 +131,7 @@ namespace ModReloader.Common.Systems.Integrations
                 }),
 
                 // tooltip: reflect current state
-                () => sys.mainState.modsPanel.GetActive() ? LocalizationHelper.GetText("ModsButton.HoverTooltipOn") : LocalizationHelper.GetText("ModsButton.HoverTooltipOff")
+                () => sys.mainState.modsPanel.GetActive() ? Loc.Get("ModsButton.HoverTooltipOn") : Loc.Get("ModsButton.HoverTooltipOff")
             );
         }
 
@@ -140,8 +140,8 @@ namespace ModReloader.Common.Systems.Integrations
         // ──────────────────────────────────────────────────────────────────────────────
         private static void RegisterUIButton(Mod herosMod)
         {
-            string Perm = LocalizationHelper.GetText("ModsButton.Text");
-            string PermDisplay = LocalizationHelper.GetText("UIElementButton.HoverDescBase");
+            string Perm = Loc.Get("ModsButton.Text");
+            string PermDisplay = Loc.Get("UIElementButton.HoverDescBase");
 
             // const string Perm = "ToggleUIPanel";
             herosMod.Call("AddPermission", Perm, PermDisplay);
@@ -166,7 +166,7 @@ namespace ModReloader.Common.Systems.Integrations
                     if (!hasPerm)
                         Main.NewText("⛔ You lost permission to use the UI-panel button!", Color.OrangeRed);
                 }),
-                (Func<string>)(() => sys.mainState.uiElementPanel.GetActive() ? LocalizationHelper.GetText("UIElementButton.HoverTooltipOn") : LocalizationHelper.GetText("UIElementButton.HoverTooltipOff"))
+                (Func<string>)(() => sys.mainState.uiElementPanel.GetActive() ? Loc.Get("UIElementButton.HoverTooltipOn") : Loc.Get("UIElementButton.HoverTooltipOff"))
             );
         }
 
@@ -176,8 +176,8 @@ namespace ModReloader.Common.Systems.Integrations
         private static void RegisterLogButton(Mod herosMod)
         {
             // const string Perm = "ToggleLogPanel";
-            string Perm = LocalizationHelper.GetText("LogButton.Text");
-            string PermDisplay = LocalizationHelper.GetText("LogButton.HoverDescBase");
+            string Perm = Loc.Get("LogButton.Text");
+            string PermDisplay = Loc.Get("LogButton.HoverDescBase");
             herosMod.Call("AddPermission", Perm, PermDisplay);
 
             MainSystem sys = ModContent.GetInstance<MainSystem>();
@@ -201,7 +201,7 @@ namespace ModReloader.Common.Systems.Integrations
                         Main.NewText("⛔ You lost permission to open the log panel!", Color.OrangeRed);
                 }),
                 (Func<string>)(() =>
-                    sys.mainState.logPanel.GetActive() ? LocalizationHelper.GetText("LogButton.HoverTooltipOn") : LocalizationHelper.GetText("LogButton.HoverTooltipOff"))
+                    sys.mainState.logPanel.GetActive() ? Loc.Get("LogButton.HoverTooltipOn") : Loc.Get("LogButton.HoverTooltipOff"))
             );
         }
     }

@@ -10,7 +10,7 @@ namespace ModReloader.Common.Systems.Integrations
     {
         public override string IconKey => "Reload"; // icon for assets only
 
-        public override string DisplayName => Helpers.LocalizationHelper.GetText("ReloadButton.Text");
+        public override string DisplayName => Helpers.Loc.Get("ReloadButton.Text");
 
         public override string Description => GetDescription();
 
@@ -18,10 +18,10 @@ namespace ModReloader.Common.Systems.Integrations
         {
             if (!Conf.C.RightClickToolOptions)
             {
-                return Helpers.LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+                return Helpers.Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
             }
 
-            string result = $"{Helpers.LocalizationHelper.GetText("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
+            string result = $"{Helpers.Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Helpers.Loc.Get("ReloadButton.HoverDescRightClick")}";
             //result += $"\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
             return result;
         }

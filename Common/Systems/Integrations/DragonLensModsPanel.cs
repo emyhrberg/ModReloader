@@ -13,11 +13,11 @@ namespace ModReloader.Common.Systems.Integrations
     [ExtendsFromMod("DragonLens")]
     public class DragonLensModsPanel : Tool
     {
-        public override string IconKey => Helpers.LocalizationHelper.GetText("ModsButton.Text");
+        public override string IconKey => Helpers.Loc.Get("ModsButton.Text");
 
-        public override string DisplayName => Helpers.LocalizationHelper.GetText("ModsButton.HoverText");
+        public override string DisplayName => Helpers.Loc.Get("ModsButton.HoverText");
 
-        public override string Description => Helpers.LocalizationHelper.GetText("ModsButton.HoverDesc");
+        public override string Description => Helpers.Loc.Get("ModsButton.HoverDesc");
 
         public override void OnActivate()
         {

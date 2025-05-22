@@ -220,3 +220,20 @@ Tools: {
 		RightClickName: DragonLensUIPanel Right Click
 	}
 }
+
+DebugText: {
+	ClickToHide: Click to hide debug info
+	RightClickOpenConfig: Right click to open config
+	RightClickCloseConfig: Right click to close config
+}
+
+ModSourceLastBuilt: {
+	Seconds: "{0} seconds ago"
+	Minute: "{0} minute ago"
+	Minutes: "{0} minutes ago"
+	Hour: "{0} hour ago"
+	Hours: "{0} hours ago"
+	Day: "{0} day ago"
+	Days: "{0} days ago"
+	LastBuilt: Last built
+}

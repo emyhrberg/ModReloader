@@ -1,6 +1,5 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Common.Configs;
 using ModReloader.Common.Systems.Integrations;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -80,7 +79,6 @@ namespace ModReloader.UI.Elements.DebugElements
         // Helper: is any tML config UI currently open?
         private bool IsConfigOpenAnywhere()
         {
-            return false;
             if (Main.InGameUI == null)
             {
                 return false;
@@ -172,15 +170,21 @@ namespace ModReloader.UI.Elements.DebugElements
                 CalculatedStyle dims = GetDimensions();
                 Vector2 posHigh = dims.Position() + new Vector2(0, -18);
 
-                DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, "Click to hide debug info", posHigh, Color.White,
+                DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, Loc.Get("DebugText.ClickToHide"), posHigh, Color.White,
                     rotation: 0f, origin: Vector2.Zero, scale: 0.8f, effects: SpriteEffects.None, layerDepth: 0f,
                     alphaMult: 0.8f);
 
                 Vector2 posLow = dims.Position() + new Vector2(0, 3);
 
-                string configOpenCloseTooltip = IsConfigOpenAnywhere()
-                   ? "Right click to close config"
-                   : "Right click to open config";
+                string configOpenCloseTooltip;
+                //if (IsConfigOpenAnywhere())
+                //{
+                //configOpenCloseTooltip = "Right click to close config";
+                //}
+                //else
+                //{
+                configOpenCloseTooltip = Loc.Get("DebugText.RightClickOpenConfig");
+                //}
 
                 DrawHelper.DrawOutlinedStringOnMenu(sb, FontAssets.MouseText.Value, configOpenCloseTooltip, posLow, Color.White,
                     rotation: 0f, origin: Vector2.Zero, scale: 0.8f, effects: SpriteEffects.None, layerDepth: 0f,

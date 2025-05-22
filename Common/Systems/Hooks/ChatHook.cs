@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Reflection;
 using ModReloader.Common.Configs;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using MonoMod.RuntimeDetour;
 using Terraria.GameContent.UI.Chat;
 
 namespace ModReloader.Common.Systems.Hooks;
@@ -14,9 +16,14 @@ public class ChatPosHook : ModSystem
 
     public override void Load()
     {
-        IL_Main.DrawPlayerChat += InjectOffset;
-        IL_RemadeChatMonitor.DrawChat += InjectOffset;
+        if (!ModLoader.TryGetMod("ChatImprover", out var bcm))
+        {
+            // Original hooks for when ChatImprover isn't present
+            IL_Main.DrawPlayerChat += InjectOffset;
+            IL_RemadeChatMonitor.DrawChat += InjectOffset;
+        }
     }
+
 
     public override void Unload()
     {
@@ -26,6 +33,11 @@ public class ChatPosHook : ModSystem
 
     public override void PostUpdateEverything()
     {
+        if (!Main.drawingPlayerChat)
+        {
+            return;
+        }
+
         // Test hot reload changes here (to chat position)
         if (Conf.C.MoveChat)
         {

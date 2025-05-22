@@ -24,9 +24,11 @@ namespace ModReloader.UI.Elements.ConfigElements
 
             // Set height based on number of mods
             int modCount = GetModSourcesCount();
+            Log.Info("Found " + modCount + " ModSources to bind to config");
             bool needScrollbar = false;
             if (modCount == 0)
             {
+                Height.Set(35, 0);
                 DrawLabel = true;
                 return;
             }
@@ -48,7 +50,6 @@ namespace ModReloader.UI.Elements.ConfigElements
                 needScrollbar = true;
             }
 
-            Height.Set(280, 0f);
             Top.Set(5, 0);
 
             ListList = (IList<List<string>>)List;
@@ -82,7 +83,7 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override void Draw(SpriteBatch sb)
         {
             //base.Draw(sb);
-            Height.Set(170, 0);
+            //Height.Set(170, 0);
 
             //Top.Set(5, 0);
 

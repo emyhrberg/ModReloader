@@ -52,11 +52,11 @@ namespace ModReloader.Common.Systems.Integrations
                 tooltip: () =>
                 {
                     if (ReloadUtilities.IsModsToReloadEmpty)
-                        return LocalizationHelper.GetText("ReloadButton.HoverDescNoMods");
+                        return Loc.Get("ReloadButton.HoverDescNoMods");
 
                     string modsToReload = string.Join(", ", Conf.C.ModsToReload);
                     Log.Info($"Reloading mods for singleplayer Cheat sheet: {modsToReload}");
-                    return LocalizationHelper.GetText("ReloadButton.HoverText", modsToReload);
+                    return Loc.Get("ReloadButton.HoverText", modsToReload);
                 }
             );
         }
@@ -73,11 +73,11 @@ namespace ModReloader.Common.Systems.Integrations
                 tooltip: () =>
                 {
                     if (ReloadUtilities.IsModsToReloadEmpty)
-                        return LocalizationHelper.GetText("ReloadButton.HoverDescNoMods");
+                        return Loc.Get("ReloadButton.HoverDescNoMods");
 
                     string modsToReload = string.Join(", ", Conf.C.ModsToReload);
                     Log.Info($"Reloading mods for multiplayer Cheat sheet: {modsToReload}");
-                    return LocalizationHelper.GetText("ReloadMPButton.HoverText", modsToReload);
+                    return Loc.Get("ReloadMPButton.HoverText", modsToReload);
                 }
             );
         }
@@ -104,7 +104,7 @@ namespace ModReloader.Common.Systems.Integrations
                         parent.Append(panel);          // move to top layer
                     }
                 },
-                tooltip: () => sys.mainState.modsPanel.GetActive() ? LocalizationHelper.GetText("ModsButton.HoverTooltipOn") : LocalizationHelper.GetText("ModsButton.HoverTooltipOff")
+                tooltip: () => sys.mainState.modsPanel.GetActive() ? Loc.Get("ModsButton.HoverTooltipOn") : Loc.Get("ModsButton.HoverTooltipOff")
             );
         }
 
@@ -132,7 +132,7 @@ namespace ModReloader.Common.Systems.Integrations
                 },
 
                 // Tooltip – reflect current state
-                tooltip: () => sys.mainState.uiElementPanel.GetActive() ? LocalizationHelper.GetText("UIElementButton.HoverTooltipOn") : LocalizationHelper.GetText("UIElementButton.HoverTooltipOff")
+                tooltip: () => sys.mainState.uiElementPanel.GetActive() ? Loc.Get("UIElementButton.HoverTooltipOn") : Loc.Get("UIElementButton.HoverTooltipOff")
             );
         }
 
@@ -159,7 +159,7 @@ namespace ModReloader.Common.Systems.Integrations
                     }
                 },
                 //tooltip: () => sys.mainState.logPanel.GetActive() ?
-                tooltip: () => sys.mainState.logPanel.GetActive() ? LocalizationHelper.GetText("LogButton.HoverTooltipOn") : LocalizationHelper.GetText("UIElementButton.HoverTooltipOff")
+                tooltip: () => sys.mainState.logPanel.GetActive() ? Loc.Get("LogButton.HoverTooltipOn") : Loc.Get("UIElementButton.HoverTooltipOff")
             );
         }
     }

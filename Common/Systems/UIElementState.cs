@@ -343,6 +343,20 @@ namespace ModReloader.Common.Systems
         {
             orig(self, spriteBatch); // Normal UI behavior
 
+            // Fixes bestiary performance bug
+            if (!showAll && !DrawSizeOfElement && !DrawNameOfElement)
+                return;
+
+
+            //if (Main.InGameUI != null)
+            //{
+            //var currentState = Main.InGameUI.CurrentState;
+            //if (currentState != null)
+            //Log.SlowInfo("InGameUI.CurrentState.Type" + currentState.GetType(), 3);
+
+        //}
+
+
             // Register the element
             if (!elements.Contains(self))
             {
