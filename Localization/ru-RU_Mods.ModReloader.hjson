@@ -1,0 +1,239 @@
+Configs: {
+	Config: {
+		DisplayName: Конфигурация
+
+		Headers: {
+			Improvements: Улучшения
+			Misc: Разное
+			ExtraInfo: Show
+			ModsToReload: Моды для перезагрузки
+			ReloadOptions: Reload Options
+		}
+
+		ModsToReload: {
+			Label: Моды для перезагрузки
+			Tooltip: ""
+		}
+
+		AutoJoinWorld: {
+			Label: Авто присоединение к миру
+			Tooltip: Автоматическое присоединение к выбранному миру после перезагрузки модов
+		}
+
+		AutoSaveWorld: {
+			Label: Авто сохранение мира
+			Tooltip: Сохраните данные игрока и мира перед перезагрузкой. Занимает больше времени на перезагрузку, но сохраняет игрока и мир.
+		}
+
+		Player: {
+			Label: Игрок
+			Tooltip: Выбор игрока для присоединения к миру при перезагрузке
+		}
+
+		World: {
+			Label: Мир
+			Tooltip: Выбор мира для присоединения при перезагрузке
+		}
+
+		LogDebugMessages: {
+			Label: Log Debug Messages
+			Tooltip: (Optional) Logs the flow of actions in the mod. Useful for finding the cause of bugs.
+		}
+
+		ShowDebugInfo: {
+			Label: Показать отладочную информацию
+			Tooltip:
+				'''
+				Adds a debug text in the bottom left corner when in a world
+				Contains name, ID, mode, fps, open config.
+				'''
+		}
+
+		ShowMainMenuInfo: {
+			Label: Show Main Menu Info
+			Tooltip: Adds all of the main menu options to that screen
+		}
+
+		ShowErrorMenuInfo: {
+			Label: Show Error Menu Info
+			Tooltip: Adds all of the error menu options to that screen
+		}
+
+		ShowCopyToClipboardButton: {
+			Label: Show Copy To Clipboard Button
+			Tooltip: A new button will appear allowing you to copy the message in the error menu
+		}
+
+		RightClickToolOptions: {
+			Label: Right Click Tool Options
+			Tooltip: Adds the option for tools to have additional functionality with right click options.
+		}
+
+		MoveChat: {
+			Label: Move Chat
+			Tooltip: Moves the chat box position a little to make space for debug info
+		}
+
+		LogLevelPersistOnReloads: {
+			Tooltip: Whether to keep the log levels after reloading. Keep this setting off to keep log levels at default.
+			Label: Log Level Persist On Reloads
+		}
+
+		BuilderToggle: {
+			Label: Builder Toggle
+			Tooltip: Shows a new builder toggle to the left of inventory to toggle all tools
+		}
+	}
+}
+
+BuilderToggles: {
+	MainStateBuilderToggle: {
+		OffText: Mod Reloader Off
+		OnText: Mod Reloader On
+	}
+}
+
+MainMenu: {
+	WelcomeTooltip: Добро пожаловать в главное меню Mod Reloader!
+	OpenConfigText: Открыть файл конфигурации
+	OpenConfigTooltip: Нажмите, чтобы открыть конфигурацию Mod Reloader
+	ReloadText: Перезагрузить
+	ReloadTooltip: Reloads {0}
+	ReloadNoMods: Моды не выбраны
+	OptionsHeader: Параметры
+	OptionsTooltip: Общие параметры для тестирования
+	StartServerText: Запустить сервер
+	StartServerTooltip: Запуск экземпляра сервера с помощью командной строки
+	StartClientText: Запустить клиент
+	StartClientTooltip: Запускает еще один экземпляр tML с командной строкой в дополнение к этому экземпляру
+	OpenLogText: Открыть лог файл
+	OpenLogTooltip: Нажмите, чтобы открыть {0}
+	ClearLogText: Очистить лог
+	ClearLogTooltip: Нажмите, чтобы очистить {0}
+	SingleplayerHeader: Одиночная игра
+	SingleplayerTooltip: Быстрое присоединение к однопользовательским мирам
+	JoinSingleplayerText: Присоединиться к одиночной игре
+	JoinSingleplayerTooltip: Enter singleplayer world with the selected player and world from config
+	MultiplayerHeader: Мультиплеер
+	MultiplayerTooltip: Размещение и тестирование мультиплеера
+	HostMultiplayerText: Host Multiplayer
+	HostMultiplayerTooltip: Запускает локальный многопользовательский мир
+	JoinMultiplayerText: Join Multiplayer
+	JoinMultiplayerTooltip: Enter local multiplayer world with first available player (server required)
+	LoadingWorld: Загрузка мира: {0}
+}
+
+ExceptionMenu: {
+	TitleTooltip: Добро пожаловать в меню ошибок Mod Reloader!
+	ReloadText: Reload
+	ReloadTooltip: Reloads {0}
+	OpenLogText: Открыть лог файл
+	OpenLogTooltip: Click to open the {0}
+	ClearLogText: Очистить лог
+	ClearLogTooltip: Click to clear the {0}
+	CopyText: Скопировать
+	CopyTooltip: Скопировать в буфер
+	GoToFileText: Go to file
+	GoToFileTooltip: Откройте исходный файл исключения в VS
+	Copied: Скопировано!
+}
+
+ModsButton: {
+	Text: Моды
+	HoverText: Список модов
+	HoverDesc: Toggle mods on or off
+	HoverTooltipOn: Close mod list
+	HoverTooltipOff: Open mod list
+}
+
+UIElementButton: {
+	Text: Интерфейс
+	HoverText: UIElement Hitboxes
+	HoverDescBase: Toggle UIElement hitboxes
+	HoverDescRightClick: Right click to toggle all UIElements
+	HoverTooltipOn: Close UIElement panel
+	HoverTooltipOff: Open UIElement panel
+}
+
+LogButton: {
+	Text: Логи
+	HoverText: Log options
+	HoverDescBase: Change log options here
+	HoverDescRightClick: Right click to open {0}
+	HoverTooltipOn: Close log panel
+	HoverTooltipOff: Open log panel
+}
+
+ReloadButton: {
+	Text: Перезагрузить
+	HoverText: Reloads {0}
+	HoverDescNoMods: No mods selected
+	HoverDescRightClick: Right click to reload mods without building any
+}
+
+ReloadMPButton: {
+	Text: Перезагрузить мультиплеер
+	HoverText: Перезагрузок {0}
+	HoverDescNoMods: Моды не выбраны
+	HoverDescRightClick: ПКМ, чтобы перезагрузить мод, не собирая его
+}
+
+Keybinds: {
+	DragonLensLogPanel.DisplayName: Лог панель Dragon Lens
+	DragonLensLogPanelRightClick.DisplayName: Dragon Lens Log Panel Right Click
+	DragonLensModsPanel.DisplayName: Панель модов Dragon Lens
+	DragonLensReload.DisplayName: Dragon Lens Reload
+	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
+	DragonLensReloadMP.DisplayName: Dragon Lens Reload M P
+	DragonLensReloadMPRightClick.DisplayName: Dragon Lens Reload M P Right Click
+	DragonLensUIPanel.DisplayName: Dragon Lens U I Panel
+	DragonLensUIPanelRightClick.DisplayName: Dragon Lens U I Panel Right Click
+}
+
+Tools: {
+	DragonLensLogPanel: {
+		DisplayName: DragonLensLogPanel
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensLogPanel Right Click
+	}
+
+	DragonLensModsPanel: {
+		DisplayName: DragonLensModsPanel
+		Description: The tool has no description! Add one in .hjson files!
+	}
+
+	DragonLensReload: {
+		DisplayName: DragonLensReload
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensReload Right Click
+	}
+
+	DragonLensReloadMP: {
+		DisplayName: DragonLensReloadMP
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensReloadMP Right Click
+	}
+
+	DragonLensUIPanel: {
+		DisplayName: DragonLensUIPanel
+		Description: The tool has no description! Add one in .hjson files!
+		RightClickName: DragonLensUIPanel Right Click
+	}
+}
+
+DebugText: {
+	ClickToHide: Нажмите, чтобы скрыть отладочную информацию
+	RightClickOpenConfig: ПКМ, чтобы открыть конфиг
+	RightClickCloseConfig: ПКМ, чтобы закрыть конфиг
+}
+
+ModSourceLastBuilt: {
+	Seconds: "{0} секунд назад"
+	Minute: "{0} минуту назад"
+	Minutes: "{0} минут назад"
+	Hour: "{0} час назад"
+	Hours: "{0} часов назад"
+	Day: "{0} день назад"
+	Days: "{0} дней назад"
+	LastBuilt: Last built
+}
