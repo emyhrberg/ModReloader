@@ -222,18 +222,18 @@ Tools: {
 }
 
 DebugText: {
-	// ClickToHide: Click to hide debug info
-	// RightClickOpenConfig: Right click to open config
-	// RightClickCloseConfig: Right click to close config
+	ClickToHide: 点击以隐藏debug信息
+	RightClickOpenConfig: 右键点击以开启模组配置
+	RightClickCloseConfig: 右键点击以关闭模组配置
 }
 
 ModSourceLastBuilt: {
-	// Seconds: "{0} seconds ago"
-	// Minute: "{0} minute ago"
-	// Minutes: "{0} minutes ago"
-	// Hour: "{0} hour ago"
-	// Hours: "{0} hours ago"
-	// Day: "{0} day ago"
-	// Days: "{0} days ago"
-	// LastBuilt: Last built
+	Seconds: "{0}秒前"
+	Minute: "{0}分钟前"
+	Minutes: "{0}分钟前"
+	Hour: "{0}小时前"
+	Hours: "{0}小时前"
+	Day: "{0}天前"
+	Days: "{0}天前"
+	LastBuilt: 上次构建于
 }
