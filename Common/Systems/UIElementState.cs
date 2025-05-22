@@ -13,6 +13,7 @@ namespace ModReloader.Common.Systems
 
         // Flag to enable/disable UI debug drawing
         public bool showAll = false;
+        public bool DrawHitboxOfElement = false;
         public bool DrawSizeOfElement = false;
         public bool DrawNameOfElement = false;
 
@@ -62,6 +63,7 @@ namespace ModReloader.Common.Systems
         // Getters
         public float GetOpacity() => opacity;
         public bool GetDrawSizeOfElement() => DrawSizeOfElement;
+        public bool GetDrawHitboxOfElement() => DrawHitboxOfElement;
         public bool GetRandomOutlineColor() => randomOutlineColor;
         public float GetSizeXOffset() => SizeXOffset;
         public float GetSizeYOffset() => SizeYOffset;
@@ -72,6 +74,7 @@ namespace ModReloader.Common.Systems
         public bool GetDrawNameOfElement() => DrawNameOfElement;
 
         // Toggle stuff
+        public void SetDrawHitboxOfElement(bool value) => DrawHitboxOfElement = value;
         public void SetDrawSizeOfElement(bool value) => DrawSizeOfElement = value;
         public void SetDrawNameOfElement(bool value) => DrawNameOfElement = value;
 
@@ -92,6 +95,7 @@ namespace ModReloader.Common.Systems
             // Load settings from JSON
             UIElementSettingsJson.Initialize();
             opacity = UIElementSettingsJson.TryGetValue("Opacity", 0.1f);
+            DrawHitboxOfElement = UIElementSettingsJson.TryGetValue("ShowHitbox", false);
             DrawSizeOfElement = UIElementSettingsJson.TryGetValue("ShowSize", false);
             DrawNameOfElement = UIElementSettingsJson.TryGetValue("ShowType", false);
             outlineColor = UIElementSettingsJson.TryGetValue("OutlineColor", Color.White);
@@ -114,6 +118,7 @@ namespace ModReloader.Common.Systems
 
             // Writting variables to settings
             UIElementSettingsJson.WriteValue("Opacity", opacity);
+            UIElementSettingsJson.WriteValue("ShowHitbox", DrawHitboxOfElement);
             UIElementSettingsJson.WriteValue("ShowSize", DrawSizeOfElement);
             UIElementSettingsJson.WriteValue("ShowType", DrawNameOfElement);
             UIElementSettingsJson.WriteValue("OutlineColor", outlineColor);
@@ -343,9 +348,24 @@ namespace ModReloader.Common.Systems
         {
             orig(self, spriteBatch); // Normal UI behavior
 
+            if (!elementToggles.ContainsKey(self.GetType().Name))
+            {
+                elementToggles[self.GetType().Name] = false;
+                Main.NewText($"Registered {self.GetType().Name} in UIElementState.", Color.Green);
+            }
+
             // Fixes bestiary performance bug
-            if (!showAll && !DrawSizeOfElement && !DrawNameOfElement)
+            if (!DrawHitboxOfElement && !DrawSizeOfElement && !DrawNameOfElement)
                 return;
+
+            if (Main.dedServ || Main.gameMenu)
+                return;
+            if (self is MainState || self is UIElementState)
+                return;
+            if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900)
+                return;
+
+            
 
 
             //if (Main.InGameUI != null)
@@ -358,23 +378,7 @@ namespace ModReloader.Common.Systems
 
 
             // Register the element
-            if (!elements.Contains(self))
-            {
-                elements.Add(self);
-
-                // Ensure the element has a default toggle state (OFF by default)
-                if (!elementToggles.ContainsKey(self.GetType().Name))
-                {
-                    elementToggles[self.GetType().Name] = false;
-                }
-            }
-
-            if (Main.dedServ || Main.gameMenu)
-                return;
-            if (self is MainState || self is UIElementState)
-                return;
-            if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900)
-                return;
+            
 
             // Check if this *type* is toggled OFF
             if (elementToggles.TryGetValue(self.GetType().Name, out bool value))
@@ -392,8 +396,12 @@ namespace ModReloader.Common.Systems
             {
                 DrawElementType(spriteBatch, self, self.GetOuterDimensions().Position().ToPoint());
             }
-
-            DrawHitbox(self, spriteBatch);
+            if(DrawHitboxOfElement)
+            {
+                // Draw the hitbox
+                DrawHitbox(self, spriteBatch);
+            }
+            
         }
     }
 }

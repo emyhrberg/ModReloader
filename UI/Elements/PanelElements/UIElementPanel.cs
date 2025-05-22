@@ -19,7 +19,9 @@ namespace ModReloader.UI.Elements.PanelElements
             AddPadding(5);
             //TODO: This option is special bc it should be enabled if all elements are enabled and disabled if even one of the elements are disabled
             //So idk how to make it work rn, maybe we just with each element that tougles on or off we just update this option
-            AddOption("Show All", false, elementState.SetShowAll, "Show all UI elements from mods");
+
+            AddOption("Show Hitboxes", elementState.GetDrawHitboxOfElement(), elementState.SetDrawHitboxOfElement, "Show all UI elements from mods");
+            
 
             AddSlider(
                 title: "Opacity",
@@ -165,6 +167,7 @@ namespace ModReloader.UI.Elements.PanelElements
             AddPadding(20);
 
             AddHeader($"All UIElements");
+            AddOption("Toggle All", false, elementState.SetShowAll, "Toggle all UI elements from mods");
         }
 
         // Dynamic UI elements for each UIElement type
