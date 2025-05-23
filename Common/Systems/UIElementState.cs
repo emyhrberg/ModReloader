@@ -25,7 +25,7 @@ namespace ModReloader.Common.Systems
         public Dictionary<string, bool> elementToggles = [];
 
         // Elements that no longer exists
-        public List<string> deathList = [];
+        public HashSet<string> activeUIElementsNameList = [];
 
         // Outline color
         private Color outlineColor = Color.White;
@@ -350,10 +350,6 @@ namespace ModReloader.Common.Systems
         {
             orig(self, spriteBatch); // Normal UI behavior
 
-            // Fixes bestiary performance bug
-            if (!DrawHitboxOfElement && !DrawSizeOfElement && !DrawNameOfElement)
-                return;
-
             if (Main.dedServ || Main.gameMenu)
                 return;
             if (self is MainState || self is UIElementState)
@@ -370,8 +366,8 @@ namespace ModReloader.Common.Systems
 
             if (elementToggles.TryGetValue(typeName, out bool value))
             {
-                // Remove the type from the death list if it exists
-                deathList.Remove(typeName);
+                // Add the type name to the activeUIElementsNameList
+                activeUIElementsNameList.Add(typeName);
 
                 // Check if this *type* is toggled OFF
                 if (!value)
