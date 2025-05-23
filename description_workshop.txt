@@ -4,14 +4,15 @@ It's built to make the mod reload and compile process easier and more efficient,
 
 [h1] Features [/h1] 
 [list]
-[*] [b]Quick Reload[/b]: Instantly reload selected mods without restarting the game.
-[*] [b]Multiplayer Reload[/b]: Instantly reload selected mods for multiple clients with one click.
-[*] [b]In-Game Mod Toggle[/b]: Enable/disable mods mid-game.
-[*] [b]Publicizer Tool [/b]: Access internal dll's, including tModLoader, with publicizer support.
+[*] [b]Quick Reload[/b]: Instantly reload (and rebuild) selected mods with just one button!
+[*] [b]Multiplayer Reload[/b]: Just like Quick Reload, but allows you to instantly reload the server and clients with one button too!
+[*] [b]In-Game Mod Toggle[/b]: Enable/disable mods without exiting a world!
+[*] [b]Private Field Access [/b]: Use any private fields as if they were public with Publicizer!
 [*] [b]Log Tools[/b]: Set the log level for every logger.
 [*] [b]UI Tools[/b]: View UIElement hitboxes, sizes, and positions to make UI development easier.
 [*] [b]Main Menu Tools[/b]: Navigate the menu faster with helpful options to speed up testing.
-[*] [b]Exception Menu Tools[/b]: Copy error messages, retry actions, and go-to-exception.
+[*] [b]Exception Menu Tools[/b]: Copy error messages, retry reload, and go to line with exception.
+[*] [b]Supports other mods[/b]: Fully compatible and integrated into DragonLens, Cheat Sheet and Heros Mod.
 [/list]
 
 [h1] Support [/h1]
@@ -22,4 +23,5 @@ It's built to make the mod reload and compile process easier and more efficient,
 [/list]
 
 [quote]
-Developed By Erky & Cotlim[/quote]
+Developed By Erky & Cotlim
+[/quote]
