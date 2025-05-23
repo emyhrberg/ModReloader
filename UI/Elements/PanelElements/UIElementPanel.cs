@@ -168,7 +168,7 @@ namespace ModReloader.UI.Elements.PanelElements
             AddPadding(20);
 
             AddHeader($"All UIElements");
-            AddOption("Toggle All", false, elementState.SetShowAll, "Toggle all UI elements from mods");
+            AddOption("Toggle All", true, elementState.SetShowAll, "Toggle all UI elements from mods");
         }
 
         // Dynamic UI elements for each UIElement type
@@ -226,7 +226,6 @@ namespace ModReloader.UI.Elements.PanelElements
                     uiList.Add(elem);
                 }
             }
-            uiList.Recalculate();
         }
     }
 }

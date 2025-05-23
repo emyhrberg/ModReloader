@@ -360,7 +360,7 @@ namespace ModReloader.Common.Systems
 
             if (!elementToggles.ContainsKey(self.GetType().Name))
             {
-                elementToggles[self.GetType().Name] = false;
+                elementToggles[self.GetType().Name] = true;
                 return;
             }
 
