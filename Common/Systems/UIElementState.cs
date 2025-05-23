@@ -365,7 +365,7 @@ namespace ModReloader.Common.Systems
 
             if (!elementToggles.ContainsKey(typeName))
             {
-                elementToggles[typeName] = true;
+                elementToggles[typeName] = showAll;
             }
 
             if (elementToggles.TryGetValue(typeName, out bool value))
