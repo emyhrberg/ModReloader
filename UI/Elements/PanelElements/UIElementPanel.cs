@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 using ModReloader.Common.Systems;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
@@ -188,6 +189,11 @@ namespace ModReloader.UI.Elements.PanelElements
                 uiList.Remove(pair.Value);
             }
 
+            foreach (var uiElementName in elementState.deathList)
+            {
+                elementState.elementToggles.Remove(uiElementName);
+            }
+
             // Remove any dynamic options that are no longer in the elementToggles
             foreach (var key in dynamicOptions.Keys.ToList())
             {
@@ -204,12 +210,12 @@ namespace ModReloader.UI.Elements.PanelElements
                 {
                     var newOption = AddOption(
                         text: pair.Key,
-                        defaultValue: elementState.GetElement(pair.Key, false),
+                        defaultValue: elementState.GetElement(pair.Key, true),
                         leftClick: (bool value) => elementState.SetElement(pair.Key, value),
                         hover: $"Show all {pair.Key} UIElements",
-                        padding: 0f
+                        padding: 0f,
+                        autoAdding: false
                     );
-
                     dynamicOptions[pair.Key] = newOption;
                 }
             }
@@ -226,6 +232,9 @@ namespace ModReloader.UI.Elements.PanelElements
                     uiList.Add(elem);
                 }
             }
+
+            // Reset deathList
+            elementState.deathList = dynamicOptionsKeys;
         }
     }
 }

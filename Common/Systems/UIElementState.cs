@@ -24,6 +24,9 @@ namespace ModReloader.Common.Systems
         // Elements
         public Dictionary<string, bool> elementToggles = [];
 
+        // Elements that no longer exists
+        public List<string> deathList = [];
+
         // Outline color
         private Color outlineColor = Color.White;
         public void SetOutlineColor(Color color) => outlineColor = color;
@@ -358,15 +361,19 @@ namespace ModReloader.Common.Systems
             if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900)
                 return;
 
-            if (!elementToggles.ContainsKey(self.GetType().Name))
+            string typeName = self.GetType().Name;
+
+            if (!elementToggles.ContainsKey(typeName))
             {
-                elementToggles[self.GetType().Name] = true;
-                return;
+                elementToggles[typeName] = true;
             }
 
-            // Check if this *type* is toggled OFF
-            if (elementToggles.TryGetValue(self.GetType().Name, out bool value))
+            if (elementToggles.TryGetValue(typeName, out bool value))
             {
+                // Remove the type from the death list if it exists
+                deathList.Remove(typeName);
+
+                // Check if this *type* is toggled OFF
                 if (!value)
                     return;
             }

@@ -132,6 +132,8 @@ namespace ModReloader.UI.Elements.PanelElements
         public UIElement AddPadding(float padding)
         {
             // Create a basic UIElement to act as a spacer instead of using HeaderElement
+            if(padding <= 0)
+                return null;
             UIElement paddingElement = new();
             paddingElement.Height.Set(padding, 0f);
             paddingElement.Width.Set(0, 1f);
@@ -154,10 +156,13 @@ namespace ModReloader.UI.Elements.PanelElements
             return sliderPanel;
         }
 
-        protected OptionElement AddOption(string text, bool defaultValue, Action<bool> leftClick, string hover = "", Action<bool> rightClick = null, float padding = 3f)
+        protected OptionElement AddOption(string text, bool defaultValue, Action<bool> leftClick, string hover = "", Action<bool> rightClick = null, float padding = 3f, bool autoAdding = true)
         {
             OptionElement option = new(defaultValue, leftClick, text, hover);
-            uiList.Add(option);
+            if (autoAdding)
+            {
+                uiList.Add(option);
+            }
             AddPadding(padding);
             return option;
         }
