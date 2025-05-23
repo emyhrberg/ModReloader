@@ -75,8 +75,8 @@ Configs: {
 		}
 
 		LogLevelPersistOnReloads: {
-			Tooltip: 重加载时是否保持日志筛选设置。关闭此选项以恢复默认日志筛选。
-			Label: 重加载时保持日志筛选设置
+			Tooltip: 重加载时是否保持日志级别设置。关闭此选项以恢复默认日志级别。
+			Label: 重加载时保持日志级别设置
 		}
 
 		BuilderToggle: {
@@ -244,29 +244,29 @@ ModSourceLastBuilt: {
 }
 
 LogPanel: {
-	// LogTitle: Log
-	// LogTitleHover: Click to open the folder at Steam/steamapps/common/tModLoader/tModLoader-Logs
-	// OpenClientLog: Open Client Log
-	// OpenClientLogHover: Click to open {0}
-	// OpenServerLog: Open Server Log
-	// OpenServerLogHover: Click to open the server log
-	// ClearClientLog: Clear Client Log
-	// ClearClientLogHover: Click to clear {0}
-	// LogLevelTitle: Log level
-	// LogLevelHeader: Set the log level for each logger: Off, Error, Warn, Info, Debug, All
-	// LogLevelPersistOnReloads: This log level persists over reloads!
-	// SetLogLevelFor: Set log level for {0}
-	// Off: Off
-	// Error: Error
-	// Warn: Warn
-	// Info: Info
-	// Debug: Debug
-	// All: All
+	LogTitle: 日志文件
+	LogTitleHover: 点击以打开Steam/steamapps/common/tModLoader/tModLoader-Logs文件夹
+	OpenClientLog: 打开客户端日志
+	OpenClientLogHover: 点击以打开{0}
+	OpenServerLog: 打开服务器日志
+	OpenServerLogHover: 点击以打开服务器日志
+	ClearClientLog: 清除客户端日志
+	ClearClientLogHover: 点击以清除{0}文件内容
+	LogLevelTitle: 日志级别设置
+	LogLevelHeader: 为每个日志记录器设置以下日志级别：关闭、错误(Error)、警告(Warn)、信息(Info)、调试(Debug)、全部
+	LogLevelPersistOnReloads: 此日志级别设置会在重加载时保持！
+	SetLogLevelFor: 为{0}设置日志级别
+	Off: 关闭
+	Error: Error
+	Warn: Warn
+	Info: Info
+	Debug: Debug
+	All: 全部
 }
 
 UIElementPanel: {
-	// ShowAll: Showing all UI elements
-	// HideAll: Hiding all UI elements
+	ShowAll: 已显示所有UI元素
+	HideAll: 已隐藏所有UI元素
 }
 
-// LeftClickHelper.ModReloaderOffTooltip: Mod Reloader is off. To toggle, open inventory, look to the left of the hotbar and toggle the eye to see or hide all Mod Reloader tools.
+LeftClickHelper.ModReloaderOffTooltip: Mod Reloader已关闭。如要开关此项，请打开物品栏，点击快捷栏左下侧的眼睛图标以显示或隐藏所有Mod Reloader工具。
