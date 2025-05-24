@@ -20,16 +20,9 @@
 		</Reference>
 
 		<!-- integration with DL, CheatSheet and HerosMod-->
-		<Reference Include="DragonLens">
-			<HintPath>lib\DragonLens.dll</HintPath>
+        <Reference Include="HEROsMod">
+			<HintPath>lib\HEROsMod.dll</HintPath>
 		</Reference>
-		<Reference Include="CheatSheet">
-			<HintPath>lib\CheatSheet.dll</HintPath>
-		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ModReference Include="HEROsMod" />
 	</ItemGroup>
 
 	<!-- References -->
