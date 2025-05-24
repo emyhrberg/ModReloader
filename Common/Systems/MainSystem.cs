@@ -21,39 +21,16 @@ namespace ModReloader.Common.Systems
             userInterface?.Update(gameTime);
         }
 
-        // boilerplate code to draw the UI
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            // Instead of drawing before "Vanilla: Mouse Text", draw just before the Fancy UI layer:
-            int fancyIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-            if (fancyIndex != -1)
+            int index = layers.FindIndex(layer => layer.Name == "Vanilla: Mouse Text");
+            if (index != -1)
             {
-                layers.Insert(fancyIndex, new LegacyGameInterfaceLayer(
-                    "ModReloader: MainSystem (before Fancy UI)",
-                    () =>
-                    {
-                        userInterface?.Draw(Main.spriteBatch, new GameTime());
-                        return true;
-                    },
+                layers.Insert(index, new LegacyGameInterfaceLayer(
+                    "ModReloader: MainSystem UI",
+                    () => { userInterface?.Draw(Main.spriteBatch, new GameTime()); return true; },
                     InterfaceScaleType.UI
                 ));
-            }
-            else
-            {
-                // Fallback: if Fancy UI isn't found, insert before Mouse Text
-                //int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-                //if (mouseTextIndex != -1)
-                //{
-                //    layers.Insert(mouseTextIndex, new LegacyGameInterfaceLayer(
-                //        "ModReloader: MainSystem",
-                //        () =>
-                //        {
-                //            userInterface?.Draw(Main.spriteBatch, new GameTime());
-                //            return true;
-                //        },
-                //        InterfaceScaleType.UI
-                //    ));
-                //}
             }
         }
     }

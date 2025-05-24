@@ -1,13 +1,10 @@
 ﻿using System;
-using Microsoft.Xna.Framework.Graphics;
+using System.Threading.Tasks;
 using ModReloader.Common.BuilderToggles;
-using ModReloader.Common.Configs;
-using ModReloader.Helpers;
-using ModReloader.UI.Elements.PanelElements.ModElements;
-using ReLogic.Content;
+using ModReloader.UI.Elements.PanelElements;
 using Terraria.UI;
 
-namespace ModReloader.Common.Systems.Integrations
+namespace ModReloader.Common.Systems.Integrations.HerosMod
 {
     [JITWhenModsEnabled("HEROsMod")]
     public class HerosModIntegration : ModSystem
@@ -16,7 +13,7 @@ namespace ModReloader.Common.Systems.Integrations
         {
             if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod) && !Main.dedServ)
             {
-                RegisterReloadButton(herosMod);
+                RegisterReloadSPButton(herosMod);
                 RegisterReloadMPButton(herosMod);
                 RegisterModsButton(herosMod);
                 RegisterUIButton(herosMod);
@@ -24,211 +21,147 @@ namespace ModReloader.Common.Systems.Integrations
             }
         }
 
-        private static void RegisterReloadButton(Mod herosMod)
+        private static void RegisterReloadSPButton(Mod herosMod)
         {
-            string ReloadPermission = Loc.Get("ReloadButton.Text");
-            string ReloadPermissionDisplay = Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+            const string Perm = "ReloadSP";
 
-            // Register a permission so admins can gate this button
-            herosMod.Call(
-                "AddPermission",
-                ReloadPermission,
-                ReloadPermissionDisplay
-            );
-
-            // Add the button itself
+            herosMod.Call("AddPermission", Perm, Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload)));
             herosMod.Call(
                 "AddSimpleButton",
-                /* permissionName:      */ ReloadPermission,
-                /* texture:             */ Ass.ButtonReloadSPHeros,
-                /* onClick action:      */ (Action)(async () =>
-                {
-                    if (!BuilderToggleHelper.GetActive())
-                    {
-                        LeftClickHelper.Notify();
-                        return;
-                    }
-                    await ReloadUtilities.SinglePlayerReload();
-                }),
-                /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
-                                           {
-                                               if (!hasPerm)
-                                                   Main.NewText("⛔You lost permission to reload mods!", Color.OrangeRed);
-                                           }),
-                /* tooltipFunc:         */ () =>
-                {
-                    if (ReloadUtilities.IsModsToReloadEmpty)
-                        return Loc.Get("ReloadButton.HoverDescNoMods");
-
-                    string modsToReload = string.Join(", ", Conf.C.ModsToReload);
-                    Log.Info($"Reloading mods for singleplayer Heros: {modsToReload}");
-                    return Loc.Get("ReloadButton.HoverText", modsToReload);
-                }
+                Perm,
+                Ass.ButtonReloadSPHeros,
+                GuardedAsync(ReloadUtilities.SinglePlayerReload),
+                (Action<bool>)(hasPerm => PermissionChanged(hasPerm, Perm)),
+                (Func<string>)(() => GetReloadTooltip())
             );
-            Log.Info("HEROsMod reload button registered successfully.");
         }
 
         private static void RegisterReloadMPButton(Mod herosMod)
         {
-            string ReloadPermission = Loc.Get("ReloadMPButton.Text");
-            string ReloadPermissionDisplay = Helpers.Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
+            const string Perm = "ReloadMP";
 
-            // Register a permission so admins can gate this button
-            herosMod.Call(
-                "AddPermission",
-                ReloadPermission,
-                ReloadPermissionDisplay
-            );
-
-            // Add the button itself
+            herosMod.Call("AddPermission", Perm, Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload)));
             herosMod.Call(
                 "AddSimpleButton",
-                /* permissionName:      */ ReloadPermission,
-                /* texture:             */ Ass.ButtonReloadMP,
-                /* onClick action:      */ (Action)(async () =>
-                                           {
-                                               if (!BuilderToggleHelper.GetActive())
-                                               {
-                                                   LeftClickHelper.Notify();
-                                                   return;
-                                               }
-                                               await ReloadUtilities.MultiPlayerMainReload();
-                                           }),
-                /* onPermissionChanged: */ (Action<bool>)(hasPerm =>
-                                           {
-                                               if (!hasPerm)
-                                                   Main.NewText("⛔ You lost permission to reload MP mods!", Color.OrangeRed);
-                                           }),
-                /* tooltipFunc:         */ () =>
-                {
-                    if (ReloadUtilities.IsModsToReloadEmpty)
-                        return Loc.Get("ReloadMPButton.HoverDescNoMods");
-
-                    string modsToReload = string.Join(", ", Conf.C.ModsToReload);
-                    Log.Info($"Reloading mods for multiplayer Heros: {modsToReload}");
-                    return Loc.Get("ReloadMPButton.HoverText", modsToReload);
-                }
+                Perm,
+                Ass.ButtonReloadMP,
+                GuardedAsync(ReloadUtilities.MultiPlayerMainReload),
+                (Action<bool>)(hasPerm => PermissionChanged(hasPerm, Perm)),
+                (Func<string>)(() => GetReloadTooltip())
             );
-            Log.Info("HEROsMod reloadMP button registered successfully.");
         }
 
         private static void RegisterModsButton(Mod herosMod)
         {
-            // const string Perm = "ToggleModMenu";
-            string Perm = Loc.Get("ModsButton.Text");
-            string PermDisplay = Loc.Get("ModsButton.HoverDesc");
-            herosMod.Call("AddPermission", Perm, PermDisplay);
+            const string Perm = "ModsPanel";
 
-            // grab the panel instance once so both the click‑action and tooltip can use it
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            Asset<Texture2D> tex = Ass.ButtonModsHeros;
-
+            herosMod.Call("AddPermission", Perm, Loc.Get("ModsButton.HoverDesc"));
             herosMod.Call(
-                "AddSimpleButton",
-                Perm,
-                tex,
-
-                // on‑click: toggle visibility and bring to front
-                () =>
-                {
-                    if (!BuilderToggleHelper.GetActive())
-                    {
-                        LeftClickHelper.Notify();
-                        return;
-                    }
-                    ModsPanel panel = sys.mainState.modsPanel;
-                    bool nowOpen = !panel.GetActive();
-                    panel.SetActive(nowOpen);
-
-                    if (panel.Parent is UIElement parent)
-                    {
-                        panel.Remove(); parent.Append(panel);
-                    }
-                },
-
-                // permission change callback
-                (Action<bool>)(hasPerm =>
-                {
-                    if (!hasPerm) Main.NewText("⛔ You lost permission to open mods panel!", Color.OrangeRed);
-                }),
-
-                // tooltip: reflect current state
-                () => sys.mainState.modsPanel.GetActive() ? Loc.Get("ModsButton.HoverTooltipOn") : Loc.Get("ModsButton.HoverTooltipOff")
+            "AddSimpleButton",
+            Perm,
+            Ass.ButtonModsHeros,
+            () => TogglePanel(ModContent.GetInstance<MainSystem>().mainState.modsPanel),
+            (Action<bool>)(hasPerm => PermissionChanged(hasPerm, "ModsPanel")),
+            (Func<string>)(() => GetTooltip(ModContent.GetInstance<MainSystem>().mainState.modsPanel, "ModsButton"))
             );
         }
 
         private static void RegisterUIButton(Mod herosMod)
         {
-            string Perm = Loc.Get("ModsButton.Text");
-            string PermDisplay = Loc.Get("UIElementButton.HoverDescBase");
+            const string Perm = "UIElementPanel";
 
-            // const string Perm = "ToggleUIPanel";
-            herosMod.Call("AddPermission", Perm, PermDisplay);
-
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            Asset<Texture2D> tex = Ass.ButtonUIHeros;
-
+            herosMod.Call("AddPermission", Perm, Loc.Get("UIElementButton.HoverDescBase"));
             herosMod.Call(
-                "AddSimpleButton",
-                Perm,
-                tex,
-                (Action)(() =>                       // click
-                {
-                    if (!BuilderToggleHelper.GetActive())
-                    {
-                        LeftClickHelper.Notify();
-                        return;
-                    }
-                    var panel = sys.mainState.uiElementPanel;
-                    bool opened = !panel.GetActive();
-                    panel.SetActive(opened);
-
-                    if (panel.Parent is UIElement p) { panel.Remove(); p.Append(panel); }
-                }),
-                (Action<bool>)(hasPerm =>            // permission lost
-                {
-                    if (!hasPerm)
-                        Main.NewText("⛔ You lost permission to use the UI-panel button!", Color.OrangeRed);
-                }),
-                (Func<string>)(() => sys.mainState.uiElementPanel.GetActive() ? Loc.Get("UIElementButton.HoverTooltipOn") : Loc.Get("UIElementButton.HoverTooltipOff"))
+            "AddSimpleButton",
+            Perm,
+            Ass.ButtonUIHeros,
+            () => TogglePanel(ModContent.GetInstance<MainSystem>().mainState.uiElementPanel),
+            (Action<bool>)(hasPerm => PermissionChanged(hasPerm, "UIElementPanel")),
+            (Func<string>)(() => GetTooltip(ModContent.GetInstance<MainSystem>().mainState.uiElementPanel, "UIElementButton"))
             );
         }
 
         private static void RegisterLogButton(Mod herosMod)
         {
-            // const string Perm = "ToggleLogPanel";
-            string Perm = Loc.Get("LogButton.Text");
-            string PermDisplay = Loc.Get("LogButton.HoverDescBase");
-            herosMod.Call("AddPermission", Perm, PermDisplay);
+            const string Perm = "LogPanel";
 
-            MainSystem sys = ModContent.GetInstance<MainSystem>();
-            Asset<Texture2D> tex = Ass.ButtonLogHeros;
-
+            herosMod.Call("AddPermission", Perm, Loc.Get("LogButton.HoverDescBase"));
             herosMod.Call(
-                "AddSimpleButton",
-                Perm,
-                tex,
-                (Action)(() =>
-                {
-                    if (!BuilderToggleHelper.GetActive())
-                    {
-                        LeftClickHelper.Notify();
-                        return;
-                    }
-                    var panel = sys.mainState.logPanel;
-                    bool opened = !panel.GetActive();
-                    panel.SetActive(opened);
-
-                    if (panel.Parent is UIElement p) { panel.Remove(); p.Append(panel); }
-                }),
-                (Action<bool>)(hasPerm =>
-                {
-                    if (!hasPerm)
-                        Main.NewText("⛔ You lost permission to open the log panel!", Color.OrangeRed);
-                }),
-                (Func<string>)(() =>
-                    sys.mainState.logPanel.GetActive() ? Loc.Get("LogButton.HoverTooltipOn") : Loc.Get("LogButton.HoverTooltipOff"))
+            "AddSimpleButton",
+            Perm,
+            Ass.ButtonLogHeros,
+            () => TogglePanel(ModContent.GetInstance<MainSystem>().mainState.logPanel),
+            (Action<bool>)(hasPerm => PermissionChanged(hasPerm, "LogPanel")),
+            (Func<string>)(() => GetTooltip(ModContent.GetInstance<MainSystem>().mainState.logPanel, "LogButton"))
             );
         }
+
+        #region  helpers
+
+        // reload action helper
+        private static Action GuardedAsync(Func<Task> taskFunc)
+        {
+            return async () =>
+            {
+                if (!BuilderToggleHelper.GetActive())
+                {
+                    LeftClickHelper.Notify();
+                    return;
+                }
+
+                await taskFunc().ConfigureAwait(false);
+            };
+        }
+
+        // reload tooltip helper
+        private static string GetReloadTooltip()
+        {
+            if (ReloadUtilities.IsModsToReloadEmpty)
+                return Loc.Get("ReloadButton.HoverDescNoMods");
+
+            string modsToReload = string.Join(", ", Conf.C.ModsToReload);
+            return Loc.Get("ReloadButton.HoverText", modsToReload);
+        }
+
+        // toggle panel helper
+        private static void TogglePanel(BasePanel panel)
+        {
+            if (!BuilderToggleHelper.GetActive())
+            {
+                LeftClickHelper.Notify();
+                return;
+            }
+            bool nowOpen = !panel.GetActive();
+            panel.SetActive(nowOpen);
+
+            if (panel.Parent is UIElement parent)
+            {
+                panel.Remove();
+                parent.Append(panel);
+            }
+        }
+
+        // permission helper
+        private static void PermissionChanged(bool hasPerm, string permissionName)
+        {
+            if (!hasPerm)
+            {
+                Main.NewText($"⛔ You lost permission to use the {permissionName} button!", Color.OrangeRed);
+                Log.Info($"Permission for {permissionName} button was lost. Please check HEROsMod permissions.");
+            }
+            else
+            {
+                Main.NewText($"✅ You regained permission to use the {permissionName} button!", Color.LightGreen);
+                Log.Info($"Permission for {permissionName} button was granted. You can now use it.");
+            }
+        }
+
+        // tooltip helper
+        private static string GetTooltip(BasePanel panel, string key)
+        {
+            return panel.GetActive() ? Loc.Get($"{key}.HoverTooltipOn") : Loc.Get($"{key}.HoverTooltipOff");
+        }
+
+        #endregion
     }
 }
