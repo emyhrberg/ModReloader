@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ModReloader.Common.BuilderToggles;
-using ModReloader.UI.Elements.ButtonElements;
 using ModReloader.UI.Elements.PanelElements;
 using Terraria.UI;
 
@@ -18,7 +17,7 @@ namespace ModReloader.Common.Systems.Integrations.HerosMod
 
         public override void PostSetupContent()
         {
-            if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod) && !Main.dedServ)
+            if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod))
             {
                 RegisterReloadSPButton(herosMod);
                 RegisterReloadMPButton(herosMod);
@@ -30,19 +29,13 @@ namespace ModReloader.Common.Systems.Integrations.HerosMod
 
         private static void RegisterReloadSPButton(Mod herosMod)
         {
-            herosMod.Call("AddPermission", PermReloadSP, "Reloads mods");
+            herosMod.Call("AddPermission", PermReloadMP, Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload)));
             herosMod.Call(
                 "AddSimpleButton",
                 PermReloadSP,
                 Ass.ButtonReloadSPHeros,
                 GuardedAsync(ReloadUtilities.SinglePlayerReload),
-                (Action<bool>)(hasPerm =>
-                {
-                    if (!hasPerm)
-                    {
-                        Main.NewText($"⛔ You lost permission to use the {PermReloadSP} button!", ColorHelper.CalamityRed);
-                    }
-                }),
+                (Action<bool>)(hasPerm => PermissionChanged(hasPerm, PermLogPanel)),
                 (Func<string>)(() => GetReloadTooltip())
             );
         }
@@ -148,12 +141,12 @@ namespace ModReloader.Common.Systems.Integrations.HerosMod
         {
             if (!hasPerm)
             {
-                Main.NewText($"⛔ You lost permission to use the {permissionName} button!", ColorHelper.CalamityRed);
+                //Main.NewText($"⛔ You lost permission to use the {permissionName} button!", ColorHelper.CalamityRed);
                 Log.Info($"You lost permission for {permissionName} button. You cannot use it anymore.");
             }
             else
             {
-                Main.NewText($"✅ You regained permission to use the {permissionName} button!", Color.LightGreen);
+                //Main.NewText($"✅ You regained permission to use the {permissionName} button!", Color.LightGreen);
                 Log.Info($"You regained permission for {permissionName} button. You can use it again.");
             }
         }
