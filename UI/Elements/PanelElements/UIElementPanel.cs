@@ -189,34 +189,29 @@ namespace ModReloader.UI.Elements.PanelElements
                 uiList.Remove(pair.Value);
             }
 
-            foreach (var uiElementName in elementState.deathList)
-            {
-                elementState.elementToggles.Remove(uiElementName);
-            }
-
             // Remove any dynamic options that are no longer in the elementToggles
             foreach (var key in dynamicOptions.Keys.ToList())
             {
-                if (!elementState.elementToggles.ContainsKey(key))
+                if (!elementState.activeUIElementsNameList.Contains(key))
                 {
                     dynamicOptions.Remove(key);
                 }
             }
 
             // Add new dynamic options for each element in the elementToggles
-            foreach (var pair in elementState.elementToggles)
+            foreach (var uiElementName in elementState.activeUIElementsNameList)
             {
-                if (!dynamicOptions.ContainsKey(pair.Key))
+                if (!dynamicOptions.ContainsKey(uiElementName))
                 {
                     var newOption = AddOption(
-                        text: pair.Key,
-                        defaultValue: elementState.GetElement(pair.Key, true),
-                        leftClick: (bool value) => elementState.SetElement(pair.Key, value),
-                        hover: $"Show all {pair.Key} UIElements",
+                        text: uiElementName,
+                        defaultValue: elementState.GetElement(uiElementName, true),
+                        leftClick: (bool value) => elementState.SetElement(uiElementName, value),
+                        hover: $"Show all {uiElementName} UIElements",
                         padding: 0f,
                         autoAdding: false
                     );
-                    dynamicOptions[pair.Key] = newOption;
+                    dynamicOptions[uiElementName] = newOption;
                 }
             }
 
@@ -233,8 +228,8 @@ namespace ModReloader.UI.Elements.PanelElements
                 }
             }
 
-            // Reset deathList
-            elementState.deathList = dynamicOptionsKeys;
+            // Reset activeUIElementsNameList
+            elementState.activeUIElementsNameList.Clear();
         }
     }
 }

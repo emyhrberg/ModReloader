@@ -5,10 +5,18 @@ using ModReloader.UI.Elements.PanelElements;
 using Terraria.UI;
 
 namespace ModReloader.Common.Systems.Integrations.HerosMod
+namespace ModReloader.Common.Systems.Integrations.HerosMod
 {
     [JITWhenModsEnabled("HEROsMod")]
-    public class HerosModIntegration : ModSystem
+    public sealed class HerosModIntegration : ModSystem
     {
+        // Permission keys for HERO's Mod buttons.
+        private const string PERM_RELOAD_SP = "ReloadSP";
+        private const string PERM_RELOAD_MP = "ReloadMP";
+        private const string PERM_OPEN_MODS = "OpenModsPanel";
+        private const string PERM_OPEN_UI = "OpenUIPanel";
+        private const string PERM_OPEN_LOG = "OpenLogPanel";
+
         public override void PostSetupContent()
         {
             if (ModLoader.TryGetMod("HEROsMod", out Mod herosMod) && !Main.dedServ)
