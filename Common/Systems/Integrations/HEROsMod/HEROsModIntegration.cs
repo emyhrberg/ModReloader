@@ -29,7 +29,7 @@ namespace ModReloader.Common.Systems.Integrations.HerosMod
 
         private static void RegisterReloadSPButton(Mod herosMod)
         {
-            herosMod.Call("AddPermission", PermReloadMP, Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload)));
+            herosMod.Call("AddPermission", PermReloadSP, Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload)));
             herosMod.Call(
                 "AddSimpleButton",
                 PermReloadSP,
