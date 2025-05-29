@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.UI.Elements.PanelElements;
 using Terraria.GameContent;
+using Terraria.ModLoader.Core;
+using Terraria.ModLoader.Default;
 using Terraria.UI;
 
 namespace ModReloader.Common.Systems
@@ -372,6 +376,7 @@ namespace ModReloader.Common.Systems
                 // Check if this *type* is toggled OFF
                 if (!value)
                     return;
+                //Main.NewText($"{GetModInstance(self).DisplayName}");
             }
 
             if (DrawSizeOfElement)
@@ -389,6 +394,25 @@ namespace ModReloader.Common.Systems
                 DrawHitbox(self, spriteBatch);
             }
 
+        }
+        public static Mod GetModInstance(object obj)
+        {
+            var typeOfObject = obj.GetType();
+            var modType = AssemblyManager.GetLoadableTypes(typeOfObject.Assembly)
+                .FirstOrDefault(t => t.IsSubclassOf(typeof(Mod)) && !t.IsAbstract, typeof(ModLoaderMod));
+
+            var method = typeof(ModContent)
+                .GetMethod(nameof(ModContent.GetInstance))
+                ?.GetGenericMethodDefinition()
+                ?.MakeGenericMethod(modType);
+
+            var result = method?.Invoke(null, null);
+            var instance = result as Mod;
+
+            if (instance == null)
+                throw new InvalidCastException($"{modType.FullName} is not a Mod or could not be instantiated via ModContent.GetInstance<T>()");
+
+            return instance;
         }
     }
 }
