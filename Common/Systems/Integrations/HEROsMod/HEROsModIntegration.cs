@@ -35,7 +35,7 @@ namespace ModReloader.Common.Systems.Integrations.HerosMod
                 PermReloadSP,
                 Ass.ButtonReloadSPHeros,
                 GuardedAsync(ReloadUtilities.SinglePlayerReload),
-                (Action<bool>)(hasPerm => PermissionChanged(hasPerm, PermLogPanel)),
+                (Action<bool>)(hasPerm => PermissionChanged(hasPerm, PermReloadSP)),
                 (Func<string>)(() => GetReloadTooltip())
             );
         }
