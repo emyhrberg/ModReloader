@@ -132,8 +132,8 @@ namespace ModReloader.Common.Systems
             int playerID = ClientDataJsonHelper.PlayerID;
             int worldID = ClientDataJsonHelper.WorldID;
 
-            var player = Main.PlayerList[Conf.C.Player];
-            var world = Main.WorldList[Conf.C.World];
+            var player = Main.PlayerList.Count > Conf.C.Player ? Main.PlayerList[Conf.C.Player] : null;
+            var world = Main.WorldList.Count > Conf.C.World ? Main.WorldList[Conf.C.World] : null;
 
             if (playerID == -1)
             {
@@ -158,20 +158,17 @@ namespace ModReloader.Common.Systems
                 world = Main.WorldList[ClientDataJsonHelper.WorldID];
             }
 
-            // Ensure the world's file path is valid
-            if (string.IsNullOrEmpty(world.Path))
+            Log.Info("SelectPlayerAndWorld. Found player: " + player?.Name + ", world: " + world?.Name);
+
+            if (player != null)
             {
-                Log.Error($"World {world.Name} has an invalid or null path.");
-                throw new ArgumentNullException(nameof(world.Path), "World path cannot be null or empty.");
+                Main.SelectPlayer(player);
+            }
+            if (world != null)
+            {
+                Main.ActiveWorldFileData = world;
             }
 
-            Log.Info("SelectPlayerAndWorld. Found player: " + player.Name + ", world: " + world.Name);
-
-            // Announce that we have added the player to the world to the server (what server? we are in main menu)
-            // ModNetHandler.PlayersInLocalHost.SendPlayersInLocalHost(toWho: 255);
-
-            Main.SelectPlayer(player);
-            Main.ActiveWorldFileData = world;
         }
     }
 }
