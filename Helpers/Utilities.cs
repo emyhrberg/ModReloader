@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
+using Terraria.ModLoader.Core;
 
 namespace ModReloader.Helpers
 {
@@ -110,9 +112,42 @@ namespace ModReloader.Helpers
             }
         }
 
-        public static T ReturValue<T>(ref T value)
+        /// <summary>
+        /// Gets the Mod instance for a given type.
+        /// Will return null if the type is not from a Mod assembly or cannot be instantiated.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidCastException"></exception>
+        public static Mod GetModInstance(Type type)
         {
-            return value;
+            var modType = AssemblyManager.GetLoadableTypes(type.Assembly)
+                .FirstOrDefault(t => t.IsSubclassOf(typeof(Mod)) && !t.IsAbstract, null);
+            if (modType == null)
+                return null;
+
+            // Imagine this as ModContent.GetInstance<modType>()
+            var method = typeof(ModContent)
+                .GetMethod(nameof(ModContent.GetInstance))
+                ?.GetGenericMethodDefinition()
+                ?.MakeGenericMethod(modType);
+            var result = method?.Invoke(null, null);
+
+            if (result is not Mod instance)
+                throw new InvalidCastException($"{modType.FullName} is not a Mod or could not be instantiated via ModContent.GetInstance<T>()");
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Gets the Mod instance for a given object.
+        /// Will return null if the object is not from a Mod assembly or cannot be instantiated.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static Mod GetModInstance(object obj)
+        {
+            return GetModInstance(obj.GetType());
         }
     }
 }

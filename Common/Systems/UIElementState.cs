@@ -393,26 +393,6 @@ namespace ModReloader.Common.Systems
                 // Draw the hitbox
                 DrawHitbox(self, spriteBatch);
             }
-
-        }
-        public static Mod GetModInstance(object obj)
-        {
-            var typeOfObject = obj.GetType();
-            var modType = AssemblyManager.GetLoadableTypes(typeOfObject.Assembly)
-                .FirstOrDefault(t => t.IsSubclassOf(typeof(Mod)) && !t.IsAbstract, typeof(ModLoaderMod));
-
-            var method = typeof(ModContent)
-                .GetMethod(nameof(ModContent.GetInstance))
-                ?.GetGenericMethodDefinition()
-                ?.MakeGenericMethod(modType);
-
-            var result = method?.Invoke(null, null);
-            var instance = result as Mod;
-
-            if (instance == null)
-                throw new InvalidCastException($"{modType.FullName} is not a Mod or could not be instantiated via ModContent.GetInstance<T>()");
-
-            return instance;
         }
     }
 }
