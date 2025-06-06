@@ -59,6 +59,9 @@ namespace ModReloader.Common.Configs
         [DefaultValue(true)]
         public bool ShowBuilderToggle;
 
+        [DefaultValue(false)]
+        public bool ClearLogOnReload;
+
         [DefaultValue(true)]
         public bool LogDebugMessages;
     }

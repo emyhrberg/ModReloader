@@ -38,6 +38,13 @@ namespace ModReloader.Helpers
         /// </summary>
         public static async Task SinglePlayerReload()
         {
+            // Check if clear between reload is enabled
+            if (Conf.C.ClearLogOnReload)
+            {
+                Log.Info("Clearing log on reload");
+                Log.ClearClientLog();
+            }
+
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 // Prepare client. Use singleplayer by default for now.

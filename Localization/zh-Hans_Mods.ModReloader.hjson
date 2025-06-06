@@ -88,6 +88,11 @@ Configs: {
 			// Label: Show Builder Toggle
 			// Tooltip: ""
 		}
+
+		ClearLogOnReload: {
+			// Label: Clear Log On Reload
+			// Tooltip: ""
+		}
 	}
 }
 

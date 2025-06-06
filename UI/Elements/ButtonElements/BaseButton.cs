@@ -42,8 +42,8 @@ namespace ModReloader.UI.Elements.ButtonElements
         protected virtual int StartFrame => 1;
         protected virtual int FrameCount => 1;
         protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
-        protected abstract int FrameWidth { get; } // abstract means force child classes to implement this
-        protected abstract int FrameHeight { get; } // abstract means force child classes to implement this
+        protected virtual int FrameWidth { get; } // abstract means force child classes to implement this
+        protected virtual int FrameHeight { get; } // abstract means force child classes to implement this
         public float TextScale; // the scale of the text, set by  
         /// <see cref="MainState"/> 
 

@@ -46,7 +46,7 @@ namespace ModReloader.Common.Systems
         public MainState()
         {
             ModContent.GetInstance<MainSystem>().mainState = this;
-            offset = -ButtonSize * 2;
+            offset = -ButtonSize;
 
             // Force to on
             MainStateBuilderToggle toggle = ModContent.GetInstance<MainStateBuilderToggle>();
@@ -148,17 +148,19 @@ namespace ModReloader.Common.Systems
             return panel;
         }
 
-        private T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null, string hoverTextDescription = "") where T : BaseButton
+        public T AddButton<T>(Asset<Texture2D> spritesheet = null, string buttonText = null, string hoverText = null, string hoverTextDescription = "") where T : BaseButton
         {
             T button = (T)Activator.CreateInstance(typeof(T), spritesheet, buttonText, hoverText, hoverTextDescription);
 
             // offset
-            button.Left.Set(offset, 0f);
-            offset += ButtonSize;
+            // button.Left.Set(offset, 0f);
+            // offset += ButtonSize;
 
             // add button
             AllButtons.Add(button);
             Append(button);
+
+            LayoutButtons();
 
             return button;
         }
@@ -200,10 +202,19 @@ namespace ModReloader.Common.Systems
             collapse?.RecalculateSizeAndPosition();
         }
 
+        private int lastScreenWidth = Main.screenWidth;
+
         public override void Update(GameTime gameTime)
         {
             if (!Active) return;
             base.Update(gameTime);
+
+            // Re-layout buttons if screen size changed
+            if (Main.screenWidth != lastScreenWidth)
+            {
+                LayoutButtons();
+                lastScreenWidth = Main.screenWidth;
+            }
 
             // whoa hot reload resize buttons work!  
             //UIScale = 0.85f;
