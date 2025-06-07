@@ -47,7 +47,7 @@ namespace ModReloader
                     Log.Error("Invalid arguments for AddButton. Please provide a valid name and action.");
                     return false;
                 }
-                Log.Info($"Adding button '{name}' with action {action.Method.Name} and tooltip '{tooltip}'.");
+                Log.Info($"Adding button '{name}' with asset '{asset?.Name}' and tooltip '{tooltip}'.");
                 return ModReloaderAPI.AddButton(name, action, asset, tooltip);
             }
 

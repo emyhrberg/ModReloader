@@ -9,8 +9,17 @@ namespace ModReloader.Helpers.API
     /// <summary>
     /// Also, <see cref="ModReloader"/> for Mod.Call integration. 
     /// </summary>
-    public class APIButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription) : BaseButton(spritesheet, buttonText, hoverText, hoverTextDescription)
+    public class APIButton : BaseButton
     {
+        public APIButton(Asset<Texture2D> spritesheet, string buttonText, string hoverText, string hoverTextDescription)
+            : base(spritesheet, buttonText, hoverText, hoverTextDescription)
+        {
+            Spritesheet = spritesheet;
+            ButtonText = new ButtonText(buttonText);
+            HoverText = hoverText;
+            HoverTextDescription = hoverTextDescription;
+        }
+
         public Action Action { get; private set; }
         public void SetAction(Action action) => Action = action;
 

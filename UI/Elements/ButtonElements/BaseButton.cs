@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Runtime.Intrinsics.X86;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.Configs;
 using ModReloader.Common.Systems;
+using ModReloader.Helpers.API;
 using ModReloader.UI.Elements.PanelElements;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
@@ -42,8 +44,8 @@ namespace ModReloader.UI.Elements.ButtonElements
         protected virtual int StartFrame => 1;
         protected virtual int FrameCount => 1;
         protected virtual int FrameSpeed => 0; // the speed of the animation, lower is faster
-        protected virtual int FrameWidth { get; } // abstract means force child classes to implement this
-        protected virtual int FrameHeight { get; } // abstract means force child classes to implement this
+        protected virtual int FrameWidth => 100; // abstract means force child classes to implement this
+        protected virtual int FrameHeight => 100;
         public float TextScale; // the scale of the text, set by  
         /// <see cref="MainState"/> 
 
@@ -96,6 +98,8 @@ namespace ModReloader.UI.Elements.ButtonElements
             if (!Active || Button == null || Button.Value == null)
                 return;
 
+
+
             // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
@@ -117,6 +121,13 @@ namespace ModReloader.UI.Elements.ButtonElements
 
             // Draw the button with full opacity.
             spriteBatch.Draw(Button.Value, drawRect, Color.White);
+
+            // Check if type is APIButton:
+            // if (this is APIButton apiButton)
+            // {
+            //     drawRect.X += 10;
+            //     spriteBatch.Draw(Button.Value, drawRect, Color.White);
+            // }
 
             if (IsMouseHovering)
             {
@@ -162,6 +173,24 @@ namespace ModReloader.UI.Elements.ButtonElements
                 Vector2 centeredPosition = position + (size - new Vector2(FrameWidth, FrameHeight) * Scale) / 2f;
                 Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
                 centeredPosition.Y -= 7; // magic offset to move it up a bit
+
+                // On APIButton. Debug asset.
+                if (this is APIButton apiBtn)
+                {
+                    //FrameHeight = 10;
+                    //Scale = 1;
+                    //DrawHelper.DrawProperScale(spriteBatch, this, Spritesheet.Value);
+                    //Main.NewText(Scale);
+
+
+                    // Hasty hotfix for UIEditor tool... 
+                    // Someone should add support for icons to be properly resized to fit the button, no matter their size...
+                    centeredPosition.X += 19;
+                    centeredPosition.Y += 18;
+
+                    spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, 0.4f, SpriteEffects.None, 0f);
+                    return;
+                }
 
                 // Draw the spritesheet.
                 spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
