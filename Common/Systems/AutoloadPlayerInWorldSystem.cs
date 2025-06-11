@@ -67,13 +67,21 @@ namespace ModReloader.Common.Systems
             Log.Info("Entering SP World");
 
             // Select the player and world
-            SelectPlayerAndWorld();
+            bool isPlayerAndWorldSelected = SelectPlayerAndWorld();
 
-            // Play the selected world in singleplayer
-            WorldGen.playWorld();
+            if (isPlayerAndWorldSelected)
+            {
+                // Play the selected world in singleplayer
+                WorldGen.playWorld();
 
-            // Show the custom load screen
-            LoadWorldState.Show(Main.ActiveWorldFileData.Name);
+                // Show the custom load screen
+                LoadWorldState.Show(Main.ActiveWorldFileData.Name);
+            }
+            else
+            {
+                Log.Error("Failed to select player and world for singleplayer.");
+                Main.menuMode = 0;
+            }
         }
 
         /// <summary>
@@ -84,14 +92,22 @@ namespace ModReloader.Common.Systems
             Log.Info("Entering MP World");
 
             // Select the player and world
-            SelectPlayerAndWorld();
+            bool isPlayerSelected = SelectPlayerAndWorld(onlylayer: true);
 
-            // Join the localhost server (code taken from Main.instance.OnSubmitServerPassword())
-            Netplay.SetRemoteIP("127.0.0.1");
-            Main.autoPass = true;
-            Main.statusText = Lang.menu[8].Value;
-            Netplay.StartTcpClient();
-            Main.menuMode = 10;
+            if (isPlayerSelected)
+            {
+                // Join the localhost server (code taken from Main.instance.OnSubmitServerPassword())
+                Netplay.SetRemoteIP("127.0.0.1");
+                Main.autoPass = true;
+                Main.statusText = Lang.menu[8].Value;
+                Netplay.StartTcpClient();
+                Main.menuMode = 10;
+            }
+            else
+            {
+                Log.Error("Failed to select player for multiplayer world.");
+                Main.menuMode = 0;
+            }
         }
 
         /// <summary>
@@ -102,73 +118,79 @@ namespace ModReloader.Common.Systems
             Log.Info("Hosting MP World");
 
             // Select the player and world
-            SelectPlayerAndWorld();
+            bool isPlayerAndWorldSelected = SelectPlayerAndWorld();
 
-            // Host the server
-            Main.instance.OnSubmitServerPassword("");
+            if (isPlayerAndWorldSelected)
+            {
+                // Host the server
+                Main.instance.OnSubmitServerPassword("");
+            }
+            else
+            {
+                Log.Error("Failed to select player and world for hosting multiplayer.");
+                Main.menuMode = 0;
+            }
         }
 
         /// <summary>
         /// Selects the player and world based on the ClientDataHandler.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        private static void SelectPlayerAndWorld()
+        private static bool SelectPlayerAndWorld(bool onlylayer = false)
         {
             Main.LoadPlayers();
             if (Main.PlayerList == null || Main.PlayerList.Count == 0)
             {
                 Log.Error("No players found after loading players.");
-                return;
+                return false;
+            }
+
+            int playerID = ClientDataJsonHelper.PlayerID;
+            var player = Main.PlayerList.Count > Conf.C.Player ? Main.PlayerList[Conf.C.Player] : null;
+
+            if (playerID != -1 && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
+            {
+                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+            }
+
+            if (player == null)
+            {
+                Log.Error("Player not found. Cannot autoload player.");
+                return false;
+            }
+            Main.SelectPlayer(player);
+
+            if (onlylayer)
+            {
+                Log.Info("Found player: " + player.Name);
+                return true;
             }
 
             Main.LoadWorlds();
             if (Main.WorldList == null || Main.WorldList.Count == 0)
             {
                 Log.Error("No worlds found after loading worlds.");
-                return;
+                return false;
             }
 
-            // Select player and world based on json
-            int playerID = ClientDataJsonHelper.PlayerID;
             int worldID = ClientDataJsonHelper.WorldID;
-
-            var player = Main.PlayerList.Count > Conf.C.Player ? Main.PlayerList[Conf.C.Player] : null;
             var world = Main.WorldList.Count > Conf.C.World ? Main.WorldList[Conf.C.World] : null;
 
-            if (playerID == -1)
+            if (worldID != -1 && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {
-                Log.Error("PlayerID is -1. Cannot autoload.");
-                // if we return here, we cause a "crash" or "stuck" in loading.
-            }
-            else
-            {
-                // all ok, continue.
-                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
-            }
-
-
-            if (worldID == -1)
-            {
-                Log.Error("WorldID is -1. Cannot autoload.");
-                // if we return here, we cause a "crash" or "stuck" in loading.
-            }
-            else
-            {
-                // all ok, continue.
                 world = Main.WorldList[ClientDataJsonHelper.WorldID];
             }
 
-            Log.Info("SelectPlayerAndWorld. Found player: " + player?.Name + ", world: " + world?.Name);
-
-            if (player != null)
+            if (world == null)
             {
-                Main.SelectPlayer(player);
-            }
-            if (world != null)
-            {
-                Main.ActiveWorldFileData = world;
+                Log.Error("World not found. Cannot autoload world.");
+                return false;
             }
 
+            Main.ActiveWorldFileData = world;
+
+            Log.Info("SelectPlayerAndWorld. Found player: " + player.Name + ", world: " + world.Name);
+            return true;
         }
     }
 }

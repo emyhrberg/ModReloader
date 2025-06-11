@@ -16,7 +16,7 @@
             int id = GetValue();
             if (Main.PlayerList.Count <= 0)
             {
-                return "No Player Found!";
+                return "No Players Found!";
             }
             if (id < 0 || id >= Main.PlayerList.Count)
             {

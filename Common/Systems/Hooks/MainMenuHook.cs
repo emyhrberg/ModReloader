@@ -103,7 +103,7 @@ namespace ModReloader.Common.Systems.Hooks
                (" ", null, 1.15f, ""),
                (Loc.Get("MainMenu.MultiplayerHeader"), null, 1.15f, Loc.Get("MainMenu.MultiplayerTooltip")),
                (Loc.Get("MainMenu.HostMultiplayerText"), AutoloadPlayerInWorldSystem.HostMultiplayerWorld, 1.02f, Loc.Get("MainMenu.HostMultiplayerTooltip")),
-               (Loc.Get("MainMenu.JoinMultiplayerText"), JoinMultiplayerNew, 1.02f, Loc.Get("MainMenu.JoinMultiplayerTooltip")),
+               (Loc.Get("MainMenu.JoinMultiplayerText"), AutoloadPlayerInWorldSystem.EnterMultiplayerWorld, 1.02f, Loc.Get("MainMenu.JoinMultiplayerTooltip")),
             };
 
 
@@ -232,7 +232,7 @@ namespace ModReloader.Common.Systems.Hooks
                 return;
             }
         }
-
+        [Obsolete("Just use EnterMultiplayerWorld")]
         private static void JoinMultiplayerNew()
         {
             Log.Info("[MainMenuHook] Trying to join localhost server with a player not already on the server");
