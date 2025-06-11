@@ -27,6 +27,8 @@ namespace ModReloader.UI.Elements.ButtonElements
         public bool Active = true;
         public bool ParentActive = false;
 
+        public Func<bool> ShouldShowHighlight = () => false;
+
         // Animation frames
         protected int currFrame = 1; // the current frame
         protected int frameCounter = 0; // the counter for the frame speed
@@ -166,6 +168,20 @@ namespace ModReloader.UI.Elements.ButtonElements
                 // On APIButton.
                 if (this is APIButton)
                 {
+                    // Check should show highlight
+                    if (ShouldShowHighlight())
+                    {
+                        float apiHighlightScale = 0.9f; // Scale factor for the highlight
+                        Rectangle scaledRect = new Rectangle(
+                            (int)(drawRect.X + drawRect.Width * (1 - apiHighlightScale) / 2),
+                            (int)(drawRect.Y + drawRect.Height * (1 - apiHighlightScale) / 2),
+                            (int)(drawRect.Width * apiHighlightScale),
+                            (int)(drawRect.Height * apiHighlightScale)
+                        );
+                        // Draw the highlight texture
+                        spriteBatch.Draw(ButtonHighlight.Value, scaledRect, Color.White * 0.7f);
+                    }
+
                     var dest = GetInnerDimensions().ToRectangle();
                     const int padding = 8;
                     dest.Inflate(-padding, -padding);
@@ -216,6 +232,9 @@ namespace ModReloader.UI.Elements.ButtonElements
         #region LeftClick
         public override void LeftClick(UIMouseEvent evt)
         {
+            // If in fancy UI, do not allow clicking
+            if (Main.inFancyUI) return;
+
             // If buttons not showing, return
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             if (!sys.mainState.AreButtonsShowing) return;

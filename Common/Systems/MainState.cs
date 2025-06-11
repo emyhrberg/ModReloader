@@ -98,11 +98,12 @@ namespace ModReloader.Common.Systems
                     Loc.Get("LogButton.HoverText"),
                     hoverTextDescription: logHoverDesc);
 
-                //testButton = AddButton<APIButton>(
-                //    Ass.APIButtonTestIcon,
-                //    "header",
-                //    "tooltip",
-                //    "desc");
+                // testButton = AddButton<APIButton>(
+                //     Ass.APIButtonTestIcon,
+                //     "header",
+                //     "tooltip",
+                //     "desc"
+                //     );
 
                 // Panels
                 modsButton.AssociatedPanel = modsPanel;

@@ -7,7 +7,7 @@ namespace ModReloader.Helpers.API
 {
     public static class ModReloaderAPI
     {
-        public static bool AddButton(string name, Action action, Asset<Texture2D> asset = null, string tooltip = null)
+        public static bool AddButton(string name, Action action, Asset<Texture2D> asset = null, string tooltip = null, Func<bool> showHighlight = null)
         {
             try
             {
@@ -26,6 +26,7 @@ namespace ModReloader.Helpers.API
                 );
 
                 button.SetAction(action);
+                button.ShouldShowHighlight = showHighlight ?? (() => false);
                 return true;
             }
             catch (Exception e)
