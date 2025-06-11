@@ -17,7 +17,7 @@
             int id = GetValue();
             if (Main.WorldList.Count <= 0)
             {
-                return "No World Found!";
+                return "No Worlds Found!";
             }
             if (id < 0 || id >= Main.WorldList.Count)
             {
