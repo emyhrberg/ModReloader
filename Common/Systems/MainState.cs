@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Common.BuilderToggles;
+using ModReloader.Helpers.API;
 using ModReloader.UI.Elements.ButtonElements;
 using ModReloader.UI.Elements.DebugElements;
 
@@ -24,6 +25,8 @@ namespace ModReloader.Common.Systems
         public ReloadMPButton reloadMPButton;
         public UIElementButton uiElementButton;
         public LogButton logButton;
+
+        public APIButton testButton;
 
         // Panels
         public ModsPanel modsPanel;
@@ -94,6 +97,12 @@ namespace ModReloader.Common.Systems
                     Loc.Get("LogButton.Text"),
                     Loc.Get("LogButton.HoverText"),
                     hoverTextDescription: logHoverDesc);
+
+                //testButton = AddButton<APIButton>(
+                //    Ass.APIButtonTestIcon,
+                //    "header",
+                //    "tooltip",
+                //    "desc");
 
                 // Panels
                 modsButton.AssociatedPanel = modsPanel;

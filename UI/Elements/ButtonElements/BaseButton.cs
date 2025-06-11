@@ -1,7 +1,5 @@
-using System.Collections.Generic;
-using System.Runtime.Intrinsics.X86;
+using System;
 using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Common.Configs;
 using ModReloader.Common.Systems;
 using ModReloader.Helpers.API;
 using ModReloader.UI.Elements.PanelElements;
@@ -98,8 +96,6 @@ namespace ModReloader.UI.Elements.ButtonElements
             if (!Active || Button == null || Button.Value == null)
                 return;
 
-
-
             // Get the button size from MainState (default to 70 if MainState is null)
             MainSystem sys = ModContent.GetInstance<MainSystem>();
 
@@ -121,13 +117,6 @@ namespace ModReloader.UI.Elements.ButtonElements
 
             // Draw the button with full opacity.
             spriteBatch.Draw(Button.Value, drawRect, Color.White);
-
-            // Check if type is APIButton:
-            // if (this is APIButton apiButton)
-            // {
-            //     drawRect.X += 10;
-            //     spriteBatch.Draw(Button.Value, drawRect, Color.White);
-            // }
 
             if (IsMouseHovering)
             {
@@ -174,21 +163,38 @@ namespace ModReloader.UI.Elements.ButtonElements
                 Rectangle sourceRectangle = new(x: 0, y: (currFrame - 1) * FrameHeight, FrameWidth, FrameHeight);
                 centeredPosition.Y -= 7; // magic offset to move it up a bit
 
-                // On APIButton. Debug asset.
-                if (this is APIButton apiBtn)
+                // On APIButton.
+                if (this is APIButton)
                 {
-                    //FrameHeight = 10;
-                    //Scale = 1;
-                    //DrawHelper.DrawProperScale(spriteBatch, this, Spritesheet.Value);
-                    //Main.NewText(Scale);
+                    var dest = GetInnerDimensions().ToRectangle();
+                    const int padding = 8;
+                    dest.Inflate(-padding, -padding);
 
+                    var tex = Spritesheet.Value;
+                    var source = new Rectangle(0, 0, tex.Width, tex.Height);
 
-                    // Hasty hotfix for UIEditor tool... 
-                    // Someone should add support for icons to be properly resized to fit the button, no matter their size...
-                    centeredPosition.X += 19;
-                    centeredPosition.Y += 18;
+                    float scaleX = dest.Width / (float)source.Width;
+                    float scaleY = dest.Height / (float)source.Height;
+                    float scale = Math.Min(scaleX, scaleY);
 
-                    spriteBatch.Draw(Spritesheet.Value, centeredPosition, sourceRectangle, Color.White * opacity, 0f, Vector2.Zero, 0.4f, SpriteEffects.None, 0f);
+                    // scaled size
+                    int fitW = (int)(source.Width * scale);
+                    int fitH = (int)(source.Height * scale);
+
+                    // center it
+                    int fitX = dest.X + (dest.Width - fitW) / 2;
+                    int fitY = dest.Y + (dest.Height - fitH) / 2;
+                    int offsetY = -7;
+                    var fitRect = new Rectangle(fitX, fitY + offsetY, fitW, fitH);
+
+                    // 4) Draw with the destination‐rect overload, which automatically scales
+                    spriteBatch.Draw(
+                        tex,
+                        fitRect,
+                        source,
+                        Color.White * opacity
+                    );
+
                     return;
                 }
 

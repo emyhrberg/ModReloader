@@ -49,8 +49,8 @@ namespace ModReloader.UI.Elements.PanelElements
             Height.Set(460, 0);
             Top.Set(-70, 0);
             Left.Set(-20, 0);
-            VAlign = 1.0f;
-            HAlign = 1.0f;
+            VAlign = 0.8f;
+            HAlign = 0.8f;
             BackgroundColor = ColorHelper.SuperDarkBluePanel;
 
             Header = header;

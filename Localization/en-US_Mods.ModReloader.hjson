@@ -194,10 +194,10 @@ Keybinds: {
 	DragonLensModsPanel.DisplayName: Dragon Lens Mods Panel
 	DragonLensReload.DisplayName: Dragon Lens Reload
 	DragonLensReloadRightClick.DisplayName: Dragon Lens Reload Right Click
-	DragonLensReloadMP.DisplayName: Dragon Lens Reload M P
-	DragonLensReloadMPRightClick.DisplayName: Dragon Lens Reload M P Right Click
-	DragonLensUIPanel.DisplayName: Dragon Lens U I Panel
-	DragonLensUIPanelRightClick.DisplayName: Dragon Lens U I Panel Right Click
+	DragonLensReloadMP.DisplayName: Dragon Lens Reload MP
+	DragonLensReloadMPRightClick.DisplayName: Dragon Lens Reload MP Right Click
+	DragonLensUIPanel.DisplayName: Dragon Lens UI Panel
+	DragonLensUIPanelRightClick.DisplayName: Dragon Lens UI Panel Right Click
 }
 
 Tools: {

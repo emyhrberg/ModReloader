@@ -50,6 +50,10 @@ namespace ModReloader
                 Log.Info($"Adding button '{name}' with asset '{asset?.Name}' and tooltip '{tooltip}'.");
                 return ModReloaderAPI.AddButton(name, action, asset, tooltip);
             }
+            else
+            {
+                Log.Error($"Unknown command '{command}' for ModReloader.Call.");
+            }
 
             return false;
         }

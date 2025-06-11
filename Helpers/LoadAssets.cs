@@ -71,6 +71,9 @@ namespace ModReloader.Helpers
         public static Asset<Texture2D> FilterModSide; // 32x32*3 (3 vertical images spritesheet)
         public static Asset<Texture2D> FilterViewSize; // 32x32*2 (2 vertical images spritesheet)
 
+        // API Test
+        public static Asset<Texture2D> APIButtonTestIcon; // 32x32
+
         // Bool for checking if assets are loaded
         public static bool Initialized { get; set; }
 

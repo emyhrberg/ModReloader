@@ -20,7 +20,8 @@
             }
             else
             {
-                return key;
+                string modifiedKey = key.StartsWith("Mods.ModReloader.") ? key.Substring("Mods.ModReloader.".Length) : key;
+                return modifiedKey;
             }
         }
     }
