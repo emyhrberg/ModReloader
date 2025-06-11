@@ -30,7 +30,7 @@ namespace ModReloader.Helpers
         public static int FindWorldId()
         {
             Main.LoadWorlds();
-            var worldId = Main.WorldList.FindIndex(w => w.Path == Main.ActiveWorldFileData.Path);
+            var worldId = Main.WorldList.FindIndex(w => w.Equals(Main.ActiveWorldFileData));
             return worldId;
         }
 
