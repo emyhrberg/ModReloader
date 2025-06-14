@@ -96,8 +96,8 @@ namespace ModReloader.Common.Systems.Hooks
                (Loc.Get("MainMenu.JoinSingleplayerText"), () =>
                {
                    ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
-                   ClientDataJsonHelper.PlayerID = -1;
-                   ClientDataJsonHelper.WorldID = -1;
+                   ClientDataJsonHelper.PlayerPath = null;
+                   ClientDataJsonHelper.WorldPath = null;
                    AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
                }, 1.02f, Loc.Get("MainMenu.JoinSingleplayerTooltip")),
                (" ", null, 1.15f, ""),
@@ -198,8 +198,7 @@ namespace ModReloader.Common.Systems.Hooks
                     throw new Exception("No worlds found.");
 
                 // Getting Player and World from ClientDataHandler
-                var world = Main.WorldList[ClientDataJsonHelper.WorldID];
-
+                var world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataJsonHelper.WorldPath)) ?? throw new Exception("World not found: " + ClientDataJsonHelper.WorldPath);
                 if (string.IsNullOrEmpty(world.Path))
                 {
                     Log.Error($"World {world.Name} has an invalid or null path.");

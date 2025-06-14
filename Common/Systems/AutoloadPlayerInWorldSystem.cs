@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using ModReloader.Common.Configs;
 using ModReloader.Helpers;
@@ -92,7 +93,7 @@ namespace ModReloader.Common.Systems
             Log.Info("Entering MP World");
 
             // Select the player and world
-            bool isPlayerSelected = SelectPlayerAndWorld(onlylayer: true);
+            bool isPlayerSelected = SelectPlayerAndWorld(onlyPlayer: true);
 
             if (isPlayerSelected)
             {
@@ -136,7 +137,7 @@ namespace ModReloader.Common.Systems
         /// Selects the player and world based on the ClientDataHandler.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        private static bool SelectPlayerAndWorld(bool onlylayer = false)
+        private static bool SelectPlayerAndWorld(bool onlyPlayer = false)
         {
             Main.LoadPlayers();
             if (Main.PlayerList == null || Main.PlayerList.Count == 0)
@@ -145,12 +146,11 @@ namespace ModReloader.Common.Systems
                 return false;
             }
 
-            int playerID = ClientDataJsonHelper.PlayerID;
             var player = Main.PlayerList.Count > Conf.C.Player ? Main.PlayerList[Conf.C.Player] : null;
 
-            if (playerID != -1 && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
+            if (ClientDataJsonHelper.PlayerPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {
-                player = Main.PlayerList[ClientDataJsonHelper.PlayerID];
+                player = Main.PlayerList.FirstOrDefault(p => p.Path.Equals(ClientDataJsonHelper.PlayerPath), null);
             }
 
             if (player == null)
@@ -160,7 +160,7 @@ namespace ModReloader.Common.Systems
             }
             Main.SelectPlayer(player);
 
-            if (onlylayer)
+            if (onlyPlayer)
             {
                 Log.Info("Found player: " + player.Name);
                 return true;
@@ -173,12 +173,11 @@ namespace ModReloader.Common.Systems
                 return false;
             }
 
-            int worldID = ClientDataJsonHelper.WorldID;
             var world = Main.WorldList.Count > Conf.C.World ? Main.WorldList[Conf.C.World] : null;
 
-            if (worldID != -1 && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
+            if (ClientDataJsonHelper.WorldPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {
-                world = Main.WorldList[ClientDataJsonHelper.WorldID];
+                world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataJsonHelper.WorldPath), null);
             }
 
             if (world == null)
@@ -187,9 +186,9 @@ namespace ModReloader.Common.Systems
                 return false;
             }
 
-            Main.ActiveWorldFileData = world;
+            world.SetAsActive();
 
-            Log.Info("SelectPlayerAndWorld. Found player: " + player.Name + ", world: " + world.Name);
+            Log.Info("Found player: " + player.Name + ", world: " + world.Name);
             return true;
         }
     }

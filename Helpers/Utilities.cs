@@ -16,22 +16,18 @@ namespace ModReloader.Helpers
         /// Finds the current player ID in the player list.
         /// </summary>
         /// <returns>The index of the current player in the player list.</returns>
-        public static int FindPlayerId()
+        public static string FindPlayerPath()
         {
-            Main.LoadPlayers();
-            var playerId = Main.PlayerList.FindIndex(p => p.Path == Main.ActivePlayerFileData.Path);
-            return playerId;
+            return Main.ActivePlayerFileData.Path;
         }
 
         /// <summary>
         /// Finds the current world ID in the world list.
         /// </summary>
         /// <returns>The index of the current world in the world list.</returns>
-        public static int FindWorldId()
+        public static string FindWorldPath()
         {
-            Main.LoadWorlds();
-            var worldId = Main.WorldList.FindIndex(w => w.Path == Main.ActiveWorldFileData.Path);
-            return worldId;
+            return Main.ActiveWorldFileData.Path;
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace ModReloader.Helpers
             }
             set;
         } = ClientMode.FreshClient;
-        public static int PlayerID // default to invalid player ID
+        public static string PlayerPath // default to invalid player ID
         {
             get
             {
@@ -27,8 +27,8 @@ namespace ModReloader.Helpers
                 return field;
             }
             set;
-        } = -1;
-        public static int WorldID // default to invalid world ID
+        } = null;
+        public static string WorldPath // default to invalid world ID
         {
             get
             {
@@ -36,7 +36,7 @@ namespace ModReloader.Helpers
                 return field;
             }
             set;
-        } = -1;
+        } = null;
 
         /// <summary>
         /// Checks if the values need to be read from the file.
@@ -45,8 +45,9 @@ namespace ModReloader.Helpers
         {
             if (!flagIsReaded)
             {
-                ReadData();
                 flagIsReaded = true;
+                ReadData();
+                
             }
         }
 
@@ -72,8 +73,8 @@ namespace ModReloader.Helpers
                 {
                     ProcessID = Utilities.ProcessID,
                     ClientMode = ClientMode,
-                    PlayerID = PlayerID,
-                    WorldID = WorldID
+                    PlayerPath = PlayerPath,
+                    WorldPath = WorldPath
                 };
 
                 var existingData = listJson.FirstOrDefault(d => d.ProcessID == Utilities.ProcessID);
@@ -82,8 +83,8 @@ namespace ModReloader.Helpers
                 {
                     // Update the existing entry
                     existingData.ClientMode = data.ClientMode;
-                    existingData.PlayerID = data.PlayerID;
-                    existingData.WorldID = data.WorldID;
+                    existingData.PlayerPath = data.PlayerPath;
+                    existingData.WorldPath = data.WorldPath;
                 }
                 else
                 {
@@ -135,12 +136,12 @@ namespace ModReloader.Helpers
                 if (index >= 0)
                 {
                     ClientMode = listJson[index].ClientMode;
-                    PlayerID = listJson[index].PlayerID;
-                    WorldID = listJson[index].WorldID;
+                    PlayerPath = listJson[index].PlayerPath;
+                    WorldPath = listJson[index].WorldPath;
                     // Clear data after reading it
                     listJson.RemoveAt(index);
                 }
-
+                Log.Info($"Readed data: C {ClientMode}, P {PlayerPath}, W {WorldPath}");
                 WriteListToFile(listJson, writer);
             });
         }

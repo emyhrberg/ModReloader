@@ -101,7 +101,7 @@ namespace ModReloader.Helpers
                 await ExitWorld();
 
                 // Create a hook for Unload to create a server after unloading
-                CreateServerBeforeUnloadHook(ClientDataJsonHelper.WorldID);
+                CreateServerBeforeUnloadHook(ClientDataJsonHelper.WorldPath);
 
                 // Mod was found, we can Reload
                 BuildOrReloadMods();
@@ -122,18 +122,18 @@ namespace ModReloader.Helpers
         /// After rebuilding, it allows all clients to reload the mods.
         /// </summary>
         /// <returns></returns>
-        public static async Task MultiPlayerMajorReload(int serverPID, int serverWorldID)
+        public static async Task MultiPlayerMajorReload(int serverPID, string serverWorldPath)
         {
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 // Prepare client data
-                PrepareClient(ClientMode.MPMajor, Utilities.FindPlayerId(), serverWorldID);
+                PrepareClient(ClientMode.MPMajor, Utilities.FindPlayerPath(), serverWorldPath);
 
                 // Exit the game.
                 await ExitWorld();
 
                 // Creating hook for Unload 
-                CreateServerBeforeUnloadHook(ClientDataJsonHelper.WorldID);
+                CreateServerBeforeUnloadHook(ClientDataJsonHelper.WorldPath);
 
                 if (!IsModsToReloadEmpty)
                 {
@@ -296,8 +296,8 @@ namespace ModReloader.Helpers
         /// <summary>
         /// Sets up a hook for creating a server after unloading the mods.
         /// </summary>
-        /// <param name="worldIdToLoad">ID of the world to load.</param>
-        private static void CreateServerBeforeUnloadHook(int worldIdToLoad)
+        /// <param name="worldPathToLoad">ID of the world to load.</param>
+        private static void CreateServerBeforeUnloadHook(string worldPathToLoad)
         {
             Hook hookForUnload = null;
 
@@ -313,7 +313,9 @@ namespace ModReloader.Helpers
                         throw new Exception("No worlds found.");
 
                     // Getting Player and World from ClientDataHandler
-                    Main.ActiveWorldFileData = Main.WorldList[worldIdToLoad];
+                    Main.ActiveWorldFileData = Main.WorldList.FirstOrDefault(p => p.Path.Equals(worldPathToLoad));
+                    if (Main.ActiveWorldFileData == null)
+                        throw new Exception("World not found: " + worldPathToLoad);
 
                     string text = "-autoshutdown -password \"" + Main.ConvertToSafeArgument(Netplay.ServerPassword) + "\" -lang " + Language.ActiveCulture.LegacyId;
                     if (Platform.IsLinux)
@@ -370,15 +372,15 @@ namespace ModReloader.Helpers
         /// <param name="clientMode"></param>
         private static void PrepareClient(ClientMode clientMode)
         {
-            PrepareClient(clientMode, Utilities.FindPlayerId(), Utilities.FindWorldId());
+            PrepareClient(clientMode, Utilities.FindPlayerPath(), Utilities.FindWorldPath());
         }
 
-        private static void PrepareClient(ClientMode clientMode, int playerID, int worldID)
+        private static void PrepareClient(ClientMode clientMode, string playerID, string worldID)
         {
             ClientDataJsonHelper.ClientMode = clientMode;
-            ClientDataJsonHelper.PlayerID = playerID;
-            ClientDataJsonHelper.WorldID = worldID;
-            Log.Info("set player and worldid to " + ClientDataJsonHelper.PlayerID + " and " + ClientDataJsonHelper.WorldID);
+            ClientDataJsonHelper.PlayerPath = playerID;
+            ClientDataJsonHelper.WorldPath = worldID;
+            Log.Info("set player and worldid to " + ClientDataJsonHelper.PlayerPath + " and " + ClientDataJsonHelper.WorldPath);
         }
 
         /// <summary>

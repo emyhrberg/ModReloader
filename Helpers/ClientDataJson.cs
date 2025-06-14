@@ -9,8 +9,8 @@ namespace ModReloader.Helpers
         // This is needed to serialize enums as strings
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ClientMode ClientMode { get; set; }
-        public int PlayerID { get; set; }
-        public int WorldID { get; set; }
+        public string PlayerPath { get; set; }
+        public string WorldPath { get; set; }
     }
 
     public enum ClientMode
