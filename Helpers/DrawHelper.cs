@@ -100,7 +100,7 @@ namespace ModReloader.Helpers
         /// <summary>
         /// Draw a tooltip panel at a hardcoded position in the main menu
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset = 0, int extraYOffset = 0, int extraHeight = 0, int extraWidth = 0)
+        public static void DrawMainMenuTooltipPanel(Func<string> text, int extraXOffset = 0, int extraYOffset = 0, int extraHeight = 0, int extraWidth = 0)
         {
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
@@ -127,7 +127,7 @@ namespace ModReloader.Helpers
             // If the whole text fits within the maxTextWidth, it stays on one line.
             // Otherwise, a simple word wrap moves extra words to the next line.
             List<string> lines = new List<string>();
-            string[] words = text.Split(' ');
+            string[] words = text().Split([' ']);
             string currentLine = "";
 
             foreach (string word in words)

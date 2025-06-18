@@ -216,7 +216,7 @@ namespace ModReloader.Common.Systems.Hooks
                 if (hovered)
                 {
                     // Draw tooltip
-                    DrawHelper.DrawMainMenuTooltipPanel(tooltip, extraXOffset: 130, extraYOffset: -430, extraHeight: 65, extraWidth: -150);
+                    DrawHelper.DrawMainMenuTooltipPanel(() => tooltip, extraXOffset: 130, extraYOffset: -430, extraHeight: 65, extraWidth: -150);
 
                     Main.LocalPlayer.mouseInterface = true;
                     // Click

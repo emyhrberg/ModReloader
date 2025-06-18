@@ -123,7 +123,7 @@ MainMenu: {
 	SingleplayerHeader: Singleplayer
 	SingleplayerTooltip: Quickly join singleplayer worlds
 	JoinSingleplayerText: Join Singleplayer
-	JoinSingleplayerTooltip: Enter singleplayer world with the selected player and world from config
+	JoinSingleplayerTooltip: Enter singleplayer world with player {0} and world {1}
 	MultiplayerHeader: Multiplayer
 	MultiplayerTooltip: Hosting and testing multiplayer
 	HostMultiplayerText: Host Multiplayer
