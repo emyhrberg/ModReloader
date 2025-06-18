@@ -61,7 +61,7 @@ namespace ModReloader.PacketHandlers
 
                 Netplay.SaveOnServerExit = shouldServerBeSaved;
 
-                SendRefreshMajorClient(majorClient, -1, Environment.ProcessId, Utilities.FindWorldPath());
+                SendRefreshMajorClient(majorClient, -1, Environment.ProcessId, Utilities.FindCurrentWorldPath());
                 SendRefreshMinorClient(-1, majorClient, onlyReload);
 
                 Netplay.Disconnect = true;
