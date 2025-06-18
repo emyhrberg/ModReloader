@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.Default;
@@ -20,12 +22,32 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override bool IsUnloaded
         => Type <= -1 || Name == null;
 
+        [JsonIgnore]
+        private PlayerFileData PlayerFile;
+
         public PlayerDefinition() : base() { }
-        public PlayerDefinition(int type) : base(Utilities.FindPlayer(type).Path) { }
+        public PlayerDefinition(int type) : base(Utilities.FindPlayer(type).Path)
+        {
+            UpdatePlayerFile();
+        }
+
+        private void UpdatePlayerFile()
+        {
+            if (PlayerFile == null || PlayerFile.Path != Name)
+            {
+                PlayerFile = Utilities.FindPlayer(Name);
+            }
+        }
         public PlayerDefinition(string path)
         {
             Mod = "Terraria";
             Name = path;
+            UpdatePlayerFile();
+        }
+        public override string ToString()
+        {
+            UpdatePlayerFile();
+            return $"{(PlayerFile != null ? PlayerFile.Name : "null")}";
         }
     }
 
@@ -61,13 +83,6 @@ namespace ModReloader.UI.Elements.ConfigElements
         {
             var passed = new List<DefinitionOptionElement<PlayerDefinition>>();
 
-            if(Options == null || Options.Count == 0)
-            {
-                Log.Warn("No options!!!!");
-                return passed;
-            }
-                
-
             foreach (var option in Options)
             {
                 // Should this be the localized Player name?
@@ -83,6 +98,12 @@ namespace ModReloader.UI.Elements.ConfigElements
             }
             return passed;
         }
+
+        public override void OnBind()
+        {
+            base.OnBind();
+            RemoveChild(ChooserFilterMod.Parent);
+        }
     }
 
     public class PlayerDefinitionOptionElement : DefinitionOptionElement<PlayerDefinition>
@@ -94,6 +115,7 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override void SetItem(PlayerDefinition definition)
         {
             base.SetItem(definition);
+            Tooltip = definition.ToString();
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)

@@ -107,6 +107,11 @@ Configs: {
 			// Label: Is Unloaded
 			// Tooltip: ""
 		}
+
+		PlayerFileData: {
+			// Tooltip: ""
+			// Label: Player File Data
+		}
 	}
 }
 

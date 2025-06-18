@@ -27,18 +27,27 @@ namespace ModReloader.Helpers
             Main.LoadPlayers();
             if (i < 0 || i >= Main.PlayerList.Count)
             {
-                var pfd = new PlayerFileData();
-                pfd.Name = "None";
-                return pfd;
+                return new PlayerFileData()
+                {
+                    Name = "None"
+                };
 
             }
             return Main.PlayerList[i];
         }
 
+        public static PlayerFileData FindPlayer(string path)
+        {
+            Main.LoadPlayers();
+
+            return Main.PlayerList.FirstOrDefault(p => p.Path == path, 
+                new PlayerFileData() { Name = "None"});
+        }
+
         public static int FindPlayerId(string path)
         {
             Main.LoadPlayers();
-            
+
             return Main.PlayerList.FindIndex(p => p.Path == path);
         }
 
