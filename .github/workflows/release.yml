@@ -32,17 +32,20 @@ jobs:
           Write-Host "Detected version: $version"
 
       # 3️⃣  Work out the absolute path to Mods/ModReloader.tmod
-      - name: Locate .tmod file
+       - name: Locate .tmod file
         id: asset
+        shell: pwsh
         run: |
-          # ${{ github.workspace }} == checkout root
-          $assetPath = Resolve-Path (Join-Path $env:GITHUB_WORKSPACE '..\Mods\ModReloader.tmod')
+          $assetPath = Join-Path $env:GITHUB_WORKSPACE 'Mods\ModReloader.tmod'
+
           if (-not (Test-Path $assetPath)) {
-            Write-Error "$assetPath not found"
+            Write-Error "Can't find $assetPath ‑ check it in!"
             exit 1
           }
+
           "file=$assetPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           Write-Host "Found asset: $assetPath"
+
 
       # 4️⃣  Create / update the tag + release, then upload the .tmod
       - name: Create GitHub Release and upload asset
