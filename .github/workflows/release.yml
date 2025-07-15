@@ -1,0 +1,56 @@
+name: Release by build.txt version (Windows)
+
+on:
+  push:
+    branches: ["master"]
+    paths: ["build.txt"] # run only when build.txt changes
+
+permissions:
+  contents: write # lets the workflow tag & create releases with GITHUB_TOKEN
+
+jobs:
+  release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      # 1️⃣  Pull the repo (full history so tags land on the right commit)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2️⃣  Parse build.txt → "1.2.3"
+      - name: Extract version from build.txt
+        id: get_version
+        run: |
+          $line    = Select-String -Path "build.txt" -Pattern '^version\s*=' | Select-Object -First 1
+          $version = ($line -split '=')[1].Trim()
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Detected version: $version"
+
+      # 3️⃣  Work out the absolute path to Mods/ModReloader.tmod
+      - name: Locate .tmod file
+        id: asset
+        run: |
+          # ${{ github.workspace }} == checkout root
+          $assetPath = Resolve-Path (Join-Path $env:GITHUB_WORKSPACE '..\Mods\ModReloader.tmod')
+          if (-not (Test-Path $assetPath)) {
+            Write-Error "$assetPath not found"
+            exit 1
+          }
+          "file=$assetPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Found asset: $assetPath"
+
+      # 4️⃣  Create / update the tag + release, then upload the .tmod
+      - name: Create GitHub Release and upload asset
+        uses: ncipollo/release-action@v1 # tiny helper, no extra setup
+        with:
+          tag: "v${{ steps.get_version.outputs.version }}"
+          name: "v${{ steps.get_version.outputs.version }}"
+          generateReleaseNotes: true # auto‑populate notes
+          artifacts: "${{ steps.asset.outputs.file }}" # absolute path from step above
+          artifactErrorsFailBuild: true # fail fast if asset missing
+          skipIfReleaseExists: true # don’t overwrite an existing release
