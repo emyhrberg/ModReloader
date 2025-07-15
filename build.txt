@@ -1,6 +1,6 @@
 displayName = Mod Reloader
 author = Erky & Cotlim
-version = 1.0.8
+version = 1.0.7
 side = both
 buildIgnore = Assets\Old*, icon.psd
 dllReferences = dnlib

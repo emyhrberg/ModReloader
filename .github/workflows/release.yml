@@ -1,58 +1,70 @@
-name: Release by build.txt version (Windows)
+name: Release ModReloader
 
 on:
-  push:
-    branches: ["master"]
-    paths: ["build.txt"] # run only when build.txt changes
+  workflow_run:
+    workflows: ["Build Mod"] # ⚙️  name in build‑mod.yml
+    types: [completed]
 
 permissions:
-  contents: write # lets the workflow tag & create releases with GITHUB_TOKEN
+  contents: write # needed for tags & releases
 
 jobs:
   release:
+    if: >
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch   == 'master'
+      }}
     runs-on: windows-latest
     defaults:
       run:
         shell: pwsh
 
     steps:
-      # 1️⃣  Pull the repo (full history so tags land on the right commit)
-      - name: Checkout repository
+      # 1️⃣  Get the exact commit that Build Mod just built
+      - name: Checkout built commit
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0 # we’ll tag this commit
 
-      # 2️⃣  Parse build.txt → "1.2.3"
-      - name: Extract version from build.txt
-        id: get_version
-        run: |
-          $line    = Select-String -Path "build.txt" -Pattern '^version\s*=' | Select-Object -First 1
-          $version = ($line -split '=')[1].Trim()
-          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          Write-Host "Detected version: $version"
+      # 2️⃣  Pull the build artifact from that run
+      - name: Download ModReloader-Binaries artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          run_id: ${{ github.event.workflow_run.id }}
+          name: ModReloader-Binaries
+          path: artifact
 
-      # 3️⃣  Work out the absolute path to Mods/ModReloader.tmod
+      # 3️⃣  Locate the .tmod file inside the artifact
       - name: Locate .tmod file
         id: asset
-        shell: pwsh
         run: |
-          $assetPath = Join-Path $env:GITHUB_WORKSPACE 'Mods\ModReloader.tmod'
-
-          if (-not (Test-Path $assetPath)) {
-            Write-Error "Can't find $assetPath ‑ check it in!"
+          $asset = Get-ChildItem -Path artifact -Filter *.tmod -Recurse |
+                   Select-Object -First 1
+          if (-not $asset) {
+            Write-Error "No .tmod file inside artifact!"
             exit 1
           }
+          "file=$($asset.FullName)" | Out-File $env:GITHUB_OUTPUT -Append
+          Write-Host "Asset: $($asset.FullName)"
 
-          "file=$assetPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          Write-Host "Found asset: $assetPath"
+      # 4️⃣  Extract version from build.txt in this commit
+      - name: Extract version
+        id: get_version
+        run: |
+          $verLine = Select-String build.txt -Pattern '^version\s*=' |
+                     Select-Object -First 1
+          $version = ($verLine.Line -split '=')[1].Trim()
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append
+          Write-Host "Detected version $version"
 
-      # 4️⃣  Create / update the tag + release, then upload the .tmod
-      - name: Create GitHub Release and upload asset
-        uses: ncipollo/release-action@v1 # tiny helper, no extra setup
+      # 5️⃣  Create / reuse the tag and GitHub release
+      - name: Publish GitHub release
+        uses: ncipollo/release-action@v1
         with:
           tag: "v${{ steps.get_version.outputs.version }}"
           name: "v${{ steps.get_version.outputs.version }}"
-          generateReleaseNotes: true # auto‑populate notes
-          artifacts: "${{ steps.asset.outputs.file }}" # absolute path from step above
-          artifactErrorsFailBuild: true # fail fast if asset missing
-          skipIfReleaseExists: true # don’t overwrite an existing release
+          artifacts: "${{ steps.asset.outputs.file }}"
+          generateReleaseNotes: true
+          skipIfReleaseExists: true
