@@ -36,8 +36,6 @@ namespace ModReloader.Common.BuilderToggles
 
         public override bool OnLeftClick(ref SoundStyle? sound)
         {
-            if (!Conf.C.ShowBuilderToggle) return false;
-
             MainSystem sys = ModContent.GetInstance<MainSystem>();
             sys.mainState.Active = !sys.mainState.Active; // Toggle the property
 
@@ -48,8 +46,6 @@ namespace ModReloader.Common.BuilderToggles
 
         public override bool Draw(SpriteBatch spriteBatch, ref BuilderToggleDrawParams drawParams)
         {
-            if (!Conf.C.ShowBuilderToggle) return false;
-
             drawParams.Frame = drawParams.Texture.Frame(1, 2, 0, CurrentState);
             return base.Draw(spriteBatch, ref drawParams);
         }

@@ -111,6 +111,7 @@ namespace ModReloader.UI.Elements.DebugElements
 
             // update the text to show playername, whoAmI, and FPS
             string playerName = Main.LocalPlayer.name;
+            string worldName = Main.worldName;
             int whoAmI = Main.myPlayer;
             int fps = Main.frameRate;
             int ups = Main.updateRate;
@@ -125,9 +126,14 @@ namespace ModReloader.UI.Elements.DebugElements
             string logFileName = Path.GetFileName(Logging.LogPath);
 
             string text = "";
-            text += $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
+            //text += $"\nName: {playerName}, ID: {whoAmI}, Mode: {netmode}";
             //text += $"\nDebugger: {Debugger.IsAttached}, PID: {System.Environment.ProcessId}";
-            text += $"\n{fps}fps {ups}ups ({Main.upTimerMax:0}ms)";
+            //text += $"\n{fps}fps {ups}ups ({Main.upTimerMax:0}ms)";
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                text += $"\nPlayer: {playerName} ({Main.myPlayer})\n World: {worldName}";
+            else if (Main.netMode == NetmodeID.SinglePlayer)
+                text += $"\nPlayer: {playerName} \nWorld: {worldName}";
 
             //Main.instance.Window.Title = " += PID HERE? FOR EASY DEBUG INFO";
 

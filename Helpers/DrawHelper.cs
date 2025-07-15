@@ -107,9 +107,9 @@ namespace ModReloader.Helpers
             // The panel is 200x50, centered on that point.
             Vector2 basePos = new Vector2(108, Main.screenHeight / 2f);
             int width = 300 + extraWidth;
-            int height = 70 + extraHeight;
+            int height = 80 + extraHeight;
             int xOffset = -100 + extraXOffset;
-            int yOffset = 30 + extraYOffset;
+            int yOffset = 120 + extraYOffset;
             Rectangle tooltipRect = new Rectangle((int)basePos.X + xOffset, (int)basePos.Y + yOffset, width, height);
 
             // Draw background panel.

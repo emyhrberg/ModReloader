@@ -76,7 +76,7 @@ namespace ModReloader.Common.Systems
                 WorldGen.playWorld();
 
                 // Show the custom load screen
-                LoadWorldState.Show(Main.ActiveWorldFileData.Name);
+                LoadWorldState.Show(Main.ActiveWorldFileData.Name, Main.ActivePlayerFileData.Name);
             }
             else
             {
