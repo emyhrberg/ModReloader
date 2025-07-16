@@ -81,27 +81,31 @@ Configs: {
 
 		ShowBuilderToggle: {
 			// Label: Show Builder Toggle
-			// Tooltip: ""
+			// Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
 		}
 
 		ClearLogOnReload: {
 			// Label: Clear Log On Reload
-			// Tooltip: ""
+			// Tooltip: Enable this to clear the client log every time a reload is performed
 		}
 
 		SaveWorld: {
 			// Label: Save World
-			// Tooltip: Save player and world data before reloading. Takes more time to reload but saves the your player and world
+			/* Tooltip:
+				'''
+				Save player and world data before reloading. 
+				Takes more time to reload but saves the your player and world
+				''' */
 		}
 
 		CreateTestWorldSize: {
 			// Label: Create Test World Size
-			// Tooltip: ""
+			// Tooltip: Size set to a world created from the main menu option
 		}
 
 		CreateTestWorldDifficulty: {
 			// Label: Create Test World Difficulty
-			// Tooltip: ""
+			// Tooltip: Difficulty set to a world created from the main menu option
 		}
 	}
 
@@ -110,7 +114,7 @@ Configs: {
 		// Small.Label: Small
 		// Medium.Label: Medium
 		// Large.Label: Large
-		// ExtraSmall.Label: Extra Small
+		// ExtraSmall.Label: Extra Small (Risky)
 	}
 
 	WorldDifficulty: {

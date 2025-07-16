@@ -32,11 +32,11 @@ Configs: {
 
 		LogDebugMessages: {
 			Label: Log Debug Messages
-			Tooltip: 
-            '''
-            (Optional) Logs the flow of actions in the mod. 
-            Useful for finding the cause of bugs.
-            '''
+			Tooltip:
+				'''
+				(Optional) Logs the flow of actions in the mod. 
+				Useful for finding the cause of bugs.
+				'''
 		}
 
 		ShowDebugInfo: {
@@ -85,31 +85,31 @@ Configs: {
 
 		ShowBuilderToggle: {
 			Label: Show Builder Toggle
-			Tooltip: "Shows a toggle to hide or show everything in the top left of the inventory"
+			Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
 		}
 
 		ClearLogOnReload: {
 			Label: Clear Log On Reload
-			Tooltip: "Enable this to clear the client log every time a reload is performed"
+			Tooltip: Enable this to clear the client log every time a reload is performed
 		}
 
 		SaveWorld: {
 			Label: Save World
-			Tooltip: 
-            '''
-            Save player and world data before reloading. 
-            Takes more time to reload but saves the your player and world
-            '''
+			Tooltip:
+				'''
+				Save player and world data before reloading. 
+				Takes more time to reload but saves the your player and world
+				'''
 		}
 
 		CreateTestWorldSize: {
 			Label: Create Test World Size
-			Tooltip: "Size set to a world created from the main menu option"
+			Tooltip: Size set to a world created from the main menu option
 		}
 
 		CreateTestWorldDifficulty: {
 			Label: Create Test World Difficulty
-            Tooltip: "Difficulty set to a world created from the main menu option"
+			Tooltip: Difficulty set to a world created from the main menu option
 		}
 	}
 
