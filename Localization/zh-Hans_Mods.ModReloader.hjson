@@ -166,7 +166,11 @@ MainMenu: {
 	// WorldHeader: World
 	// WorldTooltip: Quickly create worlds
 	// CreateNewWorld: Create New World
-	// CreateNewWorldTooltip: Create world with name {0} and size {1} and difficulty {2}
+	/* CreateNewWorldTooltip:
+		'''
+		Create world with name {0}, 
+		 size {1} and difficulty {2}
+		''' */
 }
 
 ExceptionMenu: {

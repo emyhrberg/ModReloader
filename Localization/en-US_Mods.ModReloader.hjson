@@ -147,9 +147,17 @@ MainMenu: {
 	OptionsHeader: Options
 	OptionsTooltip: General options for testing
 	StartServerText: Start Server
-	StartServerTooltip: Starts a server instance with cmd-line
+	StartServerTooltip:
+		'''
+		Starts a server instance 
+		with cmd-line
+		'''
 	StartClientText: Start Client
-	StartClientTooltip: Starts another tML instance with cmd-line in addition to this one
+	StartClientTooltip:
+		'''
+		Starts another tML instance 
+		 with cmd-line in addition to this one
+		'''
 	OpenLogText: Open Log
 	OpenLogTooltip: Click to open the {0}
 	ClearLogText: Clear Log
@@ -157,20 +165,36 @@ MainMenu: {
 	SingleplayerHeader: Singleplayer
 	SingleplayerTooltip: Quickly join singleplayer worlds
 	JoinSingleplayerText: Join Singleplayer
-	JoinSingleplayerTooltip: Enter singleplayer with player {0} and world {1}
+	JoinSingleplayerTooltip:
+		'''
+		Enter with player {0} 
+		 and world {1}
+		'''
 	JoinSingleplayerTooltipNoData: Enter singleplayer with some player and some world
 	MultiplayerHeader: Multiplayer
 	MultiplayerTooltip: Hosting and testing multiplayer
 	HostMultiplayerText: Host Multiplayer
-	HostMultiplayerTooltip: Start a local multiplayer world
+	HostMultiplayerTooltip:
+		'''
+		Start a local multiplayer world with first 
+		 available player
+		'''
 	JoinMultiplayerText: Join Multiplayer
-	JoinMultiplayerTooltip: Enter local multiplayer world with first available player (server required)
+	JoinMultiplayerTooltip:
+		'''
+		Enter local multiplayer world with first 
+		 available player (server required)
+		'''
 	LoadingPlayer: Loading player: {0}
 	LoadingWorld: Loading world: {0}
 	WorldHeader: World
 	WorldTooltip: Quickly create worlds
 	CreateNewWorld: Create New World
-	CreateNewWorldTooltip: Create world with name {0} and size {1} and difficulty {2}
+	CreateNewWorldTooltip:
+		'''
+		Create world with name {0}, 
+		 size {1} and difficulty {2}
+		'''
 }
 
 ExceptionMenu: {

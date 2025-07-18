@@ -350,49 +350,56 @@ namespace ModReloader.Common.Systems
             uiPanel?.Update(Main._drawInterfaceGameTime); // Force immediate update
         }
 
+        private readonly HashSet<string> pendingElementNames = new();
+
         public void UIElement_Draw(On_UIElement.orig_Draw orig, UIElement self, SpriteBatch spriteBatch)
         {
-            orig(self, spriteBatch); // Normal UI behavior
+            orig(self, spriteBatch);
 
-            if (Main.dedServ || Main.gameMenu)
-                return;
-            if (self is MainState || self is UIElementState)
-                return;
-            if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900)
-                return;
+            if (Main.dedServ || Main.gameMenu) return;
+            if (self is MainState || self is UIElementState) return;
+            if (self.GetOuterDimensions().Width > 900 || self.GetOuterDimensions().Height > 900) return;
 
             string typeName = self.GetType().Name;
 
+            // Defer dictionary-writes until Update
             if (!elementToggles.ContainsKey(typeName))
-            {
-                elementToggles[typeName] = showAll;
-            }
+                pendingElementNames.Add(typeName);
 
-            if (elementToggles.TryGetValue(typeName, out bool value))
-            {
-                // Add the type name to the activeUIElementsNameList
-                activeUIElementsNameList.Add(typeName);
+            if (!elementToggles.TryGetValue(typeName, out bool show) || !show)
+                return;
 
-                // Check if this *type* is toggled OFF
-                if (!value)
-                    return;
-                //Main.NewText($"{GetModInstance(self).DisplayName}");
-            }
+            activeUIElementsNameList.Add(typeName);
 
             if (DrawSizeOfElement)
-            {
                 DrawElementSize(spriteBatch, self, self.GetOuterDimensions().Position().ToPoint());
-            }
 
             if (DrawNameOfElement)
-            {
                 DrawElementType(spriteBatch, self, self.GetOuterDimensions().Position().ToPoint());
-            }
+
             if (DrawHitboxOfElement)
-            {
-                // Draw the hitbox
                 DrawHitbox(self, spriteBatch);
-            }
+        }
+
+        // ---------------------------------------------------------------------
+        //  NEW override – commits queued keys *after* the frame has finished
+        // ---------------------------------------------------------------------
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (pendingElementNames.Count == 0)
+                return;
+
+            // Add any types we noticed during Draw to the toggle table
+            foreach (string key in pendingElementNames)
+                if (!elementToggles.ContainsKey(key))
+                    elementToggles[key] = showAll;  // inherit the current “Show All” mode
+
+            pendingElementNames.Clear();
+
+            // Ask the option-panel to regenerate itself *outside* the draw pass
+            RefreshUIState();
         }
     }
 }

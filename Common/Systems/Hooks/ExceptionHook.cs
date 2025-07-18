@@ -5,18 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Common.Configs;
-using ModReloader.Helpers;
 using ReLogic.OS;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.IO;
-using Terraria.ModLoader;
-using Terraria.ModLoader.UI;
 using Terraria.UI;
 
 namespace ModReloader.Common.Systems.Hooks
@@ -216,7 +210,7 @@ namespace ModReloader.Common.Systems.Hooks
                 if (hovered)
                 {
                     // Draw tooltip
-                    DrawHelper.DrawMainMenuTooltipPanel(() => tooltip, extraXOffset: 130, extraYOffset: -430, extraHeight: 65, extraWidth: -150);
+                    DrawHelper.DrawMainMenuTooltipPanel(() => tooltip, extraXOffset: 130, extraYOffset: -440, extraHeight: 65, extraWidth: -150);
 
                     Main.LocalPlayer.mouseInterface = true;
                     // Click
