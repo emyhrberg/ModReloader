@@ -140,7 +140,7 @@ BuilderToggles: {
 MainMenu: {
 	WelcomeTooltip: Welcome to Mod Reloader's main menu!
 	OpenConfigText: Open config
-	OpenConfigTooltip: Click to open Mod Reloader config
+	OpenConfigTooltip: Click to open [c/FFFF00:Mod Reloader] config
 	ReloadText: Reload
 	ReloadTooltip: Reloads {0}
 	ReloadNoMods: No mods selected
@@ -177,7 +177,7 @@ MainMenu: {
 	HostMultiplayerTooltip:
 		'''
 		Start a local multiplayer world with first 
-		 available player
+		 available player and world
 		'''
 	JoinMultiplayerText: Join Multiplayer
 	JoinMultiplayerTooltip:

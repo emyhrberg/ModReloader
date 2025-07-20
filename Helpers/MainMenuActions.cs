@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,10 +6,60 @@ using System.Linq;
 using Terraria.GameContent.UI.States;
 using Terraria.IO;
 using Terraria.Social;
+using Terraria.WorldBuilding;
 using static ModReloader.Common.Configs.Config;
 
 namespace ModReloader.Helpers
 {
+    public class MainMenuExtraSmallSystem : ModSystem
+    {
+        public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+        {
+            if (Conf.C.CreateTestWorldSize != WorldSize.ExtraSmall)
+                return;
+
+            // Passes known (or very likely) to crash on a 2 100 × 600 map
+            string[] skipExact =
+            {
+        "Dungeon", "Dungeon Entrance", "Pyramids", "Temple", "Jungle Temple", "Bee Hives",
+        "Oceans", "Ocean Caves", "Ocean Sand",
+        "Lakes", "Oasis", "Dunes",
+        "Mushroom Patches", "Mushroom Biomes",
+        "Gem Caves", "Granite Caves", "Marble Caves",
+        "Floating Islands", "Sky Lakes",
+        "Waterfalls", "Water Features", "Rivers",
+        "Jungle Chests", "Jungle Shrines",
+        "Micro Biomes"                //   NEW
+    };
+            var exact = new HashSet<string>(skipExact, StringComparer.OrdinalIgnoreCase);
+
+            // any pass name containing these substrings will also be skipped automatically
+            string[] skipContains = { "Ocean", "Micro", "Moss" };
+
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                string name = tasks[i].Name;
+                bool bad =
+                    exact.Contains(name) ||
+                    skipContains.Any(s => name.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                if (bad)
+                    tasks[i] = new SkippedPass(name, (float)tasks[i].Weight);
+            }
+        }
+
+        private sealed class SkippedPass : GenPass
+        {
+            public SkippedPass(string name, float weight) : base(name, weight) { }
+
+            protected override void ApplyPass(GenerationProgress progress, GameConfiguration cfg)
+            {
+                // Do absolutely nothing; only update the progress text
+                progress.Message = $"Skipped {Name} (ExtraSmall world requested!)";
+            }
+        }
+    }
+
     public static class MainMenuActions
     {
         public static string GetNextAvailableTestWorldName()
@@ -86,7 +136,6 @@ namespace ModReloader.Helpers
             Main.menuMode = 10;
             WorldGen.CreateNewWorld();
         }
-
         public static void StartClient()
         {
             try

@@ -1,7 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.UI.Elements.MainMenuElements;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
@@ -9,53 +10,112 @@ namespace ModReloader.Common.Systems.Hooks.MainMenu;
 
 internal sealed class MainMenuState : UIState
 {
-    // Colors
-    private static readonly Color Normal = new(173, 173, 198);
-    private static readonly Color Hover = new(237, 246, 255);
-
-    // Position
-    private float verticalSpacing = 23f;
-    private float currentY = 15f;
-
     // Elements
+    private UIList mainMenuList;
     private TooltipPanel tooltipPanel;
-    private UIText tooltipText;
 
-    #region constructor
     public MainMenuState()
     {
         // Null checks
         if (Conf.C is null || !Conf.C.ShowMainMenuInfo)
             return;
 
+        // Set up UIList
+        mainMenuList = new UIList
+        {
+            Width = { Pixels = 310f },
+            Height = StyleDimension.Fill,
+            ListPadding = 0f,
+            Left = { Pixels = 15f },
+            Top = { Pixels = 15f },
+            ManualSortMethod = (e) => { }
+        };
+
         // Extra spacing if other big menu mods are loaded
         if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
         {
-            currentY += 205f;
-            verticalSpacing = 20f; // tighter spacing to try to fit with terramon lol
+            mainMenuList.Top.Pixels += 205f;
         }
         if (ModLoader.HasMod("CompatChecker"))
-            currentY += 30f; // move everything down a bit to fit compat checker elements at the top
+            mainMenuList.Top.Pixels += 30f;
 
+        tooltipPanel = new TooltipPanel();
+
+        // Add elements to the main menu list
+        AddModReloaderSection(tooltipPanel);
+        AddOptionsSection(tooltipPanel);
+        AddSingleplayerSection(tooltipPanel);
+        AddMultiplayerSection(tooltipPanel);
+        AddWorldSection(tooltipPanel);
+
+        Append(tooltipPanel);
+        Append(mainMenuList);
+    }
+
+    private void AddModReloaderSection(TooltipPanel tooltipPanel)
+    {
         // Helpers
         string headerModName = $"{ModContent.GetInstance<ModReloader>().DisplayName} v{ModContent.GetInstance<ModReloader>().Version}";
         string reloadHoverMods = ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : string.Join(",", Conf.C.ModsToReload);
 
-        // Add Mod Reloader section
-        AddOption(headerModName, tooltip: () => Loc.Get("MainMenu.WelcomeTooltip"), isHeader: true);
-        AddOption(Loc.Get("MainMenu.OpenConfigText"), () => Conf.C.Open(), () => Loc.Get("MainMenu.OpenConfigTooltip"));
-        AddOption(Loc.Get("MainMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), () => Loc.Get("MainMenu.ReloadTooltip", $"[c/FFFF00:{reloadHoverMods}] "));
-        AddOption(string.Empty);
+        var headerElement = new HeaderMainMenuElement(headerModName, () => Loc.Get("MainMenu.WelcomeTooltip"), tooltipPanel);
+        var configElement = new ActionMainMenuElement(
+            () => Conf.C.Open(),
+            Loc.Get("MainMenu.OpenConfigText"),
+            () => Loc.Get("MainMenu.OpenConfigTooltip"),
+            tooltipPanel
+        );
+        var reloadElement = new ActionMainMenuElement(
+            async () => await ReloadUtilities.SinglePlayerReload(),
+            Loc.Get("MainMenu.ReloadText"),
+            () => Loc.Get("MainMenu.ReloadTooltip", $"[c/FFFF00:{reloadHoverMods}]"),
+            tooltipPanel
+        );
+        var spacer = new SpacerMainMenuElement();
+        mainMenuList.Add(headerElement);
+        mainMenuList.Add(configElement);
+        mainMenuList.Add(reloadElement);
+        mainMenuList.Add(spacer);
+    }
 
-        // Add options section
-        AddOption(Loc.Get("MainMenu.OptionsHeader"), () => Loc.Get("MainMenu.OptionsTooltip"), isHeader: true);
-        AddOption(Loc.Get("MainMenu.StartServerText"), MainMenuActions.StartServer, () => Loc.Get("MainMenu.StartServerTooltip"));
-        AddOption(Loc.Get("MainMenu.StartClientText"), MainMenuActions.StartClient, () => Loc.Get("MainMenu.StartClientTooltip"));
-        AddOption(Loc.Get("MainMenu.OpenLogText"), Log.OpenClientLog, () => Loc.Get("MainMenu.OpenLogTooltip", $"[c/FFFF00:{Path.GetFileName(Logging.LogPath)}]"));
-        AddOption(Loc.Get("MainMenu.ClearLogText"), Log.ClearClientLog, () => Loc.Get("MainMenu.ClearLogTooltip", $"[c/FFFF00:{Path.GetFileName(Logging.LogPath)}]"));
-        AddOption(string.Empty);
+    private void AddOptionsSection(TooltipPanel tooltipPanel)
+    {
+        var optionsHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.OptionsHeader"), () => Loc.Get("MainMenu.OptionsTooltip"), tooltipPanel);
+        var startServerElement = new ActionMainMenuElement(
+            MainMenuActions.StartServer,
+            Loc.Get("MainMenu.StartServerText"),
+            () => Loc.Get("MainMenu.StartServerTooltip"),
+            tooltipPanel
+        );
+        var startClientElement = new ActionMainMenuElement(
+            MainMenuActions.StartClient,
+            Loc.Get("MainMenu.StartClientText"),
+            () => Loc.Get("MainMenu.StartClientTooltip"),
+            tooltipPanel
+        );
+        var openLogElement = new ActionMainMenuElement(
+            Log.OpenClientLog,
+            Loc.Get("MainMenu.OpenLogText"),
+            () => Loc.Get("MainMenu.OpenLogTooltip", $"[c/FFFF00:{Path.GetFileName(Logging.LogPath)}]"),
+            tooltipPanel
+        );
+        var clearLogElement = new ActionMainMenuElement(
+            Log.ClearClientLog,
+            Loc.Get("MainMenu.ClearLogText"),
+            () => Loc.Get("MainMenu.ClearLogTooltip", $"[c/FFFF00:{Path.GetFileName(Logging.LogPath)}]"),
+            tooltipPanel
+        );
+        var spacer = new SpacerMainMenuElement();
+        mainMenuList.Add(optionsHeader);
+        mainMenuList.Add(startServerElement);
+        mainMenuList.Add(startClientElement);
+        mainMenuList.Add(openLogElement);
+        mainMenuList.Add(clearLogElement);
+        mainMenuList.Add(spacer);
+    }
 
-        // Add singleplayer section
+    private void AddSingleplayerSection(TooltipPanel tooltipPanel)
+    {
         // Load players and worlds for tooltips
         Main.LoadPlayers();
         int playerIdx = Conf.C.Player;
@@ -66,11 +126,10 @@ internal sealed class MainMenuState : UIState
         int worldIdx = Conf.C.World;
         if (worldIdx < 0 || worldIdx >= Main.WorldList.Count) worldIdx = 0;
         string worldName = Main.WorldList.Count > 0 ? Main.WorldList[worldIdx].Name : "";
+        Log.Info("Loaded and found this many worlds in main menu: " + Main.WorldList.Count);
 
-        // Add singleplayer section
-        AddOption(Loc.Get("MainMenu.SingleplayerHeader"), tooltip: () => Loc.Get("MainMenu.SingleplayerTooltip"), isHeader: true);
-        AddOption(
-            Loc.Get("MainMenu.JoinSingleplayerText"),
+        var singleplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.SingleplayerHeader"), () => Loc.Get("MainMenu.SingleplayerTooltip"), tooltipPanel);
+        var joinSingleplayer = new ActionMainMenuElement(
             () =>
             {
                 ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
@@ -78,97 +137,108 @@ internal sealed class MainMenuState : UIState
                 ClientDataJsonHelper.WorldPath = null;
                 AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
             },
+            Loc.Get("MainMenu.JoinSingleplayerText"),
             () =>
             {
                 if (string.IsNullOrEmpty(playerName) || string.IsNullOrEmpty(worldName))
                     return Loc.Get("MainMenu.JoinSingleplayerTooltipNoData");
                 return Loc.Get("MainMenu.JoinSingleplayerTooltip", $"[c/FFFF00:{playerName}]", $"[c/FFFF00:{worldName}]");
-            }
+            },
+            tooltipPanel
         );
-        AddOption(string.Empty);
+        var spacer = new SpacerMainMenuElement();
+        mainMenuList.Add(singleplayerHeader);
+        mainMenuList.Add(joinSingleplayer);
+        mainMenuList.Add(spacer);
+    }
 
-        // Add multiplayer section
-        AddOption(Loc.Get("MainMenu.MultiplayerHeader"), tooltip: () => Loc.Get("MainMenu.MultiplayerTooltip"), isHeader: true);
-        AddOption(Loc.Get("MainMenu.HostMultiplayerText"), AutoloadPlayerInWorldSystem.HostMultiplayerWorld, () => Loc.Get("MainMenu.HostMultiplayerTooltip"));
-        AddOption(Loc.Get("MainMenu.JoinMultiplayerText"), AutoloadPlayerInWorldSystem.EnterMultiplayerWorld, () => Loc.Get("MainMenu.JoinMultiplayerTooltip"));
-        AddOption(string.Empty);
+    private void AddMultiplayerSection(TooltipPanel tooltipPanel)
+    {
+        var multiplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.MultiplayerHeader"), () => Loc.Get("MainMenu.MultiplayerTooltip"), tooltipPanel);
+        var hostMultiplayer = new ActionMainMenuElement(
+            AutoloadPlayerInWorldSystem.HostMultiplayerWorld,
+            Loc.Get("MainMenu.HostMultiplayerText"),
+            () => Loc.Get("MainMenu.HostMultiplayerTooltip"),
+            tooltipPanel
+        );
+        var joinMultiplayer = new ActionMainMenuElement(
+            AutoloadPlayerInWorldSystem.EnterMultiplayerWorld,
+            Loc.Get("MainMenu.JoinMultiplayerText"),
+            () => Loc.Get("MainMenu.JoinMultiplayerTooltip"),
+            tooltipPanel
+        );
+        var spacer = new SpacerMainMenuElement();
+        mainMenuList.Add(multiplayerHeader);
+        mainMenuList.Add(hostMultiplayer);
+        mainMenuList.Add(joinMultiplayer);
+        mainMenuList.Add(spacer);
+    }
 
-        // Add world section
-        AddOption(Loc.Get("MainMenu.WorldHeader"), tooltip: () => Loc.Get("MainMenu.WorldTooltip"), isHeader: true);
-        AddOption(
-            Loc.Get("MainMenu.CreateNewWorld"),
+    private void AddWorldSection(TooltipPanel tooltipPanel)
+    {
+        var worldHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.WorldHeader"), () => Loc.Get("MainMenu.WorldTooltip"), tooltipPanel);
+        var createNewWorld = new ActionMainMenuElement(
             () => MainMenuActions.CreateNewWorld(MainMenuActions.GetNextAvailableTestWorldName()),
-            () => Loc.Get(
-            "MainMenu.CreateNewWorldTooltip",
+            Loc.Get("MainMenu.CreateNewWorld"),
+            () => Loc.Get("MainMenu.CreateNewWorldTooltip",
             $"[c/FFFF00:{MainMenuActions.GetNextAvailableTestWorldName()}]",
             $"[c/FFFF00:{Conf.C.CreateTestWorldSize}]",
             $"[c/FFFF00:{Conf.C.CreateTestWorldDifficulty}]"
-            )
+            ),
+            tooltipPanel
         );
-
-        // Add tooltip panel
-        tooltipPanel = new();
-        tooltipPanel.BorderColor = new Color(33, 43, 79) * 0.8f;
-        tooltipPanel.BackgroundColor = new Color(73, 94, 171);
-        tooltipPanel.Left.Set(15 - 3, 0f); // -3 panel padding on each side is 6/2 = 3
-        tooltipPanel.Top.Set(currentY + 10, 0f);
-        tooltipPanel.Width.Set(310f, 0f);
-        tooltipPanel.Height.Set(68f, 0f);
-
-        // Add tooltip text
-        tooltipText = new UIText(string.Empty, 0.9f);
-        tooltipText.Left.Set(0f, 0f);
-        tooltipText.TextOriginX = 0;
-        tooltipText.TextOriginY = 0;
-        tooltipPanel.Append(tooltipText);
-        Append(tooltipPanel);
+        var spacer = new SpacerMainMenuElement();
+        mainMenuList.Add(worldHeader);
+        mainMenuList.Add(createNewWorld);
+        mainMenuList.Add(spacer);
     }
-    #endregion
 
-    /// <summary>
-    /// Helper method to add a menu option.
-    /// </summary>
-    private void AddOption(string text,
-                            Action action = null,
-                            Func<string> tooltip = null,
-                            bool isHeader = false)
+    public override void Draw(SpriteBatch spriteBatch)
     {
-        float size = isHeader ? 1.15f : 1f;
-        var label = new UIText(text, size)
-        {
-            TextColor = isHeader ? Hover : Normal
-        };
+        base.Draw(spriteBatch);
 
-        label.Left.Set(15f, 0f);
-        label.Top.Set(currentY, 0f);
-        currentY += verticalSpacing;
+        //DrawActionRowsDebug(spriteBatch);
+    }
 
-        label.OnMouseOver += (_, _) =>
+    private void PositionTooltip()
+    {
+        tooltipPanel.Left.Set(15 + 3, 0f);            
+        tooltipPanel.Top.Set(470f, 0f);  // 6 px under the list
+        tooltipPanel.Recalculate();
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        PositionTooltip();
+    }
+
+    private void DrawActionRowsDebug(SpriteBatch spriteBatch)
+    {
+        Texture2D pixel = TextureAssets.MagicPixel.Value;
+        Color debugColor = Color.Red * 0.3f;
+
+        // the first child is the inner list
+        foreach (var inner in mainMenuList.Children)
         {
-            if (!isHeader)
-                label.TextColor = Hover;
-            if (tooltip != null)
+            if (inner is not UIElement) continue;
+
+            foreach (var child in inner.Children)
             {
-                tooltipText.SetText(tooltip());
-                tooltipPanel.Hidden = false;
+                if (child is ActionMainMenuElement)
+                {
+                    CalculatedStyle d = child.GetOuterDimensions();
+                    Rectangle rect = new(
+                        (int)d.X,
+                        (int)d.Y,
+                        (int)d.Width,
+                        (int)d.Height);
+
+                    spriteBatch.Draw(pixel, rect, debugColor);
+                }
             }
-        };
-        label.OnMouseOut += (_, _) =>
-        {
-            if (!isHeader)
-                label.TextColor = Normal;
-            tooltipText.SetText(string.Empty);
-            tooltipPanel.Hidden = true;
-        };
-
-        if (action != null)
-            label.OnLeftClick += (_, _) => action.Invoke();
-
-        Append(label);
+        }
     }
 
-    public override void Draw(SpriteBatch sb)
-    {
-        base.Draw(sb);
-    }
+
 }
