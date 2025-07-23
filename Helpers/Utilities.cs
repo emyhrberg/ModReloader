@@ -38,7 +38,7 @@ namespace ModReloader.Helpers
 
         public static PlayerFileData FindPlayer(string path)
         {
-            Main.LoadPlayers();
+            //Main.LoadPlayers();
 
             return Main.PlayerList.FirstOrDefault(p => p.Path == path, 
                 new PlayerFileData() { Name = "None"});
@@ -46,7 +46,7 @@ namespace ModReloader.Helpers
 
         public static int FindPlayerId(string path)
         {
-            Main.LoadPlayers();
+            //Main.LoadPlayers();
 
             return Main.PlayerList.FindIndex(p => p.Path == path);
         }

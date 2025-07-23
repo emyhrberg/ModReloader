@@ -101,7 +101,7 @@ namespace ModReloader.UI.Elements.ConfigElements
 
     public class PlayerDefinitionOptionElement : DefinitionOptionElement<PlayerDefinition>
     {
-        public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.75f) : base(definition, scale)
+        public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.5f) : base(definition, scale)
         {
         }
 
@@ -115,7 +115,7 @@ namespace ModReloader.UI.Elements.ConfigElements
         {
             CalculatedStyle dimensions = GetInnerDimensions();
 
-            spriteBatch.Draw(BackgroundTexture.Value, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+            //spriteBatch.Draw(BackgroundTexture.Value, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 
             if (Definition != null)
             {
@@ -126,7 +126,7 @@ namespace ModReloader.UI.Elements.ConfigElements
                 if (type == -1)
                 {
                     // Use ItemID.None as the empty Player texture.
-                    PlayerTexture = TextureAssets.Item[ItemID.None].Value;
+                    PlayerTexture = TextureAssets.Item[1].Value;
                 }
                 else
                 {
@@ -156,18 +156,17 @@ namespace ModReloader.UI.Elements.ConfigElements
 
                 Vector2 vector = BackgroundTexture.Size() * Scale;
                 Vector2 position2 = dimensions.Position() + vector / 2f - rectangle2.Size() * drawScale / 2f;
-                Vector2 origin = rectangle2.Size() * 0/* * (pulseScale / 2f - 0.5f)*/;
-                try
+                Vector2 origin = rectangle2.Size()  * 0/* * (pulseScale / 2f - 0.5f)*/;
+                var playerFile = Utilities.FindPlayer(Definition.Name);
+                if (playerFile.Player == null)
                 {
-                    var playerFile = Utilities.FindPlayer(Definition.Name);
-                    //Log.Info("Draving Player");
-                    Main.PlayerRenderer.DrawPlayer(Main.Camera, playerFile.Player, position2, 0f, origin);
-
-                }
-                catch
-                {
-                    //Log.Info("Error of Draving Player");
                     spriteBatch.Draw(PlayerTexture, position2, rectangle2, Color.White, 0f, origin, drawScale, SpriteEffects.None, 0f);
+                }
+                else
+                {
+                    playerFile.Player.PlayerFrame();
+                    Main.PlayerRenderer.DrawPlayerHead(Main.Camera, playerFile.Player, position2);
+                    //Main.PlayerRenderer.DrawPlayer(Main.Camera, playerFile.Player, position2, 0f, origin);
                 }
 
             }
