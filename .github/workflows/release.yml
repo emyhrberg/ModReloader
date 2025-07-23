@@ -1,0 +1,70 @@
+name: Release ModReloader
+
+on:
+  workflow_run:
+    workflows: ["Build Mod"] # ⚙️  name in build‑mod.yml
+    types: [completed]
+
+permissions:
+  contents: write # needed for tags & releases
+
+jobs:
+  release:
+    if: >
+      ${{
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch   == 'master'
+      }}
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      # 1️⃣  Get the exact commit that Build Mod just built
+      - name: Checkout built commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0 # we’ll tag this commit
+
+      # 2️⃣  Pull the build artifact from that run
+      - name: Download ModReloader-Binaries artifact
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          run_id: ${{ github.event.workflow_run.id }}
+          name: ModReloader-Binaries
+          path: artifact
+
+      # 3️⃣  Locate the .tmod file inside the artifact
+      - name: Locate .tmod file
+        id: asset
+        run: |
+          $asset = Get-ChildItem -Path artifact -Filter *.tmod -Recurse |
+                   Select-Object -First 1
+          if (-not $asset) {
+            Write-Error "No .tmod file inside artifact!"
+            exit 1
+          }
+          "file=$($asset.FullName)" | Out-File $env:GITHUB_OUTPUT -Append
+          Write-Host "Asset: $($asset.FullName)"
+
+      # 4️⃣  Extract version from build.txt in this commit
+      - name: Extract version
+        id: get_version
+        run: |
+          $verLine = Select-String build.txt -Pattern '^version\s*=' |
+                     Select-Object -First 1
+          $version = ($verLine.Line -split '=')[1].Trim()
+          "version=$version" | Out-File $env:GITHUB_OUTPUT -Append
+          Write-Host "Detected version $version"
+
+      # 5️⃣  Create / reuse the tag and GitHub release
+      - name: Publish GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "v${{ steps.get_version.outputs.version }}"
+          name: "v${{ steps.get_version.outputs.version }}"
+          artifacts: "${{ steps.asset.outputs.file }}"
+          generateReleaseNotes: true
+          skipIfReleaseExists: true

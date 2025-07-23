@@ -20,11 +20,6 @@ Configs: {
 			Tooltip: 在重加载模组后自动加入选中的世界
 		}
 
-		AutoSaveWorld: {
-			Label: 自动保存世界
-			Tooltip: 在重加载前保存玩家和世界数据。增加重加载耗时，但可以更新存档。
-		}
-
 		Player: {
 			Label: 玩家
 			Tooltip: 选择重加载后进入游戏的玩家
@@ -86,32 +81,48 @@ Configs: {
 
 		ShowBuilderToggle: {
 			// Label: Show Builder Toggle
-			// Tooltip: ""
+			// Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
 		}
 
 		ClearLogOnReload: {
 			// Label: Clear Log On Reload
-			// Tooltip: ""
+			// Tooltip: Enable this to clear the client log every time a reload is performed
 		}
 
-		PlayerTest: {
-			// Label: Player Test
-			// Tooltip: ""
+		SaveWorld: {
+			// Label: Save World
+			/* Tooltip:
+				'''
+				Save player and world data before reloading. 
+				Takes more time to reload but saves the your player and world
+				''' */
+		}
+
+		CreateTestWorldSize: {
+			// Label: Create Test World Size
+			// Tooltip: Size set to a world created from the main menu option
+		}
+
+		CreateTestWorldDifficulty: {
+			// Label: Create Test World Difficulty
+			// Tooltip: Difficulty set to a world created from the main menu option
 		}
 	}
 
-	PlayerDefinition: {
+	WorldSize: {
 		// Tooltip: ""
+		// Small.Label: Small
+		// Medium.Label: Medium
+		// Large.Label: Large
+		// ExtraSmall.Label: Extra Small (Risky)
+	}
 
-		IsUnloaded: {
-			// Label: Is Unloaded
-			// Tooltip: ""
-		}
-
-		PlayerFileData: {
-			// Tooltip: ""
-			// Label: Player File Data
-		}
+	WorldDifficulty: {
+		// Tooltip: ""
+		// Normal.Label: Normal
+		// Expert.Label: Expert
+		// Master.Label: Master
+		// Journey.Label: Journey
 	}
 }
 
@@ -143,13 +154,23 @@ MainMenu: {
 	SingleplayerTooltip: 快速进入单人游戏
 	JoinSingleplayerText: 进入单人游戏
 	JoinSingleplayerTooltip: 根据预设的玩家和世界快速进入游戏
+	// JoinSingleplayerTooltipNoData: Enter singleplayer with some player and some world
 	MultiplayerHeader: 多人游戏
 	MultiplayerTooltip: 开服及测试多人游戏
 	HostMultiplayerText: 开服并进入游戏
 	HostMultiplayerTooltip: 在本地开服并进入多人游戏
 	JoinMultiplayerText: 加入多人游戏
 	JoinMultiplayerTooltip: 以首个可用玩家 加入本地（已开服的）多人游戏
+	// LoadingPlayer: Loading player: {0}
 	LoadingWorld: 加入游戏：{0}
+	// WorldHeader: World
+	// WorldTooltip: Quickly create worlds
+	// CreateNewWorld: Create New World
+	/* CreateNewWorldTooltip:
+		'''
+		Create world with name {0}, 
+		 size {1} and difficulty {2}
+		''' */
 }
 
 ExceptionMenu: {

@@ -20,11 +20,6 @@ Configs: {
 			Tooltip: Automatically joins the selected world after reloading mods
 		}
 
-		AutoSaveWorld: {
-			Label: Auto Save World
-			Tooltip: Save player and world data before reloading. Takes more time to reload but saves the your player and world
-		}
-
 		Player: {
 			Label: Player
 			Tooltip: Select the player to join a world with when reloading
@@ -37,7 +32,11 @@ Configs: {
 
 		LogDebugMessages: {
 			Label: Log Debug Messages
-			Tooltip: (Optional) Logs the flow of actions in the mod. Useful for finding the cause of bugs.
+			Tooltip:
+				'''
+				(Optional) Logs the flow of actions in the mod. 
+				Useful for finding the cause of bugs.
+				'''
 		}
 
 		ShowDebugInfo: {
@@ -86,32 +85,48 @@ Configs: {
 
 		ShowBuilderToggle: {
 			Label: Show Builder Toggle
-			Tooltip: ""
+			Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
 		}
 
 		ClearLogOnReload: {
 			Label: Clear Log On Reload
-			Tooltip: ""
+			Tooltip: Enable this to clear the client log every time a reload is performed
 		}
 
-		PlayerTest: {
-			Label: Player Test
-			Tooltip: ""
+		SaveWorld: {
+			Label: Save World
+			Tooltip:
+				'''
+				Save player and world data before reloading. 
+				Takes more time to reload but saves the your player and world
+				'''
+		}
+
+		CreateTestWorldSize: {
+			Label: Create Test World Size
+			Tooltip: Size set to a world created from the main menu option
+		}
+
+		CreateTestWorldDifficulty: {
+			Label: Create Test World Difficulty
+			Tooltip: Difficulty set to a world created from the main menu option
 		}
 	}
 
-	PlayerDefinition: {
+	WorldSize: {
 		Tooltip: ""
+		Small.Label: Small
+		Medium.Label: Medium
+		Large.Label: Large
+		ExtraSmall.Label: Extra Small (Risky)
+	}
 
-		IsUnloaded: {
-			Label: Is Unloaded
-			Tooltip: ""
-		}
-
-		PlayerFileData: {
-			Tooltip: ""
-			Label: Player File Data
-		}
+	WorldDifficulty: {
+		Tooltip: ""
+		Normal.Label: Normal
+		Expert.Label: Expert
+		Master.Label: Master
+		Journey.Label: Journey
 	}
 }
 
@@ -125,16 +140,24 @@ BuilderToggles: {
 MainMenu: {
 	WelcomeTooltip: Welcome to Mod Reloader's main menu!
 	OpenConfigText: Open config
-	OpenConfigTooltip: Click to open Mod Reloader config
+	OpenConfigTooltip: Click to open [c/FFFF00:Mod Reloader] config
 	ReloadText: Reload
 	ReloadTooltip: Reloads {0}
 	ReloadNoMods: No mods selected
 	OptionsHeader: Options
 	OptionsTooltip: General options for testing
 	StartServerText: Start Server
-	StartServerTooltip: Starts a server instance with cmd-line
+	StartServerTooltip:
+		'''
+		Starts a server instance 
+		with cmd-line
+		'''
 	StartClientText: Start Client
-	StartClientTooltip: Starts another tML instance with cmd-line in addition to this one
+	StartClientTooltip:
+		'''
+		Starts another tML instance 
+		 with cmd-line in addition to this one
+		'''
 	OpenLogText: Open Log
 	OpenLogTooltip: Click to open the {0}
 	ClearLogText: Clear Log
@@ -142,14 +165,36 @@ MainMenu: {
 	SingleplayerHeader: Singleplayer
 	SingleplayerTooltip: Quickly join singleplayer worlds
 	JoinSingleplayerText: Join Singleplayer
-	JoinSingleplayerTooltip: Enter singleplayer world with the selected player and world from config
+	JoinSingleplayerTooltip:
+		'''
+		Enter with player {0} 
+		 and world {1}
+		'''
+	JoinSingleplayerTooltipNoData: Enter singleplayer with some player and some world
 	MultiplayerHeader: Multiplayer
 	MultiplayerTooltip: Hosting and testing multiplayer
 	HostMultiplayerText: Host Multiplayer
-	HostMultiplayerTooltip: Start a local multiplayer world
+	HostMultiplayerTooltip:
+		'''
+		Start a local multiplayer world with first 
+		 available player and world
+		'''
 	JoinMultiplayerText: Join Multiplayer
-	JoinMultiplayerTooltip: Enter local multiplayer world with first available player (server required)
+	JoinMultiplayerTooltip:
+		'''
+		Enter local multiplayer world with first 
+		 available player (server required)
+		'''
+	LoadingPlayer: Loading player: {0}
 	LoadingWorld: Loading world: {0}
+	WorldHeader: World
+	WorldTooltip: Quickly create worlds
+	CreateNewWorld: Create New World
+	CreateNewWorldTooltip:
+		'''
+		Create world with name {0}, 
+		 size {1} and difficulty {2}
+		'''
 }
 
 ExceptionMenu: {

@@ -112,7 +112,7 @@ namespace ModReloader.Helpers
                 clientsCountInServer = Main.player.Where((p) => p.active).Count() - 1;
 
                 // Sending packet to server to reload server and all clients
-                ModNetHandler.RefreshServer.SendReloadMP(255, -1, Conf.C.AutoSaveWorld, IsModsToReloadEmpty);
+                ModNetHandler.RefreshServer.SendReloadMP(255, -1, Conf.C.SaveWorld, IsModsToReloadEmpty);
             }
         }
 
@@ -404,7 +404,7 @@ namespace ModReloader.Helpers
                 return Task.CompletedTask;
             }
 
-            if (Conf.C.AutoSaveWorld)
+            if (Conf.C.SaveWorld)
             {
                 Log.Info("Saving and quitting...");
 

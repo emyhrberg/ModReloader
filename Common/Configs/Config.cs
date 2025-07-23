@@ -32,7 +32,7 @@ namespace ModReloader.Common.Configs
         public bool AutoJoinWorld;
 
         [DefaultValue(true)]
-        public bool AutoSaveWorld;
+        public bool SaveWorld;
 
         [Header("ExtraInfo")]
 
@@ -48,6 +48,16 @@ namespace ModReloader.Common.Configs
         [DefaultValue(true)]
         public bool ShowCopyToClipboardButton;
 
+        public enum WorldSize { ExtraSmall, Small, Medium, Large }
+        [DrawTicks]
+        [DefaultValue(WorldSize.Small)]
+        public WorldSize CreateTestWorldSize;
+
+        public enum WorldDifficulty { Normal, Expert, Master, Journey }
+        [DrawTicks]
+        [DefaultValue(WorldDifficulty.Normal)]
+        public WorldDifficulty CreateTestWorldDifficulty;
+
         [Header("Misc")]
 
         [DefaultValue(true)]
@@ -55,12 +65,6 @@ namespace ModReloader.Common.Configs
 
         [DefaultValue(true)]
         public bool LogLevelPersistOnReloads;
-
-        [DefaultValue(true)]
-        public bool MoveChat;
-
-        [DefaultValue(true)]
-        public bool ShowBuilderToggle;
 
         [DefaultValue(false)]
         public bool ClearLogOnReload;

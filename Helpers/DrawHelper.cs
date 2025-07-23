@@ -100,16 +100,16 @@ namespace ModReloader.Helpers
         /// <summary>
         /// Draw a tooltip panel at a hardcoded position in the main menu
         /// </summary>
-        public static void DrawMainMenuTooltipPanel(string text, int extraXOffset = 0, int extraYOffset = 0, int extraHeight = 0, int extraWidth = 0)
+        public static void DrawMainMenuTooltipPanel(Func<string> text, int extraXOffset = 0, int extraYOffset = 0, int extraHeight = 0, int extraWidth = 0)
         {
             // Hardcoded panel position and size.
             // (108, Main.screenHeight/2 + 60) is used as the base text position.
             // The panel is 200x50, centered on that point.
             Vector2 basePos = new Vector2(108, Main.screenHeight / 2f);
             int width = 300 + extraWidth;
-            int height = 70 + extraHeight;
+            int height = 80 + extraHeight;
             int xOffset = -100 + extraXOffset;
-            int yOffset = 30 + extraYOffset;
+            int yOffset = 120 + extraYOffset;
             Rectangle tooltipRect = new Rectangle((int)basePos.X + xOffset, (int)basePos.Y + yOffset, width, height);
 
             // Draw background panel.
@@ -127,7 +127,7 @@ namespace ModReloader.Helpers
             // If the whole text fits within the maxTextWidth, it stays on one line.
             // Otherwise, a simple word wrap moves extra words to the next line.
             List<string> lines = new List<string>();
-            string[] words = text.Split(' ');
+            string[] words = text().Split([' ']);
             string currentLine = "";
 
             foreach (string word in words)

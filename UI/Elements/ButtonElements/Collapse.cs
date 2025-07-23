@@ -27,7 +27,7 @@ namespace ModReloader.UI.Elements.ButtonElements
             Top.Set(-70 + 10, 0); // Start at normal position for Expanded state
 
             // Alignment bottom center
-            VAlign = 0.99f;
+            VAlign = 1.0f;
             HAlign = 0.5f;
         }
 

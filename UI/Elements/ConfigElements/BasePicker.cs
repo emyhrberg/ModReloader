@@ -16,6 +16,8 @@ namespace ModReloader.UI.Elements.ConfigElements
 
         private bool focusFlag = false;
 
+        public UIPanel textBoxBackground = new UIPanel();
+
         public override void OnBind()
         {
             base.OnBind();
@@ -31,12 +33,11 @@ namespace ModReloader.UI.Elements.ConfigElements
                 Increment = (int)IncrementAttribute.Increment;
             }
 
-            UIPanel textBoxBackground = new UIPanel();
             textBoxBackground.SetPadding(0);
             UIFocusInputTextField uIInputTextField = new UIFocusInputTextField(Language.GetTextValue("tModLoader.ModConfigTypeHere"));
             textBoxBackground.Top.Set(0f, 0f);
-            textBoxBackground.Left.Set(-190, 1f);
-            textBoxBackground.Width.Set(180, 0f);
+            textBoxBackground.Left.Set(-220, 1f);
+            textBoxBackground.Width.Set(220, 0f);
             textBoxBackground.Height.Set(30, 0f);
             Append(textBoxBackground);
 
@@ -118,6 +119,13 @@ namespace ModReloader.UI.Elements.ConfigElements
         protected virtual string GetName()
         {
             return "";
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            textBoxBackground.Width.Pixels = 220f;
+            textBoxBackground.Left.Pixels = -220f;
+            base.Update(gameTime);
         }
 
     }

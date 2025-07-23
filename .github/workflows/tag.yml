@@ -1,0 +1,45 @@
+name: Tag by build.txt version (Windows)
+
+on:
+  push:
+    branches: ["master"]
+    paths: ["build.txt"] # run only when build.txt changes
+
+permissions:
+  contents: write # allow GITHUB_TOKEN to push a tag
+
+jobs:
+  tag-version:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need full history to create a tag
+
+      - name: Extract version from build.txt
+        id: get_version
+        shell: pwsh
+        run: |
+          $line    = Select-String -Path "build.txt" -Pattern '^version\s*=' | Select-Object -First 1
+          $version = ($line -split '=')[1].Trim()
+          Write-Host "Detected version: $version"
+          Add-Content -Path $env:GITHUB_OUTPUT -Value "version=$version"
+
+      - name: Tag commit
+        env:
+          TAG_NAME: "v${{ steps.get_version.outputs.version }}"
+        shell: pwsh
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git rev-parse $env:TAG_NAME 2>$null
+          if ($LASTEXITCODE -eq 0) {
+              Write-Host "Tag $env:TAG_NAME already exists – skipping."
+              exit 0
+          }
+
+          git tag -a $env:TAG_NAME -m "Release $env:TAG_NAME"
+          git push origin $env:TAG_NAME
