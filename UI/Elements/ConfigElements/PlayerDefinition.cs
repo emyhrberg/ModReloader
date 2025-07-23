@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Extensions.Primitives;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,32 +23,24 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override bool IsUnloaded
         => Type <= -1 || Name == null;
 
-        [JsonIgnore]
-        private PlayerFileData PlayerFile;
 
-        public PlayerDefinition() : base() { }
+        public PlayerDefinition() : base()
+        {
+
+        }
+
         public PlayerDefinition(int type) : base(Utilities.FindPlayer(type).Path)
         {
-            UpdatePlayerFile();
+
         }
 
-        private void UpdatePlayerFile()
+        public PlayerDefinition(string path) : base()
         {
-            if (PlayerFile == null || PlayerFile.Path != Name)
-            {
-                PlayerFile = Utilities.FindPlayer(Name);
-            }
-        }
-        public PlayerDefinition(string path)
-        {
-            Mod = "Terraria";
             Name = path;
-            UpdatePlayerFile();
         }
         public override string ToString()
         {
-            UpdatePlayerFile();
-            return $"{(PlayerFile != null ? PlayerFile.Name : "null")}";
+            return $"{(Utilities.FindPlayer(Name) != null ? Utilities.FindPlayer(Name).Name : "null")}";
         }
     }
 
@@ -115,7 +108,7 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override void SetItem(PlayerDefinition definition)
         {
             base.SetItem(definition);
-            Tooltip = definition.ToString();
+            Tooltip = definition?.ToString();
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -164,8 +157,19 @@ namespace ModReloader.UI.Elements.ConfigElements
                 Vector2 vector = BackgroundTexture.Size() * Scale;
                 Vector2 position2 = dimensions.Position() + vector / 2f - rectangle2.Size() * drawScale / 2f;
                 Vector2 origin = rectangle2.Size() * 0/* * (pulseScale / 2f - 0.5f)*/;
+                try
+                {
+                    var playerFile = Utilities.FindPlayer(Definition.Name);
+                    //Log.Info("Draving Player");
+                    Main.PlayerRenderer.DrawPlayer(Main.Camera, playerFile.Player, position2, 0f, origin);
 
-                spriteBatch.Draw(PlayerTexture, position2, rectangle2, Color.White, 0f, origin, drawScale, SpriteEffects.None, 0f);
+                }
+                catch
+                {
+                    //Log.Info("Error of Draving Player");
+                    spriteBatch.Draw(PlayerTexture, position2, rectangle2, Color.White, 0f, origin, drawScale, SpriteEffects.None, 0f);
+                }
+
             }
 
             if (IsMouseHovering)
