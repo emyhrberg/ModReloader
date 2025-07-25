@@ -54,7 +54,7 @@ namespace ModReloader.UI.Elements.ConfigElements
 
             Main.LoadPlayers();
 
-            for (int i = -1; i < Main.PlayerList.Count; i++)
+            for (int i = 0; i < Main.PlayerList.Count; i++)
             {
                 Log.Info("Creating PlayerDefinition for index: " + i);
                 // The first Player from PlayerID is null, so it's better to create an empty PlayerDefinition.
@@ -95,7 +95,8 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override void OnBind()
         {
             base.OnBind();
-            RemoveChild(ChooserFilterMod.Parent);
+            ChooserFilterMod.Parent.Remove();
+            ChooserFilterMod.Parent.Deactivate();
         }
     }
 
@@ -103,6 +104,7 @@ namespace ModReloader.UI.Elements.ConfigElements
     {
         public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.5f) : base(definition, scale)
         {
+            OverflowHidden = true;
         }
 
         public override void SetItem(PlayerDefinition definition)
@@ -115,16 +117,11 @@ namespace ModReloader.UI.Elements.ConfigElements
         {
             CalculatedStyle dimensions = GetInnerDimensions();
 
-            Vector2 position = dimensions.Position();
-            Vector2 size = BackgroundTexture.Size() * Scale;
-            Rectangle destination = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
-
+            var rectangle = dimensions.ToRectangle();
+            Vector2 position = dimensions.Position() + rectangle.Size() / 2f;
             // Draw background texture (end and begin to reset the sprite batch)
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
-                              DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 
-            spriteBatch.Draw(BackgroundTexture.Value, destination, Color.White);
+            spriteBatch.Draw(BackgroundTexture.Value, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(default, default, default, default, default, default, default);
@@ -136,15 +133,15 @@ namespace ModReloader.UI.Elements.ConfigElements
                 if (playerFile?.Player != null)
                 {
                     playerFile.Player.PlayerFrame();
-                    Vector2 drawPos = position + size / 2f;
-                    Main.PlayerRenderer.DrawPlayerHead(Main.Camera, playerFile.Player, drawPos);
+                    
+                    Main.PlayerRenderer.DrawPlayerHead(Main.Camera, playerFile.Player, position, scale: 1);//scale: Scale
                 }
                 else
                 {
                     // Fallback
                     Texture2D fallbackTexture = TextureAssets.Item[ItemID.None].Value;
                     Vector2 texSize = fallbackTexture.Size();
-                    Vector2 drawPos = position + size / 2f - texSize / 2f;
+                    Vector2 drawPos = position + rectangle.Size() * Scale / 2f - texSize / 2f;
                     spriteBatch.Draw(fallbackTexture, drawPos, Color.Gray);
                 }
             }
