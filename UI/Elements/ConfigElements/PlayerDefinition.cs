@@ -115,64 +115,48 @@ namespace ModReloader.UI.Elements.ConfigElements
         {
             CalculatedStyle dimensions = GetInnerDimensions();
 
-            //spriteBatch.Draw(BackgroundTexture.Value, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+            Vector2 position = dimensions.Position();
+            Vector2 size = BackgroundTexture.Size() * Scale;
+            Rectangle destination = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
 
-            if (Definition != null)
+            // Draw background texture (end and begin to reset the sprite batch)
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                              DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
+
+            spriteBatch.Begin(default, default, default, default, default, null, default);
+
+            spriteBatch.Draw(BackgroundTexture.Value, destination, Color.White);
+
+            spriteBatch.End();
+            spriteBatch.Begin(default, default, default, default, default, default, default);
+
+            // Draw player head!
+            if (Definition != null && !Unloaded)
             {
-                int type = Unloaded ? -1 : Type;
-
-                Texture2D PlayerTexture;
-
-                if (type == -1)
-                {
-                    // Use ItemID.None as the empty Player texture.
-                    PlayerTexture = TextureAssets.Item[1].Value;
-                }
-                else
-                {
-                    PlayerTexture = TextureAssets.Item[type + 1].Value;
-                }
-
-
-                int height = PlayerTexture.Height;
-                int width = PlayerTexture.Width;
-                int y = height;
-                var rectangle2 = new Rectangle(0, 0, width, height);
-
-                float drawScale = 1f;
-                float availableWidth = (float)DefaultBackgroundTexture.Width() * Scale;
-
-                if (width > availableWidth || height > availableWidth)
-                {
-                    if (width > height)
-                    {
-                        drawScale = availableWidth / width;
-                    }
-                    else
-                    {
-                        drawScale = availableWidth / height;
-                    }
-                }
-
-                Vector2 vector = BackgroundTexture.Size() * Scale;
-                Vector2 position2 = dimensions.Position() + vector / 2f - rectangle2.Size() * drawScale / 2f;
-                Vector2 origin = rectangle2.Size()  * 0/* * (pulseScale / 2f - 0.5f)*/;
                 var playerFile = Utilities.FindPlayer(Definition.Name);
-                if (playerFile.Player == null)
-                {
-                    spriteBatch.Draw(PlayerTexture, position2, rectangle2, Color.White, 0f, origin, drawScale, SpriteEffects.None, 0f);
-                }
-                else
+                if (playerFile?.Player != null)
                 {
                     playerFile.Player.PlayerFrame();
-                    Main.PlayerRenderer.DrawPlayerHead(Main.Camera, playerFile.Player, position2);
-                    //Main.PlayerRenderer.DrawPlayer(Main.Camera, playerFile.Player, position2, 0f, origin);
+                    Vector2 drawPos = position + size / 2f;
+                    Main.PlayerRenderer.DrawPlayerHead(Main.Camera, playerFile.Player, drawPos);
                 }
-
+                else
+                {
+                    // Fallback
+                    Texture2D fallbackTexture = TextureAssets.Item[ItemID.None].Value;
+                    Vector2 texSize = fallbackTexture.Size();
+                    Vector2 drawPos = position + size / 2f - texSize / 2f;
+                    spriteBatch.Draw(fallbackTexture, drawPos, Color.Gray);
+                }
             }
 
             if (IsMouseHovering)
                 UIModConfig.Tooltip = Tooltip;
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
+                              DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
         }
     }
 }
