@@ -124,8 +124,6 @@ namespace ModReloader.UI.Elements.ConfigElements
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                               DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
 
-            spriteBatch.Begin(default, default, default, default, default, null, default);
-
             spriteBatch.Draw(BackgroundTexture.Value, destination, Color.White);
 
             spriteBatch.End();
