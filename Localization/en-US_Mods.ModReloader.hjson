@@ -189,7 +189,7 @@ MainMenu: {
 	LoadingWorld: Loading world: {0}
 	WorldHeader: World
 	WorldTooltip: Quickly create worlds
-	CreateNewWorld: Create New World
+	CreateNewWorld: Quick Generate World
 	CreateNewWorldTooltip:
 		'''
 		Create world with name {0}, 

@@ -31,15 +31,20 @@ internal sealed class MainMenuState : UIState
             ManualSortMethod = (e) => { }
         };
 
+        tooltipPanel = new TooltipPanel();
+        tooltipPanel.Left.Set(15 + 3, 0f);
+        tooltipPanel.Top.Set(470f, 0f);  // 6 px under the list
+
         // Extra spacing if other big menu mods are loaded
         if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
         {
             mainMenuList.Top.Pixels += 205f;
         }
         if (ModLoader.HasMod("CompatChecker"))
+        {
             mainMenuList.Top.Pixels += 30f;
-
-        tooltipPanel = new TooltipPanel();
+            tooltipPanel.Top.Pixels += 30f;
+        }
 
         // Add elements to the main menu list
         AddModReloaderSection(tooltipPanel);
@@ -202,15 +207,15 @@ internal sealed class MainMenuState : UIState
 
     private void PositionTooltip()
     {
-        tooltipPanel.Left.Set(15 + 3, 0f);            
-        tooltipPanel.Top.Set(470f, 0f);  // 6 px under the list
-        tooltipPanel.Recalculate();
+        // tooltipPanel.Left.Set(15 + 3, 0f);
+        // tooltipPanel.Top.Set(470f, 0f);  // 6 px under the list
+        // tooltipPanel.Recalculate();
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        PositionTooltip();
+        // PositionTooltip();
     }
 
     private void DrawActionRowsDebug(SpriteBatch spriteBatch)
