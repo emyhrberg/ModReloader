@@ -155,17 +155,27 @@ namespace ModReloader.Helpers
         {
             List<ClientDataJson> listJson = new List<ClientDataJson>();
             string jsonString = reader.ReadToEnd();
-
-            if (string.IsNullOrEmpty(jsonString))
+            try
             {
-                listJson = [];
+                if (string.IsNullOrEmpty(jsonString))
+                {
+                    return listJson;
+                }
+                else
+                {
+                    listJson = JsonSerializer.Deserialize<List<ClientDataJson>>(jsonString);
+                }
+                return listJson;
             }
-            else
+            catch
             {
-                listJson = JsonSerializer.Deserialize<List<ClientDataJson>>(jsonString);
+                Log.Warn($"Error of reading list of Client Data; Value: {jsonString}");
+                return listJson;
             }
+            
+            
 
-            return listJson;
+
         }
     }
 }
