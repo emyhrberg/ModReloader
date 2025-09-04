@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Primitives;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.IO;
@@ -54,7 +54,7 @@ namespace ModReloader.UI.Elements.ConfigElements
 
             Main.LoadPlayers();
 
-            for (int i = -1; i < Main.PlayerList.Count; i++)
+            for (int i = 0; i < Main.PlayerList.Count; i++)
             {
                 Log.Info("Creating PlayerDefinition for index: " + i);
                 // The first Player from PlayerID is null, so it's better to create an empty PlayerDefinition.
@@ -95,7 +95,8 @@ namespace ModReloader.UI.Elements.ConfigElements
         public override void OnBind()
         {
             base.OnBind();
-            RemoveChild(ChooserFilterMod.Parent);
+            ChooserFilterMod.Parent.Remove();
+            ChooserFilterMod.Parent.Deactivate();
         }
     }
 
@@ -103,6 +104,7 @@ namespace ModReloader.UI.Elements.ConfigElements
     {
         public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.5f) : base(definition, scale)
         {
+            OverflowHidden = true;
         }
 
         public override void SetItem(PlayerDefinition definition)
