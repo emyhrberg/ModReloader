@@ -49,6 +49,8 @@ namespace ModReloader.Core.Features.Reload
                     onSuccessfulLoad += EnterMultiplayerWorld;
                 }
 
+                onSuccessfulLoad += LoadPlayerAndWorldLists;
+
                 // Set the modified delegate back to the field
                 onSuccessfulLoadField.SetValue(null, onSuccessfulLoad);
             }
@@ -56,6 +58,12 @@ namespace ModReloader.Core.Features.Reload
             {
                 Log.Warn("Failed to access OnSuccessfulLoad field.");
             }
+        }
+
+        private void LoadPlayerAndWorldLists()
+        {
+            Main.LoadPlayers();
+            Main.LoadWorlds();
         }
 
         /// <summary>

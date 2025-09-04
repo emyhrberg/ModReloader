@@ -13,17 +13,8 @@ namespace ModReloader.Core.Features.Reload
     {
         public static int ProcessID => Environment.ProcessId;
 
-        public static bool _IsPlayersLoaded = false;
-
-        public static bool _IsWorldsLoaded = false;
-
         public static PlayerFileData FindPlayer(int i)
         {
-            if (!_IsPlayersLoaded)
-            {
-                _IsPlayersLoaded = true;
-                Main.LoadPlayers();
-            }
             if (i < 0 || i >= Main.PlayerList.Count)
             {
                 return new PlayerFileData()
@@ -37,11 +28,6 @@ namespace ModReloader.Core.Features.Reload
 
         public static PlayerFileData FindPlayer(string path)
         {
-            if (!_IsPlayersLoaded)
-            {
-                _IsPlayersLoaded = true;
-                Main.LoadPlayers();
-            }
 
             return Main.PlayerList.FirstOrDefault(p => p.Path == path,
                 new PlayerFileData() { Name = "None" });
@@ -49,11 +35,6 @@ namespace ModReloader.Core.Features.Reload
 
         public static WorldFileData FindWorld(int i)
         {
-            if (!_IsWorldsLoaded)
-            {
-                _IsWorldsLoaded = true;
-                Main.LoadWorlds();
-            }
 
             if (i < 0 || i >= Main.WorldList.Count)
             {
@@ -68,22 +49,12 @@ namespace ModReloader.Core.Features.Reload
 
         public static int FindPlayerId(string path)
         {
-            if (!_IsPlayersLoaded)
-            {
-                _IsPlayersLoaded = true;
-                Main.LoadPlayers();
-            }
 
             return Main.PlayerList.FindIndex(p => p.Path == path);
         }
 
         public static int FindWorldId(string path)
         {
-            if (!_IsWorldsLoaded)
-            {
-                _IsWorldsLoaded = true;
-                Main.LoadWorlds();
-            }
             int index = Main.WorldList.FindIndex(p => p.Path == path);
             return index;
         }
