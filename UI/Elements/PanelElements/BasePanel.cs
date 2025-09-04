@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Helpers;
 using ModReloader.UI.Elements.ButtonElements;
+using ModReloader.UI.Elements.PanelElements.ModElements;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
@@ -230,6 +231,10 @@ namespace ModReloader.UI.Elements.PanelElements
 
         public override void LeftMouseDown(UIMouseEvent evt)
         {
+            // block drag if clicking on certain children
+            if (evt.Target is Searchbox || evt.Target is ClearSearchButton)
+                return;
+
             // don't drag if we are scrolling
             if (scrollbar != null && scrollbar.ContainsPoint(evt.MousePosition))
                 return;

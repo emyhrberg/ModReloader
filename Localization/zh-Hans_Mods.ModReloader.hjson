@@ -94,7 +94,7 @@ Configs: {
 			/* Tooltip:
 				'''
 				Save player and world data before reloading. 
-				Takes more time to reload but saves the your player and world
+				Takes more time to reload but saves your player and world
 				''' */
 		}
 

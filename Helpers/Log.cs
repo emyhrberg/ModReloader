@@ -52,7 +52,7 @@ namespace ModReloader.Helpers
             }
         }
 
-        public static void Info(string message, [CallerFilePath] string callerFilePath = "")
+        public static void Info(object message, [CallerFilePath] string callerFilePath = "")
         {
             if (!Conf.C.LogDebugMessages)
                 return; // Skip logging if the config is set to false

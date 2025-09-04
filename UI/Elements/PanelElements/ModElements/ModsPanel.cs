@@ -6,6 +6,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Helpers;
 using ReLogic.Content;
+using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.Core;
 using Terraria.UI;
@@ -37,6 +38,8 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
         private string currentFilter = "";
         private bool updateNeeded = false;
 
+        private ClearSearchButton clearSearchButton;
+
         #region Constructor
         public ModsPanel() : base(header: "Manage Mods", scrollbarEnabled: true)
         {
@@ -67,7 +70,7 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
             topContainer.Append(searchbox);
 
             // Add clear button
-            UIImageButton clearSearchButton = new(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"))
+            clearSearchButton = new(Main.Assets.Request<Texture2D>("Images/UI/SearchCancel"))
             {
                 HAlign = 1f,
                 VAlign = 0.5f,
@@ -222,15 +225,20 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
 
         #endregion
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch sb)
         {
+            
             if (!Active)
             {
                 return;
             }
 
             // use for hot reload UI changes
-            base.Draw(spriteBatch);
+            base.Draw(sb);
+
+            // debug
+            //var boxRect = clearSearchButton.GetDimensions().ToRectangle();
+            //sb.Draw(TextureAssets.MagicPixel.Value, boxRect, Color.CornflowerBlue * 0.8f);
         }
 
         #region Constructing mod lists

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ModReloader.Common.BuilderToggles;
 using Terraria.UI;
 
 namespace ModReloader.Common.Systems
@@ -13,8 +14,20 @@ namespace ModReloader.Common.Systems
         {
             userInterface = new UserInterface();
             mainState = new MainState();
-            userInterface.SetState(mainState);
+
+            bool active = BuilderToggleHelper.GetActive();
+            if (active)
+            {
+                userInterface.SetState(mainState);
+                mainState.Active = true;
+            }
+            else
+            {
+                userInterface.SetState(null);
+                mainState.Active = false;
+            }
         }
+
 
         public override void UpdateUI(GameTime gameTime)
         {

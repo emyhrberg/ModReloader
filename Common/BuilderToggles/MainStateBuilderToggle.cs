@@ -37,11 +37,24 @@ namespace ModReloader.Common.BuilderToggles
         public override bool OnLeftClick(ref SoundStyle? sound)
         {
             MainSystem sys = ModContent.GetInstance<MainSystem>();
-            sys.mainState.Active = !sys.mainState.Active; // Toggle the property
 
-            sound = sys.mainState.Active ? SoundID.MenuClose : SoundID.MenuClose;
-            return true; // Returning true will actually toggle the state.
-                         // * Returning false will not toggle the state, but will still play the sound. */
+            // Returning true will flip CurrentState after this method.
+            // If CurrentState == 0 (On), it will become Off; otherwise it will become On.
+            bool willBeActive = CurrentState != 0;
+
+            sys.mainState.Active = willBeActive;
+
+            if (willBeActive)
+            {
+                sys.userInterface?.SetState(sys.mainState);
+            }
+            else
+            {
+                sys.userInterface?.SetState(null);
+            }
+
+            sound = SoundID.MenuClose;
+            return true;
         }
 
         public override bool Draw(SpriteBatch spriteBatch, ref BuilderToggleDrawParams drawParams)

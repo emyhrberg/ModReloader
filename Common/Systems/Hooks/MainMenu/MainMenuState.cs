@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using ModReloader.UI.Elements.MainMenuElements;
@@ -70,12 +71,20 @@ internal sealed class MainMenuState : UIState
             () => Loc.Get("MainMenu.OpenConfigTooltip"),
             tooltipPanel
         );
+        Func<string> reloadTooltip;
+
+        if (ReloadUtilities.IsModsToReloadEmpty)
+            reloadTooltip = () => Loc.Get("MainMenu.ReloadNoMods"); // e.g. "No mods selected"
+        else
+            reloadTooltip = () => Loc.Get("MainMenu.ReloadTooltip", $"[c/FFFF00:{reloadHoverMods}]");
+
         var reloadElement = new ActionMainMenuElement(
-            async () => await ReloadUtilities.SinglePlayerReload(),
-            Loc.Get("MainMenu.ReloadText"),
-            () => Loc.Get("MainMenu.ReloadTooltip", $"[c/FFFF00:{reloadHoverMods}]"),
-            tooltipPanel
+            action: async () => await ReloadUtilities.SinglePlayerReload(),
+            text: Loc.Get("MainMenu.ReloadText"),
+            tooltip: reloadTooltip,
+            tooltipPanel: tooltipPanel
         );
+
         var spacer = new SpacerMainMenuElement();
         mainMenuList.Add(headerElement);
         mainMenuList.Add(configElement);

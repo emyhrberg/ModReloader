@@ -44,7 +44,7 @@ Configs: {
 			Tooltip:
 				'''
 				Adds a debug text in the bottom left corner when in a world
-				Contains name, ID, mode, fps, open config.
+				Contains player (P) and world (W) names.
 				'''
 		}
 
@@ -98,7 +98,7 @@ Configs: {
 			Tooltip:
 				'''
 				Save player and world data before reloading. 
-				Takes more time to reload but saves the your player and world
+				Takes more time to reload but saves your player and world
 				'''
 		}
 

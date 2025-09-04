@@ -5,6 +5,7 @@ using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
+using Terraria.UI.Chat;
 
 namespace ModReloader.UI.Elements.PanelElements.ModElements
 {
@@ -20,6 +21,7 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
         private readonly string hintText;
         private int textBlinkerCount;
         private int textBlinkerState;
+        public float Scale;
 
         public event Action OnFocus;
 
@@ -48,6 +50,19 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
             BorderColor = Color.Black;
 
             // uiList parent container will do positioning for us.
+        }
+
+        public override bool ContainsPoint(Vector2 point)
+        {
+            bool isInPoint = base.ContainsPoint(point);
+
+            if (isInPoint && Main.mouseLeft)
+            {
+                Main.mouseLeftRelease = false;
+                Focus();
+            }
+
+            return isInPoint;
         }
 
         public override void LeftClick(UIMouseEvent evt)
@@ -129,12 +144,15 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
             return Main.inputText.IsKeyDown(key) && !Main.oldInputText.IsKeyDown(key);
         }
 
-        protected override void DrawSelf(SpriteBatch spriteBatch)
+        protected override void DrawSelf(SpriteBatch sb)
         {
             Rectangle hitbox = GetInnerDimensions().ToRectangle();
 
+            // debug
+            //sb.Draw(TextureAssets.MagicPixel.Value, hitbox, Color.Red * 0.5f);
+
             // Draw panel
-            base.DrawSelf(spriteBatch);
+            base.DrawSelf(sb);
 
             // draw debug
             // DrawHelper.DrawDebugHitbox(this, Color.Red);
@@ -172,49 +190,61 @@ namespace ModReloader.UI.Elements.PanelElements.ModElements
                 }
                 Main.instance.DrawWindowsIMEPanel(new Vector2(98f, Main.screenHeight - 36), 0f);
             }
-            string displayString = currentString;
-            if (textBlinkerState == 1 && focused)
-            {
-                displayString += "|";
-            }
-            CalculatedStyle space = GetDimensions();
-            Color color = Color.White;
 
-            // Position
+            // Build blinking string for non-empty case
+            string displayString = currentString;
+            if (textBlinkerState == 1 && focused && !string.IsNullOrEmpty(currentString))
+                displayString += "|";
+
+            CalculatedStyle space = GetDimensions();
             Vector2 drawPos = space.Position() + new Vector2(8, 6);
             DynamicSpriteFont font = FontAssets.MouseText.Value;
-            float textScale = 0.9f; // Adjust this value to resize the text
+            const float SCALE = 1.0f;
 
-            // Draw outline
-            //if (!string.IsNullOrEmpty(currentString))
-            //{
-            Color outlineColor = Color.Black;
-            Vector2[] offsets =
-            [
-                new(-1, -1),
-                    new(1, -1),
-                    new(-1, 1),
-                    new(1, 1)
-            ];
-
-            foreach (var offset in offsets)
+            if (string.IsNullOrEmpty(currentString))
             {
-                spriteBatch.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
-            }
-            //}
+                // Draw hint text
+                const float HINT_SCALE = 0.9f;
+                sb.DrawString(font, hintText, drawPos, Color.DimGray, 0f, Vector2.Zero, HINT_SCALE, SpriteEffects.None, 0f);
 
-            // Draw text
-            if (currentString.Length == 0)
-            {
-                // Draw hintText
-                color = Color.DimGray;
-                spriteBatch.DrawString(font, hintText, drawPos, color, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+                // Draw cursor at start with black stroke + white fill
+                if (focused && textBlinkerState == 1)
+                {
+                    string cursor = "|";
+                    Color outlineColor = Color.Black;
+                    Vector2[] offsets =
+                    {
+            new(-1, -1),
+            new(1, -1),
+            new(-1, 1),
+            new(1, 1)
+        };
+                    foreach (var offset in offsets)
+                    {
+                        sb.DrawString(font, cursor, drawPos + offset, outlineColor, 0f, Vector2.Zero, SCALE, SpriteEffects.None, 0f);
+                    }
+                    sb.DrawString(font, cursor, drawPos, Color.White, 0f, Vector2.Zero, SCALE, SpriteEffects.None, 0f);
+                }
             }
             else
             {
-                // Draw currentString
-                spriteBatch.DrawString(font, displayString, drawPos, color, 0f, Vector2.Zero, textScale, SpriteEffects.None, 0f);
+                // Draw outline + text (with cursor at end if blinking)
+                Color outlineColor = Color.Black;
+                Vector2[] offsets =
+                {
+        new(-1, -1),
+        new(1, -1),
+        new(-1, 1),
+        new(1, 1)
+    };
+                foreach (var offset in offsets)
+                {
+                    sb.DrawString(font, displayString, drawPos + offset, outlineColor, 0f, Vector2.Zero, SCALE, SpriteEffects.None, 0f);
+                }
+
+                sb.DrawString(font, displayString, drawPos, Color.White, 0f, Vector2.Zero, SCALE, SpriteEffects.None, 0f);
             }
+
         }
     }
 }
