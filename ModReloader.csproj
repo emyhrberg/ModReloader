@@ -10,7 +10,10 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" />
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'" />
 	<ItemGroup>
-	  <None Include="Common\Systems\Integrations\DragonLensToolAndLayout\ModReloaderToolFilter.cs" />
+	  <AdditionalFiles Remove="Common\Systems\**" />
+	  <Compile Remove="Common\Systems\**" />
+	  <EmbeddedResource Remove="Common\Systems\**" />
+	  <None Remove="Common\Systems\**" />
 	</ItemGroup>
 	<ItemGroup>
 

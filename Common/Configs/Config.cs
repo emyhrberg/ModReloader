@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using ModReloader.Common.Configs.ConfigElements;
-using ModReloader.Common.Configs.ConfigElements.ModSources;
+using ModReloader.Common.Configs.ConfigElements.ModsConfigElements;
+using ModReloader.Common.Configs.ConfigElements.PlayerAndWorld;
 using Terraria.ModLoader.Config;
 
 namespace ModReloader.Common.Configs

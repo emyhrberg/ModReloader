@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Helpers.API;
-using ModReloader.PacketHandlers;
+using ModReloader.Common.PacketHandlers;
+using ModReloader.Core.Features.API;
 using ReLogic.Content;
 
 namespace ModReloader

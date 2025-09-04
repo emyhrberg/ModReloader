@@ -1,0 +1,2 @@
+[todo] Remove DrawProperSize and draw with proper UIImage fields instead
+[todo] Remove Active and use states instead

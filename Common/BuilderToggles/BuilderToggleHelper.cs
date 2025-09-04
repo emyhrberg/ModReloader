@@ -1,4 +1,3 @@
-
 namespace ModReloader.Common.BuilderToggles
 {
     public static class BuilderToggleHelper
