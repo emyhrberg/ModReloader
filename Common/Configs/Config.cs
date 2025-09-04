@@ -67,6 +67,12 @@ namespace ModReloader.Common.Configs
 
         [DefaultValue(true)]
         public bool LogDebugMessages;
+
+        public override void OnChanged()
+        {
+            base.OnChanged();
+
+        }
     }
 
     public static class Conf

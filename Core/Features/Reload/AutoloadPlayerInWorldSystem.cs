@@ -203,6 +203,11 @@ namespace ModReloader.Core.Features.Reload
                 return false;
             }
 
+            if ((world.GameMode == GameModeID.Creative) != (player._player.difficulty == PlayerDifficultyID.Creative))
+            {
+                return false;
+            }
+
             world.SetAsActive();
 
             Log.Info("Found player: " + player.Name + ", world: " + world.Name);
