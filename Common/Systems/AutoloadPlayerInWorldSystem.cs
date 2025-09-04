@@ -145,8 +145,8 @@ namespace ModReloader.Common.Systems
                 Log.Error("No players found after loading players.");
                 return false;
             }
-
-            var player = Main.PlayerList.Count > Conf.C.Player ? Main.PlayerList[Conf.C.Player] : null;
+            int playerId = Utilities.FindPlayerId(Conf.C.Player);
+            var player = Main.PlayerList.Count > playerId ? Main.PlayerList[playerId] : null;
 
             if (ClientDataJsonHelper.PlayerPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {
@@ -173,7 +173,8 @@ namespace ModReloader.Common.Systems
                 return false;
             }
 
-            var world = Main.WorldList.Count > Conf.C.World ? Main.WorldList[Conf.C.World] : null;
+            int worldId = Utilities.FindWorldId(Conf.C.World);
+            var world = Main.WorldList.Count > worldId ? Main.WorldList[worldId] : null;
 
             if (ClientDataJsonHelper.WorldPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {

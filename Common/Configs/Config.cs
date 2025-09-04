@@ -18,11 +18,11 @@ namespace ModReloader.Common.Configs
         [Header("ReloadOptions")]
 
         [CustomModConfigItem(typeof(PlayerIndexSliderElement))]
-        [DefaultValue(0)]
-        public int Player = 0; // player index in Main.PlayerList
+        [DefaultValue("")]
+        public string Player; // player index in Main.PlayerList
 
         [CustomModConfigItem(typeof(WorldIndexSliderElement))]
-        public int World; // world index in Main.WorldList
+        public string World; // world index in Main.WorldList
 
         [DefaultValue(true)]
         public bool AutoJoinWorld;
