@@ -53,7 +53,8 @@ namespace ModReloader.Common.Configs.ConfigElements
             TextDisplayFunction = () =>
             {
                 string header = Label ?? MemberInfo.Name;
-                return header + ": " + ResolveName(ReadIndex());
+                //return header + ": " + ResolveName(ReadIndex());
+                return header;
             };
         }
 

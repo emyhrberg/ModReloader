@@ -1,5 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Common.Systems.Hooks;
+using Terraria.GameContent;
+using Terraria.UI.Chat;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ModReloader.Common.Configs.ConfigElements;
 
@@ -24,12 +29,12 @@ public class PlayerIndexSliderElement : IntOptionElement
         return "Player " + clamped;
     }
 
-    public override void Draw(SpriteBatch spriteBatch)
+    public override void Draw(SpriteBatch sb)
     {
-        base.Draw(spriteBatch);
+        base.Draw(sb);
 
         // Player instance
-        int playerIndex = 0;
+        int playerIndex = -1;
         object raw = MemberInfo.GetValue(Item);
         if (raw is int i)
             playerIndex = i;
@@ -39,23 +44,35 @@ public class PlayerIndexSliderElement : IntOptionElement
 
         if (playerIndex != -1)
         {
+            // Player
+            var player = Main.PlayerList[playerIndex].Player;
+            string name = player.name;
+
+            // Measure width
+            var font = FontAssets.ItemStack.Value;
+            var width = font.MeasureString(name).X;
+
             // Dims
             var dims = GetDimensions();
             var rect = dims.ToRectangle();
-            var pos = new Vector2(rect.X+dims.Width-200, rect.Y+12);
+            var namePos = new Vector2(rect.X + dims.Width - 200-width, rect.Y + 7);
 
-            // Player
-            var player = Main.PlayerList[playerIndex].Player;
+            ChatManager.DrawColorCodedStringWithShadow(sb, font, 
+                name, namePos, Color.White, 0f, Vector2.Zero, Vector2.One);
+
+            // Player head pos
+            Vector2 headPos = new(namePos.X-20, namePos.Y+5);
 
             // Draw player head
+            PlayerHeadFlipHook.shouldFlipHeadDraw = player.direction == -1;
             Main.MapPlayerRenderer.DrawPlayerHead(
                 Main.Camera,
                 player,
-                pos,
+                headPos,
                 scale: 0.8f,
                 borderColor: Color.White
             );
-
+            PlayerHeadFlipHook.shouldFlipHeadDraw = false;
         }
     }
 }
