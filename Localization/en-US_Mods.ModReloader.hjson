@@ -7,7 +7,7 @@ Configs: {
 			Misc: Misc
 			ExtraInfo: Show
 			ModsToReload: Mods To Reload
-			ReloadOptions: Reload Options
+			ReloadOptions: Reload
 		}
 
 		ModsToReload: {

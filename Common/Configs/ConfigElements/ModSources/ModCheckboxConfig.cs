@@ -6,7 +6,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader.UI;
 using Terraria.UI;
 
-namespace ModReloader.UI.Elements.ConfigElements
+namespace ModReloader.Common.Configs.ConfigElements.ModSources
 {
     public class ModCheckboxConfig : UIImage
     {

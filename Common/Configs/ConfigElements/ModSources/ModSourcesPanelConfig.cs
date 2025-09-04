@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ModReloader.UI.Elements.ConfigElements
+namespace ModReloader.Common.Configs.ConfigElements.ModSources
 {
     /// <summary>
     /// A panel to display the contents of client.log.

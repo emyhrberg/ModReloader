@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
 
-namespace ModReloader.UI.Elements.ConfigElements
+namespace ModReloader.Common.Configs.ConfigElements.ModSources
 {
     /// <summary>
     /// A panel to display the Mod Sources

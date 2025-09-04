@@ -31,7 +31,6 @@ namespace ModReloader.Helpers
                 {
                     Name = "None"
                 };
-
             }
             return Main.PlayerList[i];
         }

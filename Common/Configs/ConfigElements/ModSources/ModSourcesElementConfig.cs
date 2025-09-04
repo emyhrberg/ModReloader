@@ -7,7 +7,7 @@ using ModReloader.UI.Elements.PanelElements.ModElements;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 
-namespace ModReloader.UI.Elements.ConfigElements
+namespace ModReloader.Common.Configs.ConfigElements.ModSources
 {
     // Contains:
     // Icon image

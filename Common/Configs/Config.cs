@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using ModReloader.Helpers;
-using ModReloader.UI.Elements.ConfigElements;
+using ModReloader.Common.Configs.ConfigElements;
+using ModReloader.Common.Configs.ConfigElements.ModSources;
 using Terraria.ModLoader.Config;
 
 namespace ModReloader.Common.Configs
@@ -17,16 +17,12 @@ namespace ModReloader.Common.Configs
 
         [Header("ReloadOptions")]
 
-        [CustomModConfigItem(typeof(PlayerPicker))]
+        [CustomModConfigItem(typeof(PlayerIndexSliderElement))]
         [DefaultValue(0)]
-        public int Player;
+        public int Player = 0; // player index in Main.PlayerList
 
-        [CustomModConfigItem(typeof(PlayerDefinitionElement))]
-        public PlayerDefinition PlayerTest;
-
-        [CustomModConfigItem(typeof(WorldPicker))]
-        [DefaultValue(0)]
-        public int World;
+        [CustomModConfigItem(typeof(WorldIndexSliderElement))]
+        public int World; // world index in Main.WorldList
 
         [DefaultValue(true)]
         public bool AutoJoinWorld;
