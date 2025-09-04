@@ -13,23 +13,23 @@ namespace ModReloader.Helpers
     {
         public static int ProcessID => Environment.ProcessId;
 
-        /// <summary>
-        /// Finds the current player ID in the player list.
-        /// </summary>
-        /// <returns>The index of the current player in the player list.</returns>
-        public static string FindCurrentPlayerPath()
-        {
-            return Main.ActivePlayerFileData.Path;
-        }
+        public static bool _IsPlayersLoaded = false;
+
+        public static bool _IsWorldsLoaded = false;
 
         public static PlayerFileData FindPlayer(int i)
         {
-            Main.LoadPlayers();
+            if (!_IsPlayersLoaded)
+            {
+                _IsPlayersLoaded = true;
+                Main.LoadPlayers();
+            }
             if (i < 0 || i >= Main.PlayerList.Count)
             {
                 return new PlayerFileData()
                 {
-                    Name = "None"
+                    Name = "None",
+                    _path = ""
                 };
             }
             return Main.PlayerList[i];
@@ -37,17 +37,64 @@ namespace ModReloader.Helpers
 
         public static PlayerFileData FindPlayer(string path)
         {
-            //Main.LoadPlayers();
+            if (!_IsPlayersLoaded)
+            {
+                _IsPlayersLoaded = true;
+                Main.LoadPlayers();
+            }
 
-            return Main.PlayerList.FirstOrDefault(p => p.Path == path, 
-                new PlayerFileData() { Name = "None"});
+            return Main.PlayerList.FirstOrDefault(p => p.Path == path,
+                new PlayerFileData() { Name = "None" });
+        }
+
+        public static WorldFileData FindWorld(int i)
+        {
+            if (!_IsWorldsLoaded)
+            {
+                _IsWorldsLoaded = true;
+                Main.LoadWorlds();
+            }
+            
+            if (i < 0 || i >= Main.WorldList.Count)
+            {
+                return new WorldFileData()
+                {
+                    Name = "None",
+                    _path = ""
+                };
+            }
+            return Main.WorldList[i];
         }
 
         public static int FindPlayerId(string path)
         {
-            //Main.LoadPlayers();
+            if (!_IsPlayersLoaded)
+            {
+                _IsPlayersLoaded = true;
+                Main.LoadPlayers();
+            }
 
             return Main.PlayerList.FindIndex(p => p.Path == path);
+        }
+
+        public static int FindWorldId(string path)
+        {
+            if (!_IsWorldsLoaded)
+            {
+                _IsWorldsLoaded = true;
+                Main.LoadWorlds();
+            }
+            int index = Main.WorldList.FindIndex(p => p.Path == path);
+            return index;
+        }
+
+        /// <summary>
+        /// Finds the current player ID in the player list.
+        /// </summary>
+        /// <returns>The index of the current player in the player list.</returns>
+        public static string FindCurrentPlayerPath()
+        {
+            return Main.ActivePlayerFileData.Path;
         }
 
         /// <summary>

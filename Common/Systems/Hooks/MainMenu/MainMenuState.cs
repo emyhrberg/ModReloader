@@ -132,12 +132,12 @@ internal sealed class MainMenuState : UIState
     {
         // Load players and worlds for tooltips
         Main.LoadPlayers();
-        int playerIdx = Conf.C.Player;
+        int playerIdx = Utilities.FindPlayerId(Conf.C.Player);
         if (playerIdx < 0 || playerIdx >= Main.PlayerList.Count) playerIdx = 0;
         string playerName = Main.PlayerList.Count > 0 ? Main.PlayerList[playerIdx].Name : "";
 
         Main.LoadWorlds();
-        int worldIdx = Conf.C.World;
+        int worldIdx = Utilities.FindWorldId(Conf.C.World);
         if (worldIdx < 0 || worldIdx >= Main.WorldList.Count) worldIdx = 0;
         string worldName = Main.WorldList.Count > 0 ? Main.WorldList[worldIdx].Name : "";
         Log.Info("Loaded and found this many worlds in main menu: " + Main.WorldList.Count);

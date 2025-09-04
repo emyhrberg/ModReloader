@@ -8,7 +8,7 @@ using Terraria.UI.Chat;
 
 namespace ModReloader.Common.Configs.ConfigElements;
 
-public class WorldIndexSliderElement : IntOptionElement
+public class WorldIndexSliderElement : IntPathOptionElement
 {
     private WorldPreviewElement worldPreviewElement;
 
@@ -40,12 +40,18 @@ public class WorldIndexSliderElement : IntOptionElement
     {
         base.Draw(sb);
 
-        int worldIndex = MemberInfo.GetValue(Item) as int? ?? -1;
+        var raw = MemberInfo.GetValue(Item);
+        int worldIndex = 0;
+        if (raw is string path)
+        {
+            worldIndex = PathToID(path);
+        }
+        
         if (worldIndex < 0 || Main.WorldList == null || worldIndex >= Main.WorldList.Count)
             return;
 
         var world = Main.WorldList[worldIndex];
-        string name = world.Name;
+        string name = world.GetWorldName();
 
         // Measure width for positioning text
         var font = FontAssets.ItemStack.Value;
@@ -83,5 +89,15 @@ public class WorldIndexSliderElement : IntOptionElement
 
         worldPreviewElement.Recalculate();
         worldPreviewElement.Draw(sb);
+    }
+
+    protected override string IDToPath(int index)
+    {
+        return Utilities.FindWorld(index).Path;
+    }
+
+    protected override int PathToID(string path)
+    {
+        return Utilities.FindWorldId(path);
     }
 }

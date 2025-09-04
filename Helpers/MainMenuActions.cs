@@ -79,7 +79,7 @@ namespace ModReloader.Helpers
         {
             Main.LoadPlayers();
             if (Main.PlayerList.Count == 0) return;
-            int pIdx = Conf.C.Player;
+            int pIdx = Utilities.FindPlayerId(Conf.C.Player);
             if (pIdx < 0 || pIdx >= Main.PlayerList.Count) pIdx = 0;
             Main.SelectPlayer(Main.PlayerList[pIdx]);
 

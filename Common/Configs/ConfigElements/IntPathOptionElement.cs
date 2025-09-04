@@ -5,7 +5,7 @@ using Terraria.ModLoader.UI;
 
 namespace ModReloader.Common.Configs.ConfigElements
 {
-    public abstract class IntOptionElement : RangeElement
+    public abstract class IntPathOptionElement : RangeElement
     {
         public override int NumberTicks
         {
@@ -62,17 +62,23 @@ namespace ModReloader.Common.Configs.ConfigElements
 
         protected abstract string ResolveName(int index);
 
+        protected abstract string IDToPath(int index);
+
+        protected abstract int PathToID(string path);
+
         private int ReadIndex()
         {
             object raw = MemberInfo.GetValue(Item);
-            if (raw is int i) return i;
+            int index = 0;
+            if (raw is string path) index = PathToID(path);
+            if (index >= 0) return index;
             return 0;
         }
 
         private void WriteIndex(int i)
         {
             if (!MemberInfo.CanWrite) return;
-            MemberInfo.SetValue(Item, i);
+            MemberInfo.SetValue(Item, IDToPath(i));
         }
     }
 }
