@@ -146,7 +146,12 @@ namespace ModReloader.Common.Systems
                 return false;
             }
             int playerId = Utilities.FindPlayerId(Conf.C.Player);
-            var player = Main.PlayerList.Count > playerId ? Main.PlayerList[playerId] : null;
+            if (playerId < 0 || playerId >= Main.PlayerList.Count)
+            {
+                Log.Error($"Invalid player index {playerId}. Cannot autoload player.");
+                return false;
+            }
+            var player = Main.PlayerList[playerId];
 
             if (ClientDataJsonHelper.PlayerPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {
@@ -174,7 +179,12 @@ namespace ModReloader.Common.Systems
             }
 
             int worldId = Utilities.FindWorldId(Conf.C.World);
-            var world = Main.WorldList.Count > worldId ? Main.WorldList[worldId] : null;
+            if (worldId < 0 || worldId >= Main.WorldList.Count)
+            {
+                Log.Error($"Invalid world index {worldId}. Cannot autoload world.");
+                return false;
+            }
+            var world = Main.WorldList[worldId];
 
             if (ClientDataJsonHelper.WorldPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
             {
