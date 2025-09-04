@@ -111,50 +111,78 @@ namespace ModReloader.UI.Elements.ConfigElements
             Tooltip = definition?.ToString();
         }
 
+        private bool _animated;
+        private int _animationCounter;
+
+        public override void Update(GameTime gameTime)
+        {
+            OverflowHidden = true;
+            base.Update(gameTime);
+
+            if (Definition?.Name is string name && Utilities.FindPlayer(name)?.Player is Player player)
+            {
+                using (new Main.CurrentPlayerOverride(player))
+                {
+                    _animated = IsMouseHovering;
+
+                    if (_animated)
+                    {
+                        _animationCounter++;
+                        int frame = (int)(Main.GlobalTimeWrappedHourly / 0.07f) % 14 + 6;
+                        int y = frame * 56;
+                        player.bodyFrame.Y = player.legFrame.Y = player.headFrame.Y = y;
+                        player.WingFrame(wingFlap: false);
+                    }
+                    else
+                    {
+                        player.bodyFrame.Y = player.legFrame.Y = player.headFrame.Y = 0;
+                    }
+
+                    player.PlayerFrame();
+                }
+            }
+        }
+
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            // Positions
             CalculatedStyle dimensions = GetInnerDimensions();
-
             Vector2 position = dimensions.Position();
             Vector2 size = BackgroundTexture.Size() * Scale;
             Rectangle destination = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
 
-            // Draw background texture (end and begin to reset the sprite batch)
+            // Draw background
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                               DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
-
             spriteBatch.Draw(BackgroundTexture.Value, destination, Color.White);
-
             spriteBatch.End();
-            spriteBatch.Begin(default, default, default, default, default, default, default);
 
-            // Draw player head!
-            if (Definition != null && !Unloaded)
+            // Restart spritebatch
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
+                              DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
+
+            // Draw player
+            if (Definition?.Name is string name && Utilities.FindPlayer(name)?.Player is Player player)
             {
-                var playerFile = Utilities.FindPlayer(Definition.Name);
-                if (playerFile?.Player != null)
+                player.direction = 1; // facing right
+                //player.mount.SetMount(0, player);
+                //player.heldProj = -1;
+
+                using (new Main.CurrentPlayerOverride(player))
                 {
-                    playerFile.Player.PlayerFrame();
-                    Vector2 drawPos = position + size / 2f;
-                    Main.PlayerRenderer.DrawPlayerHead(Main.Camera, playerFile.Player, drawPos);
-                }
-                else
-                {
-                    // Fallback
-                    Texture2D fallbackTexture = TextureAssets.Item[ItemID.None].Value;
-                    Vector2 texSize = fallbackTexture.Size();
-                    Vector2 drawPos = position + size / 2f - texSize / 2f;
-                    spriteBatch.Draw(fallbackTexture, drawPos, Color.Gray);
+                    Vector2 drawPos = position + size / 2f + Main.screenPosition;
+                    Main.PlayerRenderer.DrawPlayer(Main.Camera, player, drawPos, 0f, Vector2.Zero);
                 }
             }
 
-            if (IsMouseHovering)
-                UIModConfig.Tooltip = Tooltip;
-
+            // Restart spritebatch
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
                               DepthStencilState.Default, RasterizerState.CullNone, null, Main.UIScaleMatrix);
+
+            if (IsMouseHovering)
+                UIModConfig.Tooltip = Tooltip;
         }
     }
 }

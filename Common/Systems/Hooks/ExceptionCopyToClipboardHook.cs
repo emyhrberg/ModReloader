@@ -135,7 +135,7 @@ namespace ModReloader.Common.Systems.Hooks
             }
 
             // Create a standard UITextPanel with typical tModLoader colors
-            copyButton = new UITextPanel<string>(Loc.Get("ExceptionMenu.CopyTooltip"), 0.7f, large: true)
+            copyButton = new UITextPanel<string>("Copy to Clipboard", 0.7f, large: true)
             {
                 // BackgroundColor = new Color(73, 94, 171) * 0.9f, // Brighter blue for better visibility
                 BorderColor = Color.Black,
