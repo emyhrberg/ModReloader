@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Terraria.IO;
 using Terraria.ModLoader.Core;
 
 namespace ModReloader.Helpers
@@ -16,16 +17,45 @@ namespace ModReloader.Helpers
         /// Finds the current player ID in the player list.
         /// </summary>
         /// <returns>The index of the current player in the player list.</returns>
-        public static string FindPlayerPath()
+        public static string FindCurrentPlayerPath()
         {
             return Main.ActivePlayerFileData.Path;
+        }
+
+        public static PlayerFileData FindPlayer(int i)
+        {
+            Main.LoadPlayers();
+            if (i < 0 || i >= Main.PlayerList.Count)
+            {
+                return new PlayerFileData()
+                {
+                    Name = "None"
+                };
+
+            }
+            return Main.PlayerList[i];
+        }
+
+        public static PlayerFileData FindPlayer(string path)
+        {
+            //Main.LoadPlayers();
+
+            return Main.PlayerList.FirstOrDefault(p => p.Path == path, 
+                new PlayerFileData() { Name = "None"});
+        }
+
+        public static int FindPlayerId(string path)
+        {
+            //Main.LoadPlayers();
+
+            return Main.PlayerList.FindIndex(p => p.Path == path);
         }
 
         /// <summary>
         /// Finds the current world ID in the world list.
         /// </summary>
         /// <returns>The index of the current world in the world list.</returns>
-        public static string FindWorldPath()
+        public static string FindCurrentWorldPath()
         {
             return Main.ActiveWorldFileData.Path;
         }

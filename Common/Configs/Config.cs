@@ -21,6 +21,9 @@ namespace ModReloader.Common.Configs
         [DefaultValue(0)]
         public int Player;
 
+        [CustomModConfigItem(typeof(PlayerDefinitionElement))]
+        public PlayerDefinition PlayerTest;
+
         [CustomModConfigItem(typeof(WorldPicker))]
         [DefaultValue(0)]
         public int World;

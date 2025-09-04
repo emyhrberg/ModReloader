@@ -20,7 +20,16 @@
             }
             else
             {
-                string modifiedKey = key.StartsWith("Mods.ModReloader.") ? key.Substring("Mods.ModReloader.".Length) : key;
+                // no ternary
+                string modifiedKey;
+                if (key.StartsWith("Mods.ModReloader."))
+                {
+                    modifiedKey = key.Substring("Mods.ModReloader.".Length);
+                }
+                else
+                {
+                    modifiedKey = key;
+                }
                 return modifiedKey;
             }
         }

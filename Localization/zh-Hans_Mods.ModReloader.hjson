@@ -107,6 +107,11 @@ Configs: {
 			// Label: Create Test World Difficulty
 			// Tooltip: Difficulty set to a world created from the main menu option
 		}
+
+		PlayerTest: {
+			// Label: Player Test
+			// Tooltip: ""
+		}
 	}
 
 	WorldSize: {
@@ -123,6 +128,25 @@ Configs: {
 		// Expert.Label: Expert
 		// Master.Label: Master
 		// Journey.Label: Journey
+	}
+
+	PlayerDefinition: {
+		// Tooltip: ""
+
+		IsUnloaded: {
+			// Label: Is Unloaded
+			// Tooltip: ""
+		}
+
+		PlayerFile: {
+			// Label: Player File
+			// Tooltip: ""
+		}
+
+		Player: {
+			// Label: Player
+			// Tooltip: ""
+		}
 	}
 }
 

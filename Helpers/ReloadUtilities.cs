@@ -127,7 +127,7 @@ namespace ModReloader.Helpers
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 // Prepare client data
-                PrepareClient(ClientMode.MPMajor, Utilities.FindPlayerPath(), serverWorldPath);
+                PrepareClient(ClientMode.MPMajor, Utilities.FindCurrentPlayerPath(), serverWorldPath);
 
                 // Exit the game.
                 await ExitWorld();
@@ -372,7 +372,7 @@ namespace ModReloader.Helpers
         /// <param name="clientMode"></param>
         private static void PrepareClient(ClientMode clientMode)
         {
-            PrepareClient(clientMode, Utilities.FindPlayerPath(), Utilities.FindWorldPath());
+            PrepareClient(clientMode, Utilities.FindCurrentPlayerPath(), Utilities.FindCurrentWorldPath());
         }
 
         private static void PrepareClient(ClientMode clientMode, string playerID, string worldID)

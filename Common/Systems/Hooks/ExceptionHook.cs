@@ -169,7 +169,7 @@ namespace ModReloader.Common.Systems.Hooks
             string copyTooltip;
             if (timeOnCopyOptionPressed == DateTime.MinValue)
             {
-                copyTooltip = Loc.Get("ExceptionMenu.CopyTooltip");
+                copyTooltip = "Copy to Clipboard";
             }
             else
             {
@@ -180,20 +180,24 @@ namespace ModReloader.Common.Systems.Hooks
                 }
                 else
                 {
-                    copyTooltip = Loc.Get("ExceptionMenu.CopyTooltip");
+                    copyTooltip = "Copy to Clipboard";
                 }
             }
 
             // Menu options with corresponding actions
             var menuOptions = new (string Text, Action Action, float scale, string tooltip)[]
             {
-               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, Loc.Get("ExceptionMenu.TitleTooltip")),
-               (Loc.Get("ExceptionMenu.ReloadText"), async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, Loc.Get("ExceptionMenu.ReloadTooltip", reloadHoverMods)),
+               ($"{mod.DisplayNameClean} v{mod.Version}", null, 1.15f, "Welcome to Mod Reloader's error menu!"),
+               ("Reload", async () => await ReloadUtilities.SinglePlayerReload(), 1.02f, ReloadUtilities.IsModsToReloadEmpty ? "No mods selected" : $"Reloads {reloadHoverMods}"),
                (" ", null, 1.15f, ""),
-               (Loc.Get("ExceptionMenu.OpenLogText"),   Log.OpenClientLog,   1.02f, Loc.Get("ExceptionMenu.OpenLogTooltip",   fileName)),
-               (Loc.Get("ExceptionMenu.ClearLogText"),  Log.ClearClientLog,  1.02f, Loc.Get("ExceptionMenu.ClearLogTooltip",  fileName)),
-               (Loc.Get("ExceptionMenu.CopyText"),     () => CopyErrorMessage(errorMessage),           1.02f, Loc.Get("ExceptionMenu.CopyTooltip",  copyTooltip)),
-               (Loc.Get("ExceptionMenu.GoToFileText"), () => OpenFileWithException(errorMessage),      1.02f, Loc.Get("ExceptionMenu.GoToFileTooltip")),
+               ("Open Log",   Log.OpenClientLog,   1.02f, $"Click to open the {fileName}"),
+               ("Clear Log",  Log.ClearClientLog,  1.02f, $"Click to clear the {fileName}"),
+               ("Copy",     () => CopyErrorMessage(errorMessage),           1.02f, timeOnCopyOptionPressed == DateTime.MinValue
+                    ? "Copy to Clipboard"
+                    : (DateTime.Now - timeOnCopyOptionPressed).TotalSeconds <= 1
+                        ? "Copied!"
+                        : "Copy to Clipboard"),
+               ("Go to file", () => OpenFileWithException(errorMessage),      1.02f, "Open the exception's source file in VS"),
             };
 
             foreach (var (text, action, scale, tooltip) in menuOptions)
