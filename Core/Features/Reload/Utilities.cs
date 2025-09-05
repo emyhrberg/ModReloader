@@ -17,6 +17,11 @@ namespace ModReloader.Core.Features.Reload
         {
             if (i < 0 || i >= Main.PlayerList.Count)
             {
+                if (Main.PlayerList.Count >   0)
+                {
+                    return Main.PlayerList[0];
+                }
+
                 return new PlayerFileData()
                 {
                     Name = "None",
@@ -28,16 +33,31 @@ namespace ModReloader.Core.Features.Reload
 
         public static PlayerFileData FindPlayer(string path)
         {
-
-            return Main.PlayerList.FirstOrDefault(p => p.Path == path,
-                new PlayerFileData() { Name = "None" });
+            PlayerFileData pfd = Main.PlayerList.FirstOrDefault(p => p.Path == path, null);
+            if (pfd == null)
+            {
+                if(Main.PlayerList.Count > 0)
+                {
+                    return Main.PlayerList[0];
+                }
+                return new PlayerFileData()
+                {
+                    Name = "None",
+                    _path = ""
+                };
+            }
+            return pfd;
         }
 
         public static WorldFileData FindWorld(int i)
         {
-
+            
             if (i < 0 || i >= Main.WorldList.Count)
             {
+                if (Main.WorldList.Count > 0)
+                {
+                    return Main.WorldList[0];
+                }
                 return new WorldFileData()
                 {
                     Name = "None",
@@ -49,13 +69,21 @@ namespace ModReloader.Core.Features.Reload
 
         public static int FindPlayerId(string path)
         {
-
-            return Main.PlayerList.FindIndex(p => p.Path == path);
+            int index = Main.PlayerList.FindIndex(p => p.Path == path);
+            if (index == -1 && Main.PlayerList.Count > 0)
+            {
+                return 0;
+            }
+            return index;
         }
 
         public static int FindWorldId(string path)
         {
             int index = Main.WorldList.FindIndex(p => p.Path == path);
+            if (index == -1 && Main.WorldList.Count > 0)
+            {
+                return 0;
+            }
             return index;
         }
 
