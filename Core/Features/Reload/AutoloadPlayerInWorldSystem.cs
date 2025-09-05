@@ -127,6 +127,8 @@ namespace ModReloader.Core.Features.Reload
             else
             {
                 Log.Error("Failed to select player and world for hosting multiplayer.");
+                if (TryMoveToRejectionMenuIfNeeded())
+                    return;
                 Main.menuMode = 0;
             }
         }
