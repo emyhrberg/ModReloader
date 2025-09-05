@@ -128,6 +128,12 @@ internal sealed class MainMenuState : UIState
         mainMenuList.Add(spacer);
     }
 
+    private int playerIndex = -1;
+    private int worldIndex = -1;
+
+    public void UpdatePlayerIndex(int index) => playerIndex = index;
+    public void UpdateWorldIndex(int index) => worldIndex = index;
+
     private void AddSingleplayerSection(TooltipPanel tooltipPanel)
     {
         // Load players and worlds for tooltips
@@ -144,22 +150,39 @@ internal sealed class MainMenuState : UIState
 
         var singleplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.SingleplayerHeader"), () => Loc.Get("MainMenu.SingleplayerTooltip"), tooltipPanel);
         var joinSingleplayer = new ActionMainMenuElement(
-            () =>
-            {
-                ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
-                ClientDataJsonHelper.PlayerPath = null;
-                ClientDataJsonHelper.WorldPath = null;
-                AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
-            },
-            Loc.Get("MainMenu.JoinSingleplayerText"),
-            () =>
-            {
-                if (string.IsNullOrEmpty(playerName) || string.IsNullOrEmpty(worldName))
-                    return Loc.Get("MainMenu.JoinSingleplayerTooltipNoData");
-                return Loc.Get("MainMenu.JoinSingleplayerTooltip", $"[c/FFFF00:{playerName}]", $"[c/FFFF00:{worldName}]");
-            },
-            tooltipPanel
-        );
+    () =>
+    {
+        ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
+        ClientDataJsonHelper.PlayerPath = null;
+        ClientDataJsonHelper.WorldPath = null;
+        AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
+    },
+    Loc.Get("MainMenu.JoinSingleplayerText"),
+    () =>
+    {
+        Main.LoadPlayers();
+        Main.LoadWorlds();
+
+        int playerIdx = Utilities.FindPlayerId(Conf.C.Player);
+        int worldIdx = Utilities.FindWorldId(Conf.C.World);
+
+        string pName = (playerIdx >= 0 && playerIdx < Main.PlayerList.Count)
+            ? Main.PlayerList[playerIdx].Name
+            : "";
+        string wName = (worldIdx >= 0 && worldIdx < Main.WorldList.Count)
+            ? Main.WorldList[worldIdx].Name
+            : "";
+
+        if (string.IsNullOrEmpty(pName) || string.IsNullOrEmpty(wName))
+            return Loc.Get("MainMenu.JoinSingleplayerTooltipNoData");
+
+        return Loc.Get("MainMenu.JoinSingleplayerTooltip",
+            $"[c/FFFF00:{pName}]",
+            $"[c/FFFF00:{wName}]");
+    },
+    tooltipPanel
+);
+
         var spacer = new SpacerMainMenuElement();
         mainMenuList.Add(singleplayerHeader);
         mainMenuList.Add(joinSingleplayer);
@@ -212,13 +235,6 @@ internal sealed class MainMenuState : UIState
         base.Draw(spriteBatch);
 
         //DrawActionRowsDebug(spriteBatch);
-    }
-
-    private void PositionTooltip()
-    {
-        // tooltipPanel.Left.Set(15 + 3, 0f);
-        // tooltipPanel.Top.Set(470f, 0f);  // 6 px under the list
-        // tooltipPanel.Recalculate();
     }
 
     public override void Update(GameTime gameTime)

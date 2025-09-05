@@ -194,7 +194,7 @@ MainMenu: {
 		Enter with player {0} 
 		 and world {1}
 		'''
-	JoinSingleplayerTooltipNoData: Enter singleplayer with some player and some world
+	JoinSingleplayerTooltipNoData: "Please select player and world in config\n to quickly join singleplayer"
 	MultiplayerHeader: Multiplayer
 	MultiplayerTooltip: Hosting and testing multiplayer
 	HostMultiplayerText: Host Multiplayer

@@ -1,4 +1,5 @@
 ﻿using System;
+using ModReloader.Core.Features.MainMenuFeatures;
 using Terraria.ModLoader.Config.UI;
 using Terraria.ModLoader.UI;
 
@@ -8,7 +9,10 @@ namespace ModReloader.Common.Configs.ConfigElements.PlayerAndWorld
     {
         public override int NumberTicks
         {
-            get => GetCount();
+            get
+            {
+                return GetCount();
+            } 
         }
 
         public override float TickIncrement
@@ -52,14 +56,17 @@ namespace ModReloader.Common.Configs.ConfigElements.PlayerAndWorld
             TextDisplayFunction = () =>
             {
                 string header = Label ?? MemberInfo.Name;
-                //return header + ": " + ResolveName(ReadIndex());
-                return header;
+                string name = ResolveName(ReadIndex());
+                string difficulty = ResolveDifficulty(ReadIndex());
+                return header + ": " + name + " (" + difficulty + ")";
+                //return header;
             };
         }
 
         protected abstract int GetCount();
 
         protected abstract string ResolveName(int index);
+        protected abstract string ResolveDifficulty(int index);
 
         protected abstract string IDToPath(int index);
 
@@ -78,6 +85,11 @@ namespace ModReloader.Common.Configs.ConfigElements.PlayerAndWorld
         {
             if (!MemberInfo.CanWrite) return;
             MemberInfo.SetValue(Item, IDToPath(i));
+
+            //// instant UI sync (no need to wait for Apply)
+            //ModContent.GetInstance<MainMenuSystem>()?.SyncIndicesFromConfig();
+
+            //Interface.modConfig.SetPendingChanges();
         }
     }
 }

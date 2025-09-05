@@ -45,7 +45,7 @@ namespace ModReloader.Core.Features.DebugTextInWorld
             base.LeftClick(evt);
 
             Conf.C.ShowDebugInfo = !Conf.C.ShowDebugInfo;
-            Conf.Save();
+            Conf.C.SaveChanges();
 
             // Open client log
             // Log.OpenClientLog();

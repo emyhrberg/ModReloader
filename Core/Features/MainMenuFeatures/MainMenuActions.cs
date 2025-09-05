@@ -21,17 +21,17 @@ namespace ModReloader.Core.Features.MainMenuFeatures
 
             // Passes known (or very likely) to crash on a 2 100 × 600 map
             string[] skipExact =
-            {
-        "Dungeon", "Dungeon Entrance", "Pyramids", "Temple", "Jungle Temple", "Bee Hives",
-        "Oceans", "Ocean Caves", "Ocean Sand",
-        "Lakes", "Oasis", "Dunes",
-        "Mushroom Patches", "Mushroom Biomes",
-        "Gem Caves", "Granite Caves", "Marble Caves",
-        "Floating Islands", "Sky Lakes",
-        "Waterfalls", "Water Features", "Rivers",
-        "Jungle Chests", "Jungle Shrines",
-        "Micro Biomes"                //   NEW
-    };
+            [
+                "Dungeon", "Dungeon Entrance", "Pyramids", "Temple", "Jungle Temple", "Bee Hives",
+                "Oceans", "Ocean Caves", "Ocean Sand",
+                "Lakes", "Oasis", "Dunes",
+                "Mushroom Patches", "Mushroom Biomes",
+                "Gem Caves", "Granite Caves", "Marble Caves",
+                "Floating Islands", "Sky Lakes",
+                "Waterfalls", "Water Features", "Rivers",
+                "Jungle Chests", "Jungle Shrines",
+                "Micro Biomes"                
+            ];
             var exact = new HashSet<string>(skipExact, StringComparer.OrdinalIgnoreCase);
 
             // any pass name containing these substrings will also be skipped automatically

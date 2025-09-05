@@ -43,11 +43,6 @@ namespace ModReloader.Core.Features.Reload
                 ModLoader.OnSuccessfulLoad += LoadPlayerAndWorldLists;
                 ModLoader.OnSuccessfulLoad += EnterMultiplayerWorld;
             }
-
-
-
-
-
         }
 
         public static void LoadPlayerAndWorldLists()

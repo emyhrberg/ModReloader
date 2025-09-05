@@ -6,7 +6,7 @@ namespace ModReloader.Core.Features.MainMenuFeatures;
 internal sealed class MainMenuSystem : ModSystem
 {
     private UserInterface ui;
-    private MainMenuState state;
+    public MainMenuState state;
 
     public override void PostSetupContent()
     {

@@ -12,6 +12,7 @@ public class WorldIndexSliderElement : IntPathOptionElement
     protected override int GetCount()
     {
         if (Main.WorldList == null) return 0;
+        //Log.Info($"Found {Main.WorldList.Count} world");
         return Main.WorldList.Count;
     }
 
@@ -24,6 +25,31 @@ public class WorldIndexSliderElement : IntPathOptionElement
         var data = Main.WorldList[clamped];
         if (data != null && !string.IsNullOrWhiteSpace(data.Name)) return data.Name;
         return "World " + clamped;
+    }
+
+    protected override string ResolveDifficulty(int index)
+    {
+        if (Main.WorldList == null || Main.WorldList.Count == 0)
+            return "No worlds";
+
+        int clamped = index;
+        if (clamped < 0) clamped = 0;
+        if (clamped > Main.WorldList.Count - 1) clamped = Main.WorldList.Count - 1;
+
+        var world = Main.WorldList[clamped];
+        if (world == null)
+            return "Unknown";
+
+        // map GameMode byte -> string
+        string difficultyText = world.GameMode switch
+        {
+            0 => "Normal",
+            1 => "Expert",
+            2 => "Master",
+            3 => "Journey",
+            _ => "Unknown"
+        };
+        return difficultyText;
     }
 
     public override void OnBind()
@@ -48,21 +74,16 @@ public class WorldIndexSliderElement : IntPathOptionElement
             return;
 
         var world = Main.WorldList[worldIndex];
-        string name = world.GetWorldName();
-
-        // Measure width for positioning text
-        var font = FontAssets.ItemStack.Value;
-        var width = font.MeasureString(name).X;
 
         var dims = GetDimensions();
         var rect = dims.ToRectangle();
 
         // Position of the world name
-        var namePos = new Vector2(rect.X + dims.Width - 200 - width, rect.Y + 7);
-        ChatManager.DrawColorCodedStringWithShadow(sb, font, name, namePos, Color.White, 0f, Vector2.Zero, Vector2.One);
+        //var namePos = new Vector2(rect.X + dims.Width - 200 - width, rect.Y + 7);
+        //ChatManager.DrawColorCodedStringWithShadow(sb, font, name, namePos, Color.White, 0f, Vector2.Zero, Vector2.One);
 
         // Position for preview (to the left of the name)
-        Vector2 previewPos = new(namePos.X - 36, rect.Y + 2);
+        Vector2 previewPos = new(rect.X + rect.Width-220, rect.Y);
 
         // Update the preview element with this world’s options
         byte difficulty = (byte)world.GameMode;  // 0 normal, 1 expert, 2 master, 3 journey

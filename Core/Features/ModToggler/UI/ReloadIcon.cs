@@ -31,7 +31,7 @@ namespace ModReloader.Core.Features.ModToggler.UI
         public async override void LeftClick(UIMouseEvent evt)
         {
             Conf.C.ModsToReload = [internalModName];
-            Conf.Save();
+            Conf.C.SaveChanges();
             // Close fancy UI
             IngameFancyUI.Close();
             await ReloadUtilities.SinglePlayerReload();

@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using ModReloader.Common.Configs.ConfigElements.ModsConfigElements;
 using ModReloader.Common.Configs.ConfigElements.PlayerAndWorld;
+using ModReloader.Core.Features.MainMenuFeatures;
+using ModReloader.Core.Features.Reload;
 using Terraria.ModLoader.Config;
 
 namespace ModReloader.Common.Configs
@@ -68,29 +71,41 @@ namespace ModReloader.Common.Configs
         [DefaultValue(true)]
         public bool LogDebugMessages;
 
+
+        
+
         public override void OnChanged()
         {
             base.OnChanged();
+            UpdateMainMenuReloadTooltip();
+        }
 
+        private void UpdateMainMenuReloadTooltip()
+        {
+            // Update reload tooltip
+            var mainMenuSys = ModContent.GetInstance<MainMenuSystem>();
+            if (mainMenuSys == null)
+            {
+                Log.Info("main menu sys is null!");
+                return;
+            }
+            var state = mainMenuSys.state;
+            if (state == null) return;
+
+            Main.LoadPlayers();
+            Main.LoadWorlds();
+
+            int p = Utilities.FindPlayerId(Conf.C.Player);
+            int w = Utilities.FindWorldId(Conf.C.World);
+
+            state.UpdatePlayerIndex(p);
+            state.UpdateWorldIndex(w);
         }
     }
 
     public static class Conf
     {
-        public static void Save()
-        {
-            try
-            {
-                ConfigManager.Save(C);
-            }
-            catch
-            {
-                Log.Error("An error occurred while manually saving ModConfig!.");
-            }
-        }
-
-        // Instance of the Config class
-        // Use it like 'Conf.C.YourConfigField' for easy access to the config values
+        /// <summary> Quick instance getter. Usage example: Conf.C.Field /// </summary>
         public static Config C => ModContent.GetInstance<Config>();
     }
 }
