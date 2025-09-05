@@ -32,38 +32,30 @@ namespace ModReloader.Core.Features.Reload
                 return;
             }
 
-            // Get the OnSuccessfulLoad field using reflection
-            FieldInfo onSuccessfulLoadField = typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static);
-
-            if (onSuccessfulLoadField != null)
+            if (ClientDataJsonHelper.ClientMode == ClientMode.SinglePlayer)
             {
-                Action onSuccessfulLoad = (Action)onSuccessfulLoadField.GetValue(null);
-
-                if (ClientDataJsonHelper.ClientMode == ClientMode.SinglePlayer)
-                {
-                    // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
-                    onSuccessfulLoad += EnterSingleplayerWorld;
-                }
-                else if (ClientDataJsonHelper.ClientMode == ClientMode.MPMajor || ClientDataJsonHelper.ClientMode == ClientMode.MPMinor)
-                {
-                    onSuccessfulLoad += EnterMultiplayerWorld;
-                }
-
-                onSuccessfulLoad += LoadPlayerAndWorldLists;
-
-                // Set the modified delegate back to the field
-                onSuccessfulLoadField.SetValue(null, onSuccessfulLoad);
+                // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
+                ModLoader.OnSuccessfulLoad += LoadPlayerAndWorldLists;
+                ModLoader.OnSuccessfulLoad += EnterSingleplayerWorld;
             }
-            else
+            else if (ClientDataJsonHelper.ClientMode == ClientMode.MPMajor || ClientDataJsonHelper.ClientMode == ClientMode.MPMinor)
             {
-                Log.Warn("Failed to access OnSuccessfulLoad field.");
+                ModLoader.OnSuccessfulLoad += LoadPlayerAndWorldLists;
+                ModLoader.OnSuccessfulLoad += EnterMultiplayerWorld;
             }
+
+
+
+
+
         }
 
-        private void LoadPlayerAndWorldLists()
+        public static void LoadPlayerAndWorldLists()
         {
+            Log.Info("Loading player and world lists...");
             Main.LoadPlayers();
             Main.LoadWorlds();
+            Log.Info($"Loaded {Main.PlayerList?.Count ?? 0} players and {Main.WorldList?.Count ?? 0} worlds.");
         }
 
         /// <summary>
