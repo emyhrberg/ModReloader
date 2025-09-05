@@ -6,6 +6,8 @@ namespace ModReloader.Core.Features.Reload
     {
         public int ProcessID { get; set; }
 
+        public int HourOfCreation { get; set; } = 0;
+
         // This is needed to serialize enums as strings
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ClientMode ClientMode { get; set; }

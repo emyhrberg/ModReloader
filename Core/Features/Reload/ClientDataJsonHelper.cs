@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -63,6 +64,8 @@ namespace ModReloader.Core.Features.Reload
             if (path == null)
                 return;
 
+            var currentHour = DateTime.Now.Hour;
+
             Log.Info("Writing ClientData");
             Utilities.LockingFile(path, (reader, writer) =>
             {
@@ -72,6 +75,7 @@ namespace ModReloader.Core.Features.Reload
                 var data = new ClientDataJson
                 {
                     ProcessID = Utilities.ProcessID,
+                    HourOfCreation = currentHour,
                     ClientMode = ClientMode,
                     PlayerPath = PlayerPath,
                     WorldPath = WorldPath
@@ -85,12 +89,25 @@ namespace ModReloader.Core.Features.Reload
                     existingData.ClientMode = data.ClientMode;
                     existingData.PlayerPath = data.PlayerPath;
                     existingData.WorldPath = data.WorldPath;
+                    existingData.HourOfCreation = data.HourOfCreation;
                 }
                 else
                 {
                     // Add a new entry
                     listJson.Add(data);
                 }
+
+                // Remove entries by hour of creation (only keep entries from the current hour)
+                var newListJson = new List<ClientDataJson>();
+                foreach (var item in listJson)
+                {
+
+                    if (item.HourOfCreation == currentHour)
+                    {
+                        newListJson.Add(item);
+                    }
+                }
+                listJson = newListJson;
 
                 WriteListToFile(listJson, writer);
             });
