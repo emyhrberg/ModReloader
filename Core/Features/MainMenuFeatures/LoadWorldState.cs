@@ -1,7 +1,7 @@
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
-namespace ModReloader.Core.Features.Reload
+namespace ModReloader.Core.Features.MainMenuFeatures
 {
     public class LoadWorldState : UIState
     {

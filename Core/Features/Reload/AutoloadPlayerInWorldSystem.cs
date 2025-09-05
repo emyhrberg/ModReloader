@@ -1,7 +1,11 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using Humanizer;
+using ModReloader.Core.Features.MainMenuFeatures;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace ModReloader.Core.Features.Reload
 {
@@ -61,9 +65,9 @@ namespace ModReloader.Core.Features.Reload
             Log.Info("Entering SP World");
 
             // Select the player and world
-            bool isPlayerAndWorldSelected = SelectPlayerAndWorld();
+            bool ok = SelectPlayerAndWorld();
 
-            if (isPlayerAndWorldSelected)
+            if (ok)
             {
                 // Play the selected world in singleplayer
                 WorldGen.playWorld();
@@ -74,7 +78,8 @@ namespace ModReloader.Core.Features.Reload
             else
             {
                 Log.Error("Failed to select player and world for singleplayer.");
-                Main.menuMode = 0;
+                if (TryMoveToRejectionMenuIfNeeded())
+                    return;
             }
         }
 
@@ -200,5 +205,81 @@ namespace ModReloader.Core.Features.Reload
             Log.Info("Found player: " + player.Name + ", world: " + world.Name);
             return true;
         }
+
+        #region Rejection
+        private static bool TryMoveToRejectionMenuIfNeeded()
+        {
+            // Ensure lists are loaded
+            Main.LoadPlayers();
+            Main.LoadWorlds();
+
+            // Resolve player from config
+            int playerId = Utilities.FindPlayerId(Conf.C.Player);
+            if (playerId < 0 || playerId >= Main.PlayerList.Count)
+                return false;
+            var playerFile = Main.PlayerList[playerId];
+
+            // Resolve world from config
+            int worldId = Utilities.FindWorldId(Conf.C.World);
+            if (worldId < 0 || worldId >= Main.WorldList.Count)
+                return false;
+            var worldFile = Main.WorldList[worldId];
+
+            if (playerFile?.Player == null || worldFile == null)
+                return false;
+
+            // Validate world game mode is registered
+            if (!Main.RegisteredGameModes.TryGetValue(worldFile.GameMode, out var modeData))
+            {
+                SoundEngine.PlaySound(10);
+                ShowRejectionUI(Language.GetTextValue("UI.WorldCannotBeLoadedBecauseItHasAnInvalidGameMode"));
+                return true;
+            }
+
+            // Journey mismatch
+            bool playerIsJourney = playerFile.Player.difficulty == PlayerDifficultyID.Creative;
+            bool worldIsJourney = worldFile.GameMode == GameModeID.Creative;
+
+            if (playerIsJourney && !worldIsJourney)
+            {
+                SoundEngine.PlaySound(10);
+                string msg = Language.GetTextValue("UI.PlayerIsCreativeAndWorldIsNotCreative");
+                msg += $"\nPlayer: [c/ffff00:{playerFile.Player.name}] (Journey)";
+                msg += $"\nWorld: [c/ffff00:{worldFile.GetWorldName()}] (Non-Journey)";
+                ShowRejectionUI(msg);
+                return true;
+            }
+            if (!playerIsJourney && worldIsJourney)
+            {
+                SoundEngine.PlaySound(10);
+                string msg = Language.GetTextValue("UI.PlayerIsNotCreativeAndWorldIsCreative");
+                msg += $"\nPlayer: [c/ffff00:{playerFile.Player.name}] (Non-Journey)";
+                msg += $"\nWorld: [c/ffff00:{worldFile.GetWorldName()}] (Journey)";
+                ShowRejectionUI(msg);
+                return true;
+            }
+
+            // Other rejections
+            if (!SystemLoader.CanWorldBePlayed(playerFile, worldFile, out var rejector))
+            {
+                SoundEngine.PlaySound(10);
+                ShowRejectionUI(rejector.WorldCanBePlayedRejectionMessage(playerFile, worldFile));
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void ShowRejectionUI(string message)
+        {
+            // Update the status text (optional)
+            Main.statusText = message;
+
+            // Swap to our custom rejection state
+            Main.MenuUI.SetState(new RejectionState(message));
+
+            Main.menuMode = 888;
+        }
+        #endregion
     }
 }

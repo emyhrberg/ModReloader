@@ -109,7 +109,7 @@ namespace ModReloader.Core.Features.ExceptionFeatures
                     childrenCount++;
                     if (child is UITextPanel<string> textPanel && textPanel.Text == "Open Web Help")
                     {
-                        Log.SlowInfo("Found Web Help button. Moving our button.");
+                        //Log.SlowInfo("Found Web Help button. Moving our button.");
                         webHelpFound = true;
                     }
                 }

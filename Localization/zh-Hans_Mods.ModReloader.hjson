@@ -180,8 +180,8 @@ MainMenu: {
 	JoinSingleplayerTooltip: 根据预设的玩家和世界快速进入游戏
 	/* JoinSingleplayerTooltipNoData:
 		'''
+		No player or world found
 		Please select player and world in config
-		 to quickly join singleplayer
 		''' */
 	MultiplayerHeader: 多人游戏
 	MultiplayerTooltip: 开服及测试多人游戏

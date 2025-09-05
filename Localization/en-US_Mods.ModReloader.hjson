@@ -22,7 +22,7 @@ Configs: {
 
 		Player: {
 			Label: Player
-			Tooltip: Select the player to join a world with when reloading
+			Tooltip: Select the player to join with with when reloading
 		}
 
 		World: {
@@ -189,15 +189,11 @@ MainMenu: {
 	SingleplayerHeader: Singleplayer
 	SingleplayerTooltip: Quickly join singleplayer worlds
 	JoinSingleplayerText: Join Singleplayer
-	JoinSingleplayerTooltip:
-		'''
-		Enter with player {0} 
-		 and world {1}
-		'''
+	JoinSingleplayerTooltip: "Player: {0}\nWorld: {1}"
 	JoinSingleplayerTooltipNoData:
 		'''
+		No player or world found
 		Please select player and world in config
-		 to quickly join singleplayer
 		'''
 	MultiplayerHeader: Multiplayer
 	MultiplayerTooltip: Hosting and testing multiplayer
