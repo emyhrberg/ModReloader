@@ -71,8 +71,8 @@ namespace ModReloader.Common.Configs
         [DefaultValue(true)]
         public bool LogDebugMessages;
 
-
-        
+        [DefaultValue(true)]
+        public bool ShowBackToMainMenu;
 
         public override void OnChanged()
         {

@@ -116,6 +116,11 @@ Configs: {
 			Label: Player Test
 			Tooltip: ""
 		}
+
+		ShowBackToMainMenu: {
+			Label: Show Back To Main Menu When Config Is Open
+			Tooltip: "In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen."
+		}
 	}
 
 	WorldSize: {
@@ -189,7 +194,11 @@ MainMenu: {
 	SingleplayerHeader: Singleplayer
 	SingleplayerTooltip: Quickly join singleplayer worlds
 	JoinSingleplayerText: Join Singleplayer
-	JoinSingleplayerTooltip: "Player: {0}\nWorld: {1}"
+	JoinSingleplayerTooltip:
+		'''
+		Player: {0}
+		World: {1}
+		'''
 	JoinSingleplayerTooltipNoData:
 		'''
 		No player or world found
