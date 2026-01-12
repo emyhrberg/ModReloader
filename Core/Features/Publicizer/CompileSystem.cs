@@ -135,6 +135,12 @@ namespace ModReloader.Core.Features.Publicizer
                             }
                         }
 
+                        // Adding any additional preprocessor symbols from the config
+                        if (Conf.C.AdditionalPreprocessorSymbols != null)
+                        {
+                            preprocessorSymbols = [.. preprocessorSymbols, .. Conf.C.AdditionalPreprocessorSymbols];
+                        }
+
                         // Normal RoslynCompiler method
                         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
                 assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,

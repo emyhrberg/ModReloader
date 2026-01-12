@@ -33,6 +33,8 @@ namespace ModReloader.Common.Configs
         [DefaultValue(true)]
         public bool SaveWorld;
 
+        public List<string> AdditionalPreprocessorSymbols;
+
         [Header("ExtraInfo")]
 
         [DefaultValue(true)]

@@ -119,24 +119,61 @@ Configs: {
 
 		ShowBackToMainMenu: {
 			Label: Show Back To Main Menu When Config Is Open
-			Tooltip: "In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen."
+			Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
+		}
+
+		AdditionalPreprocessorSymbols: {
+			Label: Additional Preprocessor Symbols
+			Tooltip: ""
 		}
 	}
 
 	WorldSize: {
 		Tooltip: ""
-		Small.Label: Small
-		Medium.Label: Medium
-		Large.Label: Large
-		ExtraSmall.Label: Extra Small (Risky)
+
+		Small: {
+			Label: Small
+			Tooltip: ""
+		}
+
+		Medium: {
+			Label: Medium
+			Tooltip: ""
+		}
+
+		Large: {
+			Label: Large
+			Tooltip: ""
+		}
+
+		ExtraSmall: {
+			Label: Extra Small (Risky)
+			Tooltip: ""
+		}
 	}
 
 	WorldDifficulty: {
 		Tooltip: ""
-		Normal.Label: Normal
-		Expert.Label: Expert
-		Master.Label: Master
-		Journey.Label: Journey
+
+		Normal: {
+			Label: Normal
+			Tooltip: ""
+		}
+
+		Expert: {
+			Label: Expert
+			Tooltip: ""
+		}
+
+		Master: {
+			Label: Master
+			Tooltip: ""
+		}
+
+		Journey: {
+			Label: Journey
+			Tooltip: ""
+		}
 	}
 
 	PlayerDefinition: {
