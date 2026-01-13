@@ -47,6 +47,9 @@ namespace ModReloader.Common.Configs
         [DefaultValue(true)]
         public bool ShowCopyToClipboardButton;
 
+        [DefaultValue(true)]
+        public bool ShowBackToMainMenu;
+
         public enum WorldSize { ExtraSmall, Small, Medium, Large }
         [DrawTicks]
         [DefaultValue(WorldSize.Small)]
@@ -70,9 +73,6 @@ namespace ModReloader.Common.Configs
 
         [DefaultValue(true)]
         public bool LogDebugMessages;
-
-        [DefaultValue(true)]
-        public bool ShowBackToMainMenu;
 
         public override void OnChanged()
         {
@@ -105,7 +105,10 @@ namespace ModReloader.Common.Configs
 
     public static class Conf
     {
-        /// <summary> Quick instance getter. Usage example: Conf.C.Field /// </summary>
+        /// <summary> 
+        /// Quick instance getter. 
+        /// Usage example: Conf.C.YourField 
+        /// /// </summary>
         public static Config C => ModContent.GetInstance<Config>();
     }
 }

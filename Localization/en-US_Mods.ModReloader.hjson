@@ -63,11 +63,6 @@ Configs: {
 			Tooltip: A new button will appear allowing you to copy the message in the error menu
 		}
 
-		RightClickToolOptions: {
-			Label: Right Click Tool Options
-			Tooltip: Adds the option for tools to have additional functionality with right click options.
-		}
-
 		MoveChat: {
 			Label: Move Chat
 			Tooltip: Moves the chat box position a little to make space for debug info

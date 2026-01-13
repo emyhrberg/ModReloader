@@ -22,23 +22,14 @@ namespace ModReloader.Common.Integrations.DragonLens
 
         private string GetDescription()
         {
-            if (!Conf.C.RightClickToolOptions)
-            {
-                return Loc.Get("LogButton.HoverDescBase");
-            }
-
             string logFileName = Path.GetFileName(Logging.LogPath);
             string result = Loc.Get("LogButton.HoverDescBase");
             result += $"\n{Loc.Get("LogButton.HoverDescRightClick", Path.GetFileName(Logging.LogPath))}";
             return result;
         }
 
-        public override bool HasRightClick => Conf.C.RightClickToolOptions;
-
         public override void OnRightClick()
         {
-            if (!Conf.C.RightClickToolOptions) return;
-
             Log.OpenClientLog();
         }
 

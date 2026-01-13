@@ -22,11 +22,6 @@ namespace ModReloader.Common.Integrations.DragonLens
 
         private string GetDescription()
         {
-            if (!Conf.C.RightClickToolOptions)
-            {
-                return Loc.Get("UIElementButton.HoverDescBase");
-            }
-
             string result = Loc.Get("UIElementButton.HoverDescBase");
             result += $"\n{Loc.Get("UIElementButton.HoverDescRightClick")}";
             return result;
@@ -69,15 +64,8 @@ namespace ModReloader.Common.Integrations.DragonLens
             }
         }
 
-        public override bool HasRightClick => Conf.C.RightClickToolOptions;
-
         public override void OnRightClick()
         {
-            if (!Conf.C.RightClickToolOptions)
-            {
-                return;
-            }
-
             UIElementSystem elementSystem = ModContent.GetInstance<UIElementSystem>();
             if (elementSystem == null) return;
             UIElementState elementState = elementSystem.debugState;

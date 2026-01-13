@@ -15,17 +15,10 @@ namespace ModReloader.Common.Integrations.DragonLens
 
         private string GetDescription()
         {
-            if (!Conf.C.RightClickToolOptions)
-            {
-                return Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
-            }
-
             string result = $"{Loc.Get("ReloadMPButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Loc.Get("ReloadMPButton.HoverDescRightClick")}";
             //result += $"\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
             return result;
         }
-
-        public override bool HasRightClick => Conf.C.RightClickToolOptions;
 
         public override async void OnActivate()
         {

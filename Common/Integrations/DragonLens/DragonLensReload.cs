@@ -15,17 +15,10 @@ namespace ModReloader.Common.Integrations.DragonLens
 
         private string GetDescription()
         {
-            if (!Conf.C.RightClickToolOptions)
-            {
-                return Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload));
-            }
-
             string result = $"{Loc.Get("ReloadButton.HoverText", string.Join(", ", Conf.C.ModsToReload))}\n{Loc.Get("ReloadButton.HoverDescRightClick")}";
             //result += $"\n{Helpers.LocalizationHelper.GetText("ReloadButton.HoverDescRightClick")}";
             return result;
         }
-
-        public override bool HasRightClick => Conf.C.RightClickToolOptions;
 
         public override async void OnActivate()
         {
@@ -34,11 +27,6 @@ namespace ModReloader.Common.Integrations.DragonLens
 
         public override async void OnRightClick()
         {
-            if (!Conf.C.RightClickToolOptions)
-            {
-                return;
-            }
-
             ReloadUtilities.forceJustReload = true;
             await ReloadUtilities.SinglePlayerReload();
         }
