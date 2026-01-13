@@ -17,7 +17,7 @@ namespace ModReloader.Core.Features.Reload
         {
             if (i < 0 || i >= Main.PlayerList.Count)
             {
-                if (Main.PlayerList.Count >   0)
+                if (Main.PlayerList.Count > 0)
                 {
                     return Main.PlayerList[0];
                 }
@@ -36,7 +36,7 @@ namespace ModReloader.Core.Features.Reload
             PlayerFileData pfd = Main.PlayerList.FirstOrDefault(p => p.Path == path, null);
             if (pfd == null)
             {
-                if(Main.PlayerList.Count > 0)
+                if (Main.PlayerList.Count > 0)
                 {
                     return Main.PlayerList[0];
                 }
@@ -51,7 +51,7 @@ namespace ModReloader.Core.Features.Reload
 
         public static WorldFileData FindWorld(int i)
         {
-            
+
             if (i < 0 || i >= Main.WorldList.Count)
             {
                 if (Main.WorldList.Count > 0)

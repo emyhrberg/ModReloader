@@ -39,12 +39,10 @@ namespace ModReloader.Core.Features.Reload
             if (ClientDataJsonHelper.ClientMode == ClientMode.SinglePlayer)
             {
                 // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
-                ModLoader.OnSuccessfulLoad += LoadPlayerAndWorldLists;
                 ModLoader.OnSuccessfulLoad += EnterSingleplayerWorld;
             }
             else if (ClientDataJsonHelper.ClientMode == ClientMode.MPMajor || ClientDataJsonHelper.ClientMode == ClientMode.MPMinor)
             {
-                ModLoader.OnSuccessfulLoad += LoadPlayerAndWorldLists;
                 ModLoader.OnSuccessfulLoad += EnterMultiplayerWorld;
             }
         }
@@ -139,12 +137,14 @@ namespace ModReloader.Core.Features.Reload
         /// <exception cref="ArgumentNullException"></exception>
         private static bool SelectPlayerAndWorld(bool onlyPlayer = false)
         {
-            Main.LoadPlayers();
+            LoadPlayerAndWorldLists();
+
             if (Main.PlayerList == null || Main.PlayerList.Count == 0)
             {
                 Log.Error("No players found after loading players.");
                 return false;
             }
+
             int playerId = Utilities.FindPlayerId(Conf.C.Player);
             if (playerId < 0 || playerId >= Main.PlayerList.Count)
             {
@@ -171,7 +171,6 @@ namespace ModReloader.Core.Features.Reload
                 return true;
             }
 
-            Main.LoadWorlds();
             if (Main.WorldList == null || Main.WorldList.Count == 0)
             {
                 Log.Error("No worlds found after loading worlds.");
@@ -211,10 +210,6 @@ namespace ModReloader.Core.Features.Reload
         #region Rejection
         private static bool TryMoveToRejectionMenuIfNeeded()
         {
-            // Ensure lists are loaded
-            Main.LoadPlayers();
-            Main.LoadWorlds();
-
             // Resolve player from config
             int playerId = Utilities.FindPlayerId(Conf.C.Player);
             if (playerId < 0 || playerId >= Main.PlayerList.Count)

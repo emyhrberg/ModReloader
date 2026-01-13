@@ -141,11 +141,16 @@ namespace ModReloader.Core.Features.Publicizer
                             preprocessorSymbols = [.. preprocessorSymbols, .. Conf.C.AdditionalPreprocessorSymbols];
                         }
 
-                        // Normal RoslynCompiler method
+                        // Normal RoslynCompiler method with suppressed assembly version warnings
                         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary,
-                assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
-                optimizationLevel: preprocessorSymbols.Contains("DEBUG") ? OptimizationLevel.Debug : OptimizationLevel.Release,
-                allowUnsafe: true);
+                        assemblyIdentityComparer: DesktopAssemblyIdentityComparer.Default,
+                        optimizationLevel: preprocessorSymbols.Contains("DEBUG") ? OptimizationLevel.Debug : OptimizationLevel.Release,
+                        allowUnsafe: true,
+                        specificDiagnosticOptions: new Dictionary<string, ReportDiagnostic>
+                        {
+                            ["CS1701"] = ReportDiagnostic.Suppress, // Assembly reference version mismatch
+                            ["CS1702"] = ReportDiagnostic.Suppress  // Assembly reference version unified
+                        });
 
                         var parseOptions = new CSharpParseOptions(LanguageVersion.Preview, preprocessorSymbols: preprocessorSymbols);
 
