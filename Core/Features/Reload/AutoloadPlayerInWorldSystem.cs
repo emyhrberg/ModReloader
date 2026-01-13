@@ -122,6 +122,7 @@ namespace ModReloader.Core.Features.Reload
             if (isPlayerAndWorldSelected)
             {
                 // Host the server
+                Main.showServerConsole = true;
                 Main.instance.OnSubmitServerPassword("");
             }
             else
