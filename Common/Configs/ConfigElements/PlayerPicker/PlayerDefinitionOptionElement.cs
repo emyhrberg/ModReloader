@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using ModReloader.Common.Configs.ConfigElements.PlayerPicker;
+using System;
 using System.Linq;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
@@ -9,13 +9,14 @@ using Terraria.UI;
 
 namespace ModReloader.Common.Configs.ConfigElements.PlayerPicker;
 
-internal sealed class PlayerDefinitionOptionElement
-    : DefinitionOptionElement<PlayerDefinition>
+internal sealed class PlayerDefinitionOptionElement: DefinitionOptionElement<PlayerDefinition>
 {
     private UICharacter _preview;
+    private bool isActiveSelection;
 
-    public PlayerDefinitionOptionElement(PlayerDefinition definition,float scale = 0.75f): base(definition, scale)
+    public PlayerDefinitionOptionElement(PlayerDefinition definition,float scale = 0.75f, bool isActiveSelection=false): base(definition, scale)
     {
+        this.isActiveSelection = isActiveSelection;
         OverflowHidden = true;
     }
 
@@ -23,41 +24,28 @@ internal sealed class PlayerDefinitionOptionElement
     {
         base.SetItem(definition);
 
-        // Set tooltip
-        Tooltip = definition?.ToString() ?? "UnknownPlayer";
-
         RemoveAllChildren();
         _preview = null;
 
-        if (definition?.Name is not string playerPath)
-            return;
+        string path = definition?.Name;
+        if (string.IsNullOrEmpty(path)) { Tooltip = "UnknownPlayer"; return; }
 
-        PlayerFileData file = Main.PlayerList.FirstOrDefault(p => p.Path == playerPath);
+        Main.LoadPlayers();
+        PlayerFileData file = Main.PlayerList.FirstOrDefault(p => string.Equals(p.Path, path, StringComparison.OrdinalIgnoreCase));
+        if (file?.Player == null) { Tooltip = definition?.ToString() ?? "UnknownPlayer"; return; }
 
-        if (file == null)
-            return;
+        Tooltip = definition?.ToString() ?? "UnknownPlayer";
+        if (file.Player.difficulty == PlayerDifficultyID.Creative) { Color c = Main.creativeModeColor; Tooltip += $" [c/{c.R:X2}{c.G:X2}{c.B:X2}:(Journey)]"; }
 
-        // Update tooltip
-        if (file?.Player != null && file.Player.difficulty == PlayerDifficultyID.Creative)
-        {
-            Tooltip += " " + "[c/4FD9FF:(" + "Journey" + ")]";
-        }
+        Player p = file.Player;
+        p.dead = false;
 
-        // Create a preview player from file
-        Player previewPlayer = file.Player;
-        previewPlayer.dead = false;
+        float charScale = isActiveSelection ? 0.6f : 0.8f;
+        _preview = new UICharacter(p, animated: false, hasBackPanel: false, characterScale: charScale, useAClone: true);
+        _preview.Top.Set(-6f, 0f);
 
-        _preview = new UICharacter(
-            previewPlayer,
-            animated: false,
-            hasBackPanel: false, // no, we draw it manually later
-            characterScale: 0.6f,
-            useAClone: true
-        );
-        _preview.Top.Set(-6, 0);
-        Recalculate();
-        
         Append(_preview);
+        Recalculate();
     }
 
     public override void Update(GameTime gameTime)
@@ -71,24 +59,14 @@ internal sealed class PlayerDefinitionOptionElement
             //_preview.Top.Set(-6, 0);
             //_preview._characterScale = 0.5f;
 
-            if (IsMouseHovering)
-            {
-                _preview.SetAnimated(true);
-            }
-            else
-            {
-
-                _preview.SetAnimated(false);
-            }
+            _preview.SetAnimated(IsMouseHovering);
         }
+        
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
-
-        if (IsMouseHovering)
-            UIModConfig.Tooltip = Tooltip;
 
         // Position
         CalculatedStyle dimensions = GetInnerDimensions(); 
@@ -98,5 +76,9 @@ internal sealed class PlayerDefinitionOptionElement
 
         // Draw background
         spriteBatch.Draw(BackgroundTexture.Value, destination, Color.White);
+
+        // Update tooltip
+        if (IsMouseHovering)
+            UIModConfig.Tooltip = Tooltip;
     }
 }

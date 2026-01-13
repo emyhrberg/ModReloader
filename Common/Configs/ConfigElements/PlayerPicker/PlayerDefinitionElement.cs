@@ -1,45 +1,86 @@
-﻿using ModReloader.Common.Configs.ConfigElements.PlayerPicker;
-using ModReloader.Core.Features.Reload;
+﻿using ModReloader.Core.Features.Reload;
 using System;
 using System.Collections.Generic;
-using Terraria.IO;
+using System.Linq;
+using Terraria.GameContent.UI.Elements;
+using Terraria.GameContent.UI.States;
+using Terraria.ID;
 using Terraria.ModLoader.Config.UI;
 
 namespace ModReloader.Common.Configs.ConfigElements.PlayerPicker;
 
-
-public class PlayerDefinitionElement : DefinitionElement<PlayerDefinition>
+public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition>
 {
-    protected override DefinitionOptionElement<PlayerDefinition> CreateDefinitionOptionElement() => new PlayerDefinitionOptionElement(Value, 0.5f);
+    protected override DefinitionOptionElement<PlayerDefinition> CreateDefinitionOptionElement() => new PlayerDefinitionOptionElement(Value, 0.5f, isActiveSelection: true);
 
-    // Copy implementation from NPCDefinitionElement, except we iterate Main.PlayerList instead of the NPC List.
-    protected override List<DefinitionOptionElement<PlayerDefinition>> CreateDefinitionOptionElementList()
+    public override void OnBind()
     {
-        OptionScale = 0.8f; // default scale for all options. can be modified with the zoom in, zoom out buttons.
+        base.OnBind();
 
-        var options = new List<DefinitionOptionElement<PlayerDefinition>>();
+        // Remove mod filter search box
+        if (ChooserFilterMod?.Parent != null) { ChooserFilterMod.Parent.Remove(); ChooserFilterMod.Parent.Deactivate(); }
+
+        // Remove zoom buttons
+        if (ChooserPanel != null) foreach (var c in ChooserPanel.Children.ToArray()) if (c is UIModConfigHoverImageSplit) c.Remove();
+
+        // Remove scrollbar
+        if (Main.PlayerList.Count <= 11)
+            RemoveScrollbar();
 
         Main.LoadPlayers();
+        UpdateNeeded = true;
+    }
 
-        foreach (PlayerFileData file in Main.PlayerList)
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        // Update height dynamically based on number of players player has.
+        int count = Main.PlayerList?.Count ?? 0;
+        int rows = Math.Max(1, (count + 11 - 1) / 11);
+
+        float collapsed = 30f;
+        float expanded = 130f + (rows - 1) * 44f;
+        float h = SelectionExpanded ? expanded : collapsed;
+
+        Height.Set(h, 0f);
+
+        if (Parent is UISortableElement s)
+            s.Height.Set(h, 0f);
+
+        if (ChooserPanel != null)
+            ChooserPanel.Height.Set(h - collapsed, 0f);
+
+        if (SelectionExpanded && count <= 11)
+            RemoveScrollbar();
+
+        Recalculate();
+    }
+
+    protected override List<DefinitionOptionElement<PlayerDefinition>> CreateDefinitionOptionElementList()
+    {
+        OptionScale = 0.8f;
+        Main.LoadPlayers();
+
+        var arr = Main.PlayerList.ToArray();
+        var options = new List<DefinitionOptionElement<PlayerDefinition>>(arr.Length);
+
+        foreach (var f in arr)
         {
-            if (file == null)
+            if (f == null)
                 continue;
 
-            Log.Info("Adding player to config: " + file.Name);
+            var def = new PlayerDefinition(f.Path);
+            var opt = new PlayerDefinitionOptionElement(def, OptionScale, isActiveSelection: true);
 
-            var definition = new PlayerDefinition(file.Path);
-
-            var option = new PlayerDefinitionOptionElement(definition, OptionScale);
-
-            option.OnLeftClick += (_, _) =>
+            opt.OnLeftClick += (_, _) =>
             {
-                Value = option.Definition;
+                Value = opt.Definition;
                 UpdateNeeded = true;
                 SelectionExpanded = false;
             };
 
-            options.Add(option);
+            options.Add(opt);
         }
 
         return options;
@@ -48,26 +89,41 @@ public class PlayerDefinitionElement : DefinitionElement<PlayerDefinition>
     protected override List<DefinitionOptionElement<PlayerDefinition>> GetPassedOptionElements()
     {
         var passed = new List<DefinitionOptionElement<PlayerDefinition>>();
+        string filter = ChooserFilter?.CurrentString ?? "";
 
-        foreach (var option in Options)
+        foreach (var o in Options)
         {
-            // Should this be the localized Player name?
-            if (!Utilities.FindPlayer(option.Type).Name.Contains(ChooserFilter.CurrentString, StringComparison.OrdinalIgnoreCase))
+            // If player is journey and user is searching for journey, add it
+            bool isJourney = Utilities.FindPlayer(o.Type).Player.difficulty == GameModeID.Creative;
+
+            // Filter name
+            if (!Utilities.FindPlayer(o.Type).Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
                 continue;
 
-            string modname = "Terraria";
-
-            if (modname.IndexOf(ChooserFilterMod.CurrentString, StringComparison.OrdinalIgnoreCase) == -1)
-                continue;
-
-            passed.Add(option);
+            passed.Add(o);
         }
+
         return passed;
     }
 
-    public override void OnBind()
+    private void RemoveScrollbar()
     {
-        base.OnBind();
-        ChooserFilterMod.Parent.Remove();
-        ChooserFilterMod.Parent.Deactivate();
-    }}
+        if (ChooserGrid != null)
+        {
+            ChooserGrid.SetScrollbar(null);
+            ChooserGrid.Width.Set(0f, 1f);
+        }
+
+        if (ChooserPanel == null)
+            return;
+
+        foreach (var c in ChooserPanel.Children.ToArray())
+        {
+            if (c is UIScrollbar)
+                c.Remove();
+        }
+
+        ChooserPanel.Recalculate();
+        ChooserPanel.RecalculateChildren();
+    }
+}
