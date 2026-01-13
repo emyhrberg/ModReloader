@@ -47,7 +47,12 @@ public static class ReloadUtilities
         if (Main.netMode == NetmodeID.SinglePlayer)
         {
             // Prepare client. Use singleplayer by default for now.
-            PrepareClient(clientMode: ClientMode.SinglePlayer);
+            PrepareClient(
+                clientMode: ClientMode.SinglePlayer,
+                playerID: Conf.C.Player.Name,
+                worldID: Conf.C.World.Name
+            );
+
 
             // Exit the game.
             await ExitWorld();

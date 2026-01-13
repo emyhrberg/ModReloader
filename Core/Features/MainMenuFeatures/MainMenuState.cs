@@ -136,19 +136,23 @@ internal sealed class MainMenuState : UIState
 
     private void AddSingleplayerSection(TooltipPanel tooltipPanel)
     {
-        // Load players and worlds for tooltips
         Main.LoadPlayers();
-        int playerIdx = Utilities.FindPlayerId(Conf.C.Player);
-        if (playerIdx < 0 || playerIdx >= Main.PlayerList.Count) playerIdx = 0;
+        int playerIdx = Conf.C.Player != null ? Utilities.FindPlayerId(Conf.C.Player.Name) : 0;
+        if (playerIdx < 0 || playerIdx >= Main.PlayerList.Count)
+            playerIdx = 0;
+
         string playerName = Main.PlayerList.Count > 0 ? Main.PlayerList[playerIdx].Name : "";
 
         Main.LoadWorlds();
-        int worldIdx = Utilities.FindWorldId(Conf.C.World);
-        if (worldIdx < 0 || worldIdx >= Main.WorldList.Count) worldIdx = 0;
+        int worldIdx = Conf.C.World != null ? Utilities.FindWorldId(Conf.C.World.Name) : 0;
+        if (worldIdx < 0 || worldIdx >= Main.WorldList.Count)
+            worldIdx = 0;
+
         string worldName = Main.WorldList.Count > 0 ? Main.WorldList[worldIdx].Name : "";
+
         Log.Info("Loaded and found this many worlds in main menu: " + Main.WorldList.Count);
 
-        var singleplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.SingleplayerHeader"), () => Loc.Get("MainMenu.SingleplayerTooltip"), tooltipPanel);
+    var singleplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.SingleplayerHeader"), () => Loc.Get("MainMenu.SingleplayerTooltip"), tooltipPanel);
         var joinSingleplayer = new ActionMainMenuElement(
     () =>
     {
@@ -163,8 +167,8 @@ internal sealed class MainMenuState : UIState
         Main.LoadPlayers();
         Main.LoadWorlds();
 
-        int playerIdx = Utilities.FindPlayerId(Conf.C.Player);
-        int worldIdx = Utilities.FindWorldId(Conf.C.World);
+        int playerIdx = Conf.C.Player.Type;
+        int worldIdx = Conf.C.World.Type;
 
         string pName = (playerIdx >= 0 && playerIdx < Main.PlayerList.Count)
             ? Main.PlayerList[playerIdx].Name

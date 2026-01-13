@@ -1,0 +1,4 @@
+- Improved config for player and world selection to show previews of players and worlds you're selecting for reload
+- Start multiplayer will now always automatically start a console session
+- Fixed so u cannot enter journey world with non journey player (thanks Cotlim)
+- Debloated the log from messages from dnlib/publicizer which were showing no useful data.

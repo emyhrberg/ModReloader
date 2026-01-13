@@ -80,7 +80,7 @@ namespace ModReloader.Core.Features.MainMenuFeatures
         {
             Main.LoadPlayers();
             if (Main.PlayerList.Count == 0) return;
-            int pIdx = Utilities.FindPlayerId(Conf.C.Player);
+            int pIdx = Conf.C.Player.Type;
             if (pIdx < 0 || pIdx >= Main.PlayerList.Count) pIdx = 0;
             Main.SelectPlayer(Main.PlayerList[pIdx]);
 

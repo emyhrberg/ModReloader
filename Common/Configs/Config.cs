@@ -1,114 +1,159 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using ModReloader.Common.Configs.ConfigElements.ModsConfigElements;
-using ModReloader.Common.Configs.ConfigElements.PlayerAndWorld;
+﻿using ModReloader.Common.Configs.ConfigElements.ModsConfigElements;
+using ModReloader.Common.Configs.ConfigElements.PlayerPicker;
+using ModReloader.Common.Configs.ConfigElements.WorldPicker;
 using ModReloader.Core.Features.MainMenuFeatures;
 using ModReloader.Core.Features.Reload;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading.Channels;
 using Terraria.ModLoader.Config;
 
-namespace ModReloader.Common.Configs
+namespace ModReloader.Common.Configs;
+public class Config : ModConfig
 {
-    public class Config : ModConfig
+    public override ConfigScope Mode => ConfigScope.ClientSide;
+
+    [Header("ModsToReload")]
+
+    [CustomModConfigItem(typeof(ModSourcesConfig))]
+    public List<string> ModsToReload = [];
+
+    [Header("ReloadOptions")]
+
+    [CustomModConfigItem(typeof(PlayerDefinitionElement))]
+    public PlayerDefinition Player = new();
+
+    [CustomModConfigItem(typeof(WorldDefinitionElement))]
+    public WorldDefinition World = new();
+
+    // Used for testing, do not delete!
+    //public NPCDefinition NPCTest;
+
+    //[CustomModConfigItem(typeof(WorldIndexSliderElement))]
+    //public string World; // world index in Main.WorldList
+
+    [DefaultValue(true)]
+    public bool AutoJoinWorld;
+
+    [DefaultValue(true)]
+    public bool SaveWorld;
+
+    [Header("ExtraInfo")]
+
+    [DefaultValue(true)]
+    public bool ShowDebugInfo;
+
+    [DefaultValue(true)]
+    public bool ShowMainMenuInfo;
+
+    [DefaultValue(true)]
+    public bool ShowErrorMenuInfo;
+
+    [DefaultValue(true)]
+    public bool ShowCopyToClipboardButton;
+
+    [DefaultValue(true)]
+    public bool ShowBackToMainMenu;
+
+    public enum WorldSize { ExtraSmall, Small, Medium, Large }
+    [DrawTicks]
+    [DefaultValue(WorldSize.Small)]
+    public WorldSize CreateTestWorldSize;
+
+    public enum WorldDifficulty { Normal, Expert, Master, Journey }
+    [DrawTicks]
+    [DefaultValue(WorldDifficulty.Normal)]
+    public WorldDifficulty CreateTestWorldDifficulty;
+
+    [Header("Misc")]
+
+    [DefaultValue(true)]
+    public bool RightClickToolOptions;
+
+    [DefaultValue(true)]
+    public bool LogLevelPersistOnReloads;
+
+    [DefaultValue(false)]
+    public bool ClearLogOnReload;
+
+    [DefaultValue(true)]
+    public bool LogDebugMessages;
+
+    public override void OnLoaded()
     {
-        public override ConfigScope Mode => ConfigScope.ClientSide;
+        base.OnLoaded();
+        EnsureDefaultPlayerAndWorld();
+    }
 
-        [Header("ModsToReload")]
+    public override void OnChanged()
+    {
+        Log.Info("Config changed");
 
-        [CustomModConfigItem(typeof(ModSourcesConfig))]
-        public List<string> ModsToReload = [];
+        base.OnChanged();
+        UpdateMainMenuReloadTooltip();
+    }
 
-        [Header("ReloadOptions")]
+    private void UpdateMainMenuReloadTooltip()
+    {
+        var mainMenuSys = ModContent.GetInstance<MainMenuSystem>();
+        if (mainMenuSys?.state == null)
+            return;
 
-        [CustomModConfigItem(typeof(PlayerIndexSliderElement))]
-        [DefaultValue("")]
-        public string Player; // player index in Main.PlayerList
+        Main.LoadPlayers();
+        Main.LoadWorlds();
 
-        [CustomModConfigItem(typeof(WorldIndexSliderElement))]
-        public string World; // world index in Main.WorldList
+        int p = Conf.C.Player != null ? Utilities.FindPlayerId(Conf.C.Player.Name) : 0;
+        int w = Conf.C.World != null ? Utilities.FindWorldId(Conf.C.World.Name) : 0;
 
-        [DefaultValue(true)]
-        public bool AutoJoinWorld;
+        mainMenuSys.state.UpdatePlayerIndex(p);
+        mainMenuSys.state.UpdateWorldIndex(w);
+    }
 
-        [DefaultValue(true)]
-        public bool SaveWorld;
+    private void EnsureDefaultPlayerAndWorld()
+    {
+        bool changed = false;
 
-        [Header("ExtraInfo")]
-
-        [DefaultValue(true)]
-        public bool ShowDebugInfo;
-
-        [DefaultValue(true)]
-        public bool ShowMainMenuInfo;
-
-        [DefaultValue(true)]
-        public bool ShowErrorMenuInfo;
-
-        [DefaultValue(true)]
-        public bool ShowCopyToClipboardButton;
-
-        [DefaultValue(true)]
-        public bool ShowBackToMainMenu;
-
-        public enum WorldSize { ExtraSmall, Small, Medium, Large }
-        [DrawTicks]
-        [DefaultValue(WorldSize.Small)]
-        public WorldSize CreateTestWorldSize;
-
-        public enum WorldDifficulty { Normal, Expert, Master, Journey }
-        [DrawTicks]
-        [DefaultValue(WorldDifficulty.Normal)]
-        public WorldDifficulty CreateTestWorldDifficulty;
-
-        [Header("Misc")]
-
-        [DefaultValue(true)]
-        public bool RightClickToolOptions;
-
-        [DefaultValue(true)]
-        public bool LogLevelPersistOnReloads;
-
-        [DefaultValue(false)]
-        public bool ClearLogOnReload;
-
-        [DefaultValue(true)]
-        public bool LogDebugMessages;
-
-        public override void OnChanged()
+        // Player
+        if (Player == null)
         {
-            base.OnChanged();
-            UpdateMainMenuReloadTooltip();
+            Main.LoadPlayers();
+
+            if (Main.PlayerList.Count > 0)
+            {
+                Player = new PlayerDefinition(Main.PlayerList[0].Path);
+                Log.Info("Default player set to: " + Player.Name);
+                changed = true;
+            }
         }
 
-        private void UpdateMainMenuReloadTooltip()
+        // World
+        if (World == null)
         {
-            // Update reload tooltip
-            var mainMenuSys = ModContent.GetInstance<MainMenuSystem>();
-            if (mainMenuSys == null)
-            {
-                Log.Info("main menu sys is null!");
-                return;
-            }
-            var state = mainMenuSys.state;
-            if (state == null) return;
-
-            Main.LoadPlayers();
             Main.LoadWorlds();
 
-            int p = Utilities.FindPlayerId(Conf.C.Player);
-            int w = Utilities.FindWorldId(Conf.C.World);
+            if (Main.WorldList.Count > 0)
+            {
+                World = new WorldDefinition(Main.WorldList[0].Path);
+                Log.Info("Default world set to: " + Main.WorldList[0].Name);
+                changed = true;
+            }
+        }
 
-            state.UpdatePlayerIndex(p);
-            state.UpdateWorldIndex(w);
+        if (changed)
+        {
+            ConfigManager.Save(this);
+            SaveChanges();
         }
     }
 
-    public static class Conf
-    {
-        /// <summary> 
-        /// Quick instance getter. 
-        /// Usage example: Conf.C.YourField 
-        /// /// </summary>
-        public static Config C => ModContent.GetInstance<Config>();
-    }
+}
+
+public static class Conf
+{
+    /// <summary> 
+    /// Quick instance getter. 
+    /// Usage example: Conf.C.YourField 
+    /// /// </summary>
+    public static Config C => ModContent.GetInstance<Config>();
 }

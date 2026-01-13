@@ -59,11 +59,6 @@ Configs: {
 			Tooltip: 在报错界面增加一个新按钮以允许将报错信息复制到剪切板
 		}
 
-		RightClickToolOptions: {
-			Label: 右键工具选项
-			Tooltip: 为工具增加以右键点击触发的额外功能
-		}
-
 		MoveChat: {
 			Label: 移动聊天栏
 			Tooltip: 略微移动聊天栏以为debug信息留出空间
@@ -114,25 +109,72 @@ Configs: {
 		}
 
 		ShowBackToMainMenu: {
-			// Label: Show Back To Main Menu
+			// Label: Show Back To Main Menu When Config Is Open
+			// Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
+		}
+
+		RightClickToolOptions: {
+			Label: 右键工具选项
+			Tooltip: 为工具增加以右键点击触发的额外功能
+		}
+
+		ItemTest: {
+			// Label: Item Test
+			// Tooltip: ""
+		}
+
+		NPCTest: {
+			// Label: N P C Test
 			// Tooltip: ""
 		}
 	}
 
 	WorldSize: {
 		// Tooltip: ""
-		// Small.Label: Small
-		// Medium.Label: Medium
-		// Large.Label: Large
-		// ExtraSmall.Label: Extra Small (Risky)
+
+		Small: {
+			// Label: Small
+			// Tooltip: ""
+		}
+
+		Medium: {
+			// Label: Medium
+			// Tooltip: ""
+		}
+
+		Large: {
+			// Label: Large
+			// Tooltip: ""
+		}
+
+		ExtraSmall: {
+			// Label: Extra Small (Risky)
+			// Tooltip: ""
+		}
 	}
 
 	WorldDifficulty: {
 		// Tooltip: ""
-		// Normal.Label: Normal
-		// Expert.Label: Expert
-		// Master.Label: Master
-		// Journey.Label: Journey
+
+		Normal: {
+			// Label: Normal
+			// Tooltip: ""
+		}
+
+		Expert: {
+			// Label: Expert
+			// Tooltip: ""
+		}
+
+		Master: {
+			// Label: Master
+			// Tooltip: ""
+		}
+
+		Journey: {
+			// Label: Journey
+			// Tooltip: ""
+		}
 	}
 
 	PlayerDefinition: {
@@ -150,6 +192,20 @@ Configs: {
 
 		Player: {
 			// Label: Player
+			// Tooltip: ""
+		}
+	}
+
+	WorldDefinition: {
+		// Tooltip: ""
+
+		IsUnloaded: {
+			// Label: Is Unloaded
+			// Tooltip: ""
+		}
+
+		DisplayName: {
+			// Label: Display Name
 			// Tooltip: ""
 		}
 	}
