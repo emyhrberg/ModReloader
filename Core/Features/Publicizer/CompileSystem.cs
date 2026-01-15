@@ -11,7 +11,6 @@ using dnlib.DotNet.Writer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
-using ModReloader.Core.Features.Reload;
 using MonoMod.RuntimeDetour;
 
 namespace ModReloader.Core.Features.Publicizer

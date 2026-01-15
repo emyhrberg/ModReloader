@@ -1,4 +1,4 @@
-﻿using ModReloader.Core.Features.Reload;
+﻿using ModReloader.Core.Features;
 using System.IO;
 using Terraria.ModLoader.Config;
 
@@ -10,22 +10,10 @@ public class WorldDefinition : EntityDefinition
     /// <summary>
     /// The index of the world in Main.WorldList. -1 if not found.
     /// </summary>
-    public override int Type
-    {
-        get
-        {
-            Main.LoadWorlds();
-            return Utilities.FindWorldId(Name);
-        }
-    }
+    public override int Type => Utilities.FindWorldId(Name);
 
     public override bool IsUnloaded
         => Type <= -1 || Name == null;
-
-    public override string DisplayName => 
-        string.IsNullOrEmpty(Name)
-            ? "UnknownWorld"
-            : Path.GetFileNameWithoutExtension(Name);
 
     public WorldDefinition() : base()
     {
@@ -41,6 +29,5 @@ public class WorldDefinition : EntityDefinition
     {
         Name = path;
     }
-    public override string ToString() => DisplayName;
 }
 

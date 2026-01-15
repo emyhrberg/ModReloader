@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Core.Features;
 using System;
 using System.Linq;
 using Terraria.GameContent.UI.Elements;
@@ -6,18 +7,20 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ModReloader.Common.Configs.ConfigElements.PlayerPicker;
 
-internal sealed class PlayerDefinitionOptionElement: DefinitionOptionElement<PlayerDefinition>
+internal sealed class PlayerDefinitionOptionElement : DefinitionOptionElement<PlayerDefinition>
 {
     private UICharacter _preview;
     private bool isActiveSelection;
 
-    public PlayerDefinitionOptionElement(PlayerDefinition definition,float scale = 0.75f, bool isActiveSelection=false): base(definition, scale)
+    public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.75f, bool isActiveSelection = false) : base(definition, scale)
     {
         this.isActiveSelection = isActiveSelection;
         OverflowHidden = true;
+        NullID = -1;
     }
 
     public override void SetItem(PlayerDefinition definition)
@@ -27,21 +30,27 @@ internal sealed class PlayerDefinitionOptionElement: DefinitionOptionElement<Pla
         RemoveAllChildren();
         _preview = null;
 
-        string path = definition?.Name;
-        if (string.IsNullOrEmpty(path)) { Tooltip = "UnknownPlayer"; return; }
-
         Main.LoadPlayers();
-        PlayerFileData file = Main.PlayerList.FirstOrDefault(p => string.Equals(p.Path, path, StringComparison.OrdinalIgnoreCase));
-        if (file?.Player == null) { Tooltip = definition?.ToString() ?? "UnknownPlayer"; return; }
+        if (definition == null || definition.IsUnloaded)
+        {
+            Tooltip = "No Player Selected";
+            Recalculate();
+            return;
+        }
 
-        Tooltip = definition?.ToString() ?? "UnknownPlayer";
-        if (file.Player.difficulty == PlayerDifficultyID.Creative) { Color c = Main.creativeModeColor; Tooltip += $" [c/{c.R:X2}{c.G:X2}{c.B:X2}:(Journey)]"; }
+        PlayerFileData file = Utilities.FindPlayer(definition.Type);
 
-        Player p = file.Player;
-        p.dead = false;
+        Player player = file.Player;
+        player.dead = false;
+
+        Tooltip = player.name;
+        if (player.difficulty == PlayerDifficultyID.Creative)
+        {
+            Tooltip += Utilities.ColorToTerrariaString(Main.creativeModeColor, " (Journey)");
+        }
 
         float charScale = isActiveSelection ? 0.6f : 0.8f;
-        _preview = new UICharacter(p, animated: false, hasBackPanel: false, characterScale: charScale, useAClone: true);
+        _preview = new UICharacter(player, animated: false, hasBackPanel: false, characterScale: charScale, useAClone: true);
         _preview.Top.Set(-6f, 0f);
 
         Append(_preview);
@@ -55,13 +64,9 @@ internal sealed class PlayerDefinitionOptionElement: DefinitionOptionElement<Pla
         // Animate when hovering
         if (_preview != null)
         {
-            // HOT RELOAD TESTING
-            //_preview.Top.Set(-6, 0);
-            //_preview._characterScale = 0.5f;
-
             _preview.SetAnimated(IsMouseHovering);
         }
-        
+
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -69,8 +74,8 @@ internal sealed class PlayerDefinitionOptionElement: DefinitionOptionElement<Pla
         base.DrawSelf(spriteBatch);
 
         // Position
-        CalculatedStyle dimensions = GetInnerDimensions(); 
-        Vector2 position = dimensions.Position(); 
+        CalculatedStyle dimensions = GetInnerDimensions();
+        Vector2 position = dimensions.Position();
         Vector2 size = BackgroundTexture.Size() * Scale;
         Rectangle destination = new((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
 

@@ -81,7 +81,7 @@ namespace ModReloader.Core.Features.Reload
                     WorldPath = WorldPath
                 };
 
-                var existingData = listJson.FirstOrDefault(d => d.ProcessID == Reload.Utilities.ProcessID);
+                var existingData = listJson.FirstOrDefault(d => d.ProcessID == Utilities.ProcessID);
 
                 if (existingData != null)
                 {

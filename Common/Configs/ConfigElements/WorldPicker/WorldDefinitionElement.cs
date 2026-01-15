@@ -1,4 +1,4 @@
-﻿using ModReloader.Core.Features.Reload;
+﻿using ModReloader.Core.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;

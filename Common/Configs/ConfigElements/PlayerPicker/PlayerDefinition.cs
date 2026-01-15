@@ -1,4 +1,4 @@
-﻿using ModReloader.Core.Features.Reload;
+﻿using ModReloader.Core.Features;
 using Terraria.ModLoader.Config;
 
 
@@ -28,10 +28,6 @@ public class PlayerDefinition : EntityDefinition
     public PlayerDefinition(string path) : base()
     {
         Name = path;
-    }
-    public override string ToString()
-    {
-        return $"{(Utilities.FindPlayer(Name) != null ? Utilities.FindPlayer(Name).Name : "null")}";
     }
 }
 

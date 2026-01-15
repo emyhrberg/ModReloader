@@ -1,4 +1,4 @@
-﻿using ModReloader.Core.Features.Reload;
+﻿using ModReloader.Core.Features;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,14 +108,11 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
 
     private void RemoveScrollbar()
     {
-        if (ChooserGrid != null)
-        {
-            ChooserGrid.SetScrollbar(null);
-            ChooserGrid.Width.Set(0f, 1f);
-        }
-
         if (ChooserPanel == null)
             return;
+
+        ChooserGrid.SetScrollbar(null);
+        ChooserGrid.Width.Set(0f, 1f);
 
         foreach (var c in ChooserPanel.Children.ToArray())
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using ModReloader.Core.Features;
 using ReLogic.Content;
 using System;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace ModReloader.Common.Configs.ConfigElements.WorldPicker;
 
 internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<WorldDefinition>
 {
-    private WorldFileData _file;
     private Asset<Texture2D> _iconAsset;
 
     public WorldDefinitionOptionElement(WorldDefinition definition, float scale = 0.75f) : base(definition, scale) { OverflowHidden = true; }
@@ -21,26 +21,29 @@ internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<Wor
     {
         base.SetItem(definition);
 
-        _file = null;
         _iconAsset = null;
 
-        if (definition?.Name is not string worldPath || string.IsNullOrEmpty(worldPath)) { Tooltip = "UnknownWorld"; return; }
-
         Main.LoadWorlds();
-        _file = Main.WorldList.FirstOrDefault(w => string.Equals(w.Path, worldPath, StringComparison.OrdinalIgnoreCase));
-        if (_file == null) { Tooltip = definition.DisplayName ?? "UnknownWorld"; return; }
+        if (definition == null || definition.IsUnloaded)
+        {
+            Tooltip = "No World Selected";
+            Recalculate();
+            return;
+        }
+
+        var file = Utilities.FindWorld(definition.Type);
 
         // Get icon asset
-        _iconAsset = GetIconAsset(_file);
+        _iconAsset = GetIconAsset(file);
 
         // Get world info
-        string worldName = definition.DisplayName ?? "UnknownWorld";
-        int diffId = GetDifficultyId(_file);
-        string diffName = GetDifficultyName(_file);
+        string worldName = file.GetWorldName() ?? "UnknownWorld";
+        int diffId = GetDifficultyId(file);
+        string diffName = $" ({GetDifficultyName(file)})";
         Color diffColor = GetDifficultyColor(diffId);
 
         // Tooltip
-        Tooltip = $"{worldName} [c/{ToHex(diffColor)}:({diffName})]";
+        Tooltip = $"{worldName} {Utilities.ColorToTerrariaString(diffColor, diffName)}";
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -73,14 +76,15 @@ internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<Wor
     private static int GetDifficultyId(WorldFileData data)
     {
         if (data.GameMode == 3) return 0; // Journey
-        int id = data.GameMode switch 
-        { 
+        int id = data.GameMode switch
+        {
             0 => 1, // Normal
             1 => 2, // Expert
             2 => 3, // Master
-            _ => 1 }; 
+            _ => 1
+        };
 
-        if (data.ForTheWorthy) 
+        if (data.ForTheWorthy)
             id++; // FTW / Legendary
 
         return Math.Clamp(id, 0, 4);
@@ -103,11 +107,11 @@ internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<Wor
     {
         if (data.GameMode == 3) return Language.GetTextValue("UI.Creative");
 
-        int tier = data.GameMode switch 
-        { 
-            1 => 2, 
-            2 => 3, 
-            _ => 1 
+        int tier = data.GameMode switch
+        {
+            1 => 2,
+            2 => 3,
+            _ => 1
         };
         if (data.ForTheWorthy) tier++;
 
@@ -119,8 +123,6 @@ internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<Wor
             _ => Language.GetTextValue("UI.Normal")
         };
     }
-
-    private static string ToHex(Color c) => $"{c.R:X2}{c.G:X2}{c.B:X2}";
 
     private static Asset<Texture2D> GetIconAsset(WorldFileData data)
     {

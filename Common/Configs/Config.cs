@@ -1,8 +1,8 @@
 ﻿using ModReloader.Common.Configs.ConfigElements.ModsConfigElements;
 using ModReloader.Common.Configs.ConfigElements.PlayerPicker;
 using ModReloader.Common.Configs.ConfigElements.WorldPicker;
+using ModReloader.Core.Features;
 using ModReloader.Core.Features.MainMenuFeatures;
-using ModReloader.Core.Features.Reload;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

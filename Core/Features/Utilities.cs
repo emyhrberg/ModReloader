@@ -6,7 +6,7 @@ using System.Threading;
 using Terraria.IO;
 using Terraria;
 
-namespace ModReloader.Core.Features.Reload
+namespace ModReloader.Core.Features
 {
     //Class basically for universal helping functions
     internal static class Utilities
@@ -17,7 +17,7 @@ namespace ModReloader.Core.Features.Reload
         {
             if (i < 0 || i >= Main.PlayerList.Count)
             {
-                if (Main.PlayerList.Count >   0)
+                if (Main.PlayerList.Count > 0)
                 {
                     return Main.PlayerList[0];
                 }
@@ -36,7 +36,7 @@ namespace ModReloader.Core.Features.Reload
             PlayerFileData pfd = Main.PlayerList.FirstOrDefault(p => p.Path == path, null);
             if (pfd == null)
             {
-                if(Main.PlayerList.Count > 0)
+                if (Main.PlayerList.Count > 0)
                 {
                     return Main.PlayerList[0];
                 }
@@ -51,7 +51,7 @@ namespace ModReloader.Core.Features.Reload
 
         public static WorldFileData FindWorld(int i)
         {
-            
+
             if (i < 0 || i >= Main.WorldList.Count)
             {
                 if (Main.WorldList.Count > 0)
@@ -181,6 +181,17 @@ namespace ModReloader.Core.Features.Reload
                 Log.Error("Could not find part of the path: " + ex.Message);
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Turns color and text into a Terraria formatted string.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string ColorToTerrariaString(Color color, string text)
+        {
+            return $"[c/{color.R:X2}{color.G:X2}{color.B:X2}:{text}]";
         }
     }
 }
