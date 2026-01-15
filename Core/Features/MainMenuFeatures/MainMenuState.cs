@@ -152,9 +152,9 @@ internal sealed class MainMenuState : UIState
         var joinSingleplayer = new ActionMainMenuElement(
     () =>
     {
-        ClientDataJsonHelper.ClientMode = ClientMode.SinglePlayer;
-        ClientDataJsonHelper.PlayerPath = null;
-        ClientDataJsonHelper.WorldPath = null;
+        ClientDataMemoryStorage.ClientMode = ClientMode.SinglePlayer;
+        ClientDataMemoryStorage.PlayerPath = null;
+        ClientDataMemoryStorage.WorldPath = null;
         AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
     },
     Loc.Get("MainMenu.JoinSingleplayerText"),

@@ -176,7 +176,7 @@ namespace ModReloader.Core.Features.MainMenuFeatures
                     throw new Exception("No worlds found.");
 
                 // Getting Player and World from ClientDataHandler
-                var world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataJsonHelper.WorldPath)) ?? throw new Exception("World not found: " + ClientDataJsonHelper.WorldPath);
+                var world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataMemoryStorage.WorldPath)) ?? throw new Exception("World not found: " + ClientDataMemoryStorage.WorldPath);
                 if (string.IsNullOrEmpty(world.Path))
                 {
                     Log.Error($"World {world.Name} has an invalid or null path.");

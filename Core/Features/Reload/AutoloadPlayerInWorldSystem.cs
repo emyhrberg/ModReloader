@@ -22,7 +22,7 @@ namespace ModReloader.Core.Features.Reload
         public override void Unload()
         {
             if (Main.netMode != NetmodeID.Server)
-                ClientDataJsonHelper.WriteData();
+                ClientDataMemoryStorage.WriteData();
 
             // Reset some hooks
             typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, null);
@@ -36,12 +36,12 @@ namespace ModReloader.Core.Features.Reload
                 return;
             }
 
-            if (ClientDataJsonHelper.ClientMode == ClientMode.SinglePlayer)
+            if (ClientDataMemoryStorage.ClientMode == ClientMode.SinglePlayer)
             {
                 // Modify the delegate to call EnterSingleplayerWorld() when OnSuccessfulLoad is called
                 ModLoader.OnSuccessfulLoad += EnterSingleplayerWorld;
             }
-            else if (ClientDataJsonHelper.ClientMode == ClientMode.MPMajor || ClientDataJsonHelper.ClientMode == ClientMode.MPMinor)
+            else if (ClientDataMemoryStorage.ClientMode == ClientMode.MPMajor || ClientDataMemoryStorage.ClientMode == ClientMode.MPMinor)
             {
                 ModLoader.OnSuccessfulLoad += EnterMultiplayerWorld;
             }
@@ -153,9 +153,9 @@ namespace ModReloader.Core.Features.Reload
             }
             var player = Main.PlayerList[playerId];
 
-            if (ClientDataJsonHelper.PlayerPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
+            if (ClientDataMemoryStorage.PlayerPath != null && ClientDataMemoryStorage.ClientMode != ClientMode.FreshClient)
             {
-                player = Main.PlayerList.FirstOrDefault(p => p.Path.Equals(ClientDataJsonHelper.PlayerPath), null);
+                player = Main.PlayerList.FirstOrDefault(p => p.Path.Equals(ClientDataMemoryStorage.PlayerPath), null);
             }
 
             if (player == null)
@@ -185,9 +185,9 @@ namespace ModReloader.Core.Features.Reload
             }
             var world = Main.WorldList[worldId];
 
-            if (ClientDataJsonHelper.WorldPath != null && ClientDataJsonHelper.ClientMode != ClientMode.FreshClient)
+            if (ClientDataMemoryStorage.WorldPath != null && ClientDataMemoryStorage.ClientMode != ClientMode.FreshClient)
             {
-                world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataJsonHelper.WorldPath), null);
+                world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataMemoryStorage.WorldPath), null);
             }
 
             if (world == null)

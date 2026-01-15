@@ -100,7 +100,7 @@ public static class ReloadUtilities
             await ExitWorld();
 
             // Create a hook for Unload to create a server after unloading
-            CreateServerBeforeUnloadHook(ClientDataJsonHelper.WorldPath);
+            CreateServerBeforeUnloadHook(ClientDataMemoryStorage.WorldPath);
 
             // Mod was found, we can Reload
             BuildOrReloadMods();
@@ -132,7 +132,7 @@ public static class ReloadUtilities
             await ExitWorld();
 
             // Creating hook for Unload 
-            CreateServerBeforeUnloadHook(ClientDataJsonHelper.WorldPath);
+            CreateServerBeforeUnloadHook(ClientDataMemoryStorage.WorldPath);
 
             if (!IsModsToReloadEmpty)
             {
@@ -376,10 +376,10 @@ public static class ReloadUtilities
 
     private static void PrepareClient(ClientMode clientMode, string playerID, string worldID)
     {
-        ClientDataJsonHelper.ClientMode = clientMode;
-        ClientDataJsonHelper.PlayerPath = playerID;
-        ClientDataJsonHelper.WorldPath = worldID;
-        Log.Info("set player and worldid to " + ClientDataJsonHelper.PlayerPath + " and " + ClientDataJsonHelper.WorldPath);
+        ClientDataMemoryStorage.ClientMode = clientMode;
+        ClientDataMemoryStorage.PlayerPath = playerID;
+        ClientDataMemoryStorage.WorldPath = worldID;
+        Log.Info("set player and worldid to " + ClientDataMemoryStorage.PlayerPath + " and " + ClientDataMemoryStorage.WorldPath);
     }
 
     /// <summary>
