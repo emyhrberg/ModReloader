@@ -135,10 +135,9 @@ namespace ModReloader.Core.Features.Publicizer
                             }
                         }
 
-                        // Adding any additional preprocessor symbols from the config
-                        if (Conf.C.AdditionalPreprocessorSymbols != null)
+                        if (Conf.C.DebugReload)
                         {
-                            preprocessorSymbols = [.. preprocessorSymbols, .. Conf.C.AdditionalPreprocessorSymbols];
+                            preprocessorSymbols.Append("DEBUG");
                         }
 
                         // Normal RoslynCompiler method with suppressed assembly version warnings

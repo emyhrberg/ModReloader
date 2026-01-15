@@ -126,6 +126,11 @@ Configs: {
 			Label: Additional Preprocessor Symbols
 			Tooltip: ""
 		}
+
+		DebugReload: {
+			Tooltip: ""
+			Label: Debug Reload
+		}
 	}
 
 	WorldSize: {
