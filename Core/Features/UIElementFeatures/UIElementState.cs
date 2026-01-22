@@ -240,7 +240,7 @@ namespace ModReloader.Core.Features.UIElementFeatures
                 textPosition += new Vector2(TypeXOffset, TypeYOffset);
             }
 
-            Utils.DrawBorderStringFourWay(
+            Terraria.Utils.DrawBorderStringFourWay(
                 spriteBatch,
                 FontAssets.MouseText.Value,
                 typeText,
@@ -284,7 +284,7 @@ namespace ModReloader.Core.Features.UIElementFeatures
                 textPosition += new Vector2(SizeXOffset, SizeYOffset);
             }
 
-            Utils.DrawBorderStringFourWay(
+            Terraria.Utils.DrawBorderStringFourWay(
                 spriteBatch,
                 FontAssets.MouseText.Value,
                 text: sizeText,

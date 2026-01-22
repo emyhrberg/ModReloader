@@ -53,6 +53,7 @@ internal sealed class MainMenuState : UIState
         AddSingleplayerSection(tooltipPanel);
         AddMultiplayerSection(tooltipPanel);
         AddWorldSection(tooltipPanel);
+        AddLoadUnloadSection(tooltipPanel);
 
         Append(tooltipPanel);
         Append(mainMenuList);
@@ -227,6 +228,28 @@ internal sealed class MainMenuState : UIState
         var spacer = new SpacerMainMenuElement();
         mainMenuList.Add(worldHeader);
         mainMenuList.Add(createNewWorld);
+        mainMenuList.Add(spacer);
+    }
+
+    private void AddLoadUnloadSection(TooltipPanel tooltipPanel)
+    {
+        var loadUnloadHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.LoadUnloadHeader"), () => Loc.Get("MainMenu.LoadUnloadTooltip"), tooltipPanel);
+        var load = new ActionMainMenuElement(
+            MainMenuActions.LoadSingleMod,
+            Loc.Get("MainMenu.LoadMod"),
+            () => Loc.Get("MainMenu.LoadModTooltip"),
+            tooltipPanel
+        );
+        var unload = new ActionMainMenuElement(
+            MainMenuActions.UnloadSingleMod,
+            Loc.Get("MainMenu.UnloadMod"),
+            () => Loc.Get("MainMenu.UnloadModTooltip"),
+            tooltipPanel
+        );
+        var spacer = new SpacerMainMenuElement();
+        mainMenuList.Add(loadUnloadHeader);
+        mainMenuList.Add(load);
+        mainMenuList.Add(unload);
         mainMenuList.Add(spacer);
     }
 

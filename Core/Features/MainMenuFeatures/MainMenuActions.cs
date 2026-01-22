@@ -1,11 +1,15 @@
-﻿using System;
+﻿using ModReloader.Core.Features.LoadUnloadSingleMod;
+using ModReloader.Core.Features.Reload;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using ModReloader.Core.Features.Reload;
+using System.Reflection;
+using System.Threading.Tasks;
 using Terraria.GameContent.UI.States;
 using Terraria.IO;
+using Terraria.ModLoader.Core;
 using Terraria.Social;
 using Terraria.WorldBuilding;
 using static ModReloader.Common.Configs.Config;
@@ -208,6 +212,16 @@ namespace ModReloader.Core.Features.MainMenuFeatures
                 Log.Error("Failed to start server (start-tModLoaderServer.bat failed to launch): " + e.Message);
                 return;
             }
+        }
+
+        internal static void LoadSingleMod()
+        {
+            LoadUnloadSingleMod.LoadUnloadSingleMod.LoadSingleMod();
+        }
+
+        internal static void UnloadSingleMod()
+        {
+            throw new NotImplementedException();
         }
     }
 }
