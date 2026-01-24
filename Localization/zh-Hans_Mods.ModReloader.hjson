@@ -32,7 +32,7 @@ Configs: {
 
 		LogDebugMessages: {
 			Label: 在日志中记录调试信息
-			Tooltip: 
+			Tooltip:
 				'''
 				（可选）记录模组的行为流程。
 				用于寻找出错的原因。
@@ -63,29 +63,9 @@ Configs: {
 			Tooltip: 在报错界面增加一个新按钮以允许将报错信息复制到剪切板
 		}
 
-		RightClickToolOptions: {
-			Label: 右键工具选项
-			Tooltip: 为工具增加以右键点击触发的额外功能
-		}
-
-		MoveChat: {
-			Label: 移动聊天栏
-			Tooltip: 略微移动聊天栏以为debug信息留出空间
-		}
-
 		LogLevelPersistOnReloads: {
 			Tooltip: 重加载时是否保持日志级别设置。关闭此选项以恢复默认日志级别。
 			Label: 重加载时保持日志级别设置
-		}
-
-		BuilderToggle: {
-			Label: 物品栏左侧开关
-			Tooltip: 在物品栏左侧添加一个新的开关以切换所有工具
-		}
-
-		ShowBuilderToggle: {
-			// Label: Show Builder Toggle
-			// Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
 		}
 
 		ClearLogOnReload: {
@@ -112,48 +92,56 @@ Configs: {
 			// Tooltip: Difficulty set to a world created from the main menu option
 		}
 
-		PlayerTest: {
-			// Label: Player Test
-			// Tooltip: ""
-		}
-
 		ShowBackToMainMenu: {
-			// Label: Show Back To Main Menu
-			// Tooltip: ""
+			// Label: Show Back To Main Menu When Config Is Open
+			// Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
 		}
 	}
 
 	WorldSize: {
 		Tooltip: ""
-		Small.Label: 小世界
-		Medium.Label: 中世界
-		Large.Label: 大世界
-		ExtraSmall.Label: 超小世界（有风险）
+
+		Small: {
+			Label: 小世界
+			// Tooltip: ""
+		}
+
+		Medium: {
+			Label: 中世界
+			// Tooltip: ""
+		}
+
+		Large: {
+			Label: 大世界
+			// Tooltip: ""
+		}
+
+		ExtraSmall: {
+			Label: 超小世界（有风险）
+			// Tooltip: ""
+		}
 	}
 
 	WorldDifficulty: {
 		// Tooltip: ""
-		// Normal.Label: Normal
-		// Expert.Label: Expert
-		// Master.Label: Master
-		// Journey.Label: Journey
-	}
 
-	PlayerDefinition: {
-		// Tooltip: ""
-
-		IsUnloaded: {
-			// Label: Is Unloaded
+		Normal: {
+			// Label: Normal
 			// Tooltip: ""
 		}
 
-		PlayerFile: {
-			// Label: Player File
+		Expert: {
+			// Label: Expert
 			// Tooltip: ""
 		}
 
-		Player: {
-			// Label: Player
+		Master: {
+			// Label: Master
+			// Tooltip: ""
+		}
+
+		Journey: {
+			// Label: Journey
 			// Tooltip: ""
 		}
 	}
@@ -199,10 +187,7 @@ MainMenu: {
 	WorldHeader: 世界
 	WorldTooltip: 快速创建世界
 	CreateNewWorld: 创建新世界
-	CreateNewWorldTooltip:
-		'''
-		创建名叫{0}，难度为{2}的{1}
-		'''
+	CreateNewWorldTooltip: 创建名叫{0}，难度为{2}的{1}
 }
 
 ExceptionMenu: {
