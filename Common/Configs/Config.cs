@@ -63,9 +63,6 @@ namespace ModReloader.Common.Configs
         [Header("Misc")]
 
         [DefaultValue(true)]
-        public bool RightClickToolOptions;
-
-        [DefaultValue(true)]
         public bool LogLevelPersistOnReloads;
 
         [DefaultValue(false)]

@@ -219,8 +219,8 @@ internal sealed class MainMenuState : UIState
             Loc.Get("MainMenu.CreateNewWorld"),
             () => Loc.Get("MainMenu.CreateNewWorldTooltip",
             $"[c/FFFF00:{MainMenuActions.GetNextAvailableTestWorldName()}]",
-            $"[c/FFFF00:{Conf.C.CreateTestWorldSize}]",
-            $"[c/FFFF00:{Conf.C.CreateTestWorldDifficulty}]"
+            $"[c/FFFF00:{Loc.Get($"Configs.WorldSize.{Conf.C.CreateTestWorldSize}.Label")}]",
+            $"[c/FFFF00:{Loc.Get($"Configs.WorldDifficulty.{Conf.C.CreateTestWorldDifficulty}.Label")}]"
             ),
             tooltipPanel
         );

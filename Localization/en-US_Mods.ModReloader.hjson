@@ -22,7 +22,7 @@ Configs: {
 
 		Player: {
 			Label: Player
-			Tooltip: Select the player to join with with when reloading
+			Tooltip: Select the player to join with when reloading
 		}
 
 		World: {
@@ -63,24 +63,9 @@ Configs: {
 			Tooltip: A new button will appear allowing you to copy the message in the error menu
 		}
 
-		MoveChat: {
-			Label: Move Chat
-			Tooltip: Moves the chat box position a little to make space for debug info
-		}
-
 		LogLevelPersistOnReloads: {
 			Tooltip: Whether to keep the log levels after reloading. Keep this setting off to keep log levels at default.
 			Label: Log Level Persist On Reloads
-		}
-
-		BuilderToggle: {
-			Label: Builder Toggle
-			Tooltip: Shows a new builder toggle to the left of inventory to toggle all tools
-		}
-
-		ShowBuilderToggle: {
-			Label: Show Builder Toggle
-			Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
 		}
 
 		ClearLogOnReload: {
@@ -107,48 +92,56 @@ Configs: {
 			Tooltip: Difficulty set to a world created from the main menu option
 		}
 
-		PlayerTest: {
-			Label: Player Test
-			Tooltip: ""
-		}
-
 		ShowBackToMainMenu: {
 			Label: Show Back To Main Menu When Config Is Open
-			Tooltip: "In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen."
+			Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
 		}
 	}
 
 	WorldSize: {
 		Tooltip: ""
-		Small.Label: Small
-		Medium.Label: Medium
-		Large.Label: Large
-		ExtraSmall.Label: Extra Small (Risky)
+
+		Small: {
+			Label: Small
+			Tooltip: ""
+		}
+
+		Medium: {
+			Label: Medium
+			Tooltip: ""
+		}
+
+		Large: {
+			Label: Large
+			Tooltip: ""
+		}
+
+		ExtraSmall: {
+			Label: Extra Small (Risky)
+			Tooltip: ""
+		}
 	}
 
 	WorldDifficulty: {
 		Tooltip: ""
-		Normal.Label: Normal
-		Expert.Label: Expert
-		Master.Label: Master
-		Journey.Label: Journey
-	}
 
-	PlayerDefinition: {
-		Tooltip: ""
-
-		IsUnloaded: {
-			Label: Is Unloaded
+		Normal: {
+			Label: Normal
 			Tooltip: ""
 		}
 
-		PlayerFile: {
-			Label: Player File
+		Expert: {
+			Label: Expert
 			Tooltip: ""
 		}
 
-		Player: {
-			Label: Player
+		Master: {
+			Label: Master
+			Tooltip: ""
+		}
+
+		Journey: {
+			Label: Journey
 			Tooltip: ""
 		}
 	}

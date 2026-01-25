@@ -31,16 +31,20 @@ Configs: {
 		}
 
 		LogDebugMessages: {
-			Label: 在日志中记录debug信息
-			Tooltip: （可选）记录模组的行为流程。用于寻找bug的原因。
+			Label: 在日志中记录调试信息
+			Tooltip:
+				'''
+				（可选）记录模组的行为流程
+				用于寻找出错的原因
+				'''
 		}
 
 		ShowDebugInfo: {
-			Label: 显示debug信息
+			Label: 显示游戏信息
 			Tooltip:
 				'''
-				在游戏中时，在屏幕左下角添加一份debug信息
-				包括玩家名称，玩家ID，游戏模式，帧率，以及开启模组配置。
+				在游戏中时，在屏幕左下角添加一份调试信息
+				包括玩家名称（P）和世界名称（W）
 				'''
 		}
 
@@ -59,97 +63,85 @@ Configs: {
 			Tooltip: 在报错界面增加一个新按钮以允许将报错信息复制到剪切板
 		}
 
-		RightClickToolOptions: {
-			Label: 右键工具选项
-			Tooltip: 为工具增加以右键点击触发的额外功能
-		}
-
-		MoveChat: {
-			Label: 移动聊天栏
-			Tooltip: 略微移动聊天栏以为debug信息留出空间
-		}
-
 		LogLevelPersistOnReloads: {
 			Tooltip: 重加载时是否保持日志级别设置。关闭此选项以恢复默认日志级别。
 			Label: 重加载时保持日志级别设置
 		}
 
-		BuilderToggle: {
-			Label: 物品栏左侧开关
-			Tooltip: 在物品栏左侧添加一个新的开关以切换所有工具
-		}
-
-		ShowBuilderToggle: {
-			// Label: Show Builder Toggle
-			// Tooltip: Shows a toggle to hide or show everything in the top left of the inventory
-		}
-
 		ClearLogOnReload: {
-			// Label: Clear Log On Reload
-			// Tooltip: Enable this to clear the client log every time a reload is performed
+			Label: 重加载时清空日志
+			Tooltip: 开启此项以在每次重加载完成时清空客户端日志文件
 		}
 
 		SaveWorld: {
-			// Label: Save World
-			/* Tooltip:
+			Label: 保存世界
+			Tooltip:
 				'''
-				Save player and world data before reloading. 
-				Takes more time to reload but saves your player and world
-				''' */
+				在重加载前保存玩家和世界数据
+				增加重加载耗时，但可以更新存档
+				'''
 		}
 
 		CreateTestWorldSize: {
-			// Label: Create Test World Size
-			// Tooltip: Size set to a world created from the main menu option
+			Label: 创建测试世界大小
+			Tooltip: 为主菜单“快速创建世界”选项指定世界大小
 		}
 
 		CreateTestWorldDifficulty: {
-			// Label: Create Test World Difficulty
-			// Tooltip: Difficulty set to a world created from the main menu option
-		}
-
-		PlayerTest: {
-			// Label: Player Test
-			// Tooltip: ""
+			Label: 创建测试世界难度
+			Tooltip: 为主菜单“快速创建世界”选项指定世界难度
 		}
 
 		ShowBackToMainMenu: {
-			// Label: Show Back To Main Menu
-			// Tooltip: ""
+			Label: 在模组配置页面开启时显示回到主菜单
+			Tooltip: 在主菜单打开模组配置时，显示一则点击即可快速回到主菜单的文字信息
 		}
 	}
 
 	WorldSize: {
 		// Tooltip: ""
-		// Small.Label: Small
-		// Medium.Label: Medium
-		// Large.Label: Large
-		// ExtraSmall.Label: Extra Small (Risky)
+
+		Small: {
+			Label: 小世界
+			// Tooltip: ""
+		}
+
+		Medium: {
+			Label: 中世界
+			// Tooltip: ""
+		}
+
+		Large: {
+			Label: 大世界
+			// Tooltip: ""
+		}
+
+		ExtraSmall: {
+			Label: 超小世界（有风险）
+			// Tooltip: ""
+		}
 	}
 
 	WorldDifficulty: {
 		// Tooltip: ""
-		// Normal.Label: Normal
-		// Expert.Label: Expert
-		// Master.Label: Master
-		// Journey.Label: Journey
-	}
 
-	PlayerDefinition: {
-		// Tooltip: ""
-
-		IsUnloaded: {
-			// Label: Is Unloaded
+		Normal: {
+			Label: 经典
 			// Tooltip: ""
 		}
 
-		PlayerFile: {
-			// Label: Player File
+		Expert: {
+			Label: 专家
 			// Tooltip: ""
 		}
 
-		Player: {
-			// Label: Player
+		Master: {
+			Label: 大师
+			// Tooltip: ""
+		}
+
+		Journey: {
+			Label: 旅行
 			// Tooltip: ""
 		}
 	}
@@ -165,7 +157,7 @@ BuilderToggles: {
 MainMenu: {
 	WelcomeTooltip: 欢迎使用Mod Reloader主菜单！
 	OpenConfigText: 开启模组配置
-	OpenConfigTooltip: 点击以打开Mod Reloader模组配置
+	OpenConfigTooltip: 点击以打开[c/FFFF00:Mod Reloader]模组配置
 	ReloadText: 重加载
 	ReloadTooltip: 构建{0}并重加载
 	ReloadNoMods: 未设置重加载时要构建的模组
@@ -182,28 +174,36 @@ MainMenu: {
 	SingleplayerHeader: 单人游戏
 	SingleplayerTooltip: 快速进入单人游戏
 	JoinSingleplayerText: 进入单人游戏
-	JoinSingleplayerTooltip: 根据预设的玩家和世界快速进入游戏
-	/* JoinSingleplayerTooltipNoData:
+	JoinSingleplayerTooltip:
 		'''
-		No player or world found
-		Please select player and world in config
-		''' */
+		玩家：{0}
+		世界：{1}
+		'''
+	JoinSingleplayerTooltipNoData:
+		'''
+		未选择玩家或世界
+		请在模组配置中选择玩家和世界
+		'''
 	MultiplayerHeader: 多人游戏
 	MultiplayerTooltip: 开服及测试多人游戏
 	HostMultiplayerText: 开服并进入游戏
-	HostMultiplayerTooltip: 在本地开服并进入多人游戏
-	JoinMultiplayerText: 加入多人游戏
-	JoinMultiplayerTooltip: 以首个可用玩家 加入本地（已开服的）多人游戏
-	// LoadingPlayer: Loading player: {0}
-	LoadingWorld: 加入游戏：{0}
-	// WorldHeader: World
-	// WorldTooltip: Quickly create worlds
-	// CreateNewWorld: Quick Generate World
-	/* CreateNewWorldTooltip:
+	HostMultiplayerTooltip:
 		'''
-		Create world with name {0}, 
-		 size {1} and difficulty {2}
-		''' */
+		在本地开服
+		并以首个可用玩家和世界进入游戏
+		'''
+	JoinMultiplayerText: 加入多人游戏
+	JoinMultiplayerTooltip:
+		'''
+		以首个可用玩家
+		加入已本地开服的多人游戏
+		'''
+	LoadingPlayer: 加载玩家：{0}
+	LoadingWorld: 加入游戏：{0}
+	WorldHeader: 世界
+	WorldTooltip: 快速创建世界
+	CreateNewWorld: 快速创建世界
+	CreateNewWorldTooltip: 创建{2}难度的{1}并命名为{0}
 }
 
 ExceptionMenu: {
@@ -222,7 +222,7 @@ ExceptionMenu: {
 }
 
 ModsButton: {
-	// Text: Mods
+	Text: 模组
 	HoverText: 模组列表
 	HoverDesc: 启用或禁用模组
 	HoverTooltipOn: 关闭模组列表
@@ -230,7 +230,7 @@ ModsButton: {
 }
 
 UIElementButton: {
-	// Text: UI
+	Text: UI
 	HoverText: UI元素碰撞箱
 	HoverDescBase: 设置显示UI元素的碰撞箱
 	HoverDescRightClick: 右键点击以显示所有UI元素的碰撞箱
@@ -239,7 +239,7 @@ UIElementButton: {
 }
 
 LogButton: {
-	// Text: Log
+	Text: 日志
 	HoverText: 日志文件选项
 	HoverDescBase: 改变日志文件的设置
 	HoverDescRightClick: 右键点击以打开{0}文件
