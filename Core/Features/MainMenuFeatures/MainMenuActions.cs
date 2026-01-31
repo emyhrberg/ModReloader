@@ -216,7 +216,7 @@ namespace ModReloader.Core.Features.MainMenuFeatures
 
         internal static void LoadSingleMod()
         {
-            LoadUnloadSingleMod.LoadUnloadSingleMod.LoadSingleMod();
+            LoadUnloadSingleMod.LoadUnloadSingleModUnused.LoadSingleMod();
         }
 
         internal static void UnloadSingleMod()

@@ -39,5 +39,6 @@
 		<Publicize Include="tModLoader" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
 		<Publicize Include="MonoMod.RuntimeDetour" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
 		<Publicize Include="DragonLens" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
+		<Publicize Include="MonoMod.Utils" IncludeVirtualMembers="false" IncludeCompilerGeneratedMembers="false" />
 	</ItemGroup>
 </Project>
