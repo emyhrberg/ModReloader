@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using ModReloader.Core.Features;
 using ModReloader.Core.Features.Reload;
 using Terraria.ID;
 namespace ModReloader.Common.PacketHandlers

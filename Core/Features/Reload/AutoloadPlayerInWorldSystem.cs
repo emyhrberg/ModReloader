@@ -120,6 +120,7 @@ namespace ModReloader.Core.Features.Reload
             if (isPlayerAndWorldSelected)
             {
                 // Host the server
+                Main.showServerConsole = true;
                 Main.instance.OnSubmitServerPassword("");
             }
             else
@@ -144,8 +145,7 @@ namespace ModReloader.Core.Features.Reload
                 Log.Error("No players found after loading players.");
                 return false;
             }
-
-            int playerId = Utilities.FindPlayerId(Conf.C.Player);
+            int playerId = Conf.C.Player.Type;
             if (playerId < 0 || playerId >= Main.PlayerList.Count)
             {
                 Log.Error($"Invalid player index {playerId}. Cannot autoload player.");
@@ -177,7 +177,7 @@ namespace ModReloader.Core.Features.Reload
                 return false;
             }
 
-            int worldId = Utilities.FindWorldId(Conf.C.World);
+            int worldId = Conf.C.World.Type;
             if (worldId < 0 || worldId >= Main.WorldList.Count)
             {
                 Log.Error($"Invalid world index {worldId}. Cannot autoload world.");
@@ -211,13 +211,13 @@ namespace ModReloader.Core.Features.Reload
         private static bool TryMoveToRejectionMenuIfNeeded()
         {
             // Resolve player from config
-            int playerId = Utilities.FindPlayerId(Conf.C.Player);
+            int playerId = Conf.C.Player.Type;
             if (playerId < 0 || playerId >= Main.PlayerList.Count)
                 return false;
             var playerFile = Main.PlayerList[playerId];
 
             // Resolve world from config
-            int worldId = Utilities.FindWorldId(Conf.C.World);
+            int worldId = Conf.C.World.Type;
             if (worldId < 0 || worldId >= Main.WorldList.Count)
                 return false;
             var worldFile = Main.WorldList[worldId];

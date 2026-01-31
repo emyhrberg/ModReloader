@@ -70,12 +70,10 @@ namespace ModReloader.Core
                 AreButtonsShowing = true; // Show our own collapse and show buttons by default
 
                 string uiElementHoverDesc = Loc.Get("UIElementButton.HoverDescBase");
-                if (Conf.C.RightClickToolOptions)
-                    uiElementHoverDesc += "\n" + Loc.Get("UIElementButton.HoverDescRightClick");
+                uiElementHoverDesc += "\n" + Loc.Get("UIElementButton.HoverDescRightClick");
 
                 string logHoverDesc = Loc.Get("LogButton.HoverDescBase");
-                if (Conf.C.RightClickToolOptions)
-                    logHoverDesc += "\n" + Loc.Get("LogButton.HoverDescRightClick", Path.GetFileName(Logging.LogPath));
+                logHoverDesc += "\n" + Loc.Get("LogButton.HoverDescRightClick", Path.GetFileName(Logging.LogPath));
 
                 modsButton = AddButton<ModsButton>(
                     Ass.ButtonMods,
@@ -107,8 +105,7 @@ namespace ModReloader.Core
                     ? Loc.Get("ReloadButton.HoverDescNoMods")
                     : string.Join(",", Conf.C.ModsToReload);
 
-                if (Conf.C.RightClickToolOptions)
-                    reloadHoverMods += "\n" + Loc.Get("ReloadButton.HoverDescRightClick");
+                reloadHoverMods += "\n" + Loc.Get("ReloadButton.HoverDescRightClick");
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
                 {

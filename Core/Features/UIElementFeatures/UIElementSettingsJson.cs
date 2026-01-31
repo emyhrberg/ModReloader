@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using ModReloader.Core.Features.Reload;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

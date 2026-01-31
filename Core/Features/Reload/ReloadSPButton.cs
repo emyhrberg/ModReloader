@@ -23,8 +23,6 @@ namespace ModReloader.Core.Features.Reload
         {
             base.RightClick(evt);
 
-            if (!Conf.C.RightClickToolOptions) return;
-
             ReloadUtilities.forceJustReload = true;
             await ReloadUtilities.SinglePlayerReload();
         }

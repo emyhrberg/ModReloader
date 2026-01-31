@@ -113,8 +113,7 @@ namespace ModReloader.Common.Configs.ConfigElements.ModsConfigElements
                         else
                         {
                             modsToReload = $"{modsToReload}";
-                            if (Conf.C.RightClickToolOptions)
-                                modsToReload += "\nRight click to reload mods without building any";
+                            modsToReload += "\nRight click to reload mods without building any";
                         }
                         sys.mainState.reloadSPButton?.UpdateHoverTextDescription(modsToReload);
                         sys.mainState.reloadMPButton?.UpdateHoverTextDescription(modsToReload);

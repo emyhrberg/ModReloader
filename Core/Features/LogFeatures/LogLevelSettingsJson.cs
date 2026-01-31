@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using ModReloader.Core.Features.Reload;
 using Newtonsoft.Json;
 
 namespace ModReloader.Core.Features.LogFeatures

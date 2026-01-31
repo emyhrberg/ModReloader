@@ -22,12 +22,12 @@ Configs: {
 
 		Player: {
 			Label: Player
-			Tooltip: Select the player to join with with when reloading
+			Tooltip: ""
 		}
 
 		World: {
 			Label: World
-			Tooltip: Select the world to join when reloading
+			Tooltip: ""
 		}
 
 		LogDebugMessages: {
@@ -61,11 +61,6 @@ Configs: {
 		ShowCopyToClipboardButton: {
 			Label: Show Copy To Clipboard Button
 			Tooltip: A new button will appear allowing you to copy the message in the error menu
-		}
-
-		RightClickToolOptions: {
-			Label: Right Click Tool Options
-			Tooltip: Adds the option for tools to have additional functionality with right click options.
 		}
 
 		MoveChat: {
@@ -120,6 +115,21 @@ Configs: {
 		ShowBackToMainMenu: {
 			Label: Show Back To Main Menu When Config Is Open
 			Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
+		}
+
+		RightClickToolOptions: {
+			Label: Right Click Tool Options
+			Tooltip: ""
+		}
+
+		ItemTest: {
+			Label: Item Test
+			Tooltip: ""
+		}
+
+		NPCTest: {
+			Label: N P C Test
+			Tooltip: ""
 		}
 
 		AdditionalPreprocessorSymbols: {
@@ -196,6 +206,20 @@ Configs: {
 
 		Player: {
 			Label: Player
+			Tooltip: ""
+		}
+	}
+
+	WorldDefinition: {
+		Tooltip: ""
+
+		IsUnloaded: {
+			Label: Is Unloaded
+			Tooltip: ""
+		}
+
+		DisplayName: {
+			Label: Display Name
 			Tooltip: ""
 		}
 	}

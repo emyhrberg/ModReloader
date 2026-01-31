@@ -16,7 +16,6 @@ namespace ModReloader.Core.Features.LogFeatures
 
         public override void RightClick(UIMouseEvent evt)
         {
-            if (!Conf.C.RightClickToolOptions) return;
             Log.OpenClientLog();
         }
     }

@@ -59,11 +59,6 @@ Configs: {
 			Tooltip: 在报错界面增加一个新按钮以允许将报错信息复制到剪切板
 		}
 
-		RightClickToolOptions: {
-			Label: 右键工具选项
-			Tooltip: 为工具增加以右键点击触发的额外功能
-		}
-
 		MoveChat: {
 			Label: 移动聊天栏
 			Tooltip: 略微移动聊天栏以为debug信息留出空间
@@ -118,8 +113,13 @@ Configs: {
 			// Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
 		}
 
-		AdditionalPreprocessorSymbols: {
-			// Label: Additional Preprocessor Symbols
+		RightClickToolOptions: {
+			Label: 右键工具选项
+			Tooltip: 为工具增加以右键点击触发的额外功能
+		}
+
+		ItemTest: {
+			// Label: Item Test
 			// Tooltip: ""
 		}
 
@@ -192,6 +192,20 @@ Configs: {
 
 		Player: {
 			// Label: Player
+			// Tooltip: ""
+		}
+	}
+
+	WorldDefinition: {
+		// Tooltip: ""
+
+		IsUnloaded: {
+			// Label: Is Unloaded
+			// Tooltip: ""
+		}
+
+		DisplayName: {
+			// Label: Display Name
 			// Tooltip: ""
 		}
 	}

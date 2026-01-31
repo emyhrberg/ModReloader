@@ -8,7 +8,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using ModReloader.Core.Features.Reload;
 
 namespace ModReloader.Core.Features.Publicizer;
 public static class CompilerUtilities
