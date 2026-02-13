@@ -1,4 +1,4 @@
-﻿using ModReloader.Core.Features.LoadUnloadSingleMod;
+﻿
 using ModReloader.Core.Features.Reload;
 using System;
 using System.Collections.Generic;
@@ -216,12 +216,12 @@ namespace ModReloader.Core.Features.MainMenuFeatures
 
         internal static void LoadSingleMod()
         {
-            LoadUnloadSingleMod.LoadUnloadSingleModUnused.LoadSingleMod();
+            LoadUnloadSingleMod.ModStateManager.CacheModdedVanillaState();
         }
 
         internal static void UnloadSingleMod()
         {
-            throw new NotImplementedException();
+            LoadUnloadSingleMod.ModStateManager.RestoreModdedVanillaState();
         }
     }
 }
