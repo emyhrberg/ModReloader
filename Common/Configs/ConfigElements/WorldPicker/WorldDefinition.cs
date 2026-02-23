@@ -1,4 +1,5 @@
 ﻿using ModReloader.Core.Features;
+using Newtonsoft.Json;
 using System.IO;
 using Terraria.IO;
 using Terraria.ModLoader.Config;
@@ -13,6 +14,7 @@ public class WorldDefinition : EntityDefinition
     /// </summary>
     public override int Type => Utilities.FindWorldId(Name);
 
+    [JsonIgnore]
     public WorldFileData File => IsUnloaded ? null : Main.WorldList[Type];
 
     public override bool IsUnloaded

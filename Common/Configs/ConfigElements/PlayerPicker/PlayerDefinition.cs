@@ -1,4 +1,5 @@
 ﻿using ModReloader.Core.Features;
+using Newtonsoft.Json;
 using Terraria.IO;
 using Terraria.ModLoader.Config;
 
@@ -12,6 +13,7 @@ public class PlayerDefinition : EntityDefinition
     /// </summary>
     public override int Type => Utilities.FindPlayerId(Name);
 
+    [JsonIgnore]
     public PlayerFileData File => IsUnloaded ? null : Main.PlayerList[Type];
 
     public override bool IsUnloaded
