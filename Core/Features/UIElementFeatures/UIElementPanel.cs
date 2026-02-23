@@ -167,7 +167,7 @@ namespace ModReloader.Core.Features.UIElementFeatures
             AddPadding(20);
 
             AddHeader($"All UIElements");
-            AddOption("Toggle All", false, elementState.SetShowAll, "Toggle all UI elements from mods");
+            AddOption("Toggle All", true, elementState.SetShowAll, "Toggle all UI elements from mods");
         }
 
         // Dynamic UI elements for each UIElement type

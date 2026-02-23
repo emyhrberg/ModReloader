@@ -12,7 +12,7 @@ namespace ModReloader.Core.Features.UIElementFeatures
         #region So many variables
 
         // Flag to enable/disable UI debug drawing
-        public bool showAll = false;
+        public bool showAll = true;
         public bool DrawHitboxOfElement = false;
         public bool DrawSizeOfElement = false;
         public bool DrawNameOfElement = false;
