@@ -22,11 +22,7 @@ namespace ModReloader.Core.Features
                     return Main.PlayerList[0];
                 }
 
-                return new PlayerFileData()
-                {
-                    Name = "None",
-                    _path = ""
-                };
+                return null;
             }
             return Main.PlayerList[i];
         }
@@ -58,11 +54,7 @@ namespace ModReloader.Core.Features
                 {
                     return Main.WorldList[0];
                 }
-                return new WorldFileData()
-                {
-                    Name = "None",
-                    _path = ""
-                };
+                return null;
             }
             return Main.WorldList[i];
         }

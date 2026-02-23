@@ -199,15 +199,8 @@ internal sealed class MainMenuState : UIState
         Main.LoadPlayers();
         Main.LoadWorlds();
 
-        int playerIdx = Conf.C.Player.Type;
-        int worldIdx = Conf.C.World.Type;
-
-        string pName = (playerIdx >= 0 && playerIdx < Main.PlayerList.Count)
-            ? Main.PlayerList[playerIdx].Name
-            : "";
-        string wName = (worldIdx >= 0 && worldIdx < Main.WorldList.Count)
-            ? Main.WorldList[worldIdx].Name
-            : "";
+        string pName = Conf.C.Player.File?.Name ?? "Undefined";
+        string wName = Conf.C.World.File?.Name ?? "Undefined";
 
         if (string.IsNullOrEmpty(pName) || string.IsNullOrEmpty(wName))
             return Loc.Get("MainMenu.JoinSingleplayerTooltipNoData");

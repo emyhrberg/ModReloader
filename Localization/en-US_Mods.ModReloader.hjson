@@ -188,6 +188,11 @@ Configs: {
 			Label: Player
 			Tooltip: ""
 		}
+
+		File: {
+			Label: File
+			Tooltip: ""
+		}
 	}
 
 	WorldDefinition: {
@@ -201,6 +206,11 @@ Configs: {
 		DisplayName: {
 			Label: Display Name
 			Tooltip: ""
+		}
+
+		File: {
+			Tooltip: ""
+			Label: File
 		}
 	}
 }

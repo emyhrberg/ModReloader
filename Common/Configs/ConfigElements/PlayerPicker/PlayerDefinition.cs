@@ -1,4 +1,5 @@
 ﻿using ModReloader.Core.Features;
+using Terraria.IO;
 using Terraria.ModLoader.Config;
 
 
@@ -11,6 +12,8 @@ public class PlayerDefinition : EntityDefinition
     /// </summary>
     public override int Type => Utilities.FindPlayerId(Name);
 
+    public PlayerFileData File => IsUnloaded ? null : Main.PlayerList[Type];
+
     public override bool IsUnloaded
     => Type <= -1 || Name == null;
 
@@ -20,7 +23,7 @@ public class PlayerDefinition : EntityDefinition
 
     }
 
-    public PlayerDefinition(int type) : base(Utilities.FindPlayer(type).Path)
+    public PlayerDefinition(int type) : base(Utilities.FindPlayer(type)?.Path ?? "None")
     {
 
     }

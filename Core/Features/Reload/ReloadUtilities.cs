@@ -46,18 +46,12 @@ public static class ReloadUtilities
 
         if (Main.netMode == NetmodeID.SinglePlayer)
         {
-            // Prepare client. Use singleplayer by default for now.
             PrepareClient(
-                clientMode: ClientMode.SinglePlayer,
-                playerID: Conf.C.Player.Name,
-                worldID: Conf.C.World.Name
+                clientMode: ClientMode.SinglePlayer
             );
 
-
-            // Exit the game.
             await ExitWorld();
 
-            // Mod was found, we can Reload
             BuildOrReloadMods();
             return;
         }
@@ -384,7 +378,7 @@ public static class ReloadUtilities
         ClientDataMemoryStorage.ClientMode = clientMode;
         ClientDataMemoryStorage.PlayerPath = playerID;
         ClientDataMemoryStorage.WorldPath = worldID;
-        Log.Info("set player and worldid to " + ClientDataMemoryStorage.PlayerPath + " and " + ClientDataMemoryStorage.WorldPath);
+        Log.Info("set player and world to " + ClientDataMemoryStorage.PlayerPath + " and " + ClientDataMemoryStorage.WorldPath);
     }
 
     /// <summary>

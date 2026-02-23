@@ -38,7 +38,7 @@ internal sealed class PlayerDefinitionOptionElement : DefinitionOptionElement<Pl
             return;
         }
 
-        PlayerFileData file = Utilities.FindPlayer(definition.Type);
+        PlayerFileData file = definition.File;
 
         Player player = file.Player;
         player.dead = false;

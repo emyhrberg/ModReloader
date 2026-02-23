@@ -76,9 +76,10 @@ namespace ModReloader.Core.Features.Reload
             else
             {
                 Log.Error("Failed to select player and world for singleplayer.");
-                if (TryMoveToRejectionMenuIfNeeded())
-                    return;
+                if (!TryMoveToRejectionMenuIfNeeded())
+                    Main.menuMode = 0;
             }
+            
         }
 
         /// <summary>

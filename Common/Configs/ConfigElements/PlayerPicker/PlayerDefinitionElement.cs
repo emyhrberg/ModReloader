@@ -94,10 +94,10 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
         foreach (var o in Options)
         {
             // If player is journey and user is searching for journey, add it
-            bool isJourney = Utilities.FindPlayer(o.Type).Player.difficulty == GameModeID.Creative;
+            bool isJourney = o.Definition.File?.Player?.difficulty == GameModeID.Creative;
 
             // Filter name
-            if (!Utilities.FindPlayer(o.Type).Name.Contains(filter, StringComparison.OrdinalIgnoreCase))
+            if (!o.Definition.File?.Name.Contains(filter, StringComparison.OrdinalIgnoreCase) ?? true)
                 continue;
 
             passed.Add(o);

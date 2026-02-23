@@ -31,7 +31,7 @@ internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<Wor
             return;
         }
 
-        var file = Utilities.FindWorld(definition.Type);
+        var file = definition.File;
 
         // Get icon asset
         _iconAsset = GetIconAsset(file);

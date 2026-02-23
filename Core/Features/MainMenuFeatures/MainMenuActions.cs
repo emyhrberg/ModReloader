@@ -175,7 +175,7 @@ public static class MainMenuActions
                 throw new Exception("No worlds found.");
 
             // Getting Player and World from ClientDataHandler
-            var world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataMemoryStorage.WorldPath)) ?? throw new Exception("World not found: " + ClientDataMemoryStorage.WorldPath);
+            var world = Conf.C.World.File ?? throw new Exception("World not found: " + Conf.C.World.Name);
             if (string.IsNullOrEmpty(world.Path))
             {
                 Log.Error($"World {world.Name} has an invalid or null path.");

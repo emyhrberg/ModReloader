@@ -1,5 +1,6 @@
 ﻿using ModReloader.Core.Features;
 using System.IO;
+using Terraria.IO;
 using Terraria.ModLoader.Config;
 
 
@@ -12,15 +13,17 @@ public class WorldDefinition : EntityDefinition
     /// </summary>
     public override int Type => Utilities.FindWorldId(Name);
 
+    public WorldFileData File => IsUnloaded ? null : Main.WorldList[Type];
+
     public override bool IsUnloaded
-        => Type <= -1 || Name == null;
+        => Type <= -1;
 
     public WorldDefinition() : base()
     {
 
     }
 
-    public WorldDefinition(int type) : base(Utilities.FindWorld(type).Path)
+    public WorldDefinition(int type) : base(Utilities.FindWorld(type)?.Path ?? "None")
     {
 
     }
