@@ -1,4 +1,6 @@
-- Improved config for player and world selection to show previews of players and worlds you're selecting for reload
-- Start multiplayer will now always automatically start a console session
-- Fixed so u cannot enter journey world with non journey player (thanks Cotlim)
-- Debloated the log from messages from dnlib/publicizer which were showing no useful data.
+v1.1:
+- Added better player & world config selection with previews
+- Added preprocessor directive option called "Debug Reload" in config (thanks Cotlim)
+- Fixed so "Start multiplayer" will now always automatically start a console session
+- Fixed log bloat from messages from dnlib/publicizer which were showing no useful data (thanks Cotlim)
+- ...More misc features and bug fixes, this mod hasn't been updated in more than 6 months, I hope nothing breaks with this update (v1.1)...

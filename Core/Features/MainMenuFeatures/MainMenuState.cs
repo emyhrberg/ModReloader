@@ -17,6 +17,8 @@ internal sealed class MainMenuState : UIState
 
     public MainMenuState()
     {
+        Log.Info("Created menu state");
+
         // Null checks
         if (Conf.C is null || !Conf.C.ShowMainMenuInfo)
             return;
@@ -34,7 +36,7 @@ internal sealed class MainMenuState : UIState
 
         tooltipPanel = new TooltipPanel();
         tooltipPanel.Left.Set(15 + 3, 0f);
-        tooltipPanel.Top.Set(470f, 0f);  // 6 px under the list
+        tooltipPanel.Top.Set(490f, 0f);  // 6 px under the list
 
         // Extra spacing if other big menu mods are loaded
         if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
@@ -56,6 +58,29 @@ internal sealed class MainMenuState : UIState
 
         Append(tooltipPanel);
         Append(mainMenuList);
+    }
+
+    public override void OnActivate()
+    {
+        base.OnActivate();
+
+        if (mainMenuList == null || tooltipPanel == null)
+            return;
+
+        Rebuild();
+    }
+
+    private void Rebuild()
+    {
+        mainMenuList.Clear();
+
+        AddModReloaderSection(tooltipPanel);
+        AddOptionsSection(tooltipPanel);
+        AddSingleplayerSection(tooltipPanel);
+        AddMultiplayerSection(tooltipPanel);
+        AddWorldSection(tooltipPanel);
+
+        mainMenuList.Recalculate();
     }
 
     private void AddModReloaderSection(TooltipPanel tooltipPanel)
@@ -113,6 +138,12 @@ internal sealed class MainMenuState : UIState
             () => Loc.Get("MainMenu.OpenLogTooltip", $"[c/FFFF00:{Path.GetFileName(Logging.LogPath)}]"),
             tooltipPanel
         );
+        var openServerLogElement = new ActionMainMenuElement(
+            Log.OpenServerLog,
+            Loc.Get("MainMenu.OpenServerLogText"),
+            () => Loc.Get("MainMenu.OpenLogTooltip", $"[c/FFFF00:server.log]"),
+            tooltipPanel
+        );
         var clearLogElement = new ActionMainMenuElement(
             Log.ClearClientLog,
             Loc.Get("MainMenu.ClearLogText"),
@@ -124,6 +155,7 @@ internal sealed class MainMenuState : UIState
         mainMenuList.Add(startServerElement);
         mainMenuList.Add(startClientElement);
         mainMenuList.Add(openLogElement);
+        mainMenuList.Add(openServerLogElement);
         mainMenuList.Add(clearLogElement);
         mainMenuList.Add(spacer);
     }
@@ -195,17 +227,34 @@ internal sealed class MainMenuState : UIState
 
     private void AddMultiplayerSection(TooltipPanel tooltipPanel)
     {
+        Main.LoadPlayers();
+        Main.LoadWorlds();
+
+        int playerIdx = Conf.C.Player.Type;
+        int worldIdx = Conf.C.World.Type;
+
+        string pName = (playerIdx >= 0 && playerIdx < Main.PlayerList.Count)
+            ? Main.PlayerList[playerIdx].Name
+            : "";
+        string wName = (worldIdx >= 0 && worldIdx < Main.WorldList.Count)
+            ? Main.WorldList[worldIdx].Name
+            : "";
+
         var multiplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.MultiplayerHeader"), () => Loc.Get("MainMenu.MultiplayerTooltip"), tooltipPanel);
         var hostMultiplayer = new ActionMainMenuElement(
             AutoloadPlayerInWorldSystem.HostMultiplayerWorld,
             Loc.Get("MainMenu.HostMultiplayerText"),
-            () => Loc.Get("MainMenu.HostMultiplayerTooltip"),
+            () => Loc.Get("MainMenu.HostMultiplayerTooltip", 
+            $"[c/FFFF00:{pName}]",
+            $"[c/FFFF00:{wName}]"),
             tooltipPanel
         );
         var joinMultiplayer = new ActionMainMenuElement(
             AutoloadPlayerInWorldSystem.EnterMultiplayerWorld,
             Loc.Get("MainMenu.JoinMultiplayerText"),
-            () => Loc.Get("MainMenu.JoinMultiplayerTooltip"),
+            () => Loc.Get("MainMenu.JoinMultiplayerTooltip",
+            $"[c/FFFF00:{pName}]",
+            $"[c/FFFF00:{wName}]"),
             tooltipPanel
         );
         var spacer = new SpacerMainMenuElement();

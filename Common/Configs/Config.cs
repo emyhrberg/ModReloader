@@ -39,10 +39,10 @@ public class Config : ModConfig
     [DefaultValue(true)]
     public bool SaveWorld;
 
-        [DefaultValue(false)]
-        public bool DebugReload;
+    [DefaultValue(false)]
+    public bool DebugReload;
 
-        [Header("ExtraInfo")]
+    [Header("ExtraInfo")]
 
     [DefaultValue(true)]
     public bool ShowDebugInfo;
@@ -70,9 +70,6 @@ public class Config : ModConfig
     public WorldDifficulty CreateTestWorldDifficulty;
 
     [Header("Misc")]
-
-    [DefaultValue(true)]
-    public bool RightClickToolOptions;
 
     [DefaultValue(true)]
     public bool LogLevelPersistOnReloads;

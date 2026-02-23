@@ -114,27 +114,7 @@ Configs: {
 
 		ShowBackToMainMenu: {
 			Label: Show Back To Main Menu When Config Is Open
-			Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
-		}
-
-		RightClickToolOptions: {
-			Label: Right Click Tool Options
-			Tooltip: ""
-		}
-
-		ItemTest: {
-			Label: Item Test
-			Tooltip: ""
-		}
-
-		NPCTest: {
-			Label: N P C Test
-			Tooltip: ""
-		}
-
-		AdditionalPreprocessorSymbols: {
-			Label: Additional Preprocessor Symbols
-			Tooltip: ""
+			Tooltip: Shows "Back to Main Menu" text if config is open in main menu.
 		}
 
 		DebugReload: {
@@ -242,18 +222,11 @@ MainMenu: {
 	OptionsHeader: Options
 	OptionsTooltip: General options for testing
 	StartServerText: Start Server
-	StartServerTooltip:
-		'''
-		Starts a server instance 
-		with cmd-line
-		'''
+	StartServerTooltip: Starts a server
 	StartClientText: Start Client
-	StartClientTooltip:
-		'''
-		Starts another tML instance 
-		 with cmd-line in addition to this one
-		'''
+	StartClientTooltip: Starts another client
 	OpenLogText: Open Log
+	OpenServerLogText: Open Server Log
 	OpenLogTooltip: Click to open the {0}
 	ClearLogText: Clear Log
 	ClearLogTooltip: Click to clear the {0}
@@ -262,6 +235,7 @@ MainMenu: {
 	JoinSingleplayerText: Join Singleplayer
 	JoinSingleplayerTooltip:
 		'''
+		Joins a singleplayer world
 		Player: {0}
 		World: {1}
 		'''
@@ -275,24 +249,27 @@ MainMenu: {
 	HostMultiplayerText: Host Multiplayer
 	HostMultiplayerTooltip:
 		'''
-		Start a local multiplayer world with first 
-		 available player and world
+		Host a local server
+		Player: {0}
+		World: {1}
 		'''
 	JoinMultiplayerText: Join Multiplayer
 	JoinMultiplayerTooltip:
 		'''
-		Enter local multiplayer world with first 
-		 available player (server required)
+		Join your local server
+		Player: {0}
+		World: {1}
 		'''
 	LoadingPlayer: Loading player: {0}
 	LoadingWorld: Loading world: {0}
 	WorldHeader: World
 	WorldTooltip: Quickly create worlds
-	CreateNewWorld: Quick Generate World
+	CreateNewWorld: Generate World
 	CreateNewWorldTooltip:
 		'''
-		Create world with name {0}, 
-		 size {1} and difficulty {2}
+		Name: {0}
+		Size: {1}
+		Difficulty: {2}
 		'''
 }
 

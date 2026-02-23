@@ -35,13 +35,17 @@ internal sealed class MainMenuSystem : ModSystem
         if (Main.gameMenu && Main.menuMode == 0)
         {
             if (ui.CurrentState == null)
+            {
+                state = new MainMenuState();
                 ui.SetState(state);
+            }
 
             ui.Update(gameTime);
         }
         else if (ui.CurrentState != null)
         {
             ui.SetState(null);
+            state = null;
         }
 
         orig(gameTime);

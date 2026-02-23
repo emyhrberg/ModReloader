@@ -110,17 +110,7 @@ Configs: {
 
 		ShowBackToMainMenu: {
 			// Label: Show Back To Main Menu When Config Is Open
-			// Tooltip: In main menu when config is open, shows a text which can be clicked to quickly go back to the main menu screen.
-		}
-
-		RightClickToolOptions: {
-			Label: 右键工具选项
-			Tooltip: 为工具增加以右键点击触发的额外功能
-		}
-
-		ItemTest: {
-			// Label: Item Test
-			// Tooltip: ""
+			// Tooltip: Shows "Back to Main Menu" text if config is open in main menu.
 		}
 
 		DebugReload: {
@@ -232,6 +222,7 @@ MainMenu: {
 	StartClientText: 启动客户端
 	StartClientTooltip: 使用命令行启动另一个新的tML实例
 	OpenLogText: 打开日志文件
+	// OpenServerLogText: Open Server Log
 	OpenLogTooltip: 点击以打开{0}文件
 	ClearLogText: 清除日志文件
 	ClearLogTooltip: 点击以清除{0}文件内容
@@ -254,11 +245,12 @@ MainMenu: {
 	LoadingWorld: 加入游戏：{0}
 	// WorldHeader: World
 	// WorldTooltip: Quickly create worlds
-	// CreateNewWorld: Quick Generate World
+	// CreateNewWorld: Generate World
 	/* CreateNewWorldTooltip:
 		'''
-		Create world with name {0}, 
-		 size {1} and difficulty {2}
+		Name: {0}
+		Size: {1}
+		Difficulty: {2}
 		''' */
 }
 
