@@ -62,6 +62,16 @@ public class MainMenuExtraSmallSystem : ModSystem
 
 public static class MainMenuActions
 {
+    public static string GetStartServerArgumentsText()
+    {
+        if (Conf.C.StartServerArguments == null)
+            return "";
+
+        return string.Join(" ", Conf.C.StartServerArguments
+            .Where(argument => !string.IsNullOrWhiteSpace(argument))
+            .Select(argument => "-" + argument.Trim().TrimStart('-')));
+    }
+
     public static string GetNextAvailableTestWorldName()
     {
         Main.LoadWorlds();
@@ -195,7 +205,7 @@ public static class MainMenuActions
             ProcessStartInfo process = new(startServerFileName)
             {
                 UseShellExecute = true,
-                Arguments = $"-nosteam -world {world.Path}"
+                Arguments = $"-nosteam -world \"{world.Path}\" {GetStartServerArgumentsText()}".Trim()
             };
 
             // start the process

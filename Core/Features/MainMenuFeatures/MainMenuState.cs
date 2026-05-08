@@ -173,8 +173,14 @@ internal sealed class MainMenuState : UIState
         var startServerElement = new ActionMainMenuElement(
             MainMenuActions.StartServer,
             Loc.Get("MainMenu.StartServerText"),
-            () => Loc.Get("MainMenu.StartServerTooltip",
-            $"[c/FFFF00:{worldName}]"),
+            () =>
+            {
+                string args = MainMenuActions.GetStartServerArgumentsText();
+                string argsText = string.IsNullOrEmpty(args) ? "None" : args;
+
+                return Loc.Get("MainMenu.StartServerTooltip",
+                    $"[c/FFFF00:{worldName}]") + $"\nArgs: [c/FFFF00:{argsText}]";
+            },
             tooltipPanel
         );
         var startClientElement = new ActionMainMenuElement(
