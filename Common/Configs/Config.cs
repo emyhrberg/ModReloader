@@ -47,8 +47,16 @@ public class Config : ModConfig
     [DefaultValue(true)]
     public bool ShowDebugInfo;
 
+    [Header("MainMenu")]
+
     [DefaultValue(true)]
     public bool ShowMainMenuInfo;
+
+    [DefaultValue(true)]
+    public bool ShowQuickWorldGenSection;
+
+    [DefaultValue(true)]
+    public bool ShowModsSection;
 
     [DefaultValue(true)]
     public bool ShowErrorMenuInfo;
@@ -58,6 +66,8 @@ public class Config : ModConfig
 
     [DefaultValue(true)]
     public bool ShowBackToMainMenu;
+
+    public List<string> StartServerArguments = [];
 
     public enum WorldSize { ExtraSmall, Small, Medium, Large }
     [DrawTicks]

@@ -8,6 +8,7 @@ Configs: {
 			ExtraInfo: Show
 			ModsToReload: Mods To Reload
 			ReloadOptions: Reload
+			MainMenu: Main Menu
 		}
 
 		ModsToReload: {
@@ -118,8 +119,23 @@ Configs: {
 		}
 
 		DebugReload: {
+			Label: Debug Build Reload
+			Tooltip: Enables debug build or release build (solution configuration)
+		}
+
+		ShowQuickWorldGenSection: {
+			Label: Show Quick World Gen Section
 			Tooltip: ""
-			Label: Debug Reload
+		}
+
+		ShowModsSection: {
+			Label: Show Mods Section
+			Tooltip: ""
+		}
+
+		StartServerArguments: {
+			Label: Start Server Arguments
+			Tooltip: ""
 		}
 	}
 
@@ -142,7 +158,7 @@ Configs: {
 		}
 
 		ExtraSmall: {
-			Label: Extra Small (Risky)
+			Label: Extra Small (Experimental)
 			Tooltip: ""
 		}
 	}
@@ -232,7 +248,11 @@ MainMenu: {
 	OptionsHeader: Options
 	OptionsTooltip: General options for testing
 	StartServerText: Start Server
-	StartServerTooltip: Starts a server
+	StartServerTooltip:
+		'''
+		Starts a server
+		World: {0}
+		'''
 	StartClientText: Start Client
 	StartClientTooltip: Starts another client
 	OpenLogText: Open Log
@@ -281,6 +301,10 @@ MainMenu: {
 		Size: {1}
 		Difficulty: {2}
 		'''
+	ModsHeader: Mods
+	ModsTooltip: General options for mods
+	OpenEnabledText: Open enabled.json
+	OpenEnabledTooltip: Click to open the enabled.json file
 }
 
 ExceptionMenu: {

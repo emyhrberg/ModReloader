@@ -29,6 +29,8 @@ namespace ModReloader.Core.Features.ModToggler.UI
 
         public string side;
 
+        private readonly Action<string, bool> stateChanged;
+
         // State
         public EnabledState GetState() => state;
 
@@ -39,13 +41,24 @@ namespace ModReloader.Core.Features.ModToggler.UI
         }
 
         // Constructor
-        public ModElement(string cleanModName, string internalModName = "", Texture2D icon = null, Action leftClick = null, string modDescription = "", string version = "", string side = "", bool large = false)
+        public ModElement(
+            string cleanModName,
+            string internalModName = "",
+            Texture2D icon = null,
+            Action leftClick = null,
+            string modDescription = "",
+            string version = "",
+            string side = "",
+            bool large = false,
+            bool enabledLayout = false,
+            Action<string, bool> stateChanged = null)
         {
             this.cleanModName = cleanModName;
             this.internalModName = internalModName;
             this.icon = icon;
             this.modDescription = modDescription;
             this.side = side;
+            this.stateChanged = stateChanged;
 
             // this.leftClick = leftClick;
             // this.rightClick = rightClick;
@@ -94,7 +107,7 @@ namespace ModReloader.Core.Features.ModToggler.UI
             // so we should not allow the user to click on it.
             // so we send no hover option
             float size = 25f;
-            if (icon == null)
+            if (enabledLayout)
             {
                 // "Enabled Mods"
                 string hover = $"{internalModName} v{version}";
@@ -240,6 +253,8 @@ namespace ModReloader.Core.Features.ModToggler.UI
 
             MethodInfo setModEnabled = typeof(ModLoader).GetMethod("SetModEnabled", BindingFlags.NonPublic | BindingFlags.Static);
             setModEnabled?.Invoke(null, [internalModName, enabled]);
+
+            stateChanged?.Invoke(internalModName, enabled);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

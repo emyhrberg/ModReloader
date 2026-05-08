@@ -20,7 +20,8 @@ namespace ModReloader.Common.PacketHandlers
         //Gets packets
         public override void HandlePacket(BinaryReader reader, int fromWho)
         {
-            switch (reader.ReadByte())
+            byte packetType = reader.ReadByte();
+            switch (packetType)
             {
                 case ReloadMP:
                     ReceiveReloadMP(reader, fromWho);
@@ -30,6 +31,10 @@ namespace ModReloader.Common.PacketHandlers
                     break;
                 case RefreshMinorClient:
                     ReceiveRefreshMinorClient(reader, fromWho);
+                    break;
+                default:
+                    Log.Warn("Unknown refresh-server packet type: " + packetType);
+                    ModNetHandler.DrainUnreadBytes(reader);
                     break;
             }
         }
@@ -54,10 +59,11 @@ namespace ModReloader.Common.PacketHandlers
         {
             Log.Info($"Receiving ReloadMP to {Main.myPlayer} from {fromWho}");
 
+            shouldServerBeSaved = reader.ReadBoolean();
+            bool onlyReload = reader.ReadBoolean();
+
             if (Main.netMode == NetmodeID.Server)
             {
-                shouldServerBeSaved = reader.ReadBoolean();
-                bool onlyReload = reader.ReadBoolean();
                 majorClient = (byte)fromWho;
 
                 Netplay.SaveOnServerExit = shouldServerBeSaved;

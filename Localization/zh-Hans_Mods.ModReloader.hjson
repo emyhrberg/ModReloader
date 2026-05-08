@@ -8,6 +8,7 @@ Configs: {
 			ExtraInfo: 显示
 			ModsToReload: 重加载时需要构建的模组
 			ReloadOptions: 重加载选项
+			// MainMenu: Main Menu
 		}
 
 		ModsToReload: {
@@ -114,8 +115,23 @@ Configs: {
 		}
 
 		DebugReload: {
+			// Label: Debug Build Reload
+			// Tooltip: Enables debug build or release build (solution configuration)
+		}
+
+		ShowQuickWorldGenSection: {
+			// Label: Show Quick World Gen Section
 			// Tooltip: ""
-			// Label: Debug Reload
+		}
+
+		ShowModsSection: {
+			// Label: Show Mods Section
+			// Tooltip: ""
+		}
+
+		StartServerArguments: {
+			// Label: Start Server Arguments
+			// Tooltip: ""
 		}
 	}
 
@@ -138,7 +154,7 @@ Configs: {
 		}
 
 		ExtraSmall: {
-			// Label: Extra Small (Risky)
+			// Label: Extra Small (Experimental)
 			// Tooltip: ""
 		}
 	}
@@ -262,6 +278,10 @@ MainMenu: {
 		Size: {1}
 		Difficulty: {2}
 		''' */
+	// ModsHeader: Mods
+	// ModsTooltip: General options for mods
+	// OpenEnabledText: Open enabled.json
+	// OpenEnabledTooltip: Click to open the enabled.json file
 }
 
 ExceptionMenu: {

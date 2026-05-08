@@ -11,15 +11,23 @@ namespace ModReloader.Common.PacketHandlers
         public static void HandlePacket(BinaryReader r, int fromWho)
         {
             // Here we read the packet type and call the appropriate handler
-            switch (r.ReadByte())
+            byte packetType = r.ReadByte();
+            switch (packetType)
             {
                 case RefreshingServer:
                     RefreshServer.HandlePacket(r, fromWho);
                     break;
                 default:
-                    Log.Warn("Unknown packet type: " + r.ReadByte());
+                    Log.Warn("Unknown packet type: " + packetType);
+                    DrainUnreadBytes(r);
                     break;
             }
+        }
+
+        internal static void DrainUnreadBytes(BinaryReader r)
+        {
+            if (r.BaseStream.CanSeek)
+                r.BaseStream.Position = r.BaseStream.Length;
         }
     }
 }

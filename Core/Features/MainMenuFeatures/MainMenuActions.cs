@@ -208,4 +208,36 @@ public static class MainMenuActions
             return;
         }
     }
+
+    public static void OpenEnabledJson()
+    {
+        string modsDirectory = Path.Combine(Main.SavePath, "Mods");
+        string enabledJsonPath = Path.Combine(modsDirectory, "enabled.json");
+
+        Directory.CreateDirectory(modsDirectory);
+
+        if (!File.Exists(enabledJsonPath))
+        {
+            File.WriteAllText(enabledJsonPath, "[]");
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = enabledJsonPath,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception exception)
+        {
+            Log.Error("Failed to open enabled.json: " + exception);
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = modsDirectory,
+                UseShellExecute = true
+            });
+        }
+    }
 }

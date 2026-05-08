@@ -1,4 +1,5 @@
-﻿using Terraria.UI;
+﻿using Microsoft.Xna.Framework.Input;
+using Terraria.UI;
 
 namespace ModReloader.Core.Features.MainMenuFeatures;
 
@@ -32,6 +33,14 @@ internal sealed class MainMenuSystem : ModSystem
 
     private void PostUpdateUIStates(On_Main.orig_UpdateUIStates orig, GameTime gameTime)
     {
+#if DEBUG
+        if (Main.keyState.IsKeyDown(Keys.F5) && Main.oldKeyState.IsKeyUp(Keys.F5))
+        {
+            Log.Info("F5 pressed. Resetting ui state, rebuild next frame");
+            ui.SetState(null);
+        }
+#endif
+
         if (Main.gameMenu && Main.menuMode == 0)
         {
             if (ui.CurrentState == null)
@@ -42,6 +51,7 @@ internal sealed class MainMenuSystem : ModSystem
 
             ui.Update(gameTime);
         }
+
         else if (ui.CurrentState != null)
         {
             ui.SetState(null);

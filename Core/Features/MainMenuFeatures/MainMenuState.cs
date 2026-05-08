@@ -1,86 +1,122 @@
-﻿using System;
-using System.IO;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Core.Features.MainMenuFeatures.UI;
+using ModReloader.Core.Features.ModToggler.UI;
 using ModReloader.Core.Features.Reload;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader.Core;
 using Terraria.UI;
 
 namespace ModReloader.Core.Features.MainMenuFeatures;
 
 internal sealed class MainMenuState : UIState
 {
+    // Rebuild if screen width changes
+    private int previousScreenWidth = -1;
+
+    // Mods header panel
+    private const float ModsPanelGapHeight = 75f;
+
+    private static HashSet<string> enabledModNamesAtLoad;
+    private static HashSet<string> currentEnabledModNames;
+
+    private UIText modsHeaderText;
+
     // Elements
-    private UIList mainMenuList;
-    private TooltipPanel tooltipPanel;
+    private UIList leftMainMenuList;
+    private TooltipPanel leftTooltipPanel;
 
     public MainMenuState()
     {
-        Log.Info("Created menu state");
+        Log.Info("Created new MainMenuState");
 
-        // Null checks
         if (Conf.C is null || !Conf.C.ShowMainMenuInfo)
             return;
 
-        // Set up UIList
-        mainMenuList = new UIList
+        EnsureModStateCache();
+        BuildLayout();
+        Rebuild();
+
+        previousScreenWidth = Main.screenWidth;
+    }
+
+    public override void OnActivate()
+    {
+        Rebuild();
+    }
+
+    private void BuildLayout()
+    {
+        leftMainMenuList = new UIList
         {
             Width = { Pixels = 310f },
             Height = StyleDimension.Fill,
             ListPadding = 0f,
             Left = { Pixels = 15f },
-            Top = { Pixels = 15f },
+            Top = { Pixels = GetLeftMenuTop() },
             ManualSortMethod = (e) => { }
         };
 
-        tooltipPanel = new TooltipPanel();
-        tooltipPanel.Left.Set(15 + 3, 0f);
-        tooltipPanel.Top.Set(490f, 0f);  // 6 px under the list
+        leftTooltipPanel = new TooltipPanel();
+        leftTooltipPanel.Left.Set(18f, 0f);
+        leftTooltipPanel.Top.Set(GetLeftTooltipTop(), 0f);
 
-        // Extra spacing if other big menu mods are loaded
-        if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
-        {
-            mainMenuList.Top.Pixels += 205f;
-        }
-        if (ModLoader.HasMod("CompatChecker"))
-        {
-            mainMenuList.Top.Pixels += 30f;
-            tooltipPanel.Top.Pixels += 30f;
-        }
-
-        // Add elements to the main menu list
-        AddModReloaderSection(tooltipPanel);
-        AddOptionsSection(tooltipPanel);
-        AddSingleplayerSection(tooltipPanel);
-        AddMultiplayerSection(tooltipPanel);
-        AddWorldSection(tooltipPanel);
-
-        Append(tooltipPanel);
-        Append(mainMenuList);
-    }
-
-    public override void OnActivate()
-    {
-        base.OnActivate();
-
-        if (mainMenuList == null || tooltipPanel == null)
-            return;
-
-        Rebuild();
+        Append(leftTooltipPanel);
+        Append(leftMainMenuList);
     }
 
     private void Rebuild()
     {
-        mainMenuList.Clear();
+        if (leftMainMenuList == null || leftTooltipPanel == null)
+            return;
 
-        AddModReloaderSection(tooltipPanel);
-        AddOptionsSection(tooltipPanel);
-        AddSingleplayerSection(tooltipPanel);
-        AddMultiplayerSection(tooltipPanel);
-        AddWorldSection(tooltipPanel);
+        leftMainMenuList.Clear();
 
-        mainMenuList.Recalculate();
+        AddModReloaderSection(leftTooltipPanel);
+        AddOptionsSection(leftTooltipPanel);
+        AddSingleplayerSection(leftTooltipPanel);
+        AddMultiplayerSection(leftTooltipPanel);
+
+        if (Conf.C.ShowQuickWorldGenSection)
+            AddWorldSection(leftTooltipPanel);
+
+        leftTooltipPanel.Top.Set(GetLeftTooltipTop(), 0f);
+
+        if (Conf.C.ShowModsSection)
+            AddModsSection(leftTooltipPanel);
+
+        leftMainMenuList.Recalculate();
+        leftTooltipPanel.Recalculate();
+    }
+
+    private static float GetLeftMenuTop()
+    {
+        float top = 5f;
+
+        if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
+            top += 205f;
+
+        if (ModLoader.HasMod("CompatChecker"))
+            top += 30f;
+
+        return top;
+    }
+
+    private static float GetLeftTooltipTop()
+    {
+        float top = Conf.C.ShowQuickWorldGenSection ? 495f : 435f;
+
+        if (ModLoader.HasMod("TerrariaOverhaul") || ModLoader.HasMod("Terramon"))
+            top += 205f;
+
+        if (ModLoader.HasMod("CompatChecker"))
+            top += 30f;
+
+        return top;
     }
 
     private void AddModReloaderSection(TooltipPanel tooltipPanel)
@@ -111,19 +147,34 @@ internal sealed class MainMenuState : UIState
         );
 
         var spacer = new SpacerMainMenuElement();
-        mainMenuList.Add(headerElement);
-        mainMenuList.Add(configElement);
-        mainMenuList.Add(reloadElement);
-        mainMenuList.Add(spacer);
+        leftMainMenuList.Add(headerElement);
+        leftMainMenuList.Add(configElement);
+        leftMainMenuList.Add(reloadElement);
+        leftMainMenuList.Add(spacer);
     }
 
     private void AddOptionsSection(TooltipPanel tooltipPanel)
     {
+        Main.LoadPlayers();
+        int playerIdx = Conf.C.Player != null ? Utilities.FindPlayerId(Conf.C.Player.Name) : 0;
+        if (playerIdx < 0 || playerIdx >= Main.PlayerList.Count)
+            playerIdx = 0;
+
+        string playerName = Main.PlayerList.Count > 0 ? Main.PlayerList[playerIdx].Name : "";
+
+        Main.LoadWorlds();
+        int worldIdx = Conf.C.World != null ? Utilities.FindWorldId(Conf.C.World.Name) : 0;
+        if (worldIdx < 0 || worldIdx >= Main.WorldList.Count)
+            worldIdx = 0;
+
+        string worldName = Main.WorldList.Count > 0 ? Main.WorldList[worldIdx].Name : "";
+
         var optionsHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.OptionsHeader"), () => Loc.Get("MainMenu.OptionsTooltip"), tooltipPanel);
         var startServerElement = new ActionMainMenuElement(
             MainMenuActions.StartServer,
             Loc.Get("MainMenu.StartServerText"),
-            () => Loc.Get("MainMenu.StartServerTooltip"),
+            () => Loc.Get("MainMenu.StartServerTooltip",
+            $"[c/FFFF00:{worldName}]"),
             tooltipPanel
         );
         var startClientElement = new ActionMainMenuElement(
@@ -150,14 +201,21 @@ internal sealed class MainMenuState : UIState
             () => Loc.Get("MainMenu.ClearLogTooltip", $"[c/FFFF00:{Path.GetFileName(Logging.LogPath)}]"),
             tooltipPanel
         );
+        var openEnabledJsonElement = new ActionMainMenuElement(
+            MainMenuActions.OpenEnabledJson,
+            Loc.Get("MainMenu.OpenEnabledText"),
+            () => Loc.Get("MainMenu.OpenEnabledTooltip"),
+            tooltipPanel
+        );
         var spacer = new SpacerMainMenuElement();
-        mainMenuList.Add(optionsHeader);
-        mainMenuList.Add(startServerElement);
-        mainMenuList.Add(startClientElement);
-        mainMenuList.Add(openLogElement);
-        mainMenuList.Add(openServerLogElement);
-        mainMenuList.Add(clearLogElement);
-        mainMenuList.Add(spacer);
+        leftMainMenuList.Add(optionsHeader);
+        leftMainMenuList.Add(startServerElement);
+        leftMainMenuList.Add(startClientElement);
+        leftMainMenuList.Add(openLogElement);
+        leftMainMenuList.Add(openServerLogElement);
+        leftMainMenuList.Add(clearLogElement);
+        leftMainMenuList.Add(openEnabledJsonElement);
+        leftMainMenuList.Add(spacer);
     }
 
     private int playerIndex = -1;
@@ -213,9 +271,9 @@ internal sealed class MainMenuState : UIState
 );
 
         var spacer = new SpacerMainMenuElement();
-        mainMenuList.Add(singleplayerHeader);
-        mainMenuList.Add(joinSingleplayer);
-        mainMenuList.Add(spacer);
+        leftMainMenuList.Add(singleplayerHeader);
+        leftMainMenuList.Add(joinSingleplayer);
+        leftMainMenuList.Add(spacer);
     }
 
     private void AddMultiplayerSection(TooltipPanel tooltipPanel)
@@ -251,10 +309,10 @@ internal sealed class MainMenuState : UIState
             tooltipPanel
         );
         var spacer = new SpacerMainMenuElement();
-        mainMenuList.Add(multiplayerHeader);
-        mainMenuList.Add(hostMultiplayer);
-        mainMenuList.Add(joinMultiplayer);
-        mainMenuList.Add(spacer);
+        leftMainMenuList.Add(multiplayerHeader);
+        leftMainMenuList.Add(hostMultiplayer);
+        leftMainMenuList.Add(joinMultiplayer);
+        leftMainMenuList.Add(spacer);
     }
 
     private void AddWorldSection(TooltipPanel tooltipPanel)
@@ -271,9 +329,55 @@ internal sealed class MainMenuState : UIState
             tooltipPanel
         );
         var spacer = new SpacerMainMenuElement();
-        mainMenuList.Add(worldHeader);
-        mainMenuList.Add(createNewWorld);
-        mainMenuList.Add(spacer);
+        leftMainMenuList.Add(worldHeader);
+        leftMainMenuList.Add(createNewWorld);
+        leftMainMenuList.Add(spacer);
+    }
+
+    private void AddModsSection(TooltipPanel tooltipPanel)
+    {
+        leftMainMenuList.Add(new SpacerMainMenuElement(height: ModsPanelGapHeight - 10));
+
+        leftMainMenuList.Add(CreateModsHeaderPanel(tooltipPanel));
+        leftMainMenuList.Add(new SpacerMainMenuElement(height: 10));
+
+        Dictionary<string, LocalMod> localModsByInternalName = GetLocalModsByInternalName();
+
+        foreach (Mod mod in ModLoader.Mods
+            .Where(mod => mod.Name != "ModLoader")
+            .OrderBy(mod => mod.DisplayName)
+            .Take(12))
+        {
+            Texture2D modIcon = ModsPanel.GetModIconFromAllMods(mod.File);
+
+            string modDescription = "";
+
+            if (localModsByInternalName.TryGetValue(mod.Name, out LocalMod localMod))
+                modDescription = localMod.properties.description ?? "";
+
+            var modElement = new ModElement(
+                cleanModName: mod.DisplayName,
+                internalModName: mod.Name,
+                icon: modIcon,
+                leftClick: null,
+                modDescription: modDescription,
+                version: mod.Version.ToString(),
+                side: mod.Side.ToString(),
+                large: false,
+                enabledLayout: true,
+                stateChanged: OnModElementStateChanged
+            );
+
+            modElement.SetState(
+                currentEnabledModNames.Contains(mod.Name)
+                    ? OptionElement.EnabledState.Enabled
+                    : OptionElement.EnabledState.Disabled
+            );
+
+            leftMainMenuList.Add(modElement);
+        }
+
+        leftMainMenuList.Add(new SpacerMainMenuElement());
     }
 
     public override void Draw(SpriteBatch spriteBatch)
@@ -286,8 +390,121 @@ internal sealed class MainMenuState : UIState
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
+
+        if (previousScreenWidth != Main.screenWidth)
+        {
+            previousScreenWidth = Main.screenWidth;
+
+            Rebuild();
+            Recalculate();
+        }
         // PositionTooltip();
     }
+
+    #region Mod header and mod count
+
+    private UIPanel CreateModsHeaderPanel(TooltipPanel tooltipPanel)
+    {
+        var panel = new UIPanel
+        {
+            Width = { Pixels = -35f, Percent = 1f },
+            Height = { Pixels = 34f },
+            Left = { Pixels = 5f }
+        };
+
+        modsHeaderText = new UIText(GetModsHeaderText(), 0.85f)
+        {
+            HAlign = 0.5f,
+            VAlign = 0.5f
+        };
+
+        panel.Append(modsHeaderText);
+
+        return panel;
+    }
+    private static void EnsureModStateCache()
+    {
+        if (enabledModNamesAtLoad != null && currentEnabledModNames != null)
+            return;
+
+        enabledModNamesAtLoad = GetLoadedModNameSet();
+        currentEnabledModNames = new HashSet<string>(enabledModNamesAtLoad, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static HashSet<string> GetLoadedModNameSet()
+    {
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (Mod mod in ModLoader.Mods)
+        {
+            if (mod.Name == "ModLoader")
+                continue;
+
+            names.Add(mod.Name);
+        }
+
+        return names;
+    }
+
+    private string GetModsHeaderText()
+    {
+        EnsureModStateCache();
+
+        string countText = currentEnabledModNames.Count > 12
+            ? "12+"
+            : currentEnabledModNames.Count.ToString();
+
+        string reloadText = currentEnabledModNames.SetEquals(enabledModNamesAtLoad)
+            ? ""
+            : " (Reload Required)";
+
+        return $"{countText} mods enabled{reloadText}";
+    }
+
+    private void UpdateModsHeader()
+    {
+        if (modsHeaderText == null)
+            return;
+
+        modsHeaderText.SetText(GetModsHeaderText());
+    }
+
+    private void OnModElementStateChanged(string internalModName, bool enabled)
+    {
+        EnsureModStateCache();
+
+        if (enabled)
+            currentEnabledModNames.Add(internalModName);
+        else
+            currentEnabledModNames.Remove(internalModName);
+
+        UpdateModsHeader();
+    }
+    private static int GetEnabledModsCount()
+    {
+        int count = 0;
+
+        foreach (Mod mod in ModLoader.Mods)
+        {
+            if (mod.Name == "ModLoader")
+                continue;
+
+            count++;
+        }
+
+        return count;
+    }
+    private static Dictionary<string, LocalMod> GetLocalModsByInternalName()
+    {
+        return ModOrganizer.FindWorkshopMods()
+            .GroupBy(localMod => localMod.ToString(), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.First(),
+                StringComparer.OrdinalIgnoreCase
+            );
+    }
+    #endregion
 
     private void DrawActionRowsDebug(SpriteBatch spriteBatch)
     {
@@ -295,7 +512,7 @@ internal sealed class MainMenuState : UIState
         Color debugColor = Color.Red * 0.3f;
 
         // the first child is the inner list
-        foreach (var inner in mainMenuList.Children)
+        foreach (var inner in leftMainMenuList.Children)
         {
             if (inner is not UIElement) continue;
 

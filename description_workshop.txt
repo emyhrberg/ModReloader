@@ -18,6 +18,6 @@ It's built to make the mod reload and compile process easier and more efficient,
 [h2] Links [/h2]
 [list]
 [*] Source code hosted at: [url=https://github.com/emyhrberg/ModReloader] GitHub [/url]
-[*] Got questions or suggestions? Join us at: [url=https://discord.gg/6ykWs5uS] Discord [/url]
+[*] Got questions or suggestions? Join us at: [url=https://discord.gg/x8zxxdpbGG] Discord [/url]
 [*] Wish to support my mod development? You can do so at  [url=https://ko-fi.com/erkyy] Ko-Fi [/url]
 [/list]

@@ -1,7 +1,7 @@
 displayName = Mod Reloader
 author = Erky & Cotlim
 version = 1.1
-side = both
+side = NoSync
 buildIgnore = Assets\Old*, icon.psd
 dllReferences = dnlib
 weakReferences = DragonLens, CheatSheet

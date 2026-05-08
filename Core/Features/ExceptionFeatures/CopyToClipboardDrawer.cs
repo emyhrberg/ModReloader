@@ -12,30 +12,20 @@ namespace ModReloader.Core.Features.ExceptionFeatures
     /// This should work by dynamically changing the visibility based on the config value.
     /// (As opposed to the old version which hooked into its own state and appended continously.)
     /// </summary>
-    public class ExceptionCopyToClipboardHook : ModSystem
+    public class CopyToClipboardDrawer
     {
         // Variables
         private static UITextPanel<string> copyButton;
         private static bool buttonInitialized = false;
 
         #region hooks
-        public override void Load()
-        {
-            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
-            {
-                Log.Info("ExceptionCopyToClipboardHook: ImproveExceptionMenu is set to false. Not hooking into Error Menu.");
-                return;
-            }
-            On_Main.DrawVersionNumber += DrawCopyToClipboard;
-        }
-        public override void Unload()
+        public static void Unload()
         {
             if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
             {
                 Log.Info("ExceptionCopyToClipboardHook: ImproveExceptionMenu is set to false. Not unloading the hook.");
                 return;
             }
-            On_Main.DrawVersionNumber -= DrawCopyToClipboard;
 
             // Clean up button reference
             if (copyButton != null && copyButton.Parent != null)
@@ -47,10 +37,13 @@ namespace ModReloader.Core.Features.ExceptionFeatures
         }
         #endregion
 
-        private static void DrawCopyToClipboard(On_Main.orig_DrawVersionNumber orig, Color menucolor, float upbump)
+        public static void DrawCopyToClipboard()
         {
-            // Draw vanilla stuff first
-            orig(menucolor, upbump);
+            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
+            {
+                Log.Info("ExceptionCopyToClipboardHook: ImproveExceptionMenu is set to false. Not hooking into Error Menu.");
+                return;
+            }
 
             // Check if the feature is enabled in config
             if (Conf.C == null || !Conf.C.ShowCopyToClipboardButton)

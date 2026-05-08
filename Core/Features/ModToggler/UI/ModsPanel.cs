@@ -352,8 +352,14 @@ namespace ModReloader.Core.Features.ModToggler.UI
         #endregion
         #region Helpers mod lists
 
-        private static Texture2D GetModIconFromAllMods(TmodFile tmodFile)
+        public static Texture2D GetModIconFromAllMods(TmodFile tmodFile)
         {
+            if (tmodFile.Name == "ModLoader")
+                return null;
+
+            if (tmodFile == null)
+                return null;
+
             try
             {
                 // Check if the file contains "icon.png"

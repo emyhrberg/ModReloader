@@ -20,34 +20,10 @@ namespace ModReloader.Core.Features.ExceptionFeatures
     /// Try to get a "retry" and avoid disabling mods when not needed.
     /// Also, todo: highlight the line in the error message and provide clickable link to the file.
     /// </summary>
-    public class ExceptionHook : ModSystem
+    public class ExceptionDrawer
     {
-        #region hooks
-        public override void OnModLoad()
+        public static void DrawExceptionMenuUI()
         {
-            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
-            {
-                Log.Info("ExceptionHook: ImproveExceptionMenu is set to false. Not hooking into Error Menu.");
-                return;
-            }
-            On_Main.DrawVersionNumber += DrawCopyToClipboard;
-        }
-        public override void Unload()
-        {
-            if (Conf.C != null && !Conf.C.ShowCopyToClipboardButton)
-            {
-                Log.Info("ExceptionHook: ImproveExceptionMenu is set to false. Not unloading the hook.");
-                return;
-            }
-            On_Main.DrawVersionNumber -= DrawCopyToClipboard;
-        }
-        #endregion
-
-        private static void DrawCopyToClipboard(On_Main.orig_DrawVersionNumber orig, Color menucolor, float upbump)
-        {
-            // Draw vanilla stuff first
-            orig(menucolor, upbump);
-
             if (IsInErrorUI())
             {
                 DrawErrorUIOptions();
