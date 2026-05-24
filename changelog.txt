@@ -1,6 +1,4 @@
 v1.2:
 - Made mod NoSync
-- Added mod options section to main menu
-
-Testing:
-- Fixed obscure bug with in-game Mod Reloader panel config other mods config toggler to work without having to first open my own config
+- Added mods to main menu
+- Fixed config buttons
