@@ -10,7 +10,7 @@ namespace ModReloader.Core.Features.MainMenuFeatures.UI
         private static readonly Color MainMenuWhite = new(237, 246, 255);
         private static readonly Color MainMenuGrey = new(173, 173, 198);
 
-        public ActionMainMenuElement(Action action, string text, Func<string> tooltip, TooltipPanel tooltipPanel)
+        public ActionMainMenuElement(Action action, string text, Func<string> tooltip, TooltipPanel tooltipPanel, Action rightClick = null)
         {
             // pos
             Width.Set(0f, 1f);
@@ -34,22 +34,29 @@ namespace ModReloader.Core.Features.MainMenuFeatures.UI
             {
                 textElement.TextColor = MainMenuWhite;
 
-                // Show tooltip
-                tooltipPanel.Text = tooltip?.Invoke();
-                tooltipPanel.Hidden = false;
+                if (tooltipPanel != null)
+                {
+                    tooltipPanel.Text = tooltip?.Invoke();
+                    tooltipPanel.Hidden = false;
+                }
             };
 
             OnMouseOut += (_, _) =>
             {
                 textElement.TextColor = MainMenuGrey;
 
-                // Hide tooltip
-                tooltipPanel.Hidden = true;
+                if (tooltipPanel != null)
+                    tooltipPanel.Hidden = true;
             };
 
             OnLeftClick += (_, _) =>
             {
                 action?.Invoke();
+            };
+
+            OnRightClick += (_, _) =>
+            {
+                rightClick?.Invoke();
             };
         }
 

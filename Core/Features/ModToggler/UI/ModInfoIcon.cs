@@ -17,14 +17,16 @@ namespace ModReloader.Core.Features.ModToggler.UI
         public string modName;
         private string modDescription;
         private string modCleanName;
+        private readonly Action onBack;
 
-        public ModInfoIcon(Asset<Texture2D> texture, string modPath, string hover = "", string modDescription = "", string modCleanName = "") : base(texture)
+        public ModInfoIcon(Asset<Texture2D> texture, string modPath, string hover = "", string modDescription = "", string modCleanName = "", Action onBack = null) : base(texture)
         {
             tex = texture;
             this.hover = hover;
             modName = System.IO.Path.GetFileName(modPath);
             this.modDescription = modDescription;
             this.modCleanName = modCleanName;
+            this.onBack = onBack;
 
             float size = 23f;
             MaxHeight.Set(size, 0f);
@@ -38,9 +40,12 @@ namespace ModReloader.Core.Features.ModToggler.UI
         public void SetStateToClosed()
         {
             hover = $"More Info";
-            tex = Ass.ConfigOpen;
+            tex = Ass.ModInfo;
             // Main.NewText("Closing config for " + modName, new Color(226, 57, 39));
-            Main.menuMode = 0;
+            if (onBack != null)
+                Main.MenuUI.SetState(null);
+            else
+                Main.menuMode = 0;
             //Main.InGameUI.SetState(null);
             IngameFancyUI.Close();
             isInfoOpen = false;
@@ -50,6 +55,8 @@ namespace ModReloader.Core.Features.ModToggler.UI
             {
                 currentlyOpenInfo = null;
             }
+
+            onBack?.Invoke();
         }
 
         public void SetStateToOpen()
@@ -67,19 +74,6 @@ namespace ModReloader.Core.Features.ModToggler.UI
 
             Log.Info("Mod description: " + modDescription);
 
-            // ModInfoState.instance.CurrentModDescription = this.modDescription;
-            // ModInfoState.instance.modDisplayName = modCleanName;
-
-            // NEW: set description, displayName AND internalName in one call
-            DescriptionState.instance.SetModInfo(
-                description: modDescription,
-                displayName: modCleanName,
-                internalName: modName
-            );
-
-            // OPEN state
-            IngameFancyUI.OpenUIState(DescriptionState.instance);
-
             if (isInfoOpen)
             {
                 SetStateToClosed();
@@ -92,13 +86,28 @@ namespace ModReloader.Core.Features.ModToggler.UI
                 currentlyOpenInfo.SetStateToClosed();
             }
 
-            try
-            {
+            // ModInfoState.instance.CurrentModDescription = this.modDescription;
+            // ModInfoState.instance.modDisplayName = modCleanName;
 
-            }
-            catch (Exception)
+            // NEW: set description, displayName AND internalName in one call
+            DescriptionState.instance.SetModInfo(
+                description: modDescription,
+                displayName: modCleanName,
+                internalName: modName,
+                backAction: SetStateToClosed,
+                closeMainMenuUI: onBack != null
+            );
+
+            // OPEN state
+            if (onBack != null)
             {
+                Main.MenuUI.SetState(DescriptionState.instance);
+                Main.menuMode = 888;
             }
+            else
+                IngameFancyUI.OpenUIState(DescriptionState.instance);
+
+            SetStateToOpen();
         }
 
         public override void Update(GameTime gameTime)

@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ModLoader.Config;
 using Terraria.UI;
 using static ModReloader.Core.Features.ModToggler.UI.OptionElement;
 
@@ -109,10 +111,12 @@ namespace ModReloader.Core.Features.ModToggler.UI
             float size = 25f;
             if (enabledLayout)
             {
+                bool hasConfig = HasConfig(internalModName);
+
                 // "Enabled Mods"
                 string hover = $"{internalModName} v{version}";
                 ModTitleText modNameText = new(text: cleanModName, hover: hover, internalModName: internalModName);
-                modNameText.Left.Set(95, 0); // 25 left of icon1, 25 left of config, 5+5 padding=60+5 padding
+                modNameText.Left.Set(hasConfig ? 92 : 60, 0); // 25 left of icon1, 25 left of config, 5+5 padding=60+5 padding
                 modNameText.VAlign = 0.5f;
 
                 if (large)
@@ -123,31 +127,31 @@ namespace ModReloader.Core.Features.ModToggler.UI
                 }
                 Append(modNameText);
 
-                // Add ModConfigIcon to enabled mods IF they have a config.
-                // if (ModLoader.GetMod(internalModName).GetConfig(internalModName) != null)
-                // {
-                modConfigIcon = new(texture: Ass.ConfigOpen, modPath: this.internalModName, hover: $"Open config", cleanModName: cleanModName);
-
-                // size
-                modConfigIcon.MaxHeight.Set(size, 0f);
-                modConfigIcon.MaxWidth.Set(size, 0f);
-                modConfigIcon.Width.Set(size, 0f);
-                modConfigIcon.Height.Set(size, 0f);
-
-                // position
-                modConfigIcon.VAlign = 0.5f;
-                modConfigIcon.Top.Set(-1, 0); // custom top
-                modConfigIcon.Left.Set(60, 0); // 25 to left of icon + 5 padding
-
-                if (large)
+                if (hasConfig)
                 {
-                    // bottom right corner and make twice as big
-                    modConfigIcon.VAlign = 1.0f; // bottom 
-                    modConfigIcon.Left.Set(-20 - 25 - 5, 1f); // right corner, to the left of more info icon
-                    modConfigIcon.Top.Set(6, 0); // line up vertically with more info
-                }
+                    modConfigIcon = new(texture: Ass.ConfigOpen, modPath: this.internalModName, hover: $"Open config", cleanModName: cleanModName);
 
-                Append(modConfigIcon);
+                    // size
+                    modConfigIcon.MaxHeight.Set(size, 0f);
+                    modConfigIcon.MaxWidth.Set(size, 0f);
+                    modConfigIcon.Width.Set(size, 0f);
+                    modConfigIcon.Height.Set(size, 0f);
+
+                    // position
+                    modConfigIcon.VAlign = 0.5f;
+                    modConfigIcon.Top.Set(-1, 0); // custom top
+                    modConfigIcon.Left.Set(60, 0); // 25 to left of icon + 5 padding
+
+                    if (large)
+                    {
+                        // bottom right corner and make twice as big
+                        modConfigIcon.VAlign = 1.0f; // bottom 
+                        modConfigIcon.Left.Set(-20 - 25 - 5, 1f); // right corner, to the left of more info icon
+                        modConfigIcon.Top.Set(6, 0); // line up vertically with more info
+                    }
+
+                    Append(modConfigIcon);
+                }
             }
             else
             {
@@ -216,6 +220,13 @@ namespace ModReloader.Core.Features.ModToggler.UI
 
             // Fallback to just ellipsis
             return ellipsis;
+        }
+
+        private static bool HasConfig(string internalModName)
+        {
+            var configs = typeof(ConfigManager).GetField("Configs", BindingFlags.Static | BindingFlags.NonPublic)?.GetValue(null) as IDictionary<Mod, List<ModConfig>>;
+            Mod mod = ModLoader.GetMod(internalModName);
+            return mod != null && configs != null && configs.TryGetValue(mod, out List<ModConfig> modConfigs) && modConfigs.Count > 0;
         }
 
         public override void LeftClick(UIMouseEvent evt)

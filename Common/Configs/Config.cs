@@ -101,23 +101,23 @@ public class Config : ModConfig
         Log.Info("Config changed");
 
         base.OnChanged();
-        UpdateMainMenuReloadTooltip();
+        //UpdateMainMenuReloadTooltip();
     }
 
     private void UpdateMainMenuReloadTooltip()
     {
-        var mainMenuSys = ModContent.GetInstance<MainMenuSystem>();
-        if (mainMenuSys?.state == null)
-            return;
+        //var mainMenuSys = ModContent.GetInstance<MainMenuSystem>();
+        //if (mainMenuSys?.state == null)
+            //return;
 
-        Main.LoadPlayers();
-        Main.LoadWorlds();
+        //Main.LoadPlayers();
+        //Main.LoadWorlds();
 
-        int p = Conf.C.Player != null ? Utilities.FindPlayerId(Conf.C.Player.Name) : 0;
-        int w = Conf.C.World != null ? Utilities.FindWorldId(Conf.C.World.Name) : 0;
+        //int p = Conf.C.Player != null ? Utilities.FindPlayerId(Conf.C.Player.Name) : 0;
+        //int w = Conf.C.World != null ? Utilities.FindWorldId(Conf.C.World.Name) : 0;
 
-        mainMenuSys.state.UpdatePlayerIndex(p);
-        mainMenuSys.state.UpdateWorldIndex(w);
+        //mainMenuSys.state.UpdatePlayerIndex(p);
+        //mainMenuSys.state.UpdateWorldIndex(w);
     }
 
     private void EnsureDefaultPlayerAndWorld()

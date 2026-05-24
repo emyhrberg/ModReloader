@@ -242,8 +242,15 @@ MainMenu: {
 	WelcomeTooltip: Welcome to Mod Reloader's main menu!
 	OpenConfigText: Open config
 	OpenConfigTooltip: Click to open [c/FFFF00:Mod Reloader] config
+	StartHeader: Start
+	StartTooltip: Start instances quickly
+	LogsHeader: Logs
+	LogsTooltip: Open logs quickly
+	ModsHeader: Mods
+	ModsTooltip: General options for mods
 	ReloadText: Reload
 	ReloadTooltip: Reloads {0}
+	ReloadOnlyTooltip: Reload all mods
 	ReloadNoMods: No mods selected
 	OptionsHeader: Options
 	OptionsTooltip: General options for testing
@@ -301,9 +308,7 @@ MainMenu: {
 		Size: {1}
 		Difficulty: {2}
 		'''
-	ModsHeader: Mods
-	ModsTooltip: General options for mods
-	OpenEnabledText: Open enabled.json
+	OpenEnabledText: Open enabled
 	OpenEnabledTooltip: Click to open the enabled.json file
 }
 

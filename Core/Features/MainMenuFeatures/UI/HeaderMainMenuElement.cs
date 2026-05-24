@@ -32,7 +32,7 @@ namespace ModReloader.Core.Features.MainMenuFeatures.UI
 
             OnMouseOver += (_, _) =>
             {
-                if (tooltip != null)
+                if (tooltip != null && tooltipPanel != null)
                 {
                     tooltipPanel.Text = tooltip?.Invoke();
                     tooltipPanel.Hidden = false;
@@ -41,7 +41,8 @@ namespace ModReloader.Core.Features.MainMenuFeatures.UI
             OnMouseOut += (_, _) =>
             {
                 // Hide tooltip
-                tooltipPanel.Hidden = true;
+                if (tooltipPanel != null)
+                    tooltipPanel.Hidden = true;
             };
         }
 

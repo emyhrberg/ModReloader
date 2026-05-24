@@ -20,6 +20,8 @@ namespace ModReloader.Core.Features.ModToggler.UI
         // Add these fields to your ModInfoState class:
         private string modInternalName;
         private string workshopURL;
+        private Action backAction;
+        private bool closeMainMenuUI;
 
         // elements
         private UIPanel descriptionContainer;
@@ -283,16 +285,26 @@ namespace ModReloader.Core.Features.ModToggler.UI
         }
 
         // Update ModInfoIcon to pass the modName:
-        public void SetModInfo(string description, string displayName, string internalName)
+        public void SetModInfo(string description, string displayName, string internalName, Action backAction = null, bool closeMainMenuUI = false)
         {
             CurrentModDescription = description;
             modDisplayName = displayName;
             modInternalName = internalName;
+            this.backAction = backAction;
+            this.closeMainMenuUI = closeMainMenuUI;
         }
 
         private void BackButton_OnLeftClick(UIMouseEvent evt, UIElement listeningElement)
         {
-            IngameFancyUI.Close();
+            if (closeMainMenuUI)
+                Main.MenuUI.SetState(null);
+            else
+                IngameFancyUI.Close();
+
+            Action action = backAction;
+            backAction = null;
+            closeMainMenuUI = false;
+            action?.Invoke();
         }
     }
 }

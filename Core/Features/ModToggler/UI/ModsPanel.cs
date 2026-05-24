@@ -285,7 +285,8 @@ namespace ModReloader.Core.Features.ModToggler.UI
                     modDescription: description,
                     version: currMod.Version.ToString(),
                     side: currMod.Side.ToString(),
-                    large: large
+                    large: large,
+                    enabledLayout: true
                 );
 
                 // Apply filtering: 1) mod side and 2) enabled

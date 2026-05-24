@@ -2,17 +2,6 @@
 //  Shared helper to signal the player when the Builder‑toggle is OFF.
 // ──────────────────────────────────────────────────────────────────────────────
 
-// ──────────────────────────────────────────────────────────────────────────────
-//  Shared helper to signal the player when the Builder‑toggle is OFF.
-// ──────────────────────────────────────────────────────────────────────────────
-
-// ──────────────────────────────────────────────────────────────────────────────
-//  Shared helper to signal the player when the Builder‑toggle is OFF.
-// ──────────────────────────────────────────────────────────────────────────────
-
-// ──────────────────────────────────────────────────────────────────────────────
-//  Shared helper to signal the player when the Builder‑toggle is OFF.
-// ──────────────────────────────────────────────────────────────────────────────
 using ModReloader.Common.BuilderToggles;
 
 namespace ModReloader.Common.Integrations
