@@ -1,4 +1,2 @@
-v1.2:
-- Made mod NoSync
-- Added mods to main menu
+v1.2.1
 - Fixed config buttons

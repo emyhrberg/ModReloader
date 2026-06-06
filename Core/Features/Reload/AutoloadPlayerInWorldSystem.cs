@@ -5,6 +5,7 @@ using Humanizer;
 using ModReloader.Core.Features.MainMenuFeatures;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.Localization;
 
 namespace ModReloader.Core.Features.Reload
@@ -60,10 +61,21 @@ namespace ModReloader.Core.Features.Reload
         /// </summary>
         public static void EnterSingleplayerWorld()
         {
+            EnterSingleplayerWorld(useStoredPaths: true);
+        }
+
+        public static void EnterSingleplayerWorldFromConfig()
+        {
+            ClientDataMemoryStorage.ClearData();
+            EnterSingleplayerWorld(useStoredPaths: false);
+        }
+
+        private static void EnterSingleplayerWorld(bool useStoredPaths)
+        {
             Log.Info("Entering SP World");
 
             // Select the player and world
-            bool ok = SelectPlayerAndWorld();
+            bool ok = SelectPlayerAndWorld(useStoredPaths: useStoredPaths);
 
             if (ok)
             {
@@ -87,10 +99,21 @@ namespace ModReloader.Core.Features.Reload
         /// </summary>
         public static void EnterMultiplayerWorld()
         {
+            EnterMultiplayerWorld(useStoredPaths: true);
+        }
+
+        public static void EnterMultiplayerWorldFromConfig()
+        {
+            ClientDataMemoryStorage.ClearData();
+            EnterMultiplayerWorld(useStoredPaths: false);
+        }
+
+        private static void EnterMultiplayerWorld(bool useStoredPaths)
+        {
             Log.Info("Entering MP World");
 
             // Select the player and world
-            bool isPlayerSelected = SelectPlayerAndWorld(onlyPlayer: true);
+            bool isPlayerSelected = SelectPlayerAndWorld(onlyPlayer: true, useStoredPaths: useStoredPaths);
 
             if (isPlayerSelected)
             {
@@ -114,9 +137,10 @@ namespace ModReloader.Core.Features.Reload
         public static void HostMultiplayerWorld()
         {
             Log.Info("Hosting MP World");
+            ClientDataMemoryStorage.ClearData();
 
             // Select the player and world
-            bool isPlayerAndWorldSelected = SelectPlayerAndWorld();
+            bool isPlayerAndWorldSelected = SelectPlayerAndWorld(useStoredPaths: false);
 
             if (isPlayerAndWorldSelected)
             {
@@ -137,7 +161,7 @@ namespace ModReloader.Core.Features.Reload
         /// Selects the player and world based on the ClientDataHandler.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        private static bool SelectPlayerAndWorld(bool onlyPlayer = false)
+        private static bool SelectPlayerAndWorld(bool onlyPlayer = false, bool useStoredPaths = true)
         {
             LoadPlayerAndWorldLists();
 
@@ -146,7 +170,7 @@ namespace ModReloader.Core.Features.Reload
                 Log.Error("No players found after loading players.");
                 return false;
             }
-            int playerId = Conf.C.Player.Type;
+            int playerId = Conf.C.Player?.Type ?? 0;
             if (playerId < 0 || playerId >= Main.PlayerList.Count)
             {
                 Log.Error($"Invalid player index {playerId}. Cannot autoload player.");
@@ -154,9 +178,13 @@ namespace ModReloader.Core.Features.Reload
             }
             var player = Main.PlayerList[playerId];
 
-            if (ClientDataMemoryStorage.PlayerPath != null && ClientDataMemoryStorage.ClientMode != ClientMode.FreshClient)
+            if (useStoredPaths && !string.IsNullOrEmpty(ClientDataMemoryStorage.PlayerPath) && ClientDataMemoryStorage.ClientMode != ClientMode.FreshClient)
             {
-                player = Main.PlayerList.FirstOrDefault(p => p.Path.Equals(ClientDataMemoryStorage.PlayerPath), null);
+                PlayerFileData storedPlayer = Main.PlayerList.FirstOrDefault(p => string.Equals(p.Path, ClientDataMemoryStorage.PlayerPath, StringComparison.OrdinalIgnoreCase), null);
+                if (storedPlayer != null)
+                    player = storedPlayer;
+                else
+                    Log.Warn($"Stored player path no longer exists: {ClientDataMemoryStorage.PlayerPath}. Falling back to configured player.");
             }
 
             if (player == null)
@@ -178,7 +206,7 @@ namespace ModReloader.Core.Features.Reload
                 return false;
             }
 
-            int worldId = Conf.C.World.Type;
+            int worldId = Conf.C.World?.Type ?? 0;
             if (worldId < 0 || worldId >= Main.WorldList.Count)
             {
                 Log.Error($"Invalid world index {worldId}. Cannot autoload world.");
@@ -186,9 +214,13 @@ namespace ModReloader.Core.Features.Reload
             }
             var world = Main.WorldList[worldId];
 
-            if (ClientDataMemoryStorage.WorldPath != null && ClientDataMemoryStorage.ClientMode != ClientMode.FreshClient)
+            if (useStoredPaths && !string.IsNullOrEmpty(ClientDataMemoryStorage.WorldPath) && ClientDataMemoryStorage.ClientMode != ClientMode.FreshClient)
             {
-                world = Main.WorldList.FirstOrDefault(p => p.Path.Equals(ClientDataMemoryStorage.WorldPath), null);
+                WorldFileData storedWorld = Main.WorldList.FirstOrDefault(p => string.Equals(p.Path, ClientDataMemoryStorage.WorldPath, StringComparison.OrdinalIgnoreCase), null);
+                if (storedWorld != null)
+                    world = storedWorld;
+                else
+                    Log.Warn($"Stored world path no longer exists: {ClientDataMemoryStorage.WorldPath}. Falling back to configured world.");
             }
 
             if (world == null)
@@ -211,6 +243,9 @@ namespace ModReloader.Core.Features.Reload
         #region Rejection
         private static bool TryMoveToRejectionMenuIfNeeded()
         {
+            if (Main.PlayerList == null || Main.WorldList == null || Conf.C.Player == null || Conf.C.World == null)
+                return false;
+
             // Resolve player from config
             int playerId = Conf.C.Player.Type;
             if (playerId < 0 || playerId >= Main.PlayerList.Count)

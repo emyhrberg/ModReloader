@@ -308,16 +308,10 @@ internal sealed class MainMenuState : UIState
 
         Log.Info("Loaded and found this many worlds in main menu: " + Main.WorldList.Count);
 
-    var singleplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.SingleplayerHeader"), () => Loc.Get("MainMenu.SingleplayerTooltip"), tooltipPanel);
-    var joinSingleplayer = new ActionMainMenuElement(
-        () =>
-        {
-            ClientDataMemoryStorage.ClientMode = ClientMode.SinglePlayer;
-            ClientDataMemoryStorage.PlayerPath = null;
-            ClientDataMemoryStorage.WorldPath = null;
-            AutoloadPlayerInWorldSystem.EnterSingleplayerWorld();
-        },
-        Loc.Get("MainMenu.JoinSingleplayerText"),
+        var singleplayerHeader = new HeaderMainMenuElement(Loc.Get("MainMenu.SingleplayerHeader"), () => Loc.Get("MainMenu.SingleplayerTooltip"), tooltipPanel);
+        var joinSingleplayer = new ActionMainMenuElement(
+            AutoloadPlayerInWorldSystem.EnterSingleplayerWorldFromConfig,
+            Loc.Get("MainMenu.JoinSingleplayerText"),
             () =>
             {
                 Main.LoadPlayers();
@@ -367,7 +361,7 @@ internal sealed class MainMenuState : UIState
             tooltipPanel
         );
         var joinMultiplayer = new ActionMainMenuElement(
-            AutoloadPlayerInWorldSystem.EnterMultiplayerWorld,
+            AutoloadPlayerInWorldSystem.EnterMultiplayerWorldFromConfig,
             Loc.Get("MainMenu.JoinMultiplayerText"),
             () => Loc.Get("MainMenu.JoinMultiplayerTooltip",
             $"[c/FFFF00:{pName}]",
