@@ -136,7 +136,7 @@ namespace ModReloader.Core.Features.Publicizer
 
                         if (Conf.C.DebugReload)
                         {
-                            preprocessorSymbols.Append("DEBUG");
+                            preprocessorSymbols = [.. preprocessorSymbols, "DEBUG"];
                         }
 
                         // Normal RoslynCompiler method with suppressed assembly version warnings
