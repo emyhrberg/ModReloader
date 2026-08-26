@@ -248,6 +248,7 @@ MainMenu: {
 	ReloadTooltip: 构建{0}并重加载
 	// ReloadOnlyTooltip: Reload all mods
 	ReloadNoMods: 未设置重加载时要构建的模组
+	ReloadModTooltip: 重加载{0}
 	OptionsHeader: 选项
 	OptionsTooltip: 测试用基本选项
 	StartServerText: 启动服务器

@@ -252,6 +252,7 @@ MainMenu: {
 	ReloadTooltip: Reloads {0}
 	ReloadOnlyTooltip: Reload all mods
 	ReloadNoMods: No mods selected
+	ReloadModTooltip: Reload {0}
 	OptionsHeader: Options
 	OptionsTooltip: General options for testing
 	StartServerText: Start Server

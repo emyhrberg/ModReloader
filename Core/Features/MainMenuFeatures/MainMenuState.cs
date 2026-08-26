@@ -423,6 +423,7 @@ internal sealed class MainMenuState : UIState
             .Take(maxVisibleMods)
             .ToList();
         Dictionary<string, string> modDescriptions = GetModDescriptionsByInternalName();
+        HashSet<string> reloadableModNames = GetReloadableModNames();
 
         foreach (Mod mod in modsToShow)
         {
@@ -436,7 +437,8 @@ internal sealed class MainMenuState : UIState
                 version: mod.Version.ToString(),
                 enabled: currentEnabledModNames.Contains(mod.Name),
                 stateChanged: OnModElementStateChanged,
-                modDescription: modDescription ?? string.Empty
+                modDescription: modDescription ?? string.Empty,
+                reloadable: reloadableModNames.Contains(mod.Name)
             ));
         }
 
@@ -612,6 +614,23 @@ internal sealed class MainMenuState : UIState
                 pair => pair.Value.properties.description ?? string.Empty,
                 StringComparer.OrdinalIgnoreCase
             );
+    }
+
+    private static HashSet<string> GetReloadableModNames()
+    {
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (string modSourcePath in ModCompile.FindModSources())
+        {
+            if (string.IsNullOrWhiteSpace(modSourcePath) || !Directory.Exists(modSourcePath))
+                continue;
+
+            string modName = Path.GetFileName(Path.TrimEndingDirectorySeparator(modSourcePath));
+            if (!string.IsNullOrWhiteSpace(modName))
+                names.Add(modName);
+        }
+
+        return names;
     }
     #endregion
 

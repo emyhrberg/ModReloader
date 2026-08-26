@@ -20,23 +20,65 @@ internal sealed class MainMenuModElement : UIPanel
     private EnabledState state;
     private readonly OptionEnabledText enabledText;
 
-    public MainMenuModElement(string cleanModName, string internalModName, Texture2D icon, string version, bool enabled, Action<string, bool> stateChanged, string modDescription = "")
+    public MainMenuModElement(
+        string cleanModName,
+        string internalModName,
+        Texture2D icon,
+        string version,
+        bool enabled,
+        Action<string, bool> stateChanged,
+        string modDescription = "",
+        bool reloadable = false)
     {
         this.internalModName = internalModName;
         this.stateChanged = stateChanged;
         Width.Set(0f, 1f);
         Height.Set(30f, 0f);
 
-        Append(new ModEnabledIcon(TextureAssets.MagicPixel.Value, internalModName, icon) { Left = { Pixels = -6f } });
+        const float firstIconLeft = -6f;
+        const float actionIconStep = 26f;
+        const float titleRight = 222f;
+        float nextIconLeft = firstIconLeft;
 
-        Append(new ModInfoIcon(Ass.ModInfo, internalModName, "More Info", modDescription, cleanModName, () => Main.menuMode = 0) { Left = { Pixels = -6+26f }, VAlign = 0.5f, Top = { Pixels = -1f } });
+        if (reloadable)
+        {
+            Append(new ReloadIcon(Ass.ModReload.Value, internalModName, Loc.Get("MainMenu.ReloadModTooltip", cleanModName))
+            {
+                Left = { Pixels = nextIconLeft },
+                VAlign = 0.5f,
+                Top = { Pixels = -1f }
+            });
+            nextIconLeft += actionIconStep;
+        }
+
+        if (!string.IsNullOrWhiteSpace(modDescription))
+        {
+            Append(new ModInfoIcon(Ass.ModInfo, internalModName, "More Info", modDescription, cleanModName, () => Main.menuMode = 0)
+            {
+                Left = { Pixels = nextIconLeft },
+                VAlign = 0.5f,
+                Top = { Pixels = -1f }
+            });
+            nextIconLeft += actionIconStep;
+        }
 
         if (HasConfig(internalModName))
-            Append(new ConfigIcon(Ass.ConfigOpen, internalModName, "Open config", cleanModName, () => Main.menuMode = 0) { Left = { Pixels = -6+26+24 }, VAlign = 0.5f, Top = { Pixels = -1f } });
+        {
+            Append(new ConfigIcon(Ass.ConfigOpen, internalModName, "Open config", cleanModName, () => Main.menuMode = 0)
+            {
+                Left = { Pixels = nextIconLeft },
+                VAlign = 0.5f,
+                Top = { Pixels = -1f }
+            });
+            nextIconLeft += actionIconStep;
+        }
 
-        float maxWidth = 148f;
+        Append(new ModEnabledIcon(TextureAssets.MagicPixel.Value, internalModName, icon) { Left = { Pixels = nextIconLeft } });
+
+        float titleLeft = nextIconLeft + 31f;
+        float maxWidth = titleRight - titleLeft;
         string text = TruncateToWidth(cleanModName, FontAssets.MouseText.Value, maxWidth);
-        Append(new ModTitleText(text, $"{internalModName} v{version}", internalModName: internalModName) { Left = { Pixels = 74f }, VAlign = 0.5f });
+        Append(new ModTitleText(text, $"{internalModName} v{version}", internalModName: internalModName) { Left = { Pixels = titleLeft }, VAlign = 0.5f });
 
         enabledText = new OptionEnabledText("Enabled");
         enabledText.Left.Set(-64f, 1f);

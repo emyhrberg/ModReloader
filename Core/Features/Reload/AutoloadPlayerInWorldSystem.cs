@@ -1,12 +1,16 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Humanizer;
 using ModReloader.Core.Features.MainMenuFeatures;
+using ReLogic.OS;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.Localization;
+using Terraria.ModLoader.Core;
+using Terraria.Social;
 
 namespace ModReloader.Core.Features.Reload
 {
@@ -146,7 +150,7 @@ namespace ModReloader.Core.Features.Reload
             {
                 // Host the server
                 Main.showServerConsole = true;
-                Main.instance.OnSubmitServerPassword("");
+                StartLocalServerWithConfiguredArguments("");
             }
             else
             {
@@ -155,6 +159,54 @@ namespace ModReloader.Core.Features.Reload
                     return;
                 Main.menuMode = 0;
             }
+        }
+
+        private static void StartLocalServerWithConfiguredArguments(string password)
+        {
+            Netplay.ServerPassword = password;
+
+            string arguments = "-autoshutdown -password \"" + Main.ConvertToSafeArgument(password) + "\" -lang " + Language.ActiveCulture.LegacyId;
+            if (Platform.IsLinux)
+                arguments += nint.Size != 8 ? " -x86" : " -x64";
+
+            arguments += !Main.ActiveWorldFileData.IsCloudSave
+                ? Main.instance.SanitizePathArgument("world", Main.worldPathName)
+                : Main.instance.SanitizePathArgument("cloudworld", Main.worldPathName);
+            arguments += " -worldrollbackstokeep " + Main.WorldRollingBackupsCountToKeep;
+            arguments += $" -modpath \"{ModOrganizer.modPath}\"";
+
+            if (Program.LaunchParameters.TryGetValue("-tmlsavedirectory", out string tmlSaveDirectory))
+                arguments += $" -tmlsavedirectory \"{tmlSaveDirectory}\"";
+            else if (Program.LaunchParameters.TryGetValue("-savedirectory", out string saveDirectory))
+                arguments += $" -savedirectory \"{saveDirectory}\"";
+
+            if (Main.showServerConsole)
+                arguments += " -showserverconsole";
+
+            string configuredArguments = MainMenuActions.GetStartServerArgumentsText();
+            if (!string.IsNullOrEmpty(configuredArguments))
+                arguments += " " + configuredArguments;
+
+            Main.tServer = new Process();
+            Main.tServer.StartInfo.FileName = Environment.ProcessPath;
+            Main.tServer.StartInfo.Arguments = "tModLoader.dll -server " + arguments;
+            if (Main.libPath != "")
+                Main.tServer.StartInfo.Arguments += " -loadlib " + Main.libPath;
+
+            Main.tServer.StartInfo.UseShellExecute = true;
+            if (!Main.showServerConsole)
+                Main.tServer.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+            if (SocialAPI.Network != null)
+                SocialAPI.Network.LaunchLocalServer(Main.tServer, Main.MenuServerMode);
+            else
+                Main.tServer.Start();
+
+            Netplay.SetRemoteIP("127.0.0.1");
+            Main.autoPass = true;
+            Main.statusText = Lang.menu[8].Value;
+            Netplay.StartTcpClient();
+            Main.menuMode = 10;
         }
 
         /// <summary>
