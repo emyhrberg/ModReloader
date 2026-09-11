@@ -13,9 +13,17 @@ using static ModReloader.Common.Configs.Config;
 namespace ModReloader.Core.Features.MainMenuFeatures;
 public class MainMenuExtraSmallSystem : ModSystem
 {
+    internal static WorldFileData PendingExtraSmallWorld;
+
+    public override void Unload() => PendingExtraSmallWorld = null;
+
     public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
     {
-        if (Conf.C.CreateTestWorldSize != WorldSize.ExtraSmall)
+        // Consume the request once, so a test-world setting cannot affect later worlds.
+        WorldFileData requestedWorld = PendingExtraSmallWorld;
+        PendingExtraSmallWorld = null;
+        if (requestedWorld == null || !ReferenceEquals(requestedWorld, Main.ActiveWorldFileData)
+            || Main.maxTilesX != 2100 || Main.maxTilesY != 600)
             return;
 
         // Passes known (or very likely) to crash on a 2 100 × 600 map
@@ -144,7 +152,18 @@ public static class MainMenuActions
         Main.ActiveWorldFileData.SetSeed(seed);
 
         Main.menuMode = 10;
-        WorldGen.CreateNewWorld();
+        // Generation runs asynchronously; associate the request with this specific world.
+        MainMenuExtraSmallSystem.PendingExtraSmallWorld =
+            Main.maxTilesX == 2100 && Main.maxTilesY == 600 ? Main.ActiveWorldFileData : null;
+        try
+        {
+            WorldGen.CreateNewWorld();
+        }
+        catch
+        {
+            MainMenuExtraSmallSystem.PendingExtraSmallWorld = null;
+            throw;
+        }
     }
     public static void StartClient()
     {
@@ -154,7 +173,7 @@ public static class MainMenuActions
             string startGameFileName = Path.Combine(steamPath, "start-tModLoader.bat");
             if (!File.Exists(startGameFileName))
             {
-                Log.Error("Failed to find start-tModLoader.bat file.");
+                Log.Error($"Failed to find client launcher: {startGameFileName}");
                 return;
             }
 
@@ -162,6 +181,7 @@ public static class MainMenuActions
             ProcessStartInfo process = new(startGameFileName)
             {
                 UseShellExecute = true,
+                WorkingDirectory = steamPath,
             };
 
             // start the process
@@ -197,7 +217,7 @@ public static class MainMenuActions
             string startServerFileName = Path.Combine(steamPath, "start-tModLoaderServer.bat");
             if (!File.Exists(startServerFileName))
             {
-                Log.Error("Failed to find start-tModLoaderServer.bat file.");
+                Log.Error($"Failed to find server launcher: {startServerFileName}");
                 return;
             }
 
@@ -205,6 +225,7 @@ public static class MainMenuActions
             ProcessStartInfo process = new(startServerFileName)
             {
                 UseShellExecute = true,
+                WorkingDirectory = steamPath,
                 Arguments = $"-nosteam -world \"{world.Path}\" {GetStartServerArgumentsText()}".Trim()
             };
 

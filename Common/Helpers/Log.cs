@@ -135,10 +135,11 @@ namespace ModReloader.Common.Helpers
 
         public static string GetSteamPath()
         {
-            // get the DLL file from the steam path
-            string tMLDLL = Assembly.GetEntryAssembly()?.Location;
-            string steamPath = Path.GetDirectoryName(tMLDLL);
-            return steamPath;
+            // A debug host can be the entry assembly; locate tModLoader itself instead.
+            string tMLDLL = typeof(ModLoader).Assembly.Location;
+            return string.IsNullOrEmpty(tMLDLL)
+                ? Directory.GetCurrentDirectory()
+                : Path.GetDirectoryName(tMLDLL);
         }
 
         /// <summary> Opens the client log file in the default text editor for the correct player. </summary>
