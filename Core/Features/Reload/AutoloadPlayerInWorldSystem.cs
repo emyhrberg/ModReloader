@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Humanizer;
 using ModReloader.Core.Features.MainMenuFeatures;
 using ReLogic.OS;
@@ -29,12 +28,19 @@ namespace ModReloader.Core.Features.Reload
             if (Main.netMode != NetmodeID.Server)
                 ClientDataMemoryStorage.WriteData();
 
-            // Reset some hooks
-            typeof(ModLoader).GetField("OnSuccessfulLoad", BindingFlags.NonPublic | BindingFlags.Static)?.SetValue(null, null);
+            // tML installs its network-reload continuation before unloading mods.
+            // Remove only our callbacks so the existing connection can finish joining.
+            ModLoader.OnSuccessfulLoad -= EnterSingleplayerWorld;
+            ModLoader.OnSuccessfulLoad -= EnterMultiplayerWorld;
         }
 
         public override void OnModLoad()
         {
+            // A server-required reload already has a live client loop and a tML
+            // continuation. Auto-joining here would start a second connection.
+            if (ModNet.NetReloadActive)
+                return;
+
             if (!Conf.C.AutoJoinWorld)
             {
                 Log.Info("AutoJoinWorld is disabled. Skipping EnterSingleplayerWorld() hook.");

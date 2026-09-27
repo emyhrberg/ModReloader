@@ -6,3 +6,5 @@
 
 # files
 *.user
+/Tests/**/bin/
+/Tests/**/obj/
