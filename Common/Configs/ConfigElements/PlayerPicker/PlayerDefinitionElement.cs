@@ -15,6 +15,8 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
 
     public override void OnBind()
     {
+        // Load once before the base binding creates the selected option.
+        Main.LoadPlayers();
         base.OnBind();
 
         // Remove mod filter search box
@@ -27,7 +29,6 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
         if (Main.PlayerList.Count <= 11)
             RemoveScrollbar();
 
-        Main.LoadPlayers();
         UpdateNeeded = true;
     }
 
@@ -35,24 +36,23 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
     {
         base.Update(gameTime);
 
-        // Update height dynamically based on number of players player has.
+        // The base update can reset the height when expanding or filtering.
         int count = Main.PlayerList?.Count ?? 0;
         int rows = Math.Max(1, (count + 11 - 1) / 11);
 
         float collapsed = 30f;
         float expanded = 130f + (rows - 1) * 44f;
         float h = SelectionExpanded ? expanded : collapsed;
+        var parent = Parent as UISortableElement;
+
+        if (Height.Pixels == h &&
+            (parent == null || parent.Height.Pixels == h) &&
+            (ChooserPanel == null || ChooserPanel.Height.Pixels == h - collapsed))
+            return;
 
         Height.Set(h, 0f);
-
-        if (Parent is UISortableElement s)
-            s.Height.Set(h, 0f);
-
-        if (ChooserPanel != null)
-            ChooserPanel.Height.Set(h - collapsed, 0f);
-
-        if (SelectionExpanded && count <= 11)
-            RemoveScrollbar();
+        parent?.Height.Set(h, 0f);
+        ChooserPanel?.Height.Set(h - collapsed, 0f);
 
         Recalculate();
     }
@@ -60,7 +60,6 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
     protected override List<DefinitionOptionElement<PlayerDefinition>> CreateDefinitionOptionElementList()
     {
         OptionScale = 0.8f;
-        Main.LoadPlayers();
 
         var arr = Main.PlayerList.ToArray();
         var options = new List<DefinitionOptionElement<PlayerDefinition>>(arr.Length);
@@ -119,8 +118,5 @@ public sealed class PlayerDefinitionElement : DefinitionElement<PlayerDefinition
             if (c is UIScrollbar)
                 c.Remove();
         }
-
-        ChooserPanel.Recalculate();
-        ChooserPanel.RecalculateChildren();
     }
 }

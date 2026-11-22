@@ -2,7 +2,6 @@
 using ModReloader.Core.Features;
 using ReLogic.Content;
 using System;
-using System.Linq;
 using Terraria.IO;
 using Terraria.Localization;
 using Terraria.ModLoader.Config.UI;
@@ -23,11 +22,9 @@ internal sealed class WorldDefinitionOptionElement : DefinitionOptionElement<Wor
 
         _iconAsset = null;
 
-        Main.LoadWorlds();
         if (definition == null || definition.IsUnloaded)
         {
             Tooltip = "No World Selected";
-            Recalculate();
             return;
         }
 

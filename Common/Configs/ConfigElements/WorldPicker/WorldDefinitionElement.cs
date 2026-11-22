@@ -15,6 +15,8 @@ public sealed class WorldDefinitionElement : DefinitionElement<WorldDefinition>
 
     public override void OnBind()
     {
+        // Load once before the base binding creates the selected option.
+        Main.LoadWorlds();
         base.OnBind();
 
         // Remove mod filter search box
@@ -26,7 +28,6 @@ public sealed class WorldDefinitionElement : DefinitionElement<WorldDefinition>
         // Remove scrollbar
         if (Main.WorldList.Count <= 11) RemoveScrollbar();
 
-        Main.LoadWorlds(); 
         UpdateNeeded = true;
     }
 
@@ -34,21 +35,23 @@ public sealed class WorldDefinitionElement : DefinitionElement<WorldDefinition>
     {
         base.Update(gameTime);
 
-        // Adjust height based on number of worlds
-        Main.LoadWorlds();
+        // The base update can reset the height when expanding or filtering.
         int count = Main.WorldList?.Count ?? 0;
         int rows = Math.Max(1, (count + 11 - 1) / 11);
 
         float collapsed = 30f;
         float expanded = 130f + (rows - 1) * 44f;
         float h = SelectionExpanded ? expanded : collapsed;
+        var parent = Parent as UISortableElement;
+
+        if (Height.Pixels == h &&
+            (parent == null || parent.Height.Pixels == h) &&
+            (ChooserPanel == null || ChooserPanel.Height.Pixels == h - collapsed))
+            return;
 
         Height.Set(h, 0f);
-        if (Parent is UISortableElement s) 
-            s.Height.Set(h, 0f);
+        parent?.Height.Set(h, 0f);
         ChooserPanel?.Height.Set(h - collapsed, 0f);
-
-        if (SelectionExpanded && count <= 11) RemoveScrollbar();
 
         Recalculate();
     }
@@ -56,9 +59,6 @@ public sealed class WorldDefinitionElement : DefinitionElement<WorldDefinition>
     protected override List<DefinitionOptionElement<WorldDefinition>> CreateDefinitionOptionElementList()
     {
         OptionScale = 0.8f;
-
-        // Load worlds
-        Main.LoadWorlds();
 
         var arr = Main.WorldList.ToArray();
         var options = new List<DefinitionOptionElement<WorldDefinition>>(arr.Length);
@@ -83,7 +83,6 @@ public sealed class WorldDefinitionElement : DefinitionElement<WorldDefinition>
         var passed = new List<DefinitionOptionElement<WorldDefinition>>();
         string filter = ChooserFilter?.CurrentString ?? "";
         if (string.IsNullOrWhiteSpace(filter)) filter = "";
-        Main.LoadWorlds();
         foreach (var o in Options)
         {
             if (o?.Definition == null) continue;
@@ -104,6 +103,5 @@ public sealed class WorldDefinitionElement : DefinitionElement<WorldDefinition>
         if (ChooserGrid != null) { ChooserGrid.SetScrollbar(null); ChooserGrid.Width.Set(0f, 1f); }
         if (ChooserPanel == null) return;
         foreach (var c in ChooserPanel.Children.ToArray()) if (c is UIScrollbar) c.Remove();
-        ChooserPanel.Recalculate(); ChooserPanel.RecalculateChildren();
     }
 }

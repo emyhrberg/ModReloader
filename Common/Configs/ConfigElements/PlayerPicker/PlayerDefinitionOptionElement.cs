@@ -1,47 +1,39 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using ModReloader.Core.Features;
-using System;
-using System.Linq;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
-using Terraria.IO;
 using Terraria.ModLoader.Config.UI;
 using Terraria.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ModReloader.Common.Configs.ConfigElements.PlayerPicker;
 
 internal sealed class PlayerDefinitionOptionElement : DefinitionOptionElement<PlayerDefinition>
 {
     private UICharacter _preview;
-    private bool isActiveSelection;
+    private Player _previewPlayer;
+    private readonly bool isActiveSelection;
 
-    public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.75f, bool isActiveSelection = false) : base(definition, scale)
+    public PlayerDefinitionOptionElement(PlayerDefinition definition, float scale = 0.75f, bool isActiveSelection = false) : base(null, scale)
     {
         this.isActiveSelection = isActiveSelection;
         OverflowHidden = true;
         NullID = -1;
+        SetItem(definition);
     }
 
     public override void SetItem(PlayerDefinition definition)
     {
         base.SetItem(definition);
 
-        RemoveAllChildren();
-        _preview = null;
-
-        Main.LoadPlayers();
-        if (definition == null || definition.IsUnloaded)
+        Player player = definition?.File?.Player;
+        if (player == null)
         {
             Tooltip = "No Player Selected";
-            Recalculate();
+            RemoveAllChildren();
+            _preview = null;
+            _previewPlayer = null;
             return;
         }
-
-        PlayerFileData file = definition.File;
-
-        Player player = file.Player;
-        player.dead = false;
 
         Tooltip = player.name;
         if (player.difficulty == PlayerDifficultyID.Creative)
@@ -49,12 +41,18 @@ internal sealed class PlayerDefinitionOptionElement : DefinitionOptionElement<Pl
             Tooltip += Utilities.ColorToTerrariaString(Main.creativeModeColor, " (Journey)");
         }
 
+        if (ReferenceEquals(_previewPlayer, player))
+            return;
+
+        RemoveAllChildren();
+        _previewPlayer = player;
+        player.dead = false;
+
         float charScale = isActiveSelection ? 0.6f : 0.8f;
         _preview = new UICharacter(player, animated: false, hasBackPanel: false, characterScale: charScale, useAClone: true);
         _preview.Top.Set(-6f, 0f);
 
         Append(_preview);
-        Recalculate();
     }
 
     public override void Update(GameTime gameTime)
